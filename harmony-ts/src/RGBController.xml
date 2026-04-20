@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<description>
+  <name>RGB Button Controller</name>
+  <tooltip>A Master Controller with three RGB color buttons that change per frame</tooltip>
+  
+  <attributes>
+    <!-- Button value attributes (BOOL type for ButtonWidget) -->
+    <attr type="BOOL" name="RedButton" value="false" tooltip="Red button state"/>
+    <attr type="BOOL" name="GreenButton" value="false" tooltip="Green button state"/>
+    <attr type="BOOL" name="BlueButton" value="false" tooltip="Blue button state"/>
+    
+    <!-- Color attributes for button colors (animated per frame) -->
+    <attr type="COLOUR" name="red_color" value="255,0,0,255" tooltip="Red button color (animated)"/>
+    <attr type="COLOUR" name="green_color" value="0,255,0,255" tooltip="Green button color (animated)"/>
+    <attr type="COLOUR" name="blue_color" value="0,0,255,255" tooltip="Blue button color (animated)"/>
+  </attributes>
+</description>

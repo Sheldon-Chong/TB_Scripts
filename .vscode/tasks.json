@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Open Forsaken Project",
+      "type": "shell",
+      "command": "Start-Process",
+      "args": [
+        "C:\\Users\\emers\\Desktop\\Coding projects\\Python Bot\\ToonBoom_Automations\\test\\Forsaken\\SansplaysForsaken_V18.xstage"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Open Modified Forsaken Project",
+      "type": "shell",
+      "command": "Start-Process",
+      "args": [
+        "C:\\Users\\emers\\Desktop\\Coding projects\\Python Bot\\ToonBoom_Automations\\test\\Forsaken\\SansplaysForsaken_V18_modified.xstage"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Open Rig",
+      "type": "shell",
+      "command": "Start-Process",
+      "args": [
+        "C:\\Users\\emers\\Desktop\\Coding projects\\Python Bot\\ToonBoom_Automations\\test\\rig2\\rig2.xstage"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Open Lighting File",
+      "type": "shell",
+      "command": "Start-Process",
+      "args": [
+        "C:\\Users\\emers\\Desktop\\Coding projects\\Python Bot\\ToonBoom_Automations\\test\\LightingRedoV7\\LightingRedoV7.xstage"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "TypeScript Watch (src)",
+      "type": "shell",
+      "command": "npx",
+      "args": [
+        "tsc",
+        "-w"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/harmony-ts/src"
+      },
+      "problemMatcher": "$tsc-watch"
+    }
+  ]
+}

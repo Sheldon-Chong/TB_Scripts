@@ -1,0 +1,448 @@
+T: 15:39:46.552 {
+  "Process": {
+    "objectName": "",
+    "stdout": "",
+    "stderr": ""
+  },
+  "__temporaryFileContext__": {
+    "objectName": ""
+  },
+  "Scene": {
+    "objectName": "scene"
+  },
+  "specialFolders": {
+    "objectName": "specialFolders",
+    "root": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium",
+    "config": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/etc",
+    "resource": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/resources",
+    "etc": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/etc",
+    "lang": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/lang",
+    "platform": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win64",
+    "app": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win64/bin",
+    "bin": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win64/bin",
+    "bin32": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win32/bin",
+    "library": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win64/lib",
+    "legacyPlugins": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win64/plugins",
+    "plugins": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins",
+    "temp": "C:\\Users\\emers\\AppData\\Local\\Temp",
+    "userConfig": "C:/Users/emers/AppData/Roaming/Toon Boom Animation/Toon Boom Harmony Premium/full-2400-pref",
+    "htmlHelp": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/help",
+    "userScripts": "C:/Users/emers/AppData/Roaming/Toon Boom Animation/Toon Boom Harmony Premium/2400-scripts",
+    "userLayouts": "c:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Premium\\2400-layouts-xml",
+    "database": "/USA_DB",
+    "templateLibrary": "C:/Users/emers/Documents/Toon Boom Harmony Premium Library"
+  },
+  "exports": {},
+  "UiLoader": {
+    "objectName": "uiloader"
+  },
+  "about": {
+    "objectName": "about",
+    "fullVersion": true,
+    "demoVersion": false,
+    "educVersion": false,
+    "harmony": true,
+    "essentials": false,
+    "advanced": false,
+    "stage": true,
+    "storyboard": false,
+    "windowsArch": true,
+    "linuxArch": false,
+    "macArch": false,
+    "macIntelArch": false,
+    "macPpcArch": false,
+    "mainApp": true,
+    "interactiveApp": true,
+    "scanApp": false,
+    "controlCenterApp": false,
+    "paintMode": false,
+    "xsheetMode": false,
+    "applicationPath": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win64/bin/HarmonyPremium.exe",
+    "binaryPath": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/win64/bin",
+    "userName": "emers",
+    "resourcesPath": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/resources",
+    "databaseMode": false,
+    "majorVersion": 24,
+    "minorVersion": 0,
+    "patchVersion": 1,
+    "buildNumber": 23019
+  },
+  "Action": {
+    "objectName": "Action"
+  },
+  "Drawing": {
+    "objectName": "Drawing",
+    "query": {},
+    "selection": {},
+    "geometry": {},
+    "font": {},
+    "text": {}
+  },
+  "element": {
+    "objectName": "element"
+  },
+  "fileMapper": {
+    "objectName": "fileMapper"
+  },
+  "KeyModifiers": {
+    "objectName": "KeyModifiers"
+  },
+  "MessageLog": {
+    "objectName": "MessageLog"
+  },
+  "preferences": {
+    "objectName": "preferences"
+  },
+  "scene": {
+    "objectName": "scene"
+  },
+  "System": {
+    "objectName": "System"
+  },
+  "DrawingTools": {
+    "objectName": "DrawingTools",
+    "underlayArt": 1,
+    "colourArt": 2,
+    "lineArt": 4,
+    "overlayArt": 8,
+    "allArts": 15,
+    "Text": {}
+  },
+  "TimelineMarker": {
+    "objectName": "TimelineMarker"
+  },
+  "translator": {
+    "objectName": "translator"
+  },
+  "drawingExport": {
+    "objectName": "drawingExport"
+  },
+  "Settings": {
+    "objectName": "Settings"
+  },
+  "column": {
+    "objectName": "column"
+  },
+  "node": {
+    "objectName": "node"
+  },
+  "selection": {
+    "objectName": "selection"
+  },
+  "PaletteObjectManager": {
+    "objectName": "PaletteObjectManager",
+    "Constants": {
+      "objectName": "",
+      "Location": {
+        "objectName": "",
+        "ENVIRONMENT": 86,
+        "JOB": 74,
+        "SCENE": 83,
+        "ELEMENT": 69,
+        "EXTERNAL": 88
+      },
+      "ColorType": {
+        "objectName": "",
+        "SOLID_COLOR": 0,
+        "LINEAR_GRADIENT": 1,
+        "RADIAL_GRADIENT": 2
+      },
+      "PaletteListType": {
+        "objectName": "",
+        "Scene": 2,
+        "Element": 1,
+        "Hidden": 8,
+        "Unspecified": 4
+      }
+    },
+    "Locator": {
+      "objectName": ""
+    }
+  },
+  "frame": {
+    "objectName": "frame"
+  },
+  "compositionOrder": {
+    "objectName": "composition"
+  },
+  "copyPaste": {
+    "objectName": "copyPaste"
+  },
+  "exporter": {
+    "objectName": "exporter",
+    "Selective": 0,
+    "None": 0,
+    "Diffusion": 1,
+    "Pattern": 2,
+    "prores422": 0,
+    "prores422HQ": 1,
+    "prores422LT": 2,
+    "prores422Proxy": 3,
+    "prores4444": 4,
+    "prores4444XQ": 5
+  },
+  "func": {
+    "objectName": "func"
+  },
+  "MovieImport": {
+    "objectName": "MovieImport"
+  },
+  "render": {
+    "objectName": "render"
+  },
+  "waypoint": {
+    "objectName": "waypoint"
+  },
+  "Backdrop": {
+    "objectName": "Backdrop"
+  },
+  "sound": {
+    "objectName": "sound"
+  },
+  "stateUtil": {
+    "objectName": "TB_StateUtil"
+  },
+  "FileDialog": {
+    "objectName": "FileDialog"
+  },
+  "Input": {
+    "objectName": "Input"
+  },
+  "___scriptManager___": {
+    "objectName": ""
+  },
+  "deformation": {
+    "objectName": "deformation"
+  },
+  "AnimatedMatteGenerator": {
+    "resources": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/MatteGeneratorLib/AnimatedMatteGenerator/resources/View",
+    "settings": {
+      "objectName": "",
+      "normalMode": true,
+      "hintMode": false,
+      "setupMode": false,
+      "addVertexMode": false,
+      "showCurve0": true,
+      "showCurve1": true,
+      "showPointId": false,
+      "showHints": false,
+      "showInflateDeflate": false,
+      "showAnnotations": false,
+      "autoKeyAllPoints": true,
+      "fixAdjacentKeyframes": true
+    }
+  },
+  "view": {
+    "objectName": "view"
+  },
+  "ToolProperties": {
+    "objectName": "ToolProperties",
+    "snapToContour": false,
+    "snapToBoundingBoxes": false,
+    "snapToGrid": false,
+    "mergeWithTopLayer": false,
+    "autoFlattenMode": false,
+    "autoGapClosingMode": 3,
+    "respectStickyColor": true,
+    "paintDestroyTexture": false,
+    "createColorArtOnBrush": false,
+    "showOtherDrawingThumbnail": true,
+    "preventDrawing": false,
+    "preventScenePlanning": false,
+    "showAllContourEditingControls": false,
+    "brushMode": 1,
+    "paintMode": 3,
+    "bitmapPaintSourceArt": 255,
+    "bitmapPaintAlpha": 1,
+    "bitmapPaintColorTolerance": 10,
+    "bitmapPaintMaxOverlap": 25,
+    "antialiasingMode": 1,
+    "permanentSelectionMode": false,
+    "elementMode": 0,
+    "paintElementMode": 0,
+    "frameMode": 0,
+    "applyToAllLayers": true,
+    "zoomInMode": true,
+    "selectByColor": false,
+    "selectionIsLasso": true,
+    "boundingBoxMovable": false,
+    "changeSymbolPivotOnAllFrames": true,
+    "autoGapLineClosing": false,
+    "hideManipulatorControls": false,
+    "hideTranslateManipulatorControls": false,
+    "hideScaleManipulatorControls": false,
+    "hideRotateManipulatorControls": false,
+    "disablePivotManipulatorControl": false,
+    "snapTo3DMode": false,
+    "selectionMode": 1,
+    "controlPointSelectionMode": 0,
+    "smoothSelector": 0,
+    "toolResolutionWidth": 1,
+    "toolResolutionHeight": 1,
+    "smoothShowPoints": true,
+    "cutEnableCutterGesture": true,
+    "cutEnableBreakGesture": false,
+    "strokeSmoothValue": 3,
+    "lineBuildingMode": false,
+    "thicknessAdjustMode": false,
+    "linePushingMode": false,
+    "textFont": 333,
+    "textSize": 36,
+    "textStyle": 0,
+    "textAlignment": 0,
+    "textKerning": 0,
+    "autoKerning": false,
+    "textIndent": 0,
+    "textLineSpace": 0,
+    "retraceMode": false,
+    "retraceOffsetMax": 3,
+    "retraceTiltMax": 2,
+    "retraceProbability": 25,
+    "retraceNoiseMax": 3,
+    "smoothPenStyleMin": 100,
+    "smoothPenStyleMinRatio": 100,
+    "smoothPenStyleMax": 100,
+    "smoothPenStyleCenterSmooth": 20,
+    "inkSelectionMode": false,
+    "inkIntelligentMode": true,
+    "inkRaiseMode": true,
+    "inkShowInkableLines": false,
+    "inkJoinMode": 2,
+    "selectAfterPaintOrInk": false,
+    "drawingType": 0,
+    "perspectiveMode": 0,
+    "lineToolMode": 1
+  },
+  "library": {
+    "objectName": "library"
+  },
+  "SceneOffline": {
+    "objectName": "SceneOffline"
+  },
+  "SyncLayer": {
+    "objectName": "SyncLayer"
+  },
+  "DownloadOpenH264": {
+    "objectName": ""
+  },
+  "WebCCExporter": {
+    "objectName": "WebCCExporter"
+  },
+  "QuicktimeExporter": {
+    "objectName": "QuicktimeExporter"
+  },
+  "CELIO": {},
+  "ScriptManager": {
+    "registeredViews": {
+      "Master Controller": {},
+      "Port Names": {},
+      "Scene Markers": {},
+      "Skinning": {}
+    },
+    "foundPackages": [
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "AEExporter",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "ExternalRendering",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "GameStoryboardAPI",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "JapaneseToolbar",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "MasterController",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "MiniPlayback",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "OpenH264",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "PortNames",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "RigCacheToolbar",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "SceneMarkers",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "Skinning",
+        "packageType": "System",
+        "configured": true
+      },
+      {
+        "folder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages",
+        "name": "VectorFileImport",
+        "packageType": "System",
+        "configured": true
+      }
+    ],
+    "AEExporterData": {
+      "packageFolder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages/AEExporter"
+    },
+    "OpenH264ExporterData": {
+      "packageFolder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages/OpenH264"
+    },
+    "PDFImporterData": {
+      "packageFolder": "C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 24 Premium/Plugins/ScriptingInterfaces/resources/packages/VectorFileImport"
+    }
+  },
+  "__file__": "C:/Users/emers/AppData/Roaming/Toon Boom Animation/Toon Boom Harmony Premium/2400-scripts/test.js",
+  "Tools": {},
+  "PythonManager": {
+    "objectName": "PythonManager"
+  },
+  "importer": {},
+  "xsheet": {
+    "objectName": "xsheet"
+  },
+  "PaletteManager": {
+    "objectName": "PaletteManager"
+  },
+  "Timeline": {
+    "objectName": "Timeline",
+    "numLayerSel": 0,
+    "firstFrameSel": 1,
+    "numFrameSel": 1,
+    "numLayers": 2416
+  },
+  "PenstyleManager": {
+    "objectName": "PenstyleManager"
+  }
+}

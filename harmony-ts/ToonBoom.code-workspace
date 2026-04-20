@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "C:/Users/emers/AppData/Roaming/Toon Boom Animation/Toon Boom Harmony Premium/2400-scripts"
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"commandCenter.border": "#15202b99",
+			"sash.hoverBorder": "#b0c09a",
+			"statusBar.background": "#97ad7a",
+			"statusBar.foreground": "#15202b",
+			"statusBarItem.hoverBackground": "#7e975d",
+			"statusBarItem.remoteBackground": "#97ad7a",
+			"statusBarItem.remoteForeground": "#15202b",
+			"titleBar.activeBackground": "#97ad7a",
+			"titleBar.activeForeground": "#15202b",
+			"titleBar.inactiveBackground": "#97ad7a99",
+			"titleBar.inactiveForeground": "#15202b99"
+		},
+		"peacock.color": "#97ad7a",
+		"folder-color.pathColors": []
+	}
+}

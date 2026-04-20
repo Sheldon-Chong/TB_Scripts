@@ -1,0 +1,572 @@
+
+/**
+ * Generic property controller for managing layer attributes (transparency, intensity, etc.)
+ * Handles both reading and writing property values across frame ranges
+ */
+class PropertyController {
+	layer: any;
+	attributeName: string;
+	enabledValue: string;
+	disabledValue: string;
+	isInverted: boolean; // For properties like Intensity where high = enabled (opposite of transparency)
+
+	/**
+	 * @param layer - The layer object containing the property
+	 * @param attributeName - Name of the column/attribute (e.g., "TRANSPARENCY", "Intensity")
+	 * @param enabledValue - Value when property is enabled (e.g., "0" for transparency, "100" for intensity)
+	 * @param disabledValue - Value when property is disabled (e.g., "100" for transparency, "0" for intensity)
+	 * @param isInverted - Whether the property is inverted (true for intensity-based properties)
+	 */
+	constructor(layer: any, attributeName: string, enabledValue: string, disabledValue: string, isInverted: boolean = false) {
+		this.layer = layer;
+		this.attributeName = attributeName;
+		this.enabledValue = enabledValue;
+		this.disabledValue = disabledValue;
+		this.isInverted = isInverted;
+	}
+
+	/**
+	 * Get the column for this property
+	 */
+	getColumn(): any {
+		const col = this.layer.getColumn(this.attributeName);
+		if (!col) {
+			throw new Error(this.attributeName + " column not found in layer: " + this.layer.name);
+		}
+		return col;
+	}
+
+	/**
+	 * Check if the property is enabled at a specific frame
+	 * @param frameNumber - Frame number to check
+	 * @returns true if enabled, false if disabled
+	 */
+	isEnabled(frameNumber: number): boolean {
+		const col = this.getColumn();
+		const value = col.getKeyframe(frameNumber);
+		const numValue = parseFloat(value);
+		const enabledNumValue = parseFloat(this.enabledValue);
+		const disabledNumValue = parseFloat(this.disabledValue);
+		
+		// If values are closer to enabled value, consider it enabled
+		const midpoint = (enabledNumValue + disabledNumValue) / 2;
+		return numValue >= midpoint;
+	}
+
+	/**
+	 * Enable the property for a frame range
+	 * @param start - Start frame
+	 * @param end - End frame
+	 */
+	enable(start: number, end: number): void {
+		const col = this.getColumn();
+		const status = col.setKeyframeRange(start, end, this.enabledValue);
+		if (!status) {
+			throw new Error("Failed to enable " + this.attributeName + " on layer: " + this.layer.name);
+		}
+		MessageLog.trace("✅ Enabled " + this.attributeName + " on layer '" + this.layer.name + "' from frame " + start + " to " + end);
+	}
+
+	/**
+	 * Disable the property for a frame range
+	 * @param start - Start frame
+	 * @param end - End frame
+	 */
+	disable(start: number, end: number): void {
+		const col = this.getColumn();
+		const status = col.setKeyframeRange(start, end, this.disabledValue);
+		if (!status) {
+			throw new Error("Failed to disable " + this.attributeName + " on layer: " + this.layer.name);
+		}
+		MessageLog.trace("❌ Disabled " + this.attributeName + " on layer '" + this.layer.name + "' from frame " + start + " to " + end);
+	}
+
+	/**
+	 * Set the property state for a frame range
+	 * @param start - Start frame
+	 * @param end - End frame
+	 * @param enabled - true to enable, false to disable
+	 */
+	setState(start: number, end: number, enabled: boolean): void {
+		if (enabled) {
+			this.enable(start, end);
+		} else {
+			this.disable(start, end);
+		}
+	}
+
+	/**
+	 * Factory method to create a PropertyController for transparency-based properties
+	 */
+	static forTransparency(layer: any): PropertyController {
+		return new PropertyController(layer, "TRANSPARENCY", "0", "100", false);
+	}
+
+	/**
+	 * Factory method to create a PropertyController for intensity-based properties
+	 */
+	static forIntensity(layer: any): PropertyController {
+		return new PropertyController(layer, "Intensity", "100", "0", true);
+	}
+}
+
+class LightingController {
+	static TOGGLES: string[] = [
+		"T_Mood",
+		"T_Rimlight",
+		"T_Shadow",
+		"T_Outline",
+		"T_Overall_Glow"
+	];
+
+	name: string;
+	index: number;
+	associatedEffects: any;
+	toggles: { [key: string]: any };
+	propertyControllers: { [key: string]: PropertyController };
+	glow: any;
+	outsideGlowLayer: any;
+	glowLeft: any = null;
+	glowRight: any = null;
+	controllers: { glowLeft: any; glowRight: any; outsideGlow: any };
+
+	constructor(drawingLayerName: string) {
+
+		const afterUnderscore = (str: string): string => {
+			const idx = str.indexOf("_");
+			return idx !== -1 ? str.substring(idx + 1) : "";
+		};
+
+		this.name = drawingLayerName;
+		this.index = Number(afterUnderscore(drawingLayerName));
+
+		const layer = layerManager.getNodeLayer(drawingLayerName);
+
+		this.associatedEffects = layerManager.getNodeLayer("Top/Effects_" + this.index);
+		MessageLog.trace("Associated effects layer: " + this.associatedEffects);
+		const children = this.associatedEffects.getChildren();
+		const togglesArray = filterArray(children, (child: any) => {
+			if (child) {
+				return child.name.indexOf("T_") === 0;
+			}
+			return false;
+		});
+		this.toggles = {};
+		this.propertyControllers = {};
+		
+		togglesArray.forEach((toggle: any) => {
+			this.toggles[toggle.name] = toggle;
+			// Create PropertyController for each toggle (they use transparency)
+			this.propertyControllers[toggle.name] = PropertyController.forTransparency(toggle);
+			MessageLog.trace("✅ " + toggle.name);
+		});
+
+		children.forEach((child: any) => {
+			if (child && child.name === "Outside_Glow") 
+				this.outsideGlowLayer = child;
+			if (child && child.name === "Glow") 
+				this.glow = child;
+		});
+
+		stringify(this.glow);
+		if (this.glow) {
+			const glowChildren = this.glow.getChildren();
+			glowChildren.forEach((child: any) => {
+				if (child && child.name === "Glow_Left") 
+					this.glowLeft = child;
+				if (child && child.name === "Glow_Right") 
+					this.glowRight = child;
+			});
+		}
+		
+		// Create PropertyControllers for intensity-based effects
+		if (this.outsideGlowLayer) {
+			this.propertyControllers["Outside_Glow"] = PropertyController.forIntensity(this.outsideGlowLayer);
+		}
+		if (this.glowLeft) {
+			this.propertyControllers["Glow_Left"] = PropertyController.forIntensity(this.glowLeft);
+		}
+		if (this.glowRight) {
+			this.propertyControllers["Glow_Right"] = PropertyController.forIntensity(this.glowRight);
+		}
+		
+		this.controllers = {
+			glowLeft: this.glowLeft,
+			glowRight: this.glowRight,
+			outsideGlow: this.outsideGlowLayer
+		};
+
+		stringify(this.controllers.glowLeft.getAttributeNames());
+	}
+
+	/**
+	 * Get the enabled state of an effect at a specific frame
+	 * @param effectName - Name of the effect (e.g., "T_Shadow", "Outside_Glow")
+	 * @param frameNumber - Frame number to check
+	 * @returns true if enabled, false if disabled
+	 */
+	getEffectState(effectName: string, frameNumber: number): boolean {
+		const controller = this.propertyControllers[effectName];
+		if (!controller) {
+			throw new Error("Property controller not found for: " + effectName);
+		}
+		return controller.isEnabled(frameNumber);
+	}
+
+	/**
+	 * Set an effect's enabled/disabled state for a frame range
+	 * @param effectName - Name of the effect (e.g., "T_Shadow", "Outside_Glow")
+	 * @param start - Start frame
+	 * @param end - End frame
+	 * @param enabled - true to enable, false to disable
+	 */
+	setEffect(effectName: string, start: number, end: number, enabled: boolean): void {
+		const controller = this.propertyControllers[effectName];
+		if (!controller) {
+			throw new Error("Property controller not found for: " + effectName);
+		}
+		controller.setState(start, end, enabled);
+	}
+
+	/**
+	 * Legacy method - uses new setEffect internally
+	 */
+	setToggle(toggleName: string, start: number, end: number, enabled: boolean): void {
+		this.setEffect(toggleName, start, end, enabled);
+	}
+
+	ToggleAll(start: number, end: number, enabled: boolean): void {
+		for (const toggleName of LightingController.TOGGLES) {
+			this.setToggle(toggleName, start, end, enabled);
+		}
+	}
+
+	ToggleEffects(start: number, end: number, enabledEffectsList: string[]): void {
+		for (const toggleName of LightingController.TOGGLES) {
+			const enabled = (enabledEffectsList.indexOf(toggleName) !== -1);
+			this.setToggle(toggleName, start, end, enabled);
+		}
+	}
+}
+
+// todo mood has error
+
+function showTogglePanelAndApply() {
+	var toggles = [
+		"T_Shadow",
+		"T_Overall_Glow",
+		"T_Rimlight",
+		"T_Mood",
+		"T_Outline"
+	];
+
+	var myDialog = new Dialog();
+	myDialog.title = "Toggle Effects";
+
+	// Store checkboxes for later access
+	var checkboxes = {};
+
+	// Get the first selected node to read current toggle states
+	var firstSelectedNode = selection.selectedNode(0);
+	if (!firstSelectedNode) {
+		MessageLog.trace("No node selected");
+		return;
+	}
+
+	// Read current transparency values to determine checkbox states
+	var lightBox = new LightingController(firstSelectedNode);
+	var currentFrame = frame.current();
+
+	toggles.forEach(function (toggle) {
+		var cb = new CheckBox();
+		cb.text = toggle;
+		
+		// Default to true if we can't read the value
+		var isEnabled = true;
+		
+		try {
+			// Use the new getEffectState method from PropertyController
+			isEnabled = lightBox.getEffectState(toggle, currentFrame);
+		} catch (e) {
+			MessageLog.trace("Error reading toggle state for " + toggle + ": " + e.toString());
+		}
+		
+		cb.checked = isEnabled;
+		myDialog.add(cb);
+		checkboxes[toggle] = cb;
+	});
+
+	if (myDialog.exec()) {
+		// Get frame range
+		var startFrame = selection.startFrame();
+		var endFrame = startFrame + selection.numberOfFrames() - 1;
+
+		// Build enabled list from checked boxes
+		var enabledList = [];
+		toggles.forEach(function (toggle) {
+			if (checkboxes[toggle].checked) {
+				enabledList.push(toggle);
+			}
+		});
+
+		// Apply to each selected node
+		var numNodes = selection.numberOfNodesSelected();
+		for (var i = 0; i < numNodes; i++) {
+			var nodeName = selection.selectedNode(i);
+			var lightBox = new LightingController(nodeName);
+			lightBox.ToggleEffects(startFrame, endFrame, enabledList);
+		}
+
+		MessageLog.trace("Applied toggles: " + JSON.stringify(enabledList) + " to " + numNodes + " nodes");
+	} else {
+		MessageLog.trace("Toggle panel cancelled.");
+	}
+}
+
+function LayerToggle() {
+
+var ui = UiLoader.load("C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Premium\\2400-scripts\\lighting_controller.ui");
+ui.show();
+		return ;
+	var lightBox = new LightingController(selection.selectedNode(0));
+
+
+
+	lightBox.ToggleEffects(
+		selection.startFrame(),
+		selection.startFrame() + selection.numberOfFrames(),
+		// []
+		["T_Shadow", "T_Overall_Glow", "T_Rimlight", "T_Mood", "T_Outline"]
+	);
+}
+
+function showLightingControllerUI() {
+	// Load the UI file using UiLoader
+	var ui = UiLoader.load("c:/Users/emers/AppData/Roaming/Toon Boom Animation/Toon Boom Harmony Premium/2400-scripts/lighting_controller.ui");
+	
+	if (!ui) {
+		MessageBox.warning("Failed to load lighting_controller.ui");
+		return;
+	}
+
+	// Get the first selected node
+	var firstSelectedNode = selection.selectedNode(0);
+	if (!firstSelectedNode) {
+		MessageBox.warning("No node selected");
+		return;
+	}
+
+	// Create the LightingController instance
+	var lightBox = new LightingController(firstSelectedNode);
+	var currentFrame = frame.current();
+
+	// Map UI control names to effect names and their controllers
+	var effectMapping = {
+		"mood": "T_Mood",
+		"shadow": "T_Shadow",
+		"rimlight": "T_Rimlight",
+		"outline": "T_Outline",
+		"glow": "T_Overall_Glow"  // Uses transparency, not Outside_Glow
+	};
+
+	// Helper function to find widget by objectName in children recursively
+	function findWidgetByName(parent, name) {
+		if (!parent || !parent.children) return null;
+		
+		var children = parent.children();
+		for (var i = 0; i < children.length; i++) {
+			var child = children[i];
+			if (child.objectName === name) {
+				return child;
+			}
+			// Recursively search in children
+			var found = findWidgetByName(child, name);
+			if (found) return found;
+		}
+		return null;
+	}
+	
+	// Set initial values from current frame state
+	for (var controlName in effectMapping) {
+		var effectName = effectMapping[controlName];
+		
+		// Find widgets by their objectName
+		var checkbox = findWidgetByName(ui, controlName + "_checkbox");
+		var slider = findWidgetByName(ui, controlName + "_slider");
+		var spinbox = findWidgetByName(ui, controlName + "_spinbox");
+		
+		MessageLog.trace("Setting up " + controlName + " - checkbox: " + (checkbox ? "found" : "NOT FOUND") + 
+						 ", slider: " + (slider ? "found" : "NOT FOUND") + 
+						 ", spinbox: " + (spinbox ? "found" : "NOT FOUND"));
+		
+		if (!checkbox || !slider || !spinbox) {
+			MessageLog.trace("WARNING: Could not find widgets for " + controlName);
+			continue;
+		}
+		
+		try {
+			// Set slider/spinbox ranges FIRST (0-100 for intensity/transparency)
+			// Use the correct property names
+			slider["minimum"] = 0;
+			slider["maximum"] = 100;
+			spinbox["minimum"] = 0;
+			spinbox["maximum"] = 100;
+			
+			MessageLog.trace("Set ranges for " + controlName);
+			
+			// Get the actual transparency/intensity value from the column
+			var propController = lightBox.propertyControllers[effectName];
+			if (!propController) {
+				MessageLog.trace("No property controller for " + effectName);
+				continue;
+			}
+			
+			var col = propController.getColumn();
+			var rawValue = parseFloat(col.getKeyframe(currentFrame));
+			
+			// Convert raw value to user-facing value (0-100 where 100 = fully visible)
+			// For transparency: raw 0 = visible, raw 100 = invisible, so invert it
+			// For intensity: raw 100 = visible, raw 0 = invisible, so keep it
+			var displayValue = propController.isInverted ? rawValue : (100 - rawValue);
+			
+			// Set checkbox based on whether it's enabled (using midpoint logic)
+			var isEnabled = lightBox.getEffectState(effectName, currentFrame);
+			checkbox.checked = isEnabled;
+			
+			// Set slider/spinbox to the user-facing value
+			slider["value"] = displayValue;
+			spinbox["value"] = displayValue;
+			
+			MessageLog.trace("Set " + controlName + " - raw value: " + rawValue + ", display value: " + displayValue + " (enabled: " + isEnabled + ")");
+			
+		} catch (e) {
+			MessageLog.trace("Error setting up " + effectName + ": " + e.toString());
+		}
+	}
+
+
+
+	// Connect sliders to spinboxes (keep them synchronized)
+	for (var controlName in effectMapping) {
+		(function(ctrlName) {
+			MessageLog.trace("Setting up connections for: " + ctrlName);
+
+			// Find widgets using the helper function
+			var slider = findWidgetByName(ui, ctrlName + "_slider");
+			var spinbox = findWidgetByName(ui, ctrlName + "_spinbox");
+			var checkbox = findWidgetByName(ui, ctrlName + "_checkbox");
+			
+			if (!slider || !spinbox || !checkbox) {
+				MessageLog.trace("WARNING: Cannot connect signals for " + ctrlName + " - widgets not found");
+				return;
+			}
+			
+			// When slider changes, update spinbox
+			slider["valueChanged"].connect(function(value) {
+				spinbox["value"] = value;
+				// Auto-check checkbox when value > 0
+				checkbox["checked"] = (value > 0);
+			});
+			
+			// When spinbox changes, update slider
+			spinbox["valueChanged"].connect(function(value) {
+				slider["value"] = value;
+				// Auto-check checkbox when value > 0
+				checkbox["checked"] = (value > 0);
+			});
+			
+			// When checkbox changes, enable/disable controls
+			checkbox["toggled"].connect(function(checked) {
+				slider["enabled"] = checked;
+				spinbox["enabled"] = checked;
+				if (!checked) {
+					slider["value"] = 0;
+					spinbox["value"] = 0;
+				} else if (slider["value"] === 0) {
+					slider["value"] = 100;
+					spinbox["value"] = 100;
+				}
+			});
+		})(controlName);
+	}
+
+	// Connect the OK button to apply values
+	var buttonBox = findWidgetByName(ui, "buttonBox");
+	if (buttonBox) {
+		buttonBox["accepted"].connect(function() {
+			MessageLog.trace("=== OK Button Clicked ===");
+			
+			// Wrap everything in an undo/redo accumulator
+			scene.beginUndoRedoAccum("Apply Lighting Effects");
+			
+			try {
+				// Get frame range from selection
+				var startFrame = selection.startFrame();
+				var endFrame = startFrame + selection.numberOfFrames() - 1;
+				
+				MessageLog.trace("Frame range: " + startFrame + " to " + endFrame);
+				
+				// Apply to each selected node
+				var numNodes = selection.numberOfNodesSelected();
+				MessageLog.trace("Number of selected nodes: " + numNodes);
+				
+				for (var i = 0; i < numNodes; i++) {
+					var nodeName = selection.selectedNode(i);
+					MessageLog.trace("Processing node: " + nodeName);
+					
+					var controller = new LightingController(nodeName);
+					
+					for (var controlName in effectMapping) {
+						var effectName = effectMapping[controlName];
+						var checkbox = findWidgetByName(ui, controlName + "_checkbox");
+						var spinbox = findWidgetByName(ui, controlName + "_spinbox");
+					
+						if (!checkbox || !spinbox) {
+							MessageLog.trace("Skipping " + controlName + " - widgets not found");
+							continue;
+						}
+						
+						var isChecked = checkbox["checked"];
+						var spinValue = spinbox["value"];
+						
+						MessageLog.trace(controlName + ": checked=" + isChecked + ", value=" + spinValue);
+						
+						if (isChecked && spinValue > 0) {
+							// Apply the spinbox value directly
+							var propController = controller.propertyControllers[effectName];
+							
+							if (propController) {
+								var col = propController.getColumn();
+								
+								// For transparency-based: lower value = more visible
+								// For intensity-based: higher value = more visible
+								var valueToSet = propController.isInverted ? spinValue.toString() : (100 - spinValue).toString();
+								
+								MessageLog.trace("Setting " + effectName + " column to value: " + valueToSet);
+								var success = col.setKeyframeRange(startFrame, endFrame, valueToSet);
+								MessageLog.trace("setKeyframeRange returned: " + success);
+							}
+						} else {
+							// Disable the effect (set to disabled value)
+							MessageLog.trace("Disabling " + effectName);
+							controller.setEffect(effectName, startFrame, endFrame, false);
+						}
+					}
+				}
+				
+				MessageLog.trace("Applied lighting settings to " + numNodes + " node(s)");
+			} catch (e) {
+				MessageLog.trace("ERROR in OK button handler: " + e.toString());
+			} finally {
+				scene.endUndoRedoAccum();
+			}
+		});
+	}
+
+	// Show the dialog
+	if (ui.exec()) {
+		MessageLog.trace("Lighting settings applied");
+	} else {
+		MessageLog.trace("Cancelled");
+	}
+}

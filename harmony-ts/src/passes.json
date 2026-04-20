@@ -1,0 +1,20 @@
+{
+  "passes": {
+    "Pass_1": "#ff0000",
+    "Pass_2": "#ff6200",
+    "Pass_3": "#ffbf00",
+    "Pass_4": "#ddff00",
+    "Pass_5": "#84ff00",
+    "Pass_6": "#14b100",
+    "Pass_7": "#00ff3f",
+    "Pass_8": "#01b574",
+    "Pass_9": "#00fffc",
+    "Pass_10": "#61c6ff",
+    "Pass_11": "#003fff",
+    "Pass_12": "#2c2864",
+    "Pass_13": "#7f00ff",
+    "Pass_14": "#d800ff",
+    "Pass_15": "#ff00be",
+    "Pass_16": "#bf004a"
+  }
+}
