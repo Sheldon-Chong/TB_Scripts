@@ -1,0 +1,538 @@
+DrawingTools
+This module provides functions to manipulate the layers of a Drawing. All the operations are executed upon call. When calling any of the methods, the indices of the layers and the strokes in a layer might end up modified.
+Methods
+(static) createLayers(arg)
+This function is used to create a layer in a specified drawing
+Examples
+This example creates a one field rectangular contour on the currently selected Element module at the current frame if there is a drawing exposed at this frame.
+If not, the API to create a drawing should be called first.
+
+ var n = selection.selectedNode(0); // First selected node
+ DrawingTools.createLayers( {
+   label : "My Modify layer Example", 
+   drawing : {node: n, frame: frame.current()},
+   art: 2, // Line art
+   masks : [
+      {
+         polygon: true,
+         path: [ {x: 60, y: 60}, 
+                  {x: 70, y: 60}, 
+                  {x: 70, y: 70}, 
+                  {x: 60, y: 70},
+                  {x: 60, y: 60}],
+         holes : [
+            [ {x: 65, y: 65}, 
+            {x: 65, y: 68}, 
+            {x: 68, y: 68}, 
+            {x: 68, y: 65},
+            {x: 65, y: 65}]
+         ]    
+      }
+   ],
+   layers : [
+      {
+         shaders : [
+            { colorId : "0000000000000003" }  // This is the default vectorization color
+         ],
+         under : false,
+         referenceLayer: 0,
+         strokes : [ 
+         {
+            shaderLeft: 0,
+         stroke : true,
+         pencilColorId : "0000000000000003", // This is the default vectorization color
+         thickness: 1,
+         polygon: true,
+         path: [ {x: 0, y: 0}, 
+                  {x: 2500/12, y: 0}, 
+                  {x: 2500/12, y: 1875/12}, 
+                  {x: 0, y: 1875/12},
+                  {x: 0, y: 0}]
+         }
+      ] }
+   ]
+   });
+This example will generate a spiral of circles at the current frame for the selected drawing. If there is no drawing for the current selected element, it will try to create one.
+
+    function createLayer(selectedElement, atFrame, path)
+    {
+       DrawingTools.createLayers( {
+          label : "unused",  // This label will not be visible because the caller was wrapped in an undo/redo accumulator.
+          drawing : {node: selectedElement, frame: atFrame},
+              art: 2,
+              layers : [
+                 {
+                   shaders : [
+                      { colorId : "0000000000000003" }
+                    ],
+                    layerType: 10001,
+                    strokes : [ 
+                    {
+                      shaderLeft: 0,
+                      stroke : true,
+                      pencilColorId : "08aeff1cd4c30c01",
+                      thickness: 1,
+                      path: path
+                     }
+                 ] }
+              ]
+         });
+    
+    }
+    
+    function generateSpiral(selectedElement, atFrame)
+    {
+       var angle = 0;
+       var r = 0;
+       while (angle < 3600)
+       {
+          var path = Drawing.geometry.createCircle({
+             x : r * Math.cos(angle * Math.PI / 180.0),
+             y : r * Math.sin(angle * Math.PI / 180.0),
+             radius : 40 + 20 * Math.random()
+          });
+          createLayer(selectedElement, atFrame, path);
+          r += 5;
+          angle += 10 + Math.random() * 5;
+       }
+    }
+
+    scene.beginUndoRedoAccum("My nice spiral example");
+
+    var n = selection.selectedNode(0);
+    var f = frame.current();
+    // Wrap the generate spiral in an undo/redo accum to avoid having a very long undo list.
+    var settings = Tools.getToolSettings();
+    if (!settings.currentDrawing) {
+      settings = Tools.createDrawing();
+      if (!settings)
+      {
+        scene.cancelUndoRedoAccum();
+        return;
+      }
+    }
+    generateSpiral(n, f);
+    scene.endUndoRedoAccum();
+Parameters:
+Name	Type	Description
+arg	Object	A dictionary of options
+Properties
+Name	Type	Attributes	Default	Description
+drawing	Object			Drawing descriptor
+art	Object			The drawing's art index. Must be 0, 1, 2 or 3.
+label	String	<optional>
+"Create Layers"	The undo command label.
+layers	Array.<Object>	<optional>
+A list of layers definitions
+Properties
+Name	Type	Attributes	Default	Description
+referenceLayer	int	<optional>
+-1	Create the layer above or under this Layer index. Is not specified or -1, the layer willbe created on top or under the whole drawing.
+under	boolean	<optional>
+false	Create the layer under a specific layer (layerReference) or under all layers.
+shaders	Array.<Object>	<optional>
+[]	List of shader definition to be used when inserting strokes having colors on each of their sides.
+type	int	<optional>
+0	The type of layer to create. Harmony layers are created with layer type 0-9 depending on the tool used. Imported drawings are created with layer type 100-104. Applications dcan use bigger values for their own purposes.
+contours	Array.<Object>	<optional>
+[]	List of contours to create in the layer.
+Properties
+Name	Type	Attributes	Default	Description
+polygon	boolean	<optional>
+false	If true, the contour is a polygon. If false the contour is a Bezier path.
+stroke	boolean	<optional>
+false	If true, the contour is created like if it was created with the Stroke Tool.
+thickness	double	<optional>
+0	If thickness is > 0, the contour are to be created using a Pencil line.
+pencilColorId	String	<optional>
+3	The pencil color id used to trace the contour's pencil line.
+colorId	String	<optional>
+""	The color id used to fill the contour.
+path	Array.<BezierPoint>	<optional>
+The color id used to fill the contour.
+strokes	Array.<Object>	<optional>
+[]	List of strokes to insert in the layer.
+masks	Array.<BezierContour>	<optional>
+A list of masks that to be applied to the newly created layers.
+(static) deleteLayers(arg)
+This function is used to delete layers in a specified drawing
+Example
+This will delete the bottom layer of the first selected node drawing's line art at the current frame.
+
+ var config = {
+    label : "Delete bottom layer",
+    drawing  : { node : selection.selectedNode(), frame : frame.current() },
+    art : 2, // 0 = underlay, 1 = color art, 2 = line art, 3 = overlay 
+    layers : [ 0 ] // bottom layer
+ };
+ DrawingTools.deleteLayers(config);
+Parameters:
+Name	Type	Description
+arg	Object	A dictionary of options
+Properties
+Name	Type	Attributes	Default	Description
+drawing	Object			Drawing descriptor
+art	Object			The drawing's art index. Must be 0, 1, 2 or 3.
+label	String	<optional>
+"Delete Layers"	The undo command label.
+layers	Array.<int>	<optional>
+A list of layer indices.
+(static) deleteStrokes(arg)
+This function is used to delete strokes in a layer of a specified drawing. If a stroke is part of a painted contour, this will have the effect of unpainting the contour.
+Example
+var config = {
+    label : "Delete one stroke",
+    drawing  : { node : "Top/Drawing", frame : 1 },
+    art : 2, // 0 = underlay, 1 = color art, 2 = line art, 3 = overlay 
+    strokes :
+    [
+       {
+         layer: 0,
+         strokeIndex : 16
+       }
+    ]  
+ };
+ DrawingTools.deleteStrokes(config);
+Parameters:
+Name	Type	Description
+arg	Object	A dictionary of options
+Properties
+Name	Type	Attributes	Default	Description
+drawing	Object			Drawing descriptor
+art	Object			The drawing's art index. Must be 0, 1, 2 or 3.
+label	String	<optional>
+"Paint at"	The undo command label.
+strokes	Array.<Object>	<optional>
+[]	The list of strokes to delete.
+Properties
+Name	Type	Description
+layer	int	The layer index of the stroke.
+strokeIndex	int	The stroke index of the stroke.
+(static) eraseLayers(arg)
+This function is used to insert eraser contours in layers of a specified drawing. Please note, that this is not the same as deleteLayers. The deleteLayers function completely erases layers whereas eraseLayers is like using the Eraser Tool on a list of layers.
+Example
+var config = {
+    label : "Erase bottom layer",
+    drawing  : { node : "Top/Drawing", frame : 1 },
+    art : 2, // 0 = underlay, 1 = color art, 2 = line art, 3 = overlay 
+    layers : [ 0  ] ,
+    masks : [
+      {
+         polygon: true,
+         path: [ {x: 60, y: 60}, 
+                  {x: 70, y: 60}, 
+                  {x: 70, y: 70}, 
+                  {x: 60, y: 70},
+                  {x: 60, y: 60}],
+         holes : [
+            [ {x: 65, y: 65}, 
+            {x: 65, y: 68}, 
+            {x: 68, y: 68}, 
+            {x: 68, y: 65},
+            {x: 65, y: 65}]
+         ]    
+      }
+   ]
+ };
+ DrawingTools.eraseLayers(config);
+Parameters:
+Name	Type	Description
+arg	Object	A dictionary of options
+Properties
+Name	Type	Attributes	Default	Description
+drawing	Object			Drawing descriptor
+art	Object			The drawing's art index. Must be 0, 1, 2 or 3.
+label	String	<optional>
+"Erase Layers"	The undo command label.
+layers	Array.<int>	<optional>
+The list of layer indices to be modified. If empty or unspecified, all the layers of the drawing are erased.
+masks	Array.<BezierContour>	<optional>
+A list of masks that to be applied to the newly created layers.
+(static) modifyLayers(arg)
+This function is used to modify a layer in a specified drawing by replacing all of its strokes by other strokes. This method works exaclty as the createLayers method with the exception that a layer index must be specified by each object. One could replace the call to modifyLayers by a call to deleteLayers followed by a call to createLayers. The only problem with this approach is the index computation because the layer indices of the drawing change after the deletion. The use of modifyLayers prevent the user from having to compute the new indices of the layer for the createLayers.
+Example
+var config = {
+    label : "This will be the undo/redo label",
+    drawing  : { node : "Top/Drawing", frame : 1 },
+    art : 2, // 0 = underlay, 1 = color art, 2 = line art, 3 = overlay 
+    layers : [  ] // Definition of the layer strokes or contours
+ };
+ DrawingTools.modifyLayers(config);
+Parameters:
+Name	Type	Description
+arg	Object	A dictionary of options
+Properties
+Name	Type	Attributes	Default	Description
+drawing	Object			Drawing descriptor
+art	Object			The drawing's art index. Must be 0, 1, 2 or 3.
+label	String	<optional>
+"Modify Layers"	The undo command label.
+layers	Array.<Object>	<optional>
+A list of layers definitions
+Properties
+Name	Type	Attributes	Default	Description
+shaders	Array.<Object>	<optional>
+[]	List of shader definition to be used when inserting strokes having colors on each of their sides.
+layer	int			Modify this layer index.
+type	int	<optional>
+0	The type of layer to create. Harmony layers are created with layer type 0-9 depending on the tool used. Imported drawings are created with layer type 100-104. Applications dcan use bigger values for their own purposes.
+contours	Array.<Object>	<optional>
+[]	List of contours to create in the layer.
+Properties
+Name	Type	Attributes	Default	Description
+polygon	boolean	<optional>
+false	If true, the contour is a polygon. If false the contour is a Bezier path.
+stroke	boolean	<optional>
+false	If true, the contour is created like if it was created with the Stroke Tool.
+stroke	boolean	<optional>
+If true, the contour is created like if it was created with the Stroke Tool.
+thickness	double	<optional>
+0	If thickness is > 0, the contour is created using a Pencil line.
+pencilColorId	String	<optional>
+3	The pencil color id used to trace the contour's pencil line.
+colorId	String	<optional>
+""	The color id used to fill the contour.
+path	Array.<BezierPoint>	<optional>
+The actual bezier path of the contour.
+strokes	Array.<Object>	<optional>
+[]	List of strokes to insert in the layer.
+masks	Array.<BezierContour>	<optional>
+A list of masks that to be applied to the newly created layers.
+(static) modifyStrokes(arg)
+This function is used to modify strokes in a layer of a specified drawing
+Examples
+This example will insert 2 points in the first stroke of the first layer of the drawing.
+
+ var config = {
+    label : "Modify one stroke",
+    drawing  : { node : "Top/Drawing", frame : 1 },
+    art : 2, // 0 = underlay, 1 = color art, 2 = line art, 3 = overlay 
+    strokes : [ {
+       layer: 0, strokeIndex: 0, insertPoints : [ 0.5, 1.5 ] // Will insert 2 points in the bezier path
+    } ] 
+ };
+ DrawingTools.modifyStrokes(config);
+
+ 
+This is a more complex example that will take the selected strokes of a drawing and connect their end point if they are not connected to their closest point in the drawing. When making this, we have to make sure to insert a bezier anchor at the closest point. In the example, the main function is connectPointsFromSelection().
+
+ // Retrieve a layer by its index in the drawing layers
+function findLayer(layers, index)
+{
+   for(var i=0 ; i<layers.length ; ++i)
+     if (layers[i].index == index)
+       return layers[i];
+   return null;    
+}
+
+// Will look for joints in the selection that are not connected to any other strokes.
+function findUnconnectedStrokePoints(strokes, drawingData)
+{
+   var ret = [];
+   for(var i=0 ; i<strokes.selectedStrokes.length ; ++i)
+   {
+      var s = strokes.selectedStrokes[i];
+      if (!s.stroke) continue;
+      var layer = findLayer(drawingData.layers, s.layer);
+      if (!layer) continue;
+      var joints = layer.joints;
+      for(var j=0 ; j<joints.length ; ++j)
+      {
+         // To be even more robust, we should make sure there are no other joint in other layers 
+         // that are located at the same position...
+         if (joints[j].strokes.length == 1 && joints[j].strokes[0].strokeIndex == s.strokeIndex)
+         {
+            ret.push({ layer : s.layer, strokeIndex : s.strokeIndex, vertex : joints[j].strokes[0].vertex,
+              x : joints[j].x, y : joints[j].y});
+         }
+      }
+   }
+   return ret;
+}
+
+function findClosestPoints(strokes, drawingData, dmax)
+{
+   var consideredStrokes = [];
+
+   // Build unique ids for the selected strokes to prevent connecting to them
+   for(var si =0 ; si < strokes.length ; ++si)
+   {
+      var s = strokes[si];
+      s.uniqueId = s.strokeIndex + "-" + s.layer;
+      consideredStrokes.push(s.uniqueId);
+   }
+
+   for(var si =0 ; si < strokes.length ; ++si)
+   {
+      var s = strokes[si];
+      var closest = null;
+      for(var i=0 ; i < drawingData.layers.length ; ++i)
+      {
+         var layer = drawingData.layers[i];
+         for(var j=0 ; j<layer.strokes.length ; ++j)
+         {
+            // Do not consider selected strokes for connection
+            if (consideredStrokes.indexOf(j + "-" + layer.index) != -1) continue;
+            var arg = {
+               path : layer.strokes[j].path, 
+               points : [ s ]
+            }
+            if (closest)
+              arg.maxDistanceSq = closest.distanceSq;
+            var currentClosest = Drawing.geometry.getClosestPoint(arg);
+            if (currentClosest && currentClosest.length && currentClosest[0].closestPoint && (!closest || currentClosest[0].closestPoint.distanceSq < closest.distanceSq))
+            {
+               closest = currentClosest[0].closestPoint;
+               closest.layer = layer.index;
+               closest.strokeIndex = s.strokeIndex;
+               closest.distanceSq = currentClosest[0].closestPoint.distanceSq;
+            }
+         }
+      }
+      s.closestPoint = closest;
+   }
+   return strokes;
+}
+
+function getStrokePath(drawingData, layerIndex, strokeIndex)
+{
+   for(var i=0 ; i < drawingData.layers.length ; ++i)
+   {
+      var layer = drawingData.layers[i];
+      if (layer.index != layerIndex) continue;
+      return layer.strokes[strokeIndex].path;
+   }
+   return null;
+}
+
+function connectPointsFromSelection()
+{
+   var settings = Tools.getToolSettings();
+
+   var n = selection.selectedNode(0);
+   var descriptor = {
+      drawing : {node: n, frame: frame.current()},
+      art: settings.activeArt
+   };
+
+   var sel = Drawing.selection.get(descriptor);
+   
+   var request = {
+      drawing : descriptor.drawing,
+      art : descriptor.art,
+   }
+   var data = Drawing.query.getStrokes(request);
+
+   // This will iterate on the selected strokes and find the 
+   // strokes that have unconnected end points.
+   var toProcess = findUnconnectedStrokePoints(sel, data);
+
+   // This will find the closest point on the drawing for each
+   // point that was found in findUnconnectedStrokePoints
+   toProcess = findClosestPoints(toProcess, data);
+
+   var insertedPoints = {};
+   var modifiedStrokes = {};
+   
+   for(var i=0 ; i<toProcess.length ; ++i)
+   {
+      var current = toProcess[i];
+      if (!current.closestPoint) continue;
+      if (!modifiedStrokes[current.uniqueId])
+      {
+         modifiedStrokes[current.uniqueId] = { layer: current.layer, strokeIndex : current.strokeIndex, path: getStrokePath(data, current.layer, current.strokeIndex) };
+      }
+      // This should not happen, but it does not hurt to make sure...
+      if (!modifiedStrokes[current.uniqueId].path ) continue;
+
+      modifiedStrokes[current.uniqueId].path[current.vertex] = { x : current.closestPoint.x, y: current.closestPoint.y, onCurve: true};
+
+      var uniqueId = current.closestPoint.strokeIndex + "-" + current.closestPoint.layer;
+      if (!insertedPoints[uniqueId])
+      {
+         insertedPoints[uniqueId] = { layer : current.closestPoint.layer, strokeIndex : current.closestPoint.strokeIndex, insertPoints : []};
+      }
+      insertedPoints[uniqueId].insertPoints.push(current.closestPoint.t);
+   }
+
+   var modifyStrokeCommand = {
+      drawing : {node: n, frame: frame.current()},
+      art: settings.activeArt,
+      strokes : []
+   }
+
+   for(var i in insertedPoints)
+   {
+      if (!insertedPoints.hasOwnProperty(i)) continue;
+      modifyStrokeCommand.strokes.push(insertedPoints[i]);
+   }
+   for(var i in modifiedStrokes)
+   {
+      if (!modifiedStrokes.hasOwnProperty(i)) continue;
+      modifyStrokeCommand.strokes.push(modifiedStrokes[i]);
+   }
+
+   DrawingTools.modifyStrokes(modifyStrokeCommand);
+}
+
+connectPointsFromSelection();
+Parameters:
+Name	Type	Description
+arg	Object	A dictionary of options
+Properties
+Name	Type	Attributes	Default	Description
+drawing	Object			Drawing descriptor
+art	Object			The drawing's art index. Must be 0, 1, 2 or 3.
+label	String	<optional>
+"Paint at"	The undo command label.
+strokes	Array.<Object>	<optional>
+[]	The list of strokes to modify.
+Properties
+Name	Type	Attributes	Description
+layer	int		The layer index of the stroke.
+strokeIndex	int		The index of the stroke in the layer.
+path	Array.<BezierPoint>	<optional>
+The new bezier path of the stroke.
+closed	boolean	<optional>
+If true, the path is closed.
+polygon	boolean	<optional>
+If true, the path is a polygon.
+insertPoints	Array.<double>	<optional>
+If no path is specified and an array of double is passed in this member, the stroke will have points inserted at each parameter in this array.
+(static) paintAt(arg)
+This function is used to paint at a specific point in a drawing like using the paint tool.
+Example
+This example will paint at coordinates (0,0) in the line art opf the first selected Element at the current frame using the vectorization color.
+
+ var n = selection.selectedNode(0);
+ var f = frame.current();
+ DrawingTools.paintAt(
+    {
+       label : "Paint at (0,0)", 
+       drawing : {node: n, frame: f},
+           art: 2,
+       points :
+          [
+             {
+                x: 0, y: 0, colorId : "0000000000000003"
+             }
+          ] 
+    }
+
+ );
+Parameters:
+Name	Type	Description
+arg	Object	A dictionary of options
+Properties
+Name	Type	Attributes	Default	Description
+drawing	Object			Drawing descriptor
+art	Object			The drawing's art index. Must be 0, 1, 2 or 3.
+label	String	<optional>
+"Paint at"	The undo command label.
+points	Array.<Object>	<optional>
+[]	The list of points and colors to using when painting.
+Properties
+Name	Type	Description
+x	double	The x coordinate of the point.
+y	double	The x coordinate of the point.
+colorId	String	The color ID to use.

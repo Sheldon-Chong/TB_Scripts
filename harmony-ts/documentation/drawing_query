@@ -1,0 +1,389 @@
+Drawing/query
+This module mainly provides functions to query drawing content.
+Methods
+(static) evaluateStrokes(arg)
+Evaluates a list of strokes of a drawing at specified params. This method can be used to sample a drawing's strokes at regular parameters.
+Example
+var arg = {
+      drawing : {node: "Top/Drawing", frame: 1},
+      art: 2,
+      strokes : [{
+         layer: 0, strokeIndex: 0, params : [ 0, 0.5, 0.75, 1]
+      }]
+   } 
+ var evaluations = Drawing.query.evaluateStrokes(arg);
+ // Here is an example result on a drawing consisting of a line 
+ // segment going from roughly the origin to the top right cornerof the 12 fields grid.
+ evaluations = [
+   {"strokeIndex":0,"layer":0,
+   "points":[
+      {"x":-4.234375,"y":12.703125,"t":0}, // Close to origin
+      {"x":1232.3828125,"y":927.4609375,"t":0.5},
+      {"x":1850.69140625,"y":1384.83984375,"t":0.75},
+      {"x":2469,"y":1842.21875,"t":1}  // Close to 2500, 1875
+    ]}];
+Parameters:
+Name	Type	Description
+arg	EvaluateStrokesArgument	A list or options.
+Properties
+Name	Type	Description
+drawing	Object	The drawing descriptor.
+strokes	Array.<StrokeDescriptorAndParams>	The list of stroke to evaluate with the param at which to evaluate them.
+Properties
+Name	Type	Description
+layer	int	
+strokeIndex	int	
+params	Array.<double>	
+(static) getBox(args)
+Returns the bounding box of a drawing
+Example
+var settings = Tools.getToolSettings();
+  if (!settings.currentDrawing) return;
+  var config = {
+     drawing  : settings.currentDrawing,
+     art : settings.activeArt
+  };
+  var box = Drawing.query.getBox(config);
+  // Example return value:
+  box = {
+    "x0":-1062.765625, // min point x
+    "x1":1984.84375,   // max point x
+    "y0":-920.625,     // min point y
+    "y1":1570.34375    // max point y
+   };
+  // In the case of an empty drawing
+  box = {"empty":true};  
+Parameters:
+Name	Type	Description
+args	DrawingQueryBasicArguments	Dictionary of arguments
+(static) getClosestPoint(args)
+Returns the closest point in a drawing for a list of points
+Example
+var settings = Tools.getToolSettings();
+if (!settings.currentDrawing) return;
+var config = {
+   drawing  : settings.currentDrawing,
+   art : settings.activeArt,
+   points: [{ x: 0, y: 0, maxDistanceSq: 10000 }, { x: 2500, y: 1875 }, { x : 10, y: 0}]
+};
+var closest = Drawing.query.getClosestPoint(config);
+ // Example of a run with a drawing containing a pencil line that goes from roughly the origin and going
+ // to roughly the top right corner of the 12 field grid.
+ closest = 
+ [  
+   {  
+      "x":0,  "y":0,
+      "maxDistanceSq":10000,
+      "closestPoint":{  
+         "distanceSq":179.29931640625,
+         "distance":13.39026946727548,
+         "layer":0,
+         "t":0,  // We can see that the closest point is at the extremity of the segment
+         "strokeIndex":0,
+         "x":-4.234375,
+         "y":12.703125
+      }
+   },
+   {  
+      "x":2500,
+      "y":1875,
+      "maxDistanceSq":22047151657962.8,
+      "closestPoint":{  
+         "distanceSq":2035.6103515625,
+         "distance":45.117738768277164,
+         "layer":0,
+         "t":1,  // We can see that the closest point is at the extremity of the segment
+         "strokeIndex":0,
+         "x":2469,
+         "y":1842.21875
+      }
+   }
+];
+Parameters:
+Name	Type	Description
+args	DrawingQueryBasicArguments	Dictionary of arguments
+(static) getData(args)
+This function returns all the data of the drawing using contours and pencil strokes. This method differs from the Drawing.query.getStrokes() method. For example, it returns the color definitions and is thus more suitable to make export functions rather than vector drawing manipulations.
+Example
+var settings = Tools.getToolSettings();
+    if (!settings.currentDrawing) return;
+    var config = {
+       drawing  : settings.currentDrawing
+    };
+var data = Drawing.query.getData(config); 
+// The data object can now be traversed to get all the layers, contour and strokes of the drawing.
+// here is an example of the data returned on a black ellipse painted in red
+// In the output below, the list of points for the bezier paths has been skipped
+data = {  
+   "box":{ // the box of the drawing
+      "x0":-1062.765625, 
+      "x1":1025.578125,
+      "y0":-920.625,
+      "y1":789.0625
+   },
+   "arts":[  // The list of non empty arts
+      {  
+         "layers":[  
+            {  
+               "contours":[  
+                  {  
+                     "box":{  
+                        "x0":-1062.765625,
+                        "x1":1025.578125,
+                        "y0":-920.625,
+                        "y1":789.0625
+                     },
+                     "matrix":{  
+                        "ox":-1062.765625,
+                        "oy":-65.78125,
+                        "xx":2088.34375,
+                        "xy":0,
+                        "yx":0,
+                        "yy":2088.34375
+                     },
+                     "path":[   // skipped data
+                      ],
+                     "colorId":"08e9426feb78d771"
+                  }
+               ],
+               "strokes":[  
+                  {  
+                     "colorId":"08e9426feb78d76d",
+                     "thickness":{  
+                        "minThickness":5,
+                        "maxThickness":5,
+                        "thicknessPath":0
+                     },
+                     "path":[ // skipped data
+                      ],
+                     "numBeziers":8,
+                     "closed":true
+                  }
+               ],
+               "thicknessPaths":[  
+                  {  
+                     "minThickness":5,
+                     "maxThickness":5,
+                     "keys":[  
+                        {  
+                           "t":0,
+                           "leftThickness":5,
+                           "rightThickness":5
+                        },
+                        {  
+                           "t":1,
+                           "leftThickness":5,
+                           "rightThickness":5
+                        }
+                     ]
+                  }
+               ]
+            }
+         ],
+         "art":2,
+         "artName":"lineArt"
+      }
+   ],
+   "colors":{   // The color definition of each color id
+      "08e9426feb78d76d":{  
+         "name":"Black",
+         "r":0,
+         "g":0,
+         "b":0,
+         "a":255
+      },
+      "08e9426feb78d771":{  
+         "name":"Red",
+         "r":255,
+         "g":0,
+         "b":0,
+         "a":255
+      }
+   }
+};
+Parameters:
+Name	Type	Description
+args	Object	Dictionary of arguments.
+Properties
+Name	Type	Description
+drawing	Object	Drawing descriptor.
+(static) getIntersections(args)
+Example
+This example computes the intersection between a line starting at the origin and going to the top right corner of the 12 field grid with the current drawing.
+
+ var settings = Tools.getToolSettings();
+ if (!settings.currentDrawing) return;
+ var config = {
+    drawing  : settings.currentDrawing,
+    art : settings.activeArt,
+    paths : [
+       { polygon: true, path : [ {x: 0, y: 0}, {x : 2500, y: 1875}]}
+    ] 
+ };
+ var intersection = Drawing.query.getIntersections(config);
+ 
+// Here is an example of the return value of this method. 
+// It returns an array of intersecting of intersections for each intersecting stroke.
+intersections =
+[  
+   [  
+      {  
+         "layer":1,
+         "strokeIndex":0,
+         "intersections":[  
+            {  
+               "x0":1143.9253778337531,   // x0, y0, x1 and y1 are the raw evaluation 
+               "y0":857.9440333753148,    // of the input path and the strokes at the intersection point.
+               "t0":0.45757015113350125,  // The parameter t on the input path.
+               "x1":1143.9253778337531,
+               "y1":857.9440333753149,
+               "t1":4.9557816435768265,  // The parameter t on the intersected drawing stroke
+               "x":1143.921875,          // The rounded intersection x
+               "y":857.9375              // The rounded intersection y
+            },
+            {  
+               "x0":1471.1965339233038,
+               "y0":1103.3974004424779,
+               "t0":0.5884786135693215,
+               "x1":1471.1965339233038,
+               "y1":1103.3974004424779,
+               "t1":11.477369100294986,
+               "x":1471.203125,
+               "y":1103.390625
+            }
+         ]
+      },
+      {  
+         "layer":0,
+         "strokeIndex":0,
+         "intersections":[  
+            {  
+               "x0":719.0348772321428,
+               "y0":539.2761579241071,
+               "t0":0.28761395089285713,
+               "x1":719.0348772321429,
+               "y1":539.2761579241071,
+               "t1":4.998731340680804,
+               "x":719.03125,
+               "y":539.28125
+            }
+         ]
+      }
+   ]
+];
+Parameters:
+Name	Type	Description
+args	DrawingQueryBasicArguments	Dictionary of arguments
+(static) getLayerStrokes(args)
+This method is similar to Drawing.query.getStrokes. There is an additional layers parameter to specify which layer to return the strokes for. This could be used, for example in a function that would only modify the top layer of a drawing.
+Example
+var settings = Tools.getToolSettings();
+    if (!settings.currentDrawing) return;
+    var config = {
+       drawing  : settings.currentDrawing,
+       art : settings.activeArt,
+       layers : [ 0 ]
+    };
+  var strokes = Drawing.query.getLayerStrokes(config);
+  // strokes will contain the same information as getStrokes but only for the wanted layers
+Parameters:
+Name	Type	Description
+args	Object	Dictionary of arguments.
+Properties
+Name	Type	Description
+drawing	Object	Drawing descriptor.
+art	Object	Art index.
+layers	Array	List of layer indices.
+(static) getNumberOfLayers(args)
+Returns the number of layers in a drawing
+Example
+var settings = Tools.getToolSettings();
+  if (!settings.currentDrawing) return;
+  var config = {
+     drawing  : settings.currentDrawing,
+     art : settings.activeArt
+  };
+  var numberOfLayers = Drawing.query.getNumberOfLayers(config);
+  // Create a new drawing, make 2 brush strokes and run this script
+  // Will make:
+  numberOfLayers = 2;
+Parameters:
+Name	Type	Description
+args	Object	Dictionary of arguments.
+Properties
+Name	Type	Description
+drawing	Object	Drawing descriptor.
+art	Object	Art index.
+(static) getStrokes(args) → {Object}
+This function returns all the strokes of the drawing.
+Example
+Example of a call to Drawing.getStrokes on the current drawing's active art. Refer to the Vector model description tutorial
+
+  var settings = Tools.getToolSettings();
+  if (!settings.currentDrawing) return;
+  var config = {
+     drawing  : settings.currentDrawing,
+     art : settings.activeArt
+  };
+  var strokes = Drawing.query.getStrokes(config);
+  // Here is an example of the returned value for an unbordered painted rectangle.
+  // Refer to the tutorial on the vector model to know how to interpret this data
+  strokes =
+  {  
+   "layers":[  
+      {  
+         "index":0,
+         "shaders":[  
+            {  
+               "colorId":"08e9426feb78d771"
+            }
+         ],
+         "joints":[  
+            {  
+               "x":-1205.5625, "y":1004.15625,
+               "strokes":[  
+                  {  
+                     "strokeIndex":0, "vertex":0
+                  },
+                  {  
+                     "strokeIndex":0,  "vertex":4
+                  }
+               ]
+            }
+         ],
+         "strokes":[  
+            {  
+               "fromJoint":0,
+               "toJoint":0,
+               "path":[  
+               {"x":-1205.5625,"y":1004.15625,"onCurve":true},
+               {"x":-1205.5625,"y":-523.625,"onCurve":true},
+               {"x":721.515625,"y":-523.625,"onCurve":true},
+               {"x":721.515625,"y":1004.15625,"onCurve":true},
+               {"x":-1205.5625,"y":1004.15625,"onCurve":true}
+               ],
+               "numBeziers":4,
+               "closed":true,
+               "shaderRight":0
+            }
+         ]
+      }
+   ],
+   "drawing":{  
+      "drawingId":"11",
+      "elementId":1,
+      "projectId":"08ec74b9f20ec3c2",
+      "isValid":true
+   },
+   "art":2
+};
+Parameters:
+Name	Type	Description
+args	DrawingQueryBasicArguments	Dictionary of arguments
+Properties
+Name	Type	Description
+drawing	Object	Drawing descriptor
+art	int	The art number
+Returns:
+Type Object
+// 

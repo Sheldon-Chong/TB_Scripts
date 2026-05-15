@@ -1,0 +1,2370 @@
+
+node Class Reference
+Script Editor
+
+The node JavaScript global object. More...
+Public Slots
+Node Data
+String 	root ()
+ 	Returns the name of the Top level in the Node View, which is "Top". More...
+ 
+bool 	isGroup (String &node)
+ 	Returns a true or false value indicating if the node is a group. More...
+ 
+String 	getName (String &node)
+ 	Returns the name of a node. More...
+ 
+String 	type (String node)
+ 	Returns the node type. These are all of the built-in node types available from the Harmony node like: READ, COMPOSITE, PEG, QUADMAP, SHADOW, etc. More...
+ 
+int 	numberOfSubNodes (String &parent)
+ 	Returns an integer that indicates the number of nodes contained in a group. More...
+ 
+QScriptValue 	subNodes (String &parentGroup)
+ 	Returns an array of sub nodes. More...
+ 
+bool 	addCompositeToGroup (String node)
+ 	Return the value of the "Add Composite To Group" attribute of the peg-node. This method is obsolete. More...
+ 
+String 	subNode (String &parent, int iSubNode)
+ 	Returns the path of a node in a group. Nodes are counted starting with zero. More...
+ 
+String 	subNodeByName (String &parent, String name)
+ 	Returns the full path of a child node belonging to a parent group. More...
+ 
+String 	parentNode (String &node)
+ 	Returns the path of the parent level of a node contained in a group. More...
+ 
+String 	noNode ()
+ 	Returns the node path to an invalid node. More...
+ 
+bool 	equals (String node1, String node2)
+ 	Returns true or false to indicate if a node path is equal to another. Used to compare node paths. More...
+ 
+bool 	isControlShown (String node)
+ 	Returns true or false to indicate if a node controls are currently shown. More...
+ 
+bool 	showControls (String node, bool show)
+ 	Shows or hide the controls associated to a node. Similar to hitting "Show Controls" in the Camera View. More...
+ 
+String 	getTextAttr (String node, double atFrame, String attrName)
+ 	Returns the value(s) of the node selected attribute(s). More...
+ 
+Attribute * 	getAttr (String node, double atFrame, String attrName)
+ 	Returns the Attribute of the given node. The attribute value is for the given frame. More...
+ 
+QList< Attribute * > 	getAttrList (String node, double atFrame, String attrName=String())
+ 	Returns a list of Attribute objects of the given node. More...
+ 
+StringList 	getAllAttrNames (String node)
+ 	Returns a list of the names of all of the Attribute objects of the given node. More...
+ 
+StringList 	getAllAttrKeywords (String node)
+ 	Returns a list of the keywords of all of the Attribute objects of the given node. More...
+ 
+String 	linkedColumn (String node, String attrName)
+ 	Returns the name of the column that an attribute is linked to. If the attribute is not linked to a column, the method returns the null string. More...
+ 
+virtual int 	coordX (String node)
+ 	Returns an integer indicating the X position of a node in the Node View. More...
+ 
+virtual int 	coordY (String node)
+ 	Returns an integer indicating the Y position of a node in the Node View. More...
+ 
+virtual int 	coordZ (String node)
+ 	Returns an integer indicating the Z position of a node in the Node View. More...
+ 
+virtual int 	width (String node)
+ 	Returns the width of a given node. More...
+ 
+virtual int 	height (String node)
+ 	Returns the height of a given node. More...
+ 
+virtual bool 	setCoord (String node, int x, int y)
+ 	Set the position of a node in the Node View. More...
+ 
+virtual bool 	setCoord (String node, int x, int y, int z)
+ 	Set the position of a node in the Node View. More...
+ 
+int 	numberOfInputPorts (String node)
+ 	The number of input ports on the node. More...
+ 
+bool 	isLinked (String node, int iPort)
+ 	Returns true or false to indicate if a port is connected to another node. More...
+ 
+String 	srcNode (String node, int iPort)
+ 	Returns the path for the node that the port is linked to. More...
+ 
+String 	flatSrcNode (String node, int iPort)
+ 	If the Source node is a Group, this method returns the path of the node inside the Group node that is the source. If the source is not inside a group, the flatSrcNode() method behaves like the srcNode() method. More...
+ 
+QScriptValue 	srcNodeInfo (String &node, int iPort)
+ 	Returns the source node path, the output port number and the link ID for this source node that this destination node is connected to. More...
+ 
+bool 	srcPortIsMattePort (String node, int iPort)
+ 	Returns whether or not the source port on the given node is a Matte Port. More...
+ 
+int 	numberOfOutputPorts (String node)
+ 	The number of output ports on a node. More...
+ 
+int 	numberOfOutputLinks (String node, int iPort)
+ 	The number of nodes actually linked from the output ports. More...
+ 
+String 	dstNode (String sourceNode, int iPort, int iLink)
+ 	Returns the path of the destination node linked to by the output port on the source node. More...
+ 
+QScriptValue 	dstNodeInfo (String &sourceNode, int iPort, int iLink)
+ 	Returns the path and addition information of the destination node linked to the source node. More...
+ 
+bool 	groupAtNetworkBuilding (String node)
+ 	Returns true if the peg's groupAtNetworkBuilding() attribute is true. More...
+ 
+Node Editing
+String 	add (String parentGroup, String name, String type, int x, int y, int z)
+ 	Add a node to the Node View. More...
+ 
+String 	getGroupInputModule (String parentGroup, String name, int x, int y, int z)
+ 	Returns existing or add a group multi port in node. More...
+ 
+String 	getGroupOutputModule (String parentGroup, String name, int x, int y, int z)
+ 	Returns existing or add a group multi port out node. More...
+ 
+bool 	deleteNode (String nodePath, bool deleteTimedValues=false, bool deleteElements=false)
+ 	Delete a single node. Optionally, delete all columns and element associated to that node. The column and element would only be removed when no other nodes refer to them. More...
+ 
+String 	createGroup (String nodes, String groupName)
+ 	Create a group from the selection of nodes. The list of nodes is a string where the nodes are separated by commas. The actual name of each node in the list of nodes must include the full path of that node. More...
+ 
+String 	moveToGroup (String node, String groupName)
+ 	Move the specified node within the specified group. More...
+ 
+bool 	explodeGroup (String groupName)
+ 	Explode a group into its parent group. This method is identical to the "Explode Selected Group" from the Node View. More...
+ 
+bool 	rename (String node, String newName, bool renameElement=false)
+ 	Changes the name of a node. More...
+ 
+bool 	createDynamicAttr (String node, String type, String attrName, String displayName, bool linkable)
+ 	Create a new attribute for the given node. More...
+ 
+bool 	removeDynamicAttr (String node, String attrName)
+ 	Remove a dynamic attribute for the given node. More...
+ 
+bool 	setTextAttr (String node, String attrName, int atFrame, String attrValue)
+ 	Change the value of an attribute in a node. More...
+ 
+bool 	linkAttr (String node, String attrName, String columnName)
+ 	Link an attribute to a function column in the Xsheet View. More...
+ 
+bool 	unlinkAttr (String node, String attrName)
+ 	Unlink an attribute from a function column. More...
+ 
+bool 	link (String srcNode, int srcPort, String dstNode, int dstPort)
+ 	Link a port on a node to a port on another node. More...
+ 
+bool 	link (String srcNode, int srcPort, String dstNode, int dstPort, bool mayAddOutputPort, bool mayAddInputPort)
+ 	Link a port of a node to a port of another node. This version of the method allows connecting to a group node, or setup the proper connection order. More...
+ 
+bool 	unlink (String dstNode, int inPort)
+ 	Unlink a port on one node from the port on another node. More...
+ 
+bool 	setEnable (String node, bool flag)
+ 	Setters and getters for the enable/disable property of a node. More...
+ 
+bool 	getEnable (String node)
+ 	Returns whether a node is enabled or not. More...
+ 
+bool 	setCached (String node, bool cached)
+ 	Set the cached flag for a node. More...
+ 
+bool 	getCached (String node)
+ 	Set the cached flag for a node. More...
+ 
+bool 	isSupportingCache (String node)
+ 	Returns true if the node can be cached. More...
+ 
+StringList 	getAllCachedNodes (String root)
+ 	Returns all nodes that are cached. More...
+ 
+StringList 	getAllCachedNodes ()
+ 	Returns all nodes that are cached. More...
+ 
+double 	getCacheFillLevel ()
+ 	Returns how much of the cache capacity is filled up. [0,1]. More...
+ 
+void 	clearCacheDisabledState ()
+ 
+void 	clearCacheDisabledState (StringList vNodes)
+ 
+void 	clearCacheDisabledState (String vNode)
+ 
+bool 	setLocked (String node, bool lock)
+ 	Setters and getters for the lock/unlock property of a node. More...
+ 
+bool 	getLocked (String node)
+ 	Returns the lock flag. More...
+ 
+bool 	setTimelineTag (String node, bool tag)
+ 	Set the timeline tag flag of the node. More...
+ 
+bool 	getTimelineTag (String node)
+ 	Returns the timeline tag flag. More...
+ 
+StringList 	getTimelineTagList (String node=QNTR("Top"), StringList list=StringList())
+ 	Returns a list of timeline tag flags. More...
+ 
+bool 	setColor (String node, ColorRGBA *color)
+ 	Set the node colour. More...
+ 
+bool 	resetColor (String node)
+ 	Reset the node colour. More...
+ 
+ColorRGBA * 	getColor (String node)
+ 	Returns the node colour. More...
+ 
+bool 	setAsGlobalDisplay (String node)
+ 	Change the global display used in the application. The node must be the full path of a display node. More...
+ 
+bool 	setGlobalToDisplayAll ()
+ 	Change the global display used by the application to "Display All" pseudo-display. More...
+ 
+bool 	setAsDefaultCamera (String node)
+ 	Setters and getters for the default camera. More...
+ 
+String 	getDefaultCamera ()
+ 	Returns the name of the default camera. More...
+ 
+StringList 	getCameras ()
+ 	Returns a list of all cameras within the scene. More...
+ 
+int 	getMaxVersionNumber (String node)
+ 	Returns the number of versions of the node available. More...
+ 
+int 	getVersion (String node)
+ 	Returns the current version of the node. More...
+ 
+void 	setVersion (String node, int version)
+ 	Set the version of the node to use. More...
+ 
+StringList 	getNodes (StringList &types)
+ 	Returns a collection of node paths for nodes of specified types. More...
+ 
+QObject * 	getMatrix (String node, int frame)
+ 	Returns the model matrix of a node. More...
+ 
+QObject * 	getPivot (String node, int frame)
+ 	Returns the pivot of the node. More...
+ 
+QObject * 	getColorOverride (String &node)
+ 	Returns the ColorOverride object for the color override node. More...
+ 
+int 	getElementId (String nodeName)
+ 	Returns the Element Id of the node. Has to be an element node, identified with type :: READ. More...
+ 
+void 	explodeElementSymbolsInGroups (String element, bool disableElement, bool clearExposure, String &prefix=String())
+ 	Create a group for each exposure of the element where there is a symbol and will put the content of the symbol in that group. More...
+ 
+bool 	setShowTimelineThumbnails (String node, bool bShow)
+ 	Set the show/hide timeline thumbnails on drawing layers. More...
+ 
+bool 	getShowTimelineThumbnails (String node)
+ 	Returns the show/hide timeline thumbnail flags on drawing layers. More...
+ 
+bool 	setOutlineMode (String node, bool bOutlineMode)
+ 	Sets the outline mode of the given node. More...
+ 
+Detailed Description
+
+The node JavaScript global object.
+
+Nodes are synonymous with Filter, IO, Move and Group in the Node View. With node methods, retrieve values from nodes, effects and composite. Add, link or set their attributes. Nodes can have identical names, so, their full path is needed to identify a them. The full path always starts with the root group name which is Top. Then, the other parent group names follow it separated by a "/". e.g. "Top/MyFirstGroup/MySecondGroup/MyNodeName". The nomenclature is a bit confusing, but node name methods use the path as the node name most of the time. The parentNode method from this class adds the Composite node in the parent group of the selected nodes. The link method, in a loop, connects all selected nodes to the new Composite node. The setCoord() method positions a new node in the Node View. The syntax for a node paths is: "Top/Group_Name/Node_Name".
+function compose() 
+{
+ var n = selection.numberOfNodesSelected();
+ var i, posx, posy; 
+ if (n > 0) 
+ { 
+   var comp = node.add( node.parentNode(selection.selectedNode(0)), "comp", "COMPOSITE", 0, 0, 0); 
+   posx = 0; 
+   posy = -10000; 
+   for (i = 0; i < n; ++i) 
+   { 
+     var selNode = selection.selectedNode(i); 
+     node.link(selNode, 0, comp, i); 
+     posx += node.coordX(selNode); 
+     if (node.coordY(selNode) > posy) 
+       posy = node.coordY(selNode); 
+   } 
+   posx /= n; 
+   posy += 50; 
+   node.setCoord(comp, posx, posy);
+ }
+}
+Member Function Documentation
+◆ add
+String node::add 	( 	String  	parentGroup,
+		String  	name,
+		String  	type,
+		int  	x,
+		int  	y,
+		int  	z 
+	) 		
+	slot
+
+Add a node to the Node View.
+
+For an example usage of add, see the above Detailed Description.
+
+Parameters
+    parentGroup	: The path of the parent node into which you want to add this node.
+    name	: The name of the node you will add.
+    type	: The type of node you will add. The node types are like: READ, COMPOSITE, PEG, QUADMAP, SHADOW, etc.
+    x	: The X position of the node in the Node View.
+    y	: The Y position of the node in the Node View.
+    z	: The Z position of the node in the Node View. This property is important when two nodes overlap.
+
+Returns
+    Returns the path to the newly added node. 
+
+◆ addCompositeToGroup
+bool node::addCompositeToGroup 	( 	String  	node	) 	
+	slot
+
+Return the value of the "Add Composite To Group" attribute of the peg-node. This method is obsolete.
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the value of the "Add Composite To Group" attribute of the peg-node. 
+
+◆ clearCacheDisabledState [1/3]
+void node::clearCacheDisabledState 	( 		) 	
+	slot
+
+Clears the disabled cache state for all cached nodes.
+◆ clearCacheDisabledState [2/3]
+void node::clearCacheDisabledState 	( 	StringList  	vNodes	) 	
+	slot
+
+Clears the disabled cache state for the vNodes passed in param.
+◆ clearCacheDisabledState [3/3]
+void node::clearCacheDisabledState 	( 	String  	vNode	) 	
+	slot
+
+Clears the disabled cache state for the vNode passed in param.
+◆ coordX
+virtual int node::coordX 	( 	String  	node	) 	
+	virtualslot
+
+Returns an integer indicating the X position of a node in the Node View.
+
+The example below takes the path of a group node, uses coordX to retrieve it's X coordinate in the Node View, then moves it to the right by 50 units.
+function shiftGroup( exNode )
+{
+  if (node.isGroup(exNode))
+  {
+    var x = node.coordX(exNode);
+    var y = node.coordY(exNode);
+    x += 50;
+    node.setCoord(exNode,x,y);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns an integer indicating the X position of a node in the Node View. 
+
+◆ coordY
+virtual int node::coordY 	( 	String  	node	) 	
+	virtualslot
+
+Returns an integer indicating the Y position of a node in the Node View.
+
+The example below takes the path of a group node, uses coordY to retrieve it's Y coordinate in the Node View, then moves it to the down by 50 units.
+function shiftGroup(exNode)
+{
+  if (node.isGroup(exNode))
+  {
+     var x = node.coordX(exNode);
+     var y = node.coordY(exNode);
+     y += 50;
+     node.setCoord(exNode,x,y);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns an integer indicating the Y position of a node in the Node view. 
+
+◆ coordZ
+virtual int node::coordZ 	( 	String  	node	) 	
+	virtualslot
+
+Returns an integer indicating the Z position of a node in the Node View.
+
+The example below takes the path of a group node and then shifts its position 50 units to the right, and down. It also moves its position in the z-axis to the back.
+function shiftGroup(exNode)
+{
+  if (node.isGroup(exNode))
+  {
+     var x = node.coordX(exNode);
+     var y = node.coordY(exNode);
+     var z = node.coordZ(exNode);
+     x += 50;
+     y += 50;
+     if (z >= 0)
+        z = -1;
+     node.setCoord(exNode,x,y,z);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns an integer indicating the Z position of a node in the Node View. 
+
+◆ createDynamicAttr
+bool node::createDynamicAttr 	( 	String  	node,
+		String  	type,
+		String  	attrName,
+		String  	displayName,
+		bool  	linkable 
+	) 		
+	slot
+
+Create a new attribute for the given node.
+
+The example below enables the boolean value of a given attribute. If the attribute does not exist, it creates it and sets it to true.
+function toggleBool ( nodeName, attrName )
+{
+  var attr = node.getAttr(nodeName, 1.0, attrName);
+  if (attr.keyword() == "")
+  {
+    var visualAttrName = attrName;
+    var idx = attrName.lastIndexOf(".");
+    if (idx >= 0)
+    {
+      visualAttrName = attrName.substr(idx);
+    }
+    if (node.createDynamicAttr(nodeName, "BOOL", attrName, visualAttrName, false))
+    {
+      attr = node.getAttr(nodeName, 1.0, attrName);
+    }
+    if (attr.keyword() != "")
+    {
+      node.setTextAttr(nodeName, attrName, 1.0, "true");
+    }
+  }
+}
+
+Parameters
+    node	: The name of the node.
+    type	: Type of attribute to create.
+    attrName	: The name of the attribute.
+    displayName	: The name of the attribute as it will appear in the UI.
+    linkable	: Linkable status.
+
+Returns
+    Returns true if successful. 
+
+◆ createGroup
+String node::createGroup 	( 	String  	nodes,
+		String  	groupName 
+	) 		
+	slot
+
+Create a group from the selection of nodes. The list of nodes is a string where the nodes are separated by commas. The actual name of each node in the list of nodes must include the full path of that node.
+
+The parent of the group is implicitly specified. It will be the same as the parent of the first node in the list. The following example creates a group from the currently selected nodes, and verifies that all of the selected nodes were added.
+function groupExample ()
+{
+  var selected = selection.selectedNodes();
+  var nodesToGroup = selected.join();
+  var origParent = node.parentNode(selection.selectedNode(0));
+  var group = node.createGroup(nodesToGroup, "group");
+  for(var i=0; i<selected.length; i++)
+  {
+    if(node.parentNode(selection.selectedNode(i) == origParent)
+      MessageLog.trace("Problem adding \"" + selection.selectedNode(i) + "\" to the new group.");
+  }
+}
+
+Parameters
+    nodes	: This is a comma delimited list of names of nodes. e.g. (node0,node1,node2)
+    groupName	: The name of the group to create.
+
+Returns
+    Returns the full path of the created group, or an empty string if the creation of the node failed. 
+
+◆ deleteNode
+bool node::deleteNode 	( 	String  	nodePath,
+		bool  	deleteTimedValues = false,
+		bool  	deleteElements = false 
+	) 		
+	slot
+
+Delete a single node. Optionally, delete all columns and element associated to that node. The column and element would only be removed when no other nodes refer to them.
+
+The following example deletes the currently selected node.
+node.deleteNode(selection.selectedNode(0),false,false);
+
+Parameters
+    nodePath	: The path of the node.
+    deleteTimedValues	: A boolean that indicates if the columns referenced by that node shall be removed if they are no longer in use.
+    deleteElements	: A boolean that indicates if the element should also be removed, if they are no longer in use.
+
+Returns
+    Returns true if successful. 
+
+◆ dstNode
+String node::dstNode 	( 	String  	sourceNode,
+		int  	iPort,
+		int  	iLink 
+	) 		
+	slot
+
+Returns the path of the destination node linked to by the output port on the source node.
+
+The following example returns a list of all of the destination nodes of the node passed in the parameter.
+function destinationNodes( exampleNode )
+{
+  var numOutput = node.numberOfOutputPorts( exampleNode );
+  var listOfDestinationNodes = [];
+  for(var i = 0; i<numOutput; i++)
+    listOfDestinationNodes.push(node.dstNode(exampleNode, i, 0));
+  return listOfDestinationNodes;
+}
+// For another example use of dstNode, see link().
+
+Parameters
+    sourceNode	: The path of the node.
+    iPort	: The port number on which you want to find the connected node. This value is between 0 and the results of the numberOfOutputPorts() method, minus one.
+    iLink	: The link number whose destination node you want to find. This value is between 0 and the results of the numberOfOutputLinks() method, minus one.
+
+Returns
+    Returns the path of the destination node linked to by the output port on the source node. 
+
+◆ dstNodeInfo
+QScriptValue node::dstNodeInfo 	( 	String &  	sourceNode,
+		int  	iPort,
+		int  	iLink 
+	) 		
+	slot
+
+Returns the path and addition information of the destination node linked to the source node.
+
+The example below shows the relationship between dstNodeInfo and srcNode.
+var exNode = selection.selectedNode(0);
+var destination = node.dstNodeInfo(exNode, 0, 0);
+//You can use the 2 properties of the source object to use srcNode()
+ var source = node.srcNode(destination.node, destination.port);
+MessageLog.trace(node.equals(source, exNode); //This will print true
+
+Parameters
+    sourceNode	: The path of the source node.
+    iPort	: The output port number on which you want to find the connected node. This value is between 0 and the results of the numberOfOutputPorts() method, minus one.
+    iLink	: The link number whose destination node you want to find. This value is between 0 and the results of the numberOfOutputLinks() method, minus one.
+
+Returns
+    This method returns an object that contains two properties: node - The path of connected node. port - The port number on which this node is connected to. 
+
+◆ equals
+bool node::equals 	( 	String  	node1,
+		String  	node2 
+	) 		
+	slot
+
+Returns true or false to indicate if a node path is equal to another. Used to compare node paths.
+
+The example below deconstructs and then rebuilds a node path using subNodeByName, then compares the original to the rebuilt path. This example will print true. exNode is the full name of a node, such as "Top/MyGroup/MyNode".
+function nodePathRebuild (exNode)
+{
+  var name = node.getName(exNode);
+  var parent = node.parentNode(exNode);
+  //With both the parent path and the node name, you can rebuild the original node with subNodeByName
+  var rebuiltNode = node.subNodeByName(parent, exNode);
+  //This rebuilt node will be equal to the original node
+  MessageLog.trace(node.equals(exNode, rebuiltNode)); //This will print true
+  MessageLog.trace(node.equals(exNode, node.noNode()); //Since exNode is a valid node, this will print false
+}
+
+Parameters
+    node1	: The path of the first node.
+    node2	: The path of the second node.
+
+Returns
+    Returns true to indicate if the path of the first node is equal to the path of the second node. 
+
+◆ explodeElementSymbolsInGroups
+void node::explodeElementSymbolsInGroups 	( 	String  	element,
+		bool  	disableElement,
+		bool  	clearExposure,
+		String &  	prefix = String() 
+	) 		
+	slot
+
+Create a group for each exposure of the element where there is a symbol and will put the content of the symbol in that group.
+
+If disable element is TRUE, will disable the element afterwards. If clearExposure is TRUE, will clear the exposures where there were symbols afterwards. Will use prefix as the prefix for the generated group names.
+
+A symbol combines animation, artwork or layers into a single object that you can control in one layer.
+
+The example below executes explodeElementSymbolsInGroup for the currently selected drawing node, and positions the newly created node groups to the left of the original node.
+function explodeSymbol ()
+{
+  var symbolNode = selection.selectedNode(0);
+  //Creates a symbol out of the currently selected drawing
+  Action.perform("onActionCreateSymbolFromSelection()", "timelineView");
+  var prefix = node.getName(symbolNode) + "_";
+  var parent = node.parentNode(symbolNode);
+  var path = parent + "/" + prefix;
+  var i = 1;
+  var x = node.coordX(symbolNode);
+  var y = node.coordY(symbolNode);
+  var flag = false;
+  node.explodeElementSymbolsInGroup(symbolNode, true, false, prefix);
+  while (i <= frame.numberOf() && flag == false)
+  {
+    if (node.type(path+i) != "")
+    {
+      node.setCoord((path+i), x, y);
+    }
+    else
+    {
+      flag = true;
+    }
+    y = y+20;
+    i++;
+  }
+}
+
+Parameters
+    element	: Element node path.
+    disableElement	: True to disable the exploded element.
+    clearExposure	: True to clear the exposure.
+    prefix	: Add a prefix to the symbols.
+
+◆ explodeGroup
+bool node::explodeGroup 	( 	String  	groupName	) 	
+	slot
+
+Explode a group into its parent group. This method is identical to the "Explode Selected Group" from the Node View.
+
+The following example creates a group then explodes the group if it was successful.
+function groupExample ()
+{
+  var selected = selection.selectedNodes();
+  var nodesToGroup = selected.join();
+  var group = node.createGroup(nodesToGroup, "group");
+  if (node.isGroup( group ))
+    MessageLog.trace(node.explodeGroup(group));
+}
+
+Parameters
+    groupName	: The name of the node.
+
+Returns
+    Returns true if successful. 
+
+◆ flatSrcNode
+String node::flatSrcNode 	( 	String  	node,
+		int  	iPort 
+	) 		
+	slot
+
+If the Source node is a Group, this method returns the path of the node inside the Group node that is the source. If the source is not inside a group, the flatSrcNode() method behaves like the srcNode() method.
+
+The example below prints the source inside the group, and the source outisde the group of the currently selected node if it is in a group and has a source.
+function sourceFinder()
+{
+  var myNode = selection.selectedNode(0);
+  var parentNode = node.parentNode(myNode);
+  if (node.isGroup() && node.isLinked(myNode, 0))
+  {
+    var source = node.srcNode(myNode, 0);
+    var flatSource = node.flatSrcNode(myNode, 0);
+    MessageLog.trace("Source inside the group: " + source);
+    if( source != flatSource )
+      MessageLog.trace("Source outside the group: " + flatSource);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+    iPort	: The port number on the destination node whose source node you want to find. This value is between 0 and the results of the numberOfInputPorts() method, minus one.
+
+Returns
+    If the Source node is a Group, this method returns the path of the node inside the Group node that is the source. If the source is not inside a group, the flatSrcNode() method behaves like the srcNode() method. 
+
+◆ getAllAttrKeywords
+StringList node::getAllAttrKeywords 	( 	String  	node	) 	
+	slot
+
+Returns a list of the keywords of all of the Attribute objects of the given node.
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the list of Attribute keywords. 
+
+◆ getAllAttrNames
+StringList node::getAllAttrNames 	( 	String  	node	) 	
+	slot
+
+Returns a list of the names of all of the Attribute objects of the given node.
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the list of Attribute names. 
+
+◆ getAllCachedNodes [1/2]
+StringList node::getAllCachedNodes 	( 	String  	root	) 	
+	slot
+
+Returns all nodes that are cached.
+
+The following example prints the list of all cached nodes in a group and its subgroups.
+function printCachedNodes()
+{
+  var cachedNodes = node.getAllCachedNodes(node.root());
+  for(var i=0 ; i< cachedNodes.length ; ++i)
+     MessageLog.trace("Node " + cachedNodes[i] + " is cached");
+}
+
+Parameters
+    root	: The name of a group.
+
+Returns
+    Returns the list of all cached nodes. 
+
+◆ getAllCachedNodes [2/2]
+StringList node::getAllCachedNodes 	( 		) 	
+	slot
+
+Returns all nodes that are cached.
+
+The following example prints the list of all cached nodes in the scene.
+function printCachedNodes()
+{
+  var cachedNodes = node.getAllCachedNodes();
+  for(var i=0 ; i< cachedNodes.length ; ++i)
+     MessageLog.trace("Node " + cachedNodes[i] + " is cached");
+}
+
+Returns
+    Returns the list of all cached nodes. 
+
+◆ getAttr
+Attribute* node::getAttr 	( 	String  	node,
+		double  	atFrame,
+		String  	attrName 
+	) 		
+	slot
+
+Returns the Attribute of the given node. The attribute value is for the given frame.
+
+The example below gets the attribute with the corresponding name and returns it's type.
+function attrType ( nodeName, attrName )
+{
+  var attr = node.getAttr(nodeName, frame.current(), attrName);
+  return attr.typeName();
+}
+
+This is just a simple helper function, see createDynamicAttr() or removeDynamicAttr() for a more complex example using getAttr().
+
+Here is another example that gets the Transformation Names attribute from the first Transformation Switch node in the scene, then lists its sub-attributes.
+function outputTransformationNames() {
+  var transformationSwitchNodes = node.getNodes(["TransformationSwitch"]);
+  if (transformationSwitchNodes.length > 0) {
+    var transformationNamesAttribute = node.getAttr(transformationSwitchNodes[0], 1, "TransformationNames");
+    var subAttributes = transformationNamesAttribute.getSubAttributes();
+    for (var i = 0; i < subAttributes.length; i++) {
+      MessageLog.trace("subAttribute " + i + ", name: " + subAttributes[i].name() + ", value: " + subAttributes[i].textValue());
+    }
+  }
+}
+
+Parameters
+    node	: The path of the node.
+    atFrame	: The frame number at which the attribute value is extracted. This parameter isn't used if the value isn't animated (a local value).
+    attrName	: The name of the attribute. Access a child attribute by concatenating the parent attribute name with the child name separated by a dot ('.'). The name is case sensitive.
+
+Returns
+    Returns the attribute of the given name. 
+
+◆ getAttrList
+QList<Attribute*> node::getAttrList 	( 	String  	node,
+		double  	atFrame,
+		String  	attrName = String() 
+	) 		
+	slot
+
+Returns a list of Attribute objects of the given node.
+
+This example returns a list of all the attributes of a node, including all the sub attributes.
+function getAttributes(attribute, attributeList)
+{
+  attributeList.push(attribute);
+  var subAttrList = attribute.getSubAttributes();
+  for (var j = 0; j < subAttrList.length; ++j)
+  {
+    if(typeof(subAttrList[j].keyword()) === 'undefined' || subAttrList[j].keyword().length == 0)
+      continue;
+    getAttributes(subAttrList[j], attributeList);
+  }
+}
+function getFullAttributeList(nodePath)
+{
+  var attributeList = [];
+  var topAttributeList = node.getAttrList(nodePath, 1);
+  for (var i = 0; i < topAttributeList.length; ++i)
+  {
+    getAttributes(topAttributeList[i], attributeList);
+  }
+  return attributeList;
+}
+
+Parameters
+    node	: The path of the node.
+    atFrame	: The frame number at which the attribute value is extracted. This parameter isn't used if the value isn't animated (a local value).
+    attrName	: The name of the attribute or an empty string for all top level attributes. Access a child attribute by concatenating the parent attribute name with the child name separated by a dot ('.').
+
+Returns
+    Returns the list of Attribute objects. 
+
+◆ getCached
+bool node::getCached 	( 	String  	node	) 	
+	slot
+
+Set the cached flag for a node.
+
+The following example mark this node to be cached, if it is not cached.
+function cacheNode(exNode)
+{
+   if (node.getCached(exNode) == false )
+     node.setCached(exNode,false);
+}
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns true if the node is cached. 
+
+◆ getCacheFillLevel
+double node::getCacheFillLevel 	( 		) 	
+	slot
+
+Returns how much of the cache capacity is filled up. [0,1].
+◆ getCameras
+StringList node::getCameras 	( 		) 	
+	slot
+
+Returns a list of all cameras within the scene.
+
+The example below changes the default camera if a second camera exists.
+function changeCamera ()
+{
+  var cameras = node.getCameras();
+  if (cameras.length > 1 && cameras[1])
+  {
+    node.setAsDefaultCamera("Top/MyCamera2");
+    MessageLog.trace("New default camera: " + node.getDefaultCamera());
+  }
+}
+
+Returns
+    Returns a list of all cameras within the scene. 
+
+◆ getColor
+ColorRGBA* node::getColor 	( 	String  	node	) 	
+	slot
+
+Returns the node colour.
+
+The example below takes two nodes as parameters, changes the colour of the first node to the colour of the second node, then resets the second node's colour.
+function swapAndReset (node1, node2)
+{
+  var newColor = node.getColor(node2);
+  node.setColor(node1, newColor);
+}
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns the node colour. 
+
+◆ getColorOverride
+QObject* node::getColorOverride 	( 	String &  	node	) 	
+	slot
+
+Returns the ColorOverride object for the color override node.
+
+If the selected node is a color override node, returns the ColorOverride object. See the ColorOverride class for more information about ColorOverride objects.
+var myNode = selection.selectedNode(0));
+if (node.type(myNode) == "COLOR_OVERRIDE_TVG")
+{
+  return node.getColorOverride(myNode);
+}
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns a ColorOverride object. 
+
+◆ getDefaultCamera
+String node::getDefaultCamera 	( 		) 	
+	slot
+
+Returns the name of the default camera.
+
+The example below halves the field of view of the current camera view.
+var cameraNode = "Top/" + node.getDefaultCamera();
+var FOV = node.getAttr(cameraNode, frame.current(), "FOV").doubleValue();
+node.setTextAttr(cameraNode, "FOV", frame.current(), FOV/2);
+
+Returns
+    Returns the name of the default camera. 
+
+◆ getElementId
+int node::getElementId 	( 	String  	nodeName	) 	
+	slot
+
+Returns the Element Id of the node. Has to be an element node, identified with type :: READ.
+
+Returns -1 on fail. The example below uses the Element Ids of all the selected nodes (stored in a variable named allNodes) to recolour all of the drawings selected.
+var elementId = node.getElementId("Top/MyDrawing");
+// Add the drawing to the scene. For now it's just a placeholder.
+var frameIndex = fileFrameIndex(x, y);
+var exposure = "MyExposure"; // as seen in the Xsheet
+Drawing.create(elementId, exposure, false);
+
+Parameters
+    nodeName	: The name of the node.
+
+Returns
+    Returns the Element Id of the node. 
+
+◆ getEnable
+bool node::getEnable 	( 	String  	node	) 	
+	slot
+
+Returns whether a node is enabled or not.
+
+The following example disables a node if it is currently enabled.
+function disableNode(exNode)
+{
+   if (node.getEnable(exNode))
+     node.setEnable(exNode,false);
+}
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns true if the node is enabled. 
+
+◆ getGroupInputModule
+String node::getGroupInputModule 	( 	String  	parentGroup,
+		String  	name,
+		int  	x,
+		int  	y,
+		int  	z 
+	) 		
+	slot
+
+Returns existing or add a group multi port in node.
+
+Add a multi port in node inside the selected group. There can only be a single such node per group. If there is already such type of node in the group, it will return it. It returns NULL if it cannot add such node. You cannot add this type of node in the top group of a scene. The following example creates a group from the currently selected nodes, then returns the input and output modules in an object.
+function createGroupFromSelected ()
+{
+  var selected = selection.selectedNodes();
+  var nodesToGroup = selected.join();
+  var group = node.createGroup(nodesToGroup, "group");
+  var inputModule = node.getGroupInputModule(group, "", 0,0,0);
+  var outputModule = node.getGroupOutputModule(group, "", 0,0,0);
+  return {input: inputModule, output: outputModule};
+}
+
+Parameters
+    parentGroup	: The path to the parent group into which you want to add this node.
+    name	: The name of the node you will add.
+    x	: The X position of the node in the Node View.
+    y	: The Y position of the node in the Node View.
+    z	: The Z position of the node in the Node View. This property is important when two nodes overlap.
+
+Returns
+    Returns existing or added group multi port in node. Returns an empty string if it cannot add such a node. 
+
+◆ getGroupOutputModule
+String node::getGroupOutputModule 	( 	String  	parentGroup,
+		String  	name,
+		int  	x,
+		int  	y,
+		int  	z 
+	) 		
+	slot
+
+Returns existing or add a group multi port out node.
+
+Add a multi port out node inside the selected group. There can only be a single such node per group, so, if there is already such node, it returns it. It returns NULL if it cannot add such node. You cannot add this type of node in the top group of a scene. The following example creates a group from the currently selected nodes, then returns the input and output modules in an object.
+function createGroupFromSelected ()
+{
+  var selected = selection.selectedNodes();
+  var nodesToGroup = selected.join();
+  var group = node.createGroup(nodesToGroup, "group");
+  var inputModule = node.getGroupInputModule(group, "", 0,0,0);
+  var outputModule = node.getGroupOutputModule(group, "", 0,0,0);
+  return {input: inputModule, output: outputModule};
+}
+
+Parameters
+    parentGroup	: The path of the parent group into which you want to add this node.
+    name	: The name of the node you will add.
+    x	: The X position of the node in the Node View.
+    y	: The Y position of the node in the Node View.
+    z	: The Z position of the node in the Node View. This property is important when two nodes overlap.
+
+Returns
+    Returns existing or added group multi port out node. Returns an empty string if it cannot add such a node. 
+
+◆ getLocked
+bool node::getLocked 	( 	String  	node	) 	
+	slot
+
+Returns the lock flag.
+MessageLog.trace("Lock flag: " + node.getLocked(exNode));
+node.setLocked(exNode, true);
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns true if the lock flag is set. 
+
+◆ getMatrix
+QObject* node::getMatrix 	( 	String  	node,
+		int  	frame 
+	) 		
+	slot
+
+Returns the model matrix of a node.
+var myNodeModelMatrix = node.getMatrix("Top/MyNode", frame.current());
+var myNodeWorldPosition = myNodeModelMatrix.multiply(new Point3d);
+var myOtherNodeModelMatrix = node.getMatrix("Top/MyOtherNode", frame.current());
+var myOtherNodeWorldPosition = myOtherNodeModelMatrix.multiply(new Point3d);
+if(myNodeWorldPosition.z > myOtherNodeWorldPosition.z)
+  MessageLog.trace("My node is in front of the other node");
+
+Parameters
+    node	: The name of the node.
+    frame	: Is the int that specifies the frame number.
+
+Returns
+    The model matrix of a node. 
+
+◆ getMaxVersionNumber
+int node::getMaxVersionNumber 	( 	String  	node	) 	
+	slot
+
+Returns the number of versions of the node available.
+
+The example below sets current version number of a node to the maximum version number.
+node.setVersion(exNode, node.getMaxVersionNumber(exNode));
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns the number of versions of the node available. 
+
+◆ getName
+String node::getName 	( 	String &  	node	) 	
+	slot
+
+Returns the name of a node.
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the name of a node. 
+
+◆ getNodes
+StringList node::getNodes 	( 	StringList &  	types	) 	
+	slot
+
+Returns a collection of node paths for nodes of specified types.
+
+Example usage:
+var sl = ["READ", "WRITE", "COLOR_OVERRIDE_TVG"];
+var nl = node.getNodes(sl);
+for (var i = 0; i < nl.length; ++i)
+{
+  var path = nl[i];
+  if (node.type(path) == "COLOR_OVERRIDE_TVG")
+  {
+    MessageLog.trace("Colour Override: " + node.getName(path));
+    var conode = node.getColorOverride(path);
+  }
+  else if (node.type(path) == "READ")
+  {
+    MessageLog.trace("Read: " + node.getName(path));
+  }
+  else if (node.type(path) == "WRITE")
+  {
+    MessageLog.trace("Write: " + node.getName(path));
+  }
+}
+
+Returns
+    Returns a collection of node paths for the nodes of specific types. 
+
+◆ getPivot
+QObject* node::getPivot 	( 	String  	node,
+		int  	frame 
+	) 		
+	slot
+
+Returns the pivot of the node.
+
+The example below uses the pivot of a node to extract the rotation, position and scale of the node from it's model matrix.
+var myNodePivot = node.getPivot("Top/MyNode", frame.current());
+var myNodeModelMatrix = node.getMatrix("Top/MyNode", frame.current());
+var rotation = myNodeModelMatrix.extractRotation(myNodePivot, false);
+var position = myNodeModelMatrix.extractPosition(myNodePivot, false);
+var scale = myNodeModelMatrix.extractScale(myNodePivot, false);
+return [rotation, position, scale];
+
+Parameters
+    node	: The name of the node.
+    frame	: Is the int that specifies the frame number.
+
+Returns
+    The pivot of the node. 
+
+◆ getShowTimelineThumbnails
+bool node::getShowTimelineThumbnails 	( 	String  	node	) 	
+	slot
+
+Returns the show/hide timeline thumbnail flags on drawing layers.
+MessageLog.trace("Show timeline thumbnails: " + node.getShowTimelineThumbnails(exNode));
+node.setShowTimelineThumbnails(exNode, true);
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns the show/hide timeline thumbnail flags on drawing layers. 
+
+◆ getTextAttr
+String node::getTextAttr 	( 	String  	node,
+		double  	atFrame,
+		String  	attrName 
+	) 		
+	slot
+
+Returns the value(s) of the node selected attribute(s).
+
+The example below adds the current palette path to the currently selected colour override node.
+function fillColourOverride()
+{
+  var myNode = selection.selectedNode(0);
+  if (node.type(myNode) == "COLOR_OVERRIDE_TVG")
+  {
+    var num1 = node.getTextAttr(myNode, frame.current(), "PALETTES.NUMBER");
+    var palettePath = PaletteManager.getCurrentPalettePath();
+    node.setTextAttr(myNode, "PALETTES.ADD", frame.current(), palettePath);
+    var num2 = node.getTextAttr(myNode, frame.current(), "PALETTES.NUMBER");
+    if (num2 > num1)
+      MessageLog.trace("Palette successfully added.");
+  }
+}
+
+Parameters
+    node	: The path of the node.
+    atFrame	: The frame number from which you want to extract the attribute value. If the value is static, you must still pass a value. You can, for example, pass 1 to take the value at the first frame.
+    attrName	: The attribute whose value you want.
+
+For example, use the attribute PALETTES.NUMBER to return the number of palettes in the colour override node palette list. Or, use the attribute PALETTES.x to return the palette at index x from the colour override node palette list. In this case, x is a number between 0 and the number of palettes in the list, minus one. If x is not given (argument is "PALETTES") or x is not valid (< 0 or out of range) then 0 is assumed.
+
+Returns
+    Returns the value(s) of the node selected attribute(s). 
+
+◆ getTimelineTag
+bool node::getTimelineTag 	( 	String  	node	) 	
+	slot
+
+Returns the timeline tag flag.
+
+If a timeline tag is set to true, it will be shown when "View Tagged Layers" is selected.
+MessageLog.trace("Timeline tag: " + node.getTimelineTag(exNode));
+node.setTimelineTag(exNode, true);
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns the timeline tag of the node. 
+
+◆ getTimelineTagList
+StringList node::getTimelineTagList 	( 	String  	node = QNTR("Top"),
+		StringList  	list = StringList() 
+	) 		
+	slot
+
+Returns a list of timeline tag flags.
+function getSetFlags (exNode)
+{
+  if (selection.numberOfNodesSelected <= 1)
+      MessageLog.trace("Timeline tag: " + node.getTimelineTag(exNode));
+  else
+  {
+      var list = selection.selectedNodes();
+      MessageLog.trace("Timeline tags: " + node.getTimelineTagList("Top", list.toString()));
+  }
+}
+
+Parameters
+    node	: The name of the top node.
+    list	: The list of nodes to retrieve timeline tag flags.
+
+Returns
+    Returns a list of the timeline tags for the nodes. 
+
+◆ getVersion
+int node::getVersion 	( 	String  	node	) 	
+	slot
+
+Returns the current version of the node.
+
+The node may have multiple versions if their rendering output have changed over time.
+MessageLog.trace("Current node version number: " + node.getVersion(exNode));
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns the current version of the node. 
+
+◆ groupAtNetworkBuilding
+bool node::groupAtNetworkBuilding 	( 	String  	node	) 	
+	slot
+
+Returns true if the peg's groupAtNetworkBuilding() attribute is true.
+
+Deprecated:
+    Please use node.getAttr("MyPeg", 1.0, "GROUP_AT_NETWORK_BUILDING").boolValue()); 
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns true if the peg's Group at Network Building attribute is true. 
+
+◆ height
+virtual int node::height 	( 	String  	node	) 	
+	virtualslot
+
+Returns the height of a given node.
+
+This height parameter is useful for computing the position of nodes in the Node View. It uses the same unit system as the coordX() and coordY() methods. The example below takes 2 nodes as parameters and moves them one on top of the other in the node view.
+function nodeLine(node1, node2) //node1 and node2 are paths of 2 nodes
+{
+   var x = node.coordX(node1);
+   var y = node.coordY(node1);
+   y -= node.height(node1);
+   node.setCoord(node2, x,y);
+}
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the height of a given node. 
+
+◆ isControlShown
+bool node::isControlShown 	( 	String  	node	) 	
+	slot
+
+Returns true or false to indicate if a node controls are currently shown.
+
+The example below returns the state of the controls for a peg ("Top/Drawing-P"). The resulting information message can be seen in the Message Log.
+MessageLog.trace("Shown? "+node.isControlShown("Top/Drawing-P"));
+
+Parameters
+    node	: The path to the node.
+
+Returns
+    Returns true to indicate the controls are shown. 
+
+◆ isGroup
+bool node::isGroup 	( 	String &  	node	) 	
+	slot
+
+Returns a true or false value indicating if the node is a group.
+
+The example below uses isGroup to confirm that the node is a group node before printing some information about it.
+function sourceFinder()
+{
+  var myNode = selection.selectedNode(0);
+  var parentNode = node.parentNode(myNode);
+  if (node.isGroup(myNode) && node.isLinked(myNode, 0))
+  {
+    var source = node.srcNode(myNode, 0);
+    var flatSource = node.flatSrcNode(myNode, 0);
+    MessageLog.trace("Source inside the group: " + source);
+    MessageLog.trace("Source outside the group: " + flatSource);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns true if the node is in a group. 
+
+◆ isLinked
+bool node::isLinked 	( 	String  	node,
+		int  	iPort 
+	) 		
+	slot
+
+Returns true or false to indicate if a port is connected to another node.
+
+The example below inserts a new Peg node inbetween the selected node and it's parent. The new node's parent is the original parent of the selected node, and the new parent of the selected note is the created peg.
+function insertPeg()
+{
+  var myNode = selection.selectedNode(0);
+  var parentNode = node.parentNode(myNode);
+  var newPeg = node.add(parent, "New Peg", "PEG", 0, -50, 0);
+  var myNodeDestination = node.dstNode(myNode, 0 , 0);
+  if (node.isLinked(myNode, 0))
+  {
+    node.unlink(myNodeDestination, 0);
+    node.link(myNode, 0 , newPeg, 0);
+    node.link(newPeg, 0 , myNodeDestination, 0);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+    iPort	: The number of the port whose link status you want to check. This value is between 0 and the results of the numberOfInputPorts() method, minus one.
+
+Returns
+    Returns true if the indicated port is connected to another node. 
+
+◆ isSupportingCache
+bool node::isSupportingCache 	( 	String  	node	) 	
+	slot
+
+Returns true if the node can be cached.
+
+The following example mark this node to be cached, if it is not cached and if it supports caching.
+function cacheNode(exNode)
+{
+   if (node.isSupportingCache(exNode) && node.getCached(exNode) == false )
+     node.setCached(exNode,false);
+}
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns true if the node supports caching. 
+
+◆ link [1/2]
+bool node::link 	( 	String  	srcNode,
+		int  	srcPort,
+		String  	dstNode,
+		int  	dstPort 
+	) 		
+	slot
+
+Link a port on a node to a port on another node.
+// Get a node parent and children. The node will be inserted in a group and the parent/children will be connected to the group.
+var myNewGroupPath = "Top/MyGroup/MyNewGroup";
+var myNodePath = "Top/MyGroup/Drawing";
+var srcNodePath = node.srcNode(myNodePath, 0);
+var dstNodePaths = [];
+for(var i = 0; i < node.numberOfOutputLinks(myNodePath, 0); i++)
+{
+dstNodePaths.push(node.dstNode(myNodePath, 0, i));
+}
+// Move the node into the group.
+// moveToGroup creates a composite on which to connect the READ node automatically.
+node.moveToGroup(myNodePath, myNewGroupPath);
+// Connect the new group to the parent/children of the node.
+node.link(srcNodePath, 0, myNewGroupPath, 0, false, true);
+for(var i = 0; i < dstNodePaths.length; i++)
+{
+node.link(myNewGroupPath, 0, dstNodePaths[i], 0, true, true);
+}
+
+For another example usage of link, see the above Detailed Description.
+
+Parameters
+    srcNode	: The path of the node whose output port you want to link to a destination node.
+    srcPort	: The port that you want to link to the input port on the destination node. This value is between 0 and the results of the numberOfOutputPorts() method, minus one.
+    dstNode	: The path of the node whose input port you want to link to the source node.
+    dstPort	: The port on the destination node that you want to link to the output port from the source node. This value is between 0 and the results of the numberOfInputPorts() method, minus one.
+
+Returns
+    Returns true if successful. 
+
+◆ link [2/2]
+bool node::link 	( 	String  	srcNode,
+		int  	srcPort,
+		String  	dstNode,
+		int  	dstPort,
+		bool  	mayAddOutputPort,
+		bool  	mayAddInputPort 
+	) 		
+	slot
+
+Link a port of a node to a port of another node. This version of the method allows connecting to a group node, or setup the proper connection order.
+// Get a node parent and children. The node will be inserted in a group and the parent/children will be connected to the group.
+var myNewGroupPath = "Top/MyGroup/MyNewGroup";
+var myNodePath = "Top/MyGroup/Drawing";
+var srcNodePath = node.srcNode(myNodePath, 0);
+var dstNodePaths = [];
+for(var i = 0; i < node.numberOfOutputLinks(myNodePath, 0); i++)
+{
+  dstNodePaths.push(node.dstNode(myNodePath, 0, i));
+}
+// Move the node into the group.
+// moveToGroup creates a composite on which to connect the READ node automatically.
+node.moveToGroup(myNodePath, myNewGroupPath);
+// Connect the new group to the parent/children of the node.
+node.link(srcNodePath, 0, myNewGroupPath, 0, false, true);
+for(var i = 0; i < dstNodePaths.length; i++)
+{
+  node.link(myNewGroupPath, 0, dstNodePaths[i], 0, true, true);
+}
+
+Parameters
+    srcNode	: The path of the node whose output port you want to link to a destination node.
+    srcPort	: The port that you want to link to the input port on the destination node. This value is between 0 and the results of the numberOfOutputPorts() method, minus one.
+    dstNode	: The path of the node whose input port you want to link to the source node.
+    dstPort	: The port on the destination node that you want to link to the output port from the source node. This value is between 0 and the results of the numberOfInputPorts() method, minus one.
+    mayAddOutputPort	: used by group multiport nodes - automatically create a new output port for these nodes.
+    mayAddInputPort	: used by group multiport and composite - automatically create input ports for these nodes.
+
+Returns
+    Returns true if successful. 
+
+◆ linkAttr
+bool node::linkAttr 	( 	String  	node,
+		String  	attrName,
+		String  	columnName 
+	) 		
+	slot
+
+Link an attribute to a function column in the Xsheet View.
+
+The example below links the attributes of a camera peg to two columns to create a camera pan.
+function addCameraPan()
+{
+  var myCamPeg = "Top/Camera_Peg";
+  node.linkAttr(myCamPeg, "POSITION.3DPATH", "Camera_Peg_Path");
+  node.linkAttr(myCamPeg, "ROTATION.ANGLEZ", "Camera_Peg_Angle");
+  node.link( "myCamPeg", 0, "Top/Camera", 0);
+}
+
+Parameters
+    node	: The name of the node.
+    attrName	: The name of the attribute.
+    columnName	: The name of the column that you want to link to the attribute.
+
+Returns
+    Returns true if successful. 
+
+◆ linkedColumn
+String node::linkedColumn 	( 	String  	node,
+		String  	attrName 
+	) 		
+	slot
+
+Returns the name of the column that an attribute is linked to. If the attribute is not linked to a column, the method returns the null string.
+function addCameraPan()
+{
+  if ( node.getName("Top/Camera_Peg") == "" )
+  {
+    var myNode = node.add( node.root(), "Camera_Peg", "PEG", -50, 0, 0 );
+    column.add("Camera_Peg_Path", "3DPATH");
+    if (node.linkedColumn(myNode, "POSITION.3DPATH") == "")
+    {
+      node.linkAttr(myNode, "POSITION.3DPATH", "Camera_Peg_Path");
+      column.setEntry("Camera_Peg_Path", 1, 1, globalStartX );
+      column.setEntry("Camera_Peg_Path", 1, globalEndFrame, globalEndX);
+      column.setEntry("Camera_Peg_Path", 2, 1, globalStartY );
+      column.setEntry("Camera_Peg_Path", 2, globalEndFrame, globalEndY);
+      column.setEntry("Camera_Peg_Path", 3, 1, globalStartZ);
+      column.setEntry("Camera_Peg_Path", 3, globalEndFrame, globalEndZ);
+      column.add("Camera_Peg_Angle", "BEZIER");
+      node.linkAttr(myNode, "ROTATION.ANGLEZ", "Camera_Peg_Angle");
+      column.setEntry("Camera_Peg_Angle", 1, globalStartFrame, globalStartAngleZ);
+      column.setEntry("Camera_Peg_Angle", 1, globalEndFrame, globalEndAngleZ);
+    }
+  }
+  if ( node.getName("Top/Camera") == "" )
+  {
+    node.add( node.root(), "Camera", "CAMERA", -50, 50,0 );
+  }
+  node.link( "Top/Camera_Peg", 0, "Top/Camera", 0);
+  node.setTextAttr( "Top/Camera", "OFFSET.Z", 0, 0);
+}
+
+Parameters
+    node	: The path of the node.
+    attrName	: The attribute you want to check to see if it is linked to a column.
+
+Returns
+    Returns the name of the column that an attribute is linked to. 
+
+◆ moveToGroup
+String node::moveToGroup 	( 	String  	node,
+		String  	groupName 
+	) 		
+	slot
+
+Move the specified node within the specified group.
+
+This method is equivalent to the drag and drop of a node to a group from the timeline. If an element node is moved into a group, a composite node will automatically be created to connect the element node.
+node.moveToGroup("Top/MyGroup/Drawing", "Top/MyGroup/MyNewGroup");
+
+Parameters
+    node	: The path to the node to group.
+    groupName	: The path of the target group.
+
+Returns
+    Returns the path of the node after it has been moved. 
+
+◆ noNode
+String node::noNode 	( 		) 	
+	slot
+
+Returns the node path to an invalid node.
+
+Methods that returns a node path will return this value if an error occurred.
+var parentNodePath = node.parentNode("Top/MyNode");
+if(parentNodePath == node.noNode())
+  return; // something wrong happened
+
+Returns
+    Returns the node path to an invalid node. 
+
+◆ numberOfInputPorts
+int node::numberOfInputPorts 	( 	String  	node	) 	
+	slot
+
+The number of input ports on the node.
+
+The example below uses numberOfInputPorts to get the path to the source node of the parameter. exNode is the full name of a node, such as "Top/MyGroup/MyNode".
+var numInput = node.numberOfInputPorts(exNode);
+var source = node.srcNode(exNode, (numInput-1));
+//Note: This source node is different than the parent node. The source node is the node connected to one of the input ports of the node. The parent is the parent group of the node.
+var parent = node.parentNode(exNode);
+MessageLog.trace(node.equals(parent, source)); //This will print false
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the number of input ports on the node. 
+
+◆ numberOfOutputLinks
+int node::numberOfOutputLinks 	( 	String  	node,
+		int  	iPort 
+	) 		
+	slot
+
+The number of nodes actually linked from the output ports.
+
+For an example use of numberOfOutputLinks see link().
+
+Parameters
+    node	: The path of the node.
+    iPort	: The port number on which you want to locate the node that is connected to it. This value is between 0 and the results of the numberOfInputPorts() method, minus one.
+
+Returns
+    Returns the number of nodes actually linked from the output ports. 
+
+◆ numberOfOutputPorts
+int node::numberOfOutputPorts 	( 	String  	node	) 	
+	slot
+
+The number of output ports on a node.
+
+The following example returns a list of all of the destination nodes of the node passed in the parameter.
+function getAllDstNodes(startingNode)
+{
+  var listOfDestinationNodes = [];
+  var numOutputPorts = node.numberOfOutputPorts(startingNode);
+  for(var i = 0; i<numOutputPorts; i++)
+  {
+    var portIdx = i;
+    var numLinks = node.numberOfOutputLinks(startingNode, portIdx);
+    for(var j = 0; j < numLinks; j++)
+    {
+      var linkIdx = j;
+      var dstNode = node.dstNode(startingNode, portIdx, linkIdx)
+      listOfDestinationNodes.push(dstNode);
+    }
+  }
+  return listOfDestinationNodes;
+}
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the number of output ports on a node. 
+
+◆ numberOfSubNodes
+int node::numberOfSubNodes 	( 	String &  	parent	) 	
+	slot
+
+Returns an integer that indicates the number of nodes contained in a group.
+
+The example below prints all of the sub nodes of a node if the node's type is GROUP. exNode is the full name of a node, such as "Top/MyGroup".
+function groupInfo( exNode )
+{
+  var i = 0;
+  if (node.isGroup(exNode))
+  {
+    MessageLog.trace("The node " + exNode + " has " + node.numberOfSubNodes(exNode) + " sub nodes.");
+    while(i < node.numberOfSubNodes(exNode))
+    {
+      MessageLog.trace(node.subNode(exNode, i));
+      i++;
+    }
+  }
+}
+
+Sample output of the above example to the Message Log view:
+
+The node Top/MyGroup has 2 sub nodes.
+
+Top/MyGroup/MyNode1
+
+Top/MyGroup/MyNode2
+
+Parameters
+    parent	: The path of the parent node.
+
+Returns
+    Returns the number of nodes contained in a group. 
+
+◆ parentNode
+String node::parentNode 	( 	String &  	node	) 	
+	slot
+
+Returns the path of the parent level of a node contained in a group.
+
+The parent of a node is the parent group that the node is currently in. If the node is not in a group, it's parent is "Top".
+
+The example below uses the path to the parent of a node to explode the group it is in. exNode is the full name of a node, such as "Top/MyGroup/MyNode".
+var parent = node.parentNode(exNode);
+node.explodeGroup(parent);
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the path of the parent level of a node contained in a group. 
+
+◆ removeDynamicAttr
+bool node::removeDynamicAttr 	( 	String  	node,
+		String  	attrName 
+	) 		
+	slot
+
+Remove a dynamic attribute for the given node.
+
+The example below attempts to remove the dynamic attribbute for the given node and attribute name. It will do nothing if that attribute does not exist.
+node.removeDynamicAttr(nodeName, attrName);
+
+Parameters
+    node	: The name of the node.
+    attrName	: The name of the attribute.
+
+Returns
+    Returns true if successful. 
+
+◆ rename
+bool node::rename 	( 	String  	node,
+		String  	newName,
+		bool  	renameElement = false 
+	) 		
+	slot
+
+Changes the name of a node.
+
+The following example renames a node with the path "Top/myNode".
+node.rename("Top/myNode", "myNodeWithANewName");
+
+Parameters
+    node	: The name of the node.
+    newName	: The new name for the node.
+    renameElement	: A boolean that indicates if element should also be renamed (if node is an element node)
+
+Returns
+    Returns true if successful. 
+
+◆ resetColor
+bool node::resetColor 	( 	String  	node	) 	
+	slot
+
+Reset the node colour.
+
+The example below takes two nodes as parameters, changes the colour of the first node to the colour of the second node, then resets the second node's colour.
+function swapAndReset (node1, node2)
+{
+  var newColor = node.getColor(node2);
+  node.setColor(node1, newColor);
+  node.resetColor(node2);
+}
+
+Parameters
+    node	: The name of the node.
+
+Returns
+    Returns true if successful. 
+
+◆ root
+String node::root 	( 		) 	
+	slot
+
+Returns the name of the Top level in the Node View, which is "Top".
+
+Returns
+    Returns the name of the Top level in the node View. 
+
+◆ setAsDefaultCamera
+bool node::setAsDefaultCamera 	( 	String  	node	) 	
+	slot
+
+Setters and getters for the default camera.
+
+Set the default camera in the scene. Returns whether successful or not.
+
+The example below changes the camera if a second camera exists.
+function changeCamera ()
+{
+  var cameras = node.getCameras();
+  if (cameras[1])
+  {
+    node.setAsDefaultCamera(cameras[1]);
+    MessageLog.trace("New default camera: " + node.getDefaultCamera());
+  }
+}
+
+Parameters
+    node	: The name of the camera.
+
+Returns
+    Returns true if successful. 
+
+◆ setAsGlobalDisplay
+bool node::setAsGlobalDisplay 	( 	String  	node	) 	
+	slot
+
+Change the global display used in the application. The node must be the full path of a display node.
+
+The example below sets the global display to the node in the parameter. If that node is not a display node, it sets the global display to "Display All".
+function globalDisplaySetter(exNode)
+{
+   if (node.type(exNode) == "DISPLAY")
+   {
+      node.setAsGlobalDisplay(exNode);
+   }
+   else
+   {
+      node.setGlobalToDisplayAll();
+   }
+}
+
+Parameters
+    node	: The full path of a display node.
+
+Returns
+    Returns true if successful. Returns false if the display node was not found or an invalid name was provided. 
+
+◆ setCached
+bool node::setCached 	( 	String  	node,
+		bool  	cached 
+	) 		
+	slot
+
+Set the cached flag for a node.
+
+The following example mark this node to be cached, if it is not cached.
+function cacheNode(exNode)
+{
+   if (node.getCached(exNode) == false )
+     node.setCached(exNode,false);
+}
+
+Parameters
+    node	: The name of the node.
+    cached	: If true, marks the node to be cached.
+
+Returns
+    Returns true if the node is cached. 
+
+◆ setColor
+bool node::setColor 	( 	String  	node,
+		ColorRGBA *  	color 
+	) 		
+	slot
+
+Set the node colour.
+
+The example below changes the colour of a node to solid red.
+function swapAndReset (exNode)
+{
+  //The parameters here are the Red, Green, Blue and Alpha values. (255, 0, 0, 255) is a solid red colour.
+  var newColor = new ColorRGBA(255, 0 , 0, 255);
+  node.setColor(exNode, newColor);
+}
+
+Parameters
+    node	: The name of the node.
+    color	: The new colour set for the node. This must be a ColorRGBA object.
+
+Returns
+    Returns true if successful. 
+
+◆ setCoord [1/2]
+virtual bool node::setCoord 	( 	String  	node,
+		int  	x,
+		int  	y 
+	) 		
+	virtualslot
+
+Set the position of a node in the Node View.
+
+The example below takes the path of a group node and then shifts its position 50 units to the right, and down in the node view.
+function shiftGroup(exNode)
+{
+  if (node.isGroup(exNode))
+  {
+     var x = node.coordX(exNode);
+     var y = node.coordY(exNode);
+     x += 50;
+     y += 50;
+     node.setCoord(exNode,x,y);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+    x	: The X position of the node in the Node View.
+    y	: The Y position of the node in the Node View.
+
+Returns
+    Returns true if successful. 
+
+◆ setCoord [2/2]
+virtual bool node::setCoord 	( 	String  	node,
+		int  	x,
+		int  	y,
+		int  	z 
+	) 		
+	virtualslot
+
+Set the position of a node in the Node View.
+
+The example below takes the path of a group node and then shifts its position 50 units to the right, and down in the node view. It also moves the group node's position in the z-axis to the back.
+function shiftGroup(exNode)
+{
+  if (node.isGroup(exNode))
+  {
+     var x = node.coordX(exNode);
+     var y = node.coordY(exNode);
+     var z = node.coordZ(exNode);
+     x += 50;
+     y += 50;
+     if (z >= 0)
+        z = -1;
+     node.setCoord(exNode,x,y,z);
+  }
+}
+
+Parameters
+    node	: The path of the node.
+    x	: The X position of the node in the Node View.
+    y	: The Y position of the node in the Node View.
+    z	: The Z position of the node in the Node View.
+
+Returns
+    Returns true if successful. 
+
+◆ setEnable
+bool node::setEnable 	( 	String  	node,
+		bool  	flag 
+	) 		
+	slot
+
+Setters and getters for the enable/disable property of a node.
+
+Set the enable flag of the node.
+
+The following example disables a node if it is currently enabled.
+function disableNode(exNode)
+{
+   if (node.getEnable(exNode))
+     node.setEnable(exNode,false);
+}
+
+Parameters
+    node	: The name of the node.
+    flag	: If true, enable the node.
+
+Returns
+    Returns true if successful. 
+
+◆ setGlobalToDisplayAll
+bool node::setGlobalToDisplayAll 	( 		) 	
+	slot
+
+Change the global display used by the application to "Display All" pseudo-display.
+
+The example below sets the global display to the node in the parameter. If that node is not a display node, it sets the global display to "Display All".
+function globalDisplaySetter(exNode)
+{
+   if (node.type(exNode) == "DISPLAY")
+   {
+      node.setAsGlobalDisplay(exNode);
+   }
+   else
+   {
+      node.setGlobalToDisplayAll();
+   }
+}
+
+Returns
+    Returns true if successful. 
+
+◆ setLocked
+bool node::setLocked 	( 	String  	node,
+		bool  	lock 
+	) 		
+	slot
+
+Setters and getters for the lock/unlock property of a node.
+
+Set the lock flag of the node.
+MessageLog.trace("Lock flag: " + node.getLocked(exNode));
+node.setLocked(exNode, true);
+
+Parameters
+    node	: The name of the node.
+    lock	: If true, lock the node.
+
+Returns
+    Returns true if successful. 
+
+◆ setOutlineMode
+bool node::setOutlineMode 	( 	String  	node,
+		bool  	bOutlineMode 
+	) 		
+	slot
+
+Sets the outline mode of the given node.
+
+Parameters
+    node	: The name of the node.
+    bOutlineMode	: The mode to set the outline to.
+
+Returns
+    Returns true if successful. 
+
+◆ setShowTimelineThumbnails
+bool node::setShowTimelineThumbnails 	( 	String  	node,
+		bool  	bShow 
+	) 		
+	slot
+
+Set the show/hide timeline thumbnails on drawing layers.
+node.setShowTimelineThumbnails(exNode, true);
+
+Parameters
+    node	: The name of the node.
+    bShow	: True to show thumbnails.
+
+Returns
+    Returns true if successful. 
+
+◆ setTextAttr
+bool node::setTextAttr 	( 	String  	node,
+		String  	attrName,
+		int  	atFrame,
+		String  	attrValue 
+	) 		
+	slot
+
+Change the value of an attribute in a node.
+
+Additions specific to the Colour Override node:
+
+Use the attribute PALETTES.CLEAR to clear the palette list in the colour override node.
+
+Use the attribute PALETTES.ADD to add a palette to the palette list of the colour override node. Attemping to add a palette that already exists will cause setTextAttr to do nothing.
+
+Use the attribute PALETTES.REMOVE to remove a palette from the palette list of the colour override node.
+
+The example below adds the current palette path to the currently selected colour override node.
+function fillColourOverride()
+{
+  var myNode = selection.selectedNode(0);
+  if (node.type(myNode) == "COLOR_OVERRIDE_TVG")
+  {
+    var num1 = node.getTextAttr(myNode, frame.current(), "PALETTES.NUMBER");
+    var palettePath = PaletteManager.getCurrentPalettePath();
+    node.setTextAttr(myNode, "PALETTES.ADD", frame.current(), palettePath);
+    var num2 = node.getTextAttr(myNode, frame.current(), "PALETTES.NUMBER");
+    if (num2 > num1)
+      MessageLog.trace("Palette successfully added.");
+  }
+}
+
+Parameters
+    node	: The name of the node.
+    attrName	: The name of the attribute whose value you want to change.
+    atFrame	: The frame number at which you set the value.
+    attrValue	: The new value of the attribute.
+
+Returns
+    Returns true if successful. 
+
+◆ setTimelineTag
+bool node::setTimelineTag 	( 	String  	node,
+		bool  	tag 
+	) 		
+	slot
+
+Set the timeline tag flag of the node.
+
+If a timeline tag is set to true, it will be shown when "View Tagged Layers" is selected.
+MessageLog.trace("Timeline tag: " + node.getTimelineTag(exNode));
+node.setTimelineTag(exNode, true);
+
+Parameters
+    node	: The name of the node.
+    tag	: New tag state of the node.
+
+Returns
+    Returns true if successful. 
+
+◆ setVersion
+void node::setVersion 	( 	String  	node,
+		int  	version 
+	) 		
+	slot
+
+Set the version of the node to use.
+
+The example below sets current version number of a node to the maximum version number.
+node.setVersion(exNode, node.getMaxVersionNumber(exNode));
+
+Parameters
+    node	: The name of the node.
+    version	: The new version of the node.
+
+◆ showControls
+bool node::showControls 	( 	String  	node,
+		bool  	show 
+	) 		
+	slot
+
+Shows or hide the controls associated to a node. Similar to hitting "Show Controls" in the Camera View.
+
+The example below show the controls of a peg ("Top/Drawing-P").
+node.showControls("Top/Drawing-P", true);
+
+Parameters
+    node	: The path to the node.
+    show	: True to show the controls of the node, false to hide.
+
+Returns
+    Returns true to indicate the command was successful (false if the node was not found). 
+
+◆ srcNode
+String node::srcNode 	( 	String  	node,
+		int  	iPort 
+	) 		
+	slot
+
+Returns the path for the node that the port is linked to.
+
+The example below uses numberOfInputPorts to get the path to the source node of the parameter. exNode is the full name of a node, such as "Top/MyGroup/MyNode".
+var numInput = node.numberOfInputPorts(exNode);
+var source = node.srcNode(exNode, (numInput-1));
+//Note: This source node is different than the parent node. The source node is the node connected to one of the input ports of the node. The parent is the parent group of the node.
+var parent = node.parentNode(exNode);
+MessageLog.trace(node.equals(parent, source)); //This will print false
+
+Parameters
+    node	: The path of the node.
+    iPort	: The port number on the destination node whose source node you want to find. This value is between 0 and the results of the numberOfInputPorts() method, minus one.
+
+Returns
+    Returns the path for the node that the port is linked to. If there is no source node, returns the null string. 
+
+◆ srcNodeInfo
+QScriptValue node::srcNodeInfo 	( 	String &  	node,
+		int  	iPort 
+	) 		
+	slot
+
+Returns the source node path, the output port number and the link ID for this source node that this destination node is connected to.
+
+The example below shows the relationship between srcNodeInfo and dstNode.
+var exNode = selection.selectedNode(0);
+var numInput = node.numberOfInputPorts(exNode);
+var source = node.srcNodeInfo(exNode, 0);
+//Note: This source node is different than the parent node. The source node is the node connected to one of the input ports of the node. The parent is the parent group of the node.
+var parent = node.parentNode(exNode);
+MessageLog.trace(node.equals(parent, source.node)); //This will print false
+//You can use the 3 properties of the source object to use dstNode()
+var destination = node.dstNode(source.node, source.port, source.link);
+MessageLog.trace(node.equals(destination, exNode); //This will print true
+
+Parameters
+    node	: The path of the source node.
+    iPort	: the port number of which you want to locate the node that is connected to it. This value is between 0 and the result of numberOfInputPorts() method, minus one. This method is similar to srcNode(), however, it returns an object that contains 3 properties:
+
+node - the path of the source node this destination node is linked to. This is the same value as the value returned by srcNode().
+
+port - this is the output port number in the source node that this destination node is connected to.
+
+link - this is the link number in the output port of the source node for this connection.
+
+Returns
+    Returns the source node path, the output port number and the link ID for this source node that this destination node is connected to. 
+
+◆ srcPortIsMattePort
+bool node::srcPortIsMattePort 	( 	String  	node,
+		int  	iPort 
+	) 		
+	slot
+
+Returns whether or not the source port on the given node is a Matte Port.
+
+Parameters
+    node	: The path of the source node.
+    iPort	: The port number to check whether or not it is a Matte Port. This value is between 0 and the result of numberOfInputPorts() minus one.
+
+Returns
+    Returns true if the specified port on the node is a Matte Port. 
+
+◆ subNode
+String node::subNode 	( 	String &  	parent,
+		int  	iSubNode 
+	) 		
+	slot
+
+Returns the path of a node in a group. Nodes are counted starting with zero.
+
+The example below prints all of the sub nodes of a node if the node's type is GROUP. exNode is the full name of a node, such as "Top/MyGroup".
+function groupInfo( exNode )
+{
+  var i = 0;
+  if (node.isGroup(exNode))
+  {
+    MessageLog.trace("The node " + exNode + " has " + node.numberOfSubNodes(exNode) + " sub nodes.");
+    while(i < node.numberOfSubNodes(exNode))
+    {
+      MessageLog.trace(node.subNode(exNode, i));
+      i++;
+    }
+  }
+}
+
+Sample output of the above example to the Message Log view:
+
+The node Top/MyGroup has 2 sub nodes.
+
+Top/MyGroup/MyNode1
+
+Top/MyGroup/MyNode2
+
+Parameters
+    parent	: The path of the parent node.
+    iSubNode	: An integer representing the numerical value of the node. This value must be between 0 and the numberOfSubNodes() method, minus one, for that point.
+
+Returns
+    Returns the path of a node in a group. 
+
+◆ subNodeByName
+String node::subNodeByName 	( 	String &  	parent,
+		String  	name 
+	) 		
+	slot
+
+Returns the full path of a child node belonging to a parent group.
+
+The existence of the parent group is validated as well as the existence of the child node in that parent. Use this method instead of manually concatenating the full path name of child nodes. The example below deconstructs and then rebuilds a node path using subNodeByName. exNode is the full name of a node, such as "Top/MyGroup/MyNode".
+var name = node.getName(exNode);
+var parent = node.parentNode(exNode);
+//With both the parent path and the node name, you can rebuild the original node with subNodeByName
+var rebuiltNode = node.subNodeByName(parent,exNode);
+//This rebuilt node will be equal to the original node
+MessageLog.trace(node.equals(exNode, rebuiltNode)); //This will print true
+
+Parameters
+    parent	: Fully qualified path of the parent group.
+    name	: The actual node name suffix. This one is only the short name, not the full path of the node.
+
+Returns
+    Returns the full path of a child node belonging to a parent group. 
+
+◆ subNodes
+QScriptValue node::subNodes 	( 	String &  	parentGroup	) 	
+	slot
+
+Returns an array of sub nodes.
+
+The example below prints an array of a node's subnodes if the node's type is GROUP. exNode is the full name of a node, such as "Top/MyGroup".
+function groupInfo( exNode )
+{
+  var i = 0;
+  if (node.isGroup(exNode))
+  {
+    MessageLog.trace("The node " + exNode + " has " + node.numberOfSubNodes(exNode) + " sub nodes.");
+    MessageLog.trace(node.subNodes(exNode);
+  }
+}
+
+Sample output of the above example to the Message Log view:
+
+The node Top/MyGroup has 2 sub nodes.
+
+Top/MyGroup/MyNode1,Top/MyGroup/MyNode2
+
+Parameters
+    parentGroup	: The path of the parent node.
+
+Returns
+    Returns an array of sub nodes. 
+
+◆ type
+String node::type 	( 	String  	node	) 	
+	slot
+
+Returns the node type. These are all of the built-in node types available from the Harmony node like: READ, COMPOSITE, PEG, QUADMAP, SHADOW, etc.
+
+The example below prints all of the sub nodes of a node if the node's type is GROUP. exNode is the full name of a node, such as "Top/MyGroup".
+function groupInfo( exNode )
+{
+  var i = 0;
+  if (node.type(exNode) == GROUP)
+  {
+    MessageLog.trace("The node " + exNode + " has " + node.numberOfSubNodes(exNode) + " sub nodes.");
+    while(i < node.numberOfSubNodes(exNode))
+    {
+      MessageLog.trace(node.subNode(exNode, i));
+      i++;
+    }
+  }
+}
+
+Sample output of the above example to the Message Log view:
+
+The node Top/MyGroup has 2 sub nodes.
+
+Top/MyGroup/MyNode1
+
+Top/MyGroup/MyNode2
+
+Other example uses of type can be found in getTextAttr(), setTextAttr(), explodeElementSymbolsInGroups().
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the node type. 
+
+◆ unlink
+bool node::unlink 	( 	String  	dstNode,
+		int  	inPort 
+	) 		
+	slot
+
+Unlink a port on one node from the port on another node.
+
+The example below inserts a new Peg node inbetween the selected node and it's parent. After unlinking the original node from it's original parent, the original parent is linked to the new node, and the new node becomes the parent of the original node.
+function insertPeg()
+{
+  var myNode = selection.selectedNode(0);
+  var parentNode = node.parentNode(myNode);
+  var newPeg = node.add(parent, "New Peg", "PEG", 0, -50, 0);
+  var myNodeDestination = node.dstNode(myNode, 0 , 0);
+  if (node.isLinked(myNode, 0))
+  {
+    node.unlink(myNodeDestination, 0);
+    node.link(myNode, 0 , newPeg, 0);
+    node.link(newPeg, 0 , myNodeDestination, 0);
+  }
+}
+
+Parameters
+    dstNode	: The path of the node whose input port you want to unlink from the source node.
+    inPort	: The input port that you want to unlink. This value is between 0 and the results of the numberOfInputPorts() method, minus one.
+
+Returns
+    Returns true if successful. 
+
+◆ unlinkAttr
+bool node::unlinkAttr 	( 	String  	node,
+		String  	attrName 
+	) 		
+	slot
+
+Unlink an attribute from a function column.
+
+The example below removes a camera pan by unlinking it from the column. It would undo the example shown for linkAttr() and linkedColumn().
+if (node.linkedColumn(myNode, "POSITION.3DPATH") != "")
+  node.unlinkAttr(myNode, "POSITION.3DPATH");
+
+Parameters
+    node	: The name of the node.
+    attrName	: The name of the attribute that you want to unlink.
+
+Returns
+    Returns true if successful. 
+
+◆ width
+virtual int node::width 	( 	String  	node	) 	
+	virtualslot
+
+Returns the width of a given node.
+
+This width parameter is useful for computing the position of nodes in the Node View. It uses the same unit system as the coordX() and coordY() methods. The example below takes 2 nodes as parameters and moves them side by side in the node view.
+function nodeLine(node1, node2) //node1 and node2 are paths of 2 nodes
+{
+   var x = node.coordX(node1);
+   var y = node.coordY(node1);
+   x -= node.width(node1);
+   node.setCoord(node2, x,y);
+}
+
+Parameters
+    node	: The path of the node.
+
+Returns
+    Returns the width of a given node. 
+

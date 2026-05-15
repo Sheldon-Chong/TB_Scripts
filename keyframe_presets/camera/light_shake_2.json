@@ -1,0 +1,62 @@
+{
+  "name": "light_shake_2",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": -0.629,
+      "y": 1.875,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 1,
+      "x": 1.184,
+      "y": -3.614,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 2,
+      "x": 1.43,
+      "y": 3.056,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 3,
+      "x": -0.624,
+      "y": -1.064,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 4,
+      "x": 0.202,
+      "y": 0.629,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 5,
+      "x": 0.056,
+      "y": 0.176,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 6,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  ],
+  "center": 0
+}

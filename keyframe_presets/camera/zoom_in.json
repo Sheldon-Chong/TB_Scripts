@@ -1,0 +1,70 @@
+{
+  "name": "zoom_in",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 1,
+      "x": 0,
+      "y": 0,
+      "z": -0.96,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 2,
+      "x": 0,
+      "y": 0,
+      "z": -1.247,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 3,
+      "x": 0,
+      "y": 0,
+      "z": -7.747,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 4,
+      "x": 0,
+      "y": 0,
+      "z": 3.354,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 5,
+      "x": 0,
+      "y": 0,
+      "z": 0.946,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 6,
+      "x": 0,
+      "y": 0,
+      "z": 0.189,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 7,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  ],
+  "center": 4
+}

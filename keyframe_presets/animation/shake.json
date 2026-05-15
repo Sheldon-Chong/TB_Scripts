@@ -1,0 +1,38 @@
+{
+  "name": "shake",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": -0.0267,
+      "y": -0.0356,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 1,
+      "x": 0.0267,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 2,
+      "x": -0.04,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 3,
+      "x": 0.0267,
+      "y": -0.0889,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  ],
+  "center": null
+}

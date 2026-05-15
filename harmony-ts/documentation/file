@@ -1,0 +1,232 @@
+File Class Reference
+The PermanentFile and TemporaryFile JavaScript classes. Used to represent an actual image file on disk. More...
+
+Public Slots
+File & 	setPath (const String &path)
+ 	Specify absolute path of this image file. Name of file can not be changed if there is an open stream. More...
+ 
+String 	path () const
+ 	Retrieves the full file path. More...
+ 
+File & 	setExtension (const String &ext)
+ 	Change extension for file name. Extension won't change if there is an open stream. More...
+ 
+String 	extension () const
+ 	Retrieve file extension. More...
+ 
+bool 	exists () const
+ 	Verify if file exists on the disk. More...
+ 
+bool 	remove ()
+ 	Remove physical file manually. Cannot remove file if there is an open stream. More...
+ 
+void 	setTextCodec (const String &codecName)
+ 	Sets the codec for this file wrapper for the encoding specified by codecName. Common values for codecName include "ISO 8859-1", "UTF-8", and "UTF-16". More...
+ 
+Stream Manipulation
+bool 	isOpen () const
+ 	Check if file is opened. More...
+ 
+bool 	isClose () const
+ 	Checks if the file is closed. More...
+ 
+bool 	open (int m=int(IO::WRITE_ONLY))
+ 	Opens the file stream for read/write. More...
+ 
+bool 	close ()
+ 	Closes the file stream. More...
+ 
+void 	write (const String &text)
+ 	Write string in current stream. More...
+ 
+void 	writeLine (const String &text)
+ 	Write string line in current stream. More...
+ 
+void 	writeFile (File file)
+ 	Write entire contents of the parameter file in the current stream. More...
+ 
+String 	read ()
+ 	Read entire content of stream. More...
+ 
+String 	readLine ()
+ 	Read single line of stream. More...
+ 
+File management
+bool 	move (File dest)
+ 	Moves the current File to a new File destination. More...
+ 
+bool 	copy (File dest)
+ 	Copy current File to new File destination. More...
+ 
+Public Member Functions
+ 	File ()
+ 	Create a new File. More...
+ 
+ 	File (String path)
+ 	Create a new File. More...
+ 
+Detailed Description
+The PermanentFile and TemporaryFile JavaScript classes. Used to represent an actual image file on disk.
+
+Files can be instantiated in the scripting environment or retrieved in an InputPort object.
+
+There are two possible constructors: the PermanentFile or TemporaryFile. The PermanentFile takes the name of a file as an argument.
+
+file = new PermanentFile( "C:\file.txt" );
+file.open( IO.WRITE_ONLY );                 // open with write only stream
+file.writeLine( "Hello World!" );           // write line to file
+file.close();                               // close file
+The TemporaryFile takes an extension as an argument, an returns a temporary file with that extension. The temporary file and its containing directory will be deleted on exit.
+
+file = new TemporaryFile( "txt" );
+file.open( IO.WRITE_ONLY );                 // open with write only stream
+file.writeLine( "Hello World!" );           // write line to file
+file.close();                               // close file
+Constructor & Destructor Documentation
+◆ File() [1/2]
+File::File	(		)	
+Create a new File.
+
+◆ File() [2/2]
+File::File	(	String 	path	)	
+Create a new File.
+
+Parameters
+path	Path to physical File
+Member Function Documentation
+◆ close
+bool File::close	(		)	
+slot
+Closes the file stream.
+
+Returns
+Returns true if successful.
+◆ copy
+bool File::copy	(	File 	dest	)	
+slot
+Copy current File to new File destination.
+
+Parameters
+dest	: The desired destination of the File.
+Returns
+Returns true if successful.
+◆ exists
+bool File::exists	(		)	const
+slot
+Verify if file exists on the disk.
+
+Returns
+Returns true if the file exists on the disk.
+◆ extension
+String File::extension	(		)	const
+slot
+Retrieve file extension.
+
+Returns
+Returns the file extension String.
+◆ isClose
+bool File::isClose	(		)	const
+slot
+Checks if the file is closed.
+
+Returns
+Returns true if the file is closed.
+◆ isOpen
+bool File::isOpen	(		)	const
+slot
+Check if file is opened.
+
+Returns
+Returns true if the file is open.
+◆ move
+bool File::move	(	File 	dest	)	
+slot
+Moves the current File to a new File destination.
+
+Parameters
+dest	: The desired destination of the File.
+Returns
+Returns true if successful.
+◆ open
+bool File::open	(	int 	m = int(IO::WRITE_ONLY)	)	
+slot
+Opens the file stream for read/write.
+
+Parameters
+m	: IO stream descriptor.
+Returns
+Returns true if successful.
+◆ path
+String File::path	(		)	const
+slot
+Retrieves the full file path.
+
+Returns
+Returns the full file path String.
+◆ read
+String File::read	(		)	
+slot
+Read entire content of stream.
+
+Returns
+Returns the content of the stream as a String.
+◆ readLine
+String File::readLine	(		)	
+slot
+Read single line of stream.
+
+Returns
+Returns a single line from the stream as a String.
+◆ remove
+bool File::remove	(		)	
+slot
+Remove physical file manually. Cannot remove file if there is an open stream.
+
+Returns
+Returns true if successful.
+◆ setExtension
+File& File::setExtension	(	const String & 	ext	)	
+slot
+Change extension for file name. Extension won't change if there is an open stream.
+
+Parameters
+ext	: Extension String of image file.
+Returns
+Returns the File reference.
+◆ setPath
+File& File::setPath	(	const String & 	path	)	
+slot
+Specify absolute path of this image file. Name of file can not be changed if there is an open stream.
+
+Parameters
+path	: Absolute path String of image file.
+Returns
+Returns the File reference.
+◆ setTextCodec
+void File::setTextCodec	(	const String & 	codecName	)	
+slot
+Sets the codec for this file wrapper for the encoding specified by codecName. Common values for codecName include "ISO 8859-1", "UTF-8", and "UTF-16".
+
+Parameters
+codecName	: the codec name
+◆ write
+void File::write	(	const String & 	text	)	
+slot
+Write string in current stream.
+
+Parameters
+text	: Text to write.
+◆ writeFile
+void File::writeFile	(	File 	file	)	
+slot
+Write entire contents of the parameter file in the current stream.
+
+Parameters
+file	: File object.
+◆ writeLine
+void File::writeLine	(	const String & 	text	)	
+slot
+Write string line in current stream.
+
+Parameters
+text	: Text to write.

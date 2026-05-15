@@ -1,0 +1,62 @@
+{
+  "name": "heavy_shake",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 1,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 2,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 3,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 4,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 5,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 6,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    }
+  ],
+  "center": null
+}

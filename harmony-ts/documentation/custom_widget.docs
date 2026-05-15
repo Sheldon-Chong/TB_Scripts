@@ -1,0 +1,116 @@
+
+CustomWidget Class Reference
+Master Controller Node
+
+The CustomWidget JavaScript class. A widget for which the attribute, drag_manipulator, painter, picker and local_transformation components are specified at the widget creation. More...
+Signals
+void 	valueChanged (String newValue)
+ 	valueChanged signal called when value of the attribute of the widget has changed More...
+ 
+Additional Inherited Members
+Detailed Description
+
+The CustomWidget JavaScript class. A widget for which the attribute, drag_manipulator, painter, picker and local_transformation components are specified at the widget creation.
+
+A widget that can have its look, drag manipulation, transformation and picking be customized. The look of the widget can be set at the widget creation by specifying a painter property. By example, the widget can be drawn as a circle, a slider, a point, a plane, an arrow or sphere.
+Painter 	Attribute 	Description
+ARROW_X 	- 	A 3 dimensional arrow pointing the positive X axis. See TranslationXWidget for more information
+ARROW_Y 	- 	A 3 dimensional arrow pointing the positive Y axis. See TranslationYWidget for more information
+ARROW_Z 	- 	A 3 dimensional arrow pointing the positive Z axis. See TranslationZWidget for more information
+CIRCLE_X 	- 	A 2 dimensional circle around the X axis. See RotationXWidget for more information.
+CIRCLE_Y 	- 	A 2 dimensional circle around the Y axis. See RotationYWidget for more information.
+CIRCLE_Z 	- 	A 2 dimensional circle around the Z axis. See RotationZWidget for more information.
+PLANE_XY 	- 	A 2 dimensional plane in the X/Y plane.
+PLANE_YZ 	- 	A 2 dimensional plane in the Y/Z plane.
+PLANE_XZ 	- 	A 2 dimensional plane in the X/Z plane.
+POINT_2D 	POSITION_2D 	A 2 dimensional point in the XY plane. See Point2dWidget for more information.
+SLIDER 	DOUBLE 	A slider handle. See SliderWidget for more information.
+SLIDER_FRAME 	- 	A slider frame. See SliderWidget for more information.
+SPHERE 	- 	A 3 dimensional sphere. See Rotation3dWidgets for more information.
+
+Local transformations let the widget have attributes that affects the widget registered after them. By example, a translation widget could be declared first and enable the user to drag the widgets registered after it. The local transformation is specified by the local_transformation property.
+Local Transformation 	Attribute 	Description
+TRANSLATION_X 	DOUBLE 	A translation along the X axis.
+TRANSLATION_Y 	DOUBLE 	A translation along the Y axis.
+TRANSLATION_Z 	DOUBLE 	A translation along the Z axis.
+ROTATION_X 	DOUBLE 	A rotation around the X axis.
+ROTATION_Y 	DOUBLE 	A rotation around the Y axis.
+ROTATION_Z 	DOUBLE 	A rotation around the Z axis.
+SCALE_X 	DOUBLE 	A scale in the X axis.
+SCALE_Y 	DOUBLE 	A scale in the Y axis.
+SCALE_Z 	DOUBLE 	A scale in the Z axis.
+SCALE_3D 	SCALE_3D 	A scale in the 3 axis.
+TRANSLATION_XYZ 	POSITION_3D 	A 3 dimensional translation
+ROTATION_3D 	ROTATION_3D 	A rotation in the 3 axis.
+
+The picker property enables the user to choose the selection behaviour after being picked.
+Picker 	Description -----—
+MONO 	When the user pick the widget with the Transform tool, deselect everything else. The widget can only be selected alone.
+MULTI 	The user can select he widget alone, but he can also press shift to select other widget that supports multi-selection. Control lasso selection is also supported.
+
+The drag_manipulator property enables the user to choose the behavior of the widget when it is dragged. Please note that the drag behaviour can also be implemented in a javaScript callback with the CustomWidget.
+Drag Manipulator 	Attribute 	Description
+POSITION_2D 	POSITION_2D 	Drag the widget in the model plane of the Master Controller node. The dragging region is limited to the to the given bounding box.
+POSITION_3D 	POSITION_3D 	Drag the widget in any of the 3 axis. The axis available at a specific drag are the ones parallel to the camera plane.
+TRANSLATION_X 	DOUBLE 	Drag the widget along the X axis.
+TRANSLATION_Y 	DOUBLE 	Drag the widget along the Y axis.
+TRANSLATION_Z 	DOUBLE 	Drag the widget along the Z axis.
+ROTATION_X 	DOUBLE 	Drag around the X axis.
+ROTATION_Y 	DOUBLE 	Drag around the Y axis.
+ROTATION_Z 	DOUBLE 	Drag around the Z axis.
+ROTATION_3D 	ROTATION_3D 	Pick a sphere and drag it to generate a rotation in the 3 axis corresponding to the rotation from the picking point of the sphere to the release point.
+SLIDER 	DOUBLE 	Pick the handle of a slider. The handle movement are bounded by the height of the slider.
+
+If a drag manipulator property hasn't been provided, connect the custom widget drag signals to implement the desired behaviour.
+
+Note
+    If you use a drag_manipulator, local_transformation or painter that has an attribute specified in one of the previous tables, you need to set the attribute property to the corresponding type in the widget constructor.
+
+var drag_offset = new Vector3d;
+function onDragStart(context)
+{
+  var projectedPoint = context.projectToModelPlane(context.dragPoint());
+  var modelPickingPoint = context.multiplyByPostMatrix(projectedPoint);
+  var pegPoint = node.getAttr("Top/MyPeg", frame.current(), "POSITION").pos3dValue();
+  var modelOriginPoint = scene.toOGL(pegPoint);
+  drag_offset = modelOriginPoint.minus(modelPickingPoint);
+}
+function onDragTransX(context)  
+{ 
+  var projectedPoint = context.projectToModelPlane(context.dragPoint());
+  var localPoint = context.multiplyByPostMatrix(projectedPoint);
+  var fieldPoint = scene.fromOGL(localPoint.add(drag_offset)); 
+  
+  var newValue = fieldPoint.x;
+  
+  node.setTextAttr("Top/MyController", "TranslationX", frame.current(),  newValue);
+  node.setTextAttr("Top/MyPeg", "POSITION.X", frame.current(), newValue);
+}
+Controller.onShowControl = function()
+{
+  Controller.controls = [];
+  var customWidget = new CustomWidget(
+  {
+    data : "TranslationX",
+    attribute : "DOUBLE",
+    drag_manipulator : "SCRIPT",
+    painter : "ARROW_X",
+    picker : "MONO",
+    local_transformation : "TRANSLATION_X"
+  } );
+  // Register a callback for when a transformation tool value changes.
+  customWidget.dragStarted.connect(onDragStart);
+  customWidget.drag.connect(onDragTransX);
+  Controller.controls.push(customWidget); 
+}
+
+When connecting to a dragStarted or drag signal, the provided context offers methods to compute the location of the dragging point. See DragContext for more information.
+Member Function Documentation
+◆ valueChanged
+void CustomWidget::valueChanged 	( 	String  	newValue	) 	
+	signal
+
+valueChanged signal called when value of the attribute of the widget has changed
+
+Parameters
+    newValue	The new value of the attribute of the widget in text format. The given value is the equivalent of calling node.getTextAttr() with the widget attribute as the method attribute parameter. 

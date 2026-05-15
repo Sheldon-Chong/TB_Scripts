@@ -1,0 +1,464 @@
+
+Dialog Tutorial
+
+This tutorial will show you how to create a dialog, add widgets to it, connect signals and execute it within the Harmony Script Editor.
+
+It will also introduce the UiLoader and cover how to add predefined Qt forms to your scripts.
+Simple Message Boxes
+
+While dialog boxes are highly customizable, message boxes are simple to use and can just as effectively convey an important message or alert to the user. There are three kinds of message boxes: information, warning and critical.
+
+Information boxes display your message and have one button; OK.
+MessageBox.information("This is some information.");
+
+Warning boxes display your message and have two buttons; Abort and Retry.
+MessageBox.warning("This is a warning.");
+
+Critical boxes display your message and have on button; Retry.
+MessageBox.critical("This is critical!");
+
+The Retry and OK buttons function the same, sending the accept signal, and the Abort button sends the reject signal. If the accept signal is sent, the MessageBox will return true, if the reject signal is sent, false will be returned.
+Preset Dialogs
+
+There are 4 simple dialog boxes that you can use that do not require any formatting to get basic input from the user such as an item from a list, a number, or a text string.
+
+Here are some code snippets showing how to implement these preset dialogs.
+
+getText
+Input.getText( String LABEL , String TEXT , String TITLE );
+
+LABEL is the prompt you want to show next to the text field to get input from the user. TEXT is the default text that appears in the dialog box’s text field. TITLE is the title that will appear on the dialog box. This line will return a String.
+
+getNumber
+Input.getNumber( String LABEL , double VALUE , int DECIMALS , double MIN , double MAX , String TITLE );
+
+LABEL is the prompt you want to show next to the number field to get input from the user. VALUE is the default value that appears in the dialog box’s number field. DECIMALS is the number of decimals to allow in the input. MIN is the minimum value allowed for the input. MAX is the maximum value allowed for the input. TITLE is the title that will appear on the dialog box. This line will return a double.
+
+getItem [1/2]
+Input.getItem( String LABEL , LIST , CURRENT , bool EDITABLE , String TITLE );
+
+LABEL is the prompt you want to show next to the item list. LIST is an array of items for the user to choose from. CURRENT is the currently selected item from the list. EDITABLE is a boolean flag whether or not to allow the user to enter their own item. TITLE is the title that will appear on the dialog box. This line will return a value matching the type from the LIST array.
+
+getItem [2/2]
+Input.getItem( LIST , CURRENT , bool EDITABLE );
+
+LIST is an array of items for the user to choose from. CURRENT is the currently selected item from the list. EDITABLE is a boolean flag whether or not to allow the user to enter their own item. This line will return a value matching the type from the LIST array.
+Creating Your Own Dialog
+
+When you create a custom dialog you can create complex boxes that give the user a variety of input options.
+
+For starters, we will start by showing you how to create a very basic dialog:
+function myFirstDialog()
+{
+  var myDialog = new Dialog();
+  myDialog.title = "My First Dialog";
+  myDialog.exec();
+}
+
+The variable myDialog is a dialog object. You can change the title of your dialog box by using dialog.title, or dialog.caption, followed by the string you want to display as the title. dialog.exec is how to execute and display your dialog box, and must be after any customizations of your dialog that you want to display.
+
+Now we can check out some more simple customizations.
+
+By default, a dialog box has 2 buttons; OK and Cancel. Clicking OK sends the accepted signal, causing dialog.exec to return true, and clicking Cancel sends the rejected signal, causing dialog.exec to return false. We can change the text of these buttons using dialog.okButtonText and dialog.cancelButtonText. Here is what that would look like for myDialog from earlier:
+myDialog.okButtonText = "Click here to accept";
+myDialog.cancelButtonText = "Click here to reject";
+
+So far our dialog box is looking pretty bare. We can add some text to the body of the dialog box by using a Label widget:
+var bodyText = new Label();
+bodyText.text = "This is some text to display in the body of the dialog.";
+myDialog.add( bodyText );
+
+This text will appear in a single line in the dialog box, and as is the case for all widgets, the box will be resized to fit it. To add multiple lines of text, you can create and add new Label widgets, or add line breaks in your string.
+
+DIALOG BOX LAYOUT Your dialog box is automatically sized to be the smallest possible while still fitting all the widgets. You can edit your box’s width to make it larger than necessary, but it will not shrink the box smaller than it would be by default.
+myDialog.width = 500;
+
+There are a few other ways to improve the formatting of your dialog box. dialog.addSpace() inserts a block of blank space in your dialog. It can be used to space out widgets, or to change the height of your dialog box before it executes.
+myDialog.addSpace( 25 );
+
+You can also separate your widgets into columns by adding a new column:
+myDialog.newColumn();
+
+Any widgets added to your dialog before adding a new column will show up in the previous column. Your dialog can be split into as many columns as you’d like.
+
+Similar to columns, you can create tabs that appear at the bottom of your dialog box. Any widgets added after a tab will appear in that tab. The widgets that appear in your tabs can be formatted the same way as those in the main body, even with columns. The contents of only one tab can be seen by the user at any given time, and adding additional tabs will increase the number of tabs the user can open, and not create any nested tabs.
+myDialog.newTab("First Tab");
+
+Finally, you can create a group box within you dialog to keep all related widgets together and independently formatted under a specific title.
+var groupBox = new GroupBox();
+groupBox.title = "Group One";
+myDialog.add( groupBox );
+
+Within a group box you can add widgets with GroupBox.add, and have the formatting options of GroupBox.addSpace and GroupBox.newColumn. GroupBox.clear removes all widgets within the group box.
+
+Here is a sample dialog box showcasing all of the formatting options:
+function dialogBoxFormatting()
+{
+  var sampleDialog = new Dialog();
+  sampleDialog.title = "This Is a Sample Dialog";
+  var bodyText = new Label();
+  bodyText.text = "This is some text to display in the body of the dialog.";
+  sampleDialog.add( bodyText );
+  sampleDialog.addSpace( 15 );
+  var moreText = new Label();
+  moreText.text = "And here is some more!";
+  sampleDialog.add( moreText );
+  sampleDialog.addSpace( 15 );
+  var groupBox = new GroupBox();
+  groupBox.title = "Group One";
+  var groupText = new Label();
+  groupText.text = "This text is in a group box.";
+  groupBox.add( groupText );
+  groupBox.newColumn();
+  var columnText = new Label();
+  columnText.text = "This is a second column.";
+  groupBox.add( columnText );
+  sampleDialog.add( groupBox );
+  sampleDialog.addSpace( 15 );
+  sampleDialog.newTab("First tab");
+  var tabText = new Label();
+  tabText.text = "This is a tab.";
+  sampleDialog.add( tabText );
+  sampleDialog.newTab("Second tab");
+  var tab2Text = new Label();
+  tab2Text.text = "This is another tab.";
+  sampleDialog.add( tab2Text );
+  sampleDialog.okButtonText = "OK Button";
+  sampleDialog.cancelButtonText = "Cancel Button";
+  sampleDialog.exec();
+}
+Adding Widgets To Your Dialog
+
+Now that you have learned how to create and format a dialog box, we can move on to using them to get input from a user. There are ten widgets you can use to get user input and here we will show you how to use each of them. These widgets are contained in a wrapper to allow them to be used within the scripting environment, and as a result are missing some of the functionality and properties they would normally have within Qt. This functionality can be regained by using the UiLoader, which is covered at the end of this tutorial.
+
+LineEdit The line edit widget allows you to prompt the user for a line of text and then save their input as a string. The user’s input will be saved into the widget’s LineEdit.text attribute, where it can be accessed. You also can set the value of LineEdit.text before executing your dialog to preload your text edit field with a message or prompt for the user. It is important to note that if you set the value of LineEdit.text and then the user clicks the Cancel button, it will be as if the user entered the preset text.
+var myDialog = new Dialog();
+myDialog.title = "LineEdit Example";
+var userInput = new LineEdit();
+userInput.label = "What is your favourite colour?";
+myDialog.add( userInput );
+if ( myDialog.exec() )
+{
+var inputText = userInput.text;
+MessageLog.trace("Your favourite colour is " + inputText + "!");
+}
+
+TextEdit The text edit widget creates a multi-line text box for the user to write text to. You can save what is written in the text box in a string, and preserve all of the formatting such as line breaks and spacing originally in the text box. The user’s input will be saved into the widget’s text attribute, where it can be accessed. You can set the value of TextEdit.text before executing your dialog to preload your text edit field with a message or prompt for the user. It is important to note that if you set the value of TextEdit.text and then the user hits the Cancel button, it will be as if the user entered the preset text.
+var myDialog = new Dialog();
+myDialog.title = "TextEdit Example";
+var userInput = new TextEdit();
+userInput.text = "Tell us how you feel about this tutorial.";
+myDialog.add( userInput );
+if ( myDialog.exec() )
+{
+var inputText = userInput.text;
+MessageLog.trace( inputText );
+}
+
+Line edit and text edit are very flexible for getting user input, but that input is unpredictable, as the user can type anything into the text field. The following input widgets only accept specific input.
+
+NumberEdit The number edit widget creates a field where the user can input only numbers (0-9) and modifiers for those numbers ( + , - , . ). The ‘+’ and ‘-‘ symbols can only be the first character in the field. Using NumberEdit.minimum, NumberEdit.maximum, and NumberEdit.decimals you can restrict what the user can input further, setting limits for the lowest number possible, the largest number possible, and the number of decimals allowed in the input. You can also edit the label (NumberEdit.label) on a number edit widget to prompt the user properly.
+var myDialog = new Dialog();
+myDialog.title = "NumberEdit Example";
+var userInput = new NumberEdit();
+userInput.decimals = 3;
+userInput.minimum = 0;
+userInput.maximum = 1;
+userInput.label = "Enter a number between 0 and 1: ";
+myDialog.add( userInput );
+if ( myDialog.exec() )
+{
+  var inputNum = userInput.value;
+  MessageLog.trace( inputNum );
+}
+
+DateEdit The date edit widget allows the user to input a date. By default, the date is ordered in the format Day/Month/Year, but the order can be changed using DateEdit.order and the DateEditEnum object. You can also set the minimum and maximum dates allowed by using DateEdit.maximum and DateEdit.minimum. These both require arguments that are Date objects. The default date shown is January 01, 2000, but that can be changed by presenting the DateEdit.date value to a Date object. You can also use DateEdit.label to set a prompt for the user next to the input field.
+var myDialog = new Dialog();
+myDialog.title = "DateEdit Example";
+var userInput = new DateEdit();
+//YMD means the order will be changed to Year:Month:Day in the dialog.
+//The possible orders are DMY, MDY, YMD, YDM.
+userInput.order = DateEditEnum.YMD;
+var min = new Date( 2010, 1, 1 );
+var max = new Date( 2019, 12, 31 );
+var now = new Date();
+userInput.date = now;
+userInput.minimum = min;
+userInput.maximum = max;
+userInput.label = "Pick a date from this decade: ";
+myDialog.add( userInput );
+if ( myDialog.exec() )
+{
+  var inputDate = userInput.date;
+  var day = inputDate.getDate(); //The day returned is in the range 1-31
+  var month = inputDate.getMonth() + 1;  //The month returned is in the range 0-11
+  var year = inputDate.getFullYear();
+  MessageLog.trace("The selected date is " + day + "/" + month + "/" + year + ".");
+}
+
+TimeEdit The time edit widget allows the user to input a time. This widget uses QTime objects, which use 24H clock formatting. By default, the time edit widget allows the user to edit the hour, minute and whether it is the AM or PM. To allow the user to edit the seconds, you can use TimeEdit.showSeconds, and to hide the AM : PM display you can use TimeEdit.showAMPM. You can set minimum and maximum times that the user can enter, with TimeEdit.minimum, and TimeEdit.maximum, either of which must be set to QTime objects. You can set the initial time displayed when the dialog box opens by presetting the TimeEdit.time value, again with a QTime object. You can also use TimeEdit.label to give a prompt to the user next to the input field.
+var myDialog = new Dialog();
+myDialog.title = "TimeEdit Example";
+var userInput = new TimeEdit();
+//Creating 3 new QTime objects for the times 3PM, 5PM and 3PM
+var min = new QTime( 15, 00, 00 );
+var max = new QTime( 18, 00, 00 );
+var preset = new QTime( 15, 00, 00 );
+userInput.time = preset;
+userInput.minimum = min;
+userInput.maximum = max;
+userInput.showSeconds = true;
+userInput.showAMPM = false;
+userInput.label = "Pick an appointment time: ";
+myDialog.add( userInput );
+if ( myDialog.exec() )
+  MessageLog.trace("The chosen time is: " + userInput.time + ".");
+
+SpinBox The spin box widget allows the user to choose a number from an ascending and descending list. The user can also type their choice into the spin box, but only if it is within the minimum and maximum values. It will return an integer value only. You can set the maximum value of the spin box using SpinBox.maximum, and set the minimum value with SpinBox.minimum. You can set the default (starting) value shown in the spin box with SpinBox.value. By default, the spin box goes from 0-99, with an initial value of 0. You can also use SpinBox.label to give a prompt to the user next to the input field.
+var myDialog = new Dialog();
+myDialog.title = "SpinBox Example";
+var userInput = new SpinBox();
+userInput.label = "Pick a number: ";
+userInput.maximum = 100;
+userInput.minimum = 1;
+myDialog.add( userInput );
+if ( myDialog.exec() )
+  MessageLog.trace("The chosen number is: " + userInput.value + ".");
+
+ComboBox The combo box widget allows the user to select an item from a dropdown list. The values for the dropdown list can be added using ComboBox.itemList, with an array of items. If ComboBox.editable is set to true, the user can either select an item from the list, or type in their own value. By default, the editable attribute is set to false. You can get the zero indexed position of the user’s input from your array of items with ComboBox.currentItemPos. You can retrieve their actual selection or input with ComboBox.currentItem. You can also use ComboBox.label to give a prompt to the user next to the dropdown list.
+var myDialog = new Dialog();
+myDialog.title = "ComboBox Example";
+var userInput = new ComboBox();
+userInput.label = "What is your favourite colour?";
+userInput.editable = true;
+userInput.itemList = ["Red", "Green", "Blue", "Yellow", "White", "Pink", "Orange", "Purple", "Black"];
+myDialog.add( userInput );
+if ( myDialog.exec() )
+  MessageLog.trace("Your favourite colour is " + userInput.currentItem + "!");
+
+Slider The slider widget allows the user to select the value from scrollable slider. The default range for the slider is from 0 to 99. The minimum and maximum values of the slider can be set with Slider.minimum and Slider.maximum. The initial value along the slider can be set by presetting the Slider.value. The orientation of the slider in the dialog box can be set with Slider.orientation, and changed to "Horizontal" or "Vertical". By default, the slider will be horizontal. The slider widget also has a built-in signal. Signals can make function calls, such as in this case where there is a valueChanged signal. You can use Slider.callback to call a function whenever the valueChanged signal is sent, meaning whenever the user moves the slider. Slider.valueChanged( int ) will send the valueChanged signal without altering the value of the slider. You can also use Slider.label to give the user context about the slider.
+var mySlider;
+function sliderExample()
+{
+  var myDialog = new Dialog();
+  myDialog.title = "Slider Example";
+  var userInput = new Slider();
+  userInput.label = "Pick a number.";
+  userInput.minimum = -50;
+  userInput.maximum = 50;
+  userInput.value = 0;
+  userInput.orientation = "Vertical";
+  //Whenever the valueChanged() signal is sent,
+  // the current value of the slider will be printed
+  userInput.callback = "printVal";
+  mySlider = userInput;
+  myDialog.add( userInput );
+  myDialog.exec();
+}
+function printVal()
+{
+  //This prints a continuous stream of updating values, as they are changed
+  MessageLog.trace(mySlider.value);
+}
+
+CheckBox The check box widget allows the user to choose a boolean value for a given prompt, the box being checked for true, and unchecked for false. The status of the box can be retrieved or preset with CheckBox.checked, which will also return the associated boolean value. CheckBox.text can be used to give a prompt or label to the check box.
+var myDialog = new Dialog();
+myDialog.title = "CheckBox Example";
+var userInput = new CheckBox();
+userInput.text = "Is this guide helpful?";
+myDialog.add( userInput );
+if ( myDialog.exec() )
+{
+  if( userInput.checked )
+    MessageLog.trace( "The guide is helpful!" );
+}
+
+RadioButton The radio button widget allows the user to choose a one of multiple radio buttons, which must each be instantiated separately. The status of the button can be checked or set with RadioButton.checked, which will return a boolean value. RadioButton.text can be used to give a prompt or label to the check box. By default, a radio button will be unchecked, but once it is checked it cannot be unchecked except by checking a different box in the same container, meaning radio buttons inside a tab or group box will not interact with radio buttons outside of that tab or group box, and vice versa.
+var myDialog = new Dialog();
+myDialog.title = "RadioButton Example";
+var optionOne = new RadioButton();
+optionOne.text = "Pick me!";
+var optionTwo = new RadioButton();
+optionTwo.text = "No, pick me!";
+myDialog.add( optionOne );
+myDialog.newColumn();
+myDialog.add( optionTwo );
+if ( myDialog.exec() )
+{
+  if ( optionOne.checked )
+    MessageLog.trace( "You picked the first option." );
+  else if ( optionTwo.checked )
+    MessageLog.trace( "You picked the second option." );
+  else
+    MessageLog.trace( "Neither option was selected." );
+}
+
+Button The button widget allows you to add your own custom button to the dialog box. You can change the label of the button using Button.label. The button also has a clicked() signal, meaning you can use it to call other functions in the middle of executing your dialog box. You can call a function with this signal using Button.callback.
+var redSpin;
+var greenSpin;
+var blueSpin;
+var alphaSpin;
+function colourDialog()
+{
+  var myDialog = new Dialog();
+  myDialog.title = "Set Colour-Card Colour";
+  var sNode = selection.selectedNode(0);
+  if (node.type(sNode) != "COLOR_CARD")
+  {
+    MessageBox.critical("No Colour-Card Selected \n\nSelect a Colour-Card Node and try again.");
+    return;
+  }
+  var cardColour = colourGetter();
+  //Creating a spin box for each attribute of a colour object, Red, Green Blue and Alpha values
+  var rSpin = new SpinBox();
+  rSpin.maximum = 255;
+  rSpin.minimum = 0;
+  rSpin.value = cardColour.r;
+  rSpin.label = "Red Value: ";
+  redSpin = rSpin;
+  var gSpin = new SpinBox();
+  gSpin.maximum = 255;
+  gSpin.minimum = 0;
+  gSpin.value = cardColour.g;
+  gSpin.label = "Green Value: ";
+  greenSpin = gSpin;
+  var bSpin = new SpinBox();
+  bSpin.maximum = 255;
+  bSpin.minimum = 0;
+  bSpin.value = cardColour.b;
+  bSpin.label = "Blue Value: ";
+  blueSpin = bSpin;
+  var aSpin = new SpinBox();
+  aSpin.maximum = 255;
+  aSpin.minimum = 0;
+  aSpin.value = cardColour.a;
+  aSpin.label = "Alpha Value: ";
+  alphaSpin = aSpin;
+  //Creates a button that will preview the new colour
+  var setter = new Button();
+  setter.label = "Set Colour";
+  setter.callback = "colourSetter";
+  //Adds the widgets with some minor formatting
+  myDialog.addSpace( 5 );
+  myDialog.add( rSpin );
+  myDialog.addSpace( 5 );
+  myDialog.add( gSpin );
+  myDialog.addSpace( 5 );
+  myDialog.add( bSpin );
+  myDialog.addSpace( 5 );
+  myDialog.add( aSpin );
+  myDialog.addSpace( 5 );
+  myDialog.add( setter );
+  myDialog.okButtonText = "Accept Changes";
+  myDialog.cancelButtonText = "Undo";
+  //If ‘Undo’ is clicked, resets the colour to the original
+  if ( !myDialog.exec() )
+  colourResetter( cardColour );
+}
+function colourSetter()
+{
+  var sNode = selection.selectedNode(0);
+  if (node.type(sNode) == "COLOR_CARD")
+  {
+    var myAttr = node.getAttrList(sNode, frame.current(), "");
+    var myColor = new ColorRGBA(redSpin.value, greenSpin.value, blueSpin.value, alphaSpin.value);
+    for(i=0; i < myAttr.length; i++)
+    {
+      if(myAttr[i].typeName() == "COLOR")
+      {
+        myAttr[i].setValue(myColor);
+        view.refreshViews();
+      }
+    }
+  }
+}
+function colourGetter()
+{
+  var sNode = selection.selectedNode(0);
+  if (node.type(sNode) == "COLOR_CARD")
+  {
+    var myAttr = node.getAttrList(sNode, frame.current(), "");
+    for(i=0; i < myAttr.length; i++)
+    {
+      if(myAttr[i].typeName() == "COLOR")
+      {
+        var cardColour = myAttr[i].colorValue();
+      }
+    }
+  }
+  else
+    var cardColour = new ColorRGBA(0,0,0,0);
+  return cardColour;
+}
+function colourResetter( cardColour )
+{
+  var sNode = selection.selectedNode(0);
+  if (node.type(sNode) == "COLOR_CARD")
+  {
+    var myAttr = node.getAttrList(sNode, frame.current(), "");
+    for(i=0; i < myAttr.length; i++)
+    {
+      if(myAttr[i].typeName() == "COLOR")
+      {
+        myAttr[i].setValue( cardColour );
+        view.refreshViews();
+      }
+    }
+  }
+}
+Signals
+
+So far we’ve covered signals when it comes to creating your own button and when using a slider, but the default Cancel and OK buttons also send signals. In a script, these buttons will close the dialog box, but we can use the signals they send as they do to our advantage afterwards. When a dialog box is closed using the Cancel button, the line dialog.exec() will return false, when closed with OK, dialog.exec() will return true. While we can’t change the actual signals sent, we can use the return values generated by these signals locally. The signal emitted by clicking the cancel button is a rejected() signal, that goes to the reject() slot of the dialog box. The signal emitted by clicking the OK button is an accepted() signal, that goes to the accept() slot of the dialog box.
+
+This can be seen in the example above, in the following lines:
+if ( !myDialog.exec() )
+  colourResetter( cardColour );
+
+If the user clicks ‘Undo’ (The cancel button) after testing out a few colours for their colour card, the script will call colourResetter and set the colour card to the colour it was when the function was originally called. If you are going to be using any of the user input after the dialog box is closed then you should contain your dialog.exec(), and the operations involving that input, in an if statement.
+UiLoader
+
+UiLoader allows you to load predefined Qt forms that define Qt Widgets. These pre-defined Qt forms are typically built using Qt Designer.
+
+Using the Qt Designer allows you to create more complex widgets than possible solely within the scripting environment, as you can use all of the pre-defined widgets supported by Qt4.8. These Qt Designer files use the extension *.ui, and are loaded by using the UiLoader.load() function where the parameter is the path to your *.ui file.
+
+All widgets created in the ui file can be edited further inside your script by using the nested name of the attribute you wish to edit. For example, a checkbox inside of a tab inside of a dialog may have the full name dialog.tab.checkbox, and editing its value (whether it’s checked or not when the dialog opens) would look like this:
+this.ui.dialog.tab.checkbox.checked = true;
+
+When using the UiLoader, not only can you edit all of the properties of a widget, you also have access to all of its signals and slots, as well as its inherited properties, signals, and slots. The Qt documentation has all the info on all of the supported widgets as well as their accessible properties: https://doc.qt.io/qt-6.4/. Some of these properties, signals and slots are not usable within the Harmony widget wrapper, so the UiLoader can be a very powerful tool for your script.
+
+The following script and associated predefined form are included in the installation of Harmony, so it can be run inside the Harmony Script Editor to see what it does. The script (TB_LightTableSliderUsingFormLoader.js) can be found in your Harmony folder in /resources/scripts/, or in the Script Editor, and the predefined form (lighttable.ui) can be found in your Harmony folder in /resources/forms/.
+function lightTableExampleUsingPredefineUI()
+{
+  this.opacityChanged = function( digitValue)
+  {
+    this.ui.LightTableOpacityValueLabel.text = digitValue / 256.0;
+    preferences.setDouble("DRAWING_LIGHTTABLE_OPACITY", digitValue/256.0 );
+  }
+  this.washChanged = function( digitValue)
+  {
+    this.ui.LightTableWashValueLabel.text = digitValue / 256.0;
+    preferences.setDouble("DRAWING_LIGHTTABLE_WASH", digitValue/256.0 );
+  }
+  // Load the ui file (created in Qt designer)
+  localPath = specialFolders.resource;
+  System.println( localPath );
+  localPath += "/forms/lighttable.ui";
+  this.ui = UiLoader.load( localPath );
+  // Show the dialog in non-modal fashion.
+  ui.show();
+  // Modify any properties that seem interesting
+  this.ui.windowTitle = "Light Table Values";
+  this.ui.LightTableWashValueLabel.text =preferences.getDouble("DRAWING_LIGHTTABLE_OPACITY",0 );
+  this.ui.LightTableOpacityValueLabel.text =preferences.getDouble("DRAWING_LIGHTTABLE_WASH",0 );
+  this.ui.LightTableWashLabel.text ="LightTable Wash";
+  this.ui.LightTableOpacityLabel.text ="LightTable Opacity";
+  this.ui.LightTableWashSlider.minimun = 0;
+  this.ui.LightTableWashSlider.maximum = 256;
+  this.ui.LightTableWashSlider.value = preferences.getDouble("DRAWING_LIGHTTABLE_WASH",0 ) * 256;
+  this.ui.LightTableOpacitySlider.minimun = 0;
+  this.ui.LightTableOpacitySlider.maximum = 256;
+  this.ui.LightTableOpacitySlider.value = preferences.getDouble("DRAWING_LIGHTTABLE_OPACITY",0 ) * 256;
+  // Connect the sliders signals to a script defined local slot
+  ui.LightTableOpacitySlider.valueChanged.connect( this, this.opacityChanged);
+  ui.LightTableWashSlider.valueChanged.connect( this, this.washChanged);
+}

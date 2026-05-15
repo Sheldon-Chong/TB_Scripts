@@ -1,0 +1,78 @@
+{
+  "name": "pan_right",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 1,
+      "x": 0.086,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 2,
+      "x": 0.492,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 3,
+      "x": 4.54,
+      "y": 0.002,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 4,
+      "x": -5.352,
+      "y": -0.003,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 5,
+      "x": -0.768,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 6,
+      "x": -0.201,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 7,
+      "x": -0.058,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 8,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  ],
+  "center": 4
+}

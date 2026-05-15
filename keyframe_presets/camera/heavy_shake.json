@@ -1,0 +1,62 @@
+{
+  "name": "heavy_shake",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": 3.552,
+      "y": 3.664,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 1,
+      "x": -5.076,
+      "y": -4.799,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 2,
+      "x": -4.894,
+      "y": 4.132,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 3,
+      "x": -2.653,
+      "y": 2.312,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 4,
+      "x": -1.083,
+      "y": 0.789,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 5,
+      "x": -0.302,
+      "y": 0.291,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 6,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  ],
+  "center": 0
+}

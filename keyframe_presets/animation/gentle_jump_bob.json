@@ -1,0 +1,62 @@
+{
+  "name": "gentle_jump_bob",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    {
+      "frame": 1,
+      "x": 0,
+      "y": 0.0833,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1.0144
+    },
+    {
+      "frame": 2,
+      "x": 0,
+      "y": 0.4833,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1.0456
+    },
+    {
+      "frame": 3,
+      "x": 0,
+      "y": 2.5333,
+      "z": 0,
+      "scaleX": 0.9128,
+      "scaleY": 1.103
+    },
+    {
+      "frame": 4,
+      "x": 0,
+      "y": 0.5333,
+      "z": 0,
+      "scaleX": 0.9893,
+      "scaleY": 1.0301
+    },
+    {
+      "frame": 5,
+      "x": 0,
+      "y": 0.1333,
+      "z": 0,
+      "scaleX": 0.9956,
+      "scaleY": 1.0095
+    },
+    {
+      "frame": 6,
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    }
+  ],
+  "center": null
+}

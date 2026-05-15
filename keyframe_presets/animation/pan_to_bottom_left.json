@@ -1,0 +1,78 @@
+{
+  "name": "pan_to_bottom_left",
+  "keyframes": [
+    {
+      "frame": 0,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 1,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 2,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 3,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 4,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 5,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 6,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 7,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    },
+    {
+      "frame": 8,
+      "x": null,
+      "y": null,
+      "z": null,
+      "scaleX": null,
+      "scaleY": null
+    }
+  ],
+  "center": null
+}

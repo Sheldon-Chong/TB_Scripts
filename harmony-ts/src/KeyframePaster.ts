@@ -1,7 +1,7 @@
 include("globals.js");
 include(specialFolders.userScripts + "/keyframePaster/edgeSnappingPreview.js");
-const CAMERA_PRESETS_PATH = specialFolders.userScripts + "/keyframe_presets/camera";
-const ANIMATION_PRESETS_PATH = specialFolders.userScripts + "/keyframe_presets/animation";
+const CAMERA_PRESETS_PATH = "D:/YT projects/Coding/ToonBoom/keyframe_presets/camera";
+const ANIMATION_PRESETS_PATH = "D:/YT projects/Coding/ToonBoom/keyframe_presets/animation";
 
 const KEYFRAME_PRESETS = [
   "gentle_jump_bob",
@@ -121,7 +121,7 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
   try {
     MessageLog.trace("applying");
     scene.beginUndoRedoAccum("Apply " + label + ": " + presetName);
-    const path = specialFolders.userScripts + "/keyframe_presets/" + subFolder + presetName + ".json";
+    const path = "D:/YT projects/Coding/ToonBoom/keyframe_presets/" + subFolder + presetName + ".json";
 
     var content = G.FileUtils.readFrom(path);
 

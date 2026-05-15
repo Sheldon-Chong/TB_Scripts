@@ -1,0 +1,545 @@
+Matrix4x4 Class Reference
+Script Editor | Script Node
+The Matrix4x4 JavaScript class. Defines a four by four matrix container. More...
+
+Public Slots
+double 	value (int row, int column)
+ 	Retrieve single value from Matrix4x4. More...
+ 
+Matrix4x4 & 	setFromEulerAngles (double rx, double ry, double rz)
+ 	Set matrix rotation from Euler angles. More...
+ 
+Vector3d 	axis (int axisIndex)
+ 	Retrieve axis from Matrix4x4. More...
+ 
+Point3d 	origin ()
+ 	Retrieve Matrix4x4 origin. More...
+ 
+bool 	isEmpty ()
+ 	Test if Matrix4x4 is empty. More...
+ 
+Matrix4x4 & 	clear ()
+ 	Clear current Matrix4x4. More...
+ 
+Matrix4x4 & 	normalize ()
+ 	Normalize current Matrix4x4. More...
+ 
+Matrix4x4 & 	multiplyEq (Matrix4x4 m2)
+ 	Multiply current Matrix4x4 with specified Matrix4x4. More...
+ 
+QObject 	multiply (Matrix4x4 m2)
+ 	Multiply current Matrix4x4 with specified Matrix4x4. More...
+ 
+Point3d 	multiply (Point3d p)
+ 	Multiply specified Point3d with current Matrix4x4. More...
+ 
+QObject 	multiply (Vector3d v)
+ 	Multiply specified Vector3d with current Matrix4x4. More...
+ 
+Matrix4x4 & 	translate (Vector3d v)
+ 	Translate current Matrix4x4 with specified Vector3d. More...
+ 
+Matrix4x4 & 	translate (double dx, double dy, double dz=0.0)
+ 	Translate current Matrix4x4. More...
+ 
+Matrix4x4 & 	scale (double sx, double sy, double sz=1.0)
+ 	Scale current Matrix4x4. More...
+ 
+Matrix4x4 & 	rotatePlane (Vector3d v, Point3d p)
+ 	Rotate current Matrix4x4. More...
+ 
+Matrix4x4 & 	rotateRadians (double rad, Vector3d v)
+ 	Rotate current Matrix4x4. More...
+ 
+Matrix4x4 & 	rotateDegrees (double deg, Vector3d v)
+ 	Rotate current Matrix4x4. More...
+ 
+Matrix4x4 & 	skew (double sk)
+ 	Shear current Matrix4x4. More...
+ 
+Matrix4x4 & 	orthogonalProject (double left, double right, double bottom, double top, double zNear, double zFar)
+ 	Calculate an orthogonal projection Matrix4x4. More...
+ 
+Matrix4x4 & 	perspectiveProject (double left, double right, double bottom, double top, double zNear, double zFar)
+ 	Calculate a perspective projection Matrix4x4. More...
+ 
+Matrix4x4 & 	perspectiveProject (double fovy, double ratio, double zNear, double zFar)
+ 	Calculate a perspective projection Matrix4x4. More...
+ 
+Matrix4x4 & 	inverse ()
+ 	Invert current Matrix4x4. More...
+ 
+Matrix4x4 	getInverse ()
+ 	Invert current Matrix4x4. More...
+ 
+Matrix4x4 & 	transpose ()
+ 	Transpose current Matrix4x4. More...
+ 
+Matrix4x4 	getTranspose ()
+ 	Transpose current Matrix4x4. More...
+ 
+Point3d 	extractPosition (Point3d *pivot=NULL, bool force3d=false)
+ 	Extract position from matrix. More...
+ 
+Point3d 	extractScale (Point3d *pivot=NULL, bool force3d=false)
+ 	Extract scale from matrix. More...
+ 
+Point3d 	extractRotation (Point3d *pivot=NULL, bool force3d=false)
+ 	Extract rotation from matrix. More...
+ 
+double 	extractSkew (Point3d *pivot=NULL)
+ 	Extract skew from matrix. More...
+ 
+void 	print (String label)
+ 
+Public Member Functions
+ 	Matrix4x4 ()
+ 	Create a new empty Matrix4x4. More...
+ 
+Properties
+double 	m00
+ 	1st row and 1st column value More...
+ 
+double 	m01
+ 	1st row and 2nd column value More...
+ 
+double 	m02
+ 	1st row and 3rd column value More...
+ 
+double 	m03
+ 	1st row and 4th column value More...
+ 
+double 	m10
+ 	2nd row and 1st column value More...
+ 
+double 	m11
+ 	2nd row and 2nd column value More...
+ 
+double 	m12
+ 	2nd row and 3rd column value More...
+ 
+double 	m13
+ 	2nd row and 4th column value More...
+ 
+double 	m20
+ 	3rd row and 1st column value More...
+ 
+double 	m21
+ 	3rd row and 2nd column value More...
+ 
+double 	m22
+ 	3rd row and 3rd column value More...
+ 
+double 	m23
+ 	3rd row and 4th column value More...
+ 
+double 	m30
+ 	4th row and 1st column value More...
+ 
+double 	m31
+ 	4th row and 2nd column value More...
+ 
+double 	m32
+ 	4th row and 3rd column value More...
+ 
+double 	m33
+ 	4th row and 4th column value More...
+ 
+Detailed Description
+The Matrix4x4 JavaScript class. Defines a four by four matrix container.
+
+Matrix4x4 objects can be instantiated in the scripting environment.
+
+m = new Matrix4x4();               // create empty matrix
+raxis = new Vector3d( 0,0,1 );     // create new axis Vector3d
+m.rotateDegrees( 90, raxis );      // rotate matrix 90 degrees on z axis
+m.scale( 2.0, 1.0, 2.0 );          // scale matrix non-uniformly
+Constructor & Destructor Documentation
+◆ Matrix4x4()
+Matrix4x4::Matrix4x4	(		)	
+Create a new empty Matrix4x4.
+
+Member Function Documentation
+◆ axis
+Vector3d Matrix4x4::axis	(	int 	axisIndex	)	
+slot
+Retrieve axis from Matrix4x4.
+
+Parameters
+axisIndex	Axis index 0 for the X axis, 1 for Y axis, 2 for Z axis.
+Returns
+Vector3d axis
+◆ clear
+Matrix4x4& Matrix4x4::clear	(		)	
+slot
+Clear current Matrix4x4.
+
+Returns
+Matrix4x4 reference
+◆ extractPosition
+Point3d Matrix4x4::extractPosition	(	Point3d * 	pivot = NULL,
+bool 	force3d = false 
+)		
+slot
+Extract position from matrix.
+
+Returns
+Point3d that encapsulates the 3d position.
+◆ extractRotation
+Point3d Matrix4x4::extractRotation	(	Point3d * 	pivot = NULL,
+bool 	force3d = false 
+)		
+slot
+Extract rotation from matrix.
+
+Returns
+Point3d that encapsulates the 3d euler angle.
+◆ extractScale
+Point3d Matrix4x4::extractScale	(	Point3d * 	pivot = NULL,
+bool 	force3d = false 
+)		
+slot
+Extract scale from matrix.
+
+Returns
+Point3d that encapsulates the 3d scale.
+◆ extractSkew
+double Matrix4x4::extractSkew	(	Point3d * 	pivot = NULL	)	
+slot
+Extract skew from matrix.
+
+Returns
+skew value.
+◆ getInverse
+Matrix4x4 Matrix4x4::getInverse	(		)	
+slot
+Invert current Matrix4x4.
+
+Returns
+new Matrix4x4
+◆ getTranspose
+Matrix4x4 Matrix4x4::getTranspose	(		)	
+slot
+Transpose current Matrix4x4.
+
+Returns
+new Matrix4x4
+◆ inverse
+Matrix4x4& Matrix4x4::inverse	(		)	
+slot
+Invert current Matrix4x4.
+
+Returns
+Matrix4x4 reference
+◆ isEmpty
+bool Matrix4x4::isEmpty	(		)	
+slot
+Test if Matrix4x4 is empty.
+
+Returns
+Result of test
+◆ multiply [1/3]
+QObject Matrix4x4::multiply	(	Matrix4x4 	m2	)	
+slot
+Multiply current Matrix4x4 with specified Matrix4x4.
+
+Parameters
+m2	Second Matrix4x4
+Returns
+new Matrix4x4
+◆ multiply [2/3]
+Point3d Matrix4x4::multiply	(	Point3d 	p	)	
+slot
+Multiply specified Point3d with current Matrix4x4.
+
+Parameters
+p	Point3d
+Returns
+new Point3d
+◆ multiply [3/3]
+QObject Matrix4x4::multiply	(	Vector3d 	v	)	
+slot
+Multiply specified Vector3d with current Matrix4x4.
+
+Parameters
+v	Vector3d
+Returns
+new Vector3d
+◆ multiplyEq
+Matrix4x4& Matrix4x4::multiplyEq	(	Matrix4x4 	m2	)	
+slot
+Multiply current Matrix4x4 with specified Matrix4x4.
+
+Parameters
+m2	Second Matrix4x4
+Returns
+Matrix4x4 reference
+◆ normalize
+Matrix4x4& Matrix4x4::normalize	(		)	
+slot
+Normalize current Matrix4x4.
+
+Returns
+Matrix4x4 reference
+◆ origin
+Point3d Matrix4x4::origin	(		)	
+slot
+Retrieve Matrix4x4 origin.
+
+Returns
+Point3d origin
+◆ orthogonalProject
+Matrix4x4& Matrix4x4::orthogonalProject	(	double 	left,
+double 	right,
+double 	bottom,
+double 	top,
+double 	zNear,
+double 	zFar 
+)		
+slot
+Calculate an orthogonal projection Matrix4x4.
+
+Parameters
+left	Left volume value
+right	Right volume value
+bottom	Bottom volume value
+top	Top volume value
+zNear	Near volume value
+zFar	Far volume value
+Returns
+Matrix4x4 reference
+◆ perspectiveProject [1/2]
+Matrix4x4& Matrix4x4::perspectiveProject	(	double 	left,
+double 	right,
+double 	bottom,
+double 	top,
+double 	zNear,
+double 	zFar 
+)		
+slot
+Calculate a perspective projection Matrix4x4.
+
+Parameters
+left	Left volume value
+right	Right volume value
+bottom	Bottom volume value
+top	Top volume value
+zNear	Near volume value
+zFar	Far volume value
+Returns
+Matrix4x4 reference
+◆ perspectiveProject [2/2]
+Matrix4x4& Matrix4x4::perspectiveProject	(	double 	fovy,
+double 	ratio,
+double 	zNear,
+double 	zFar 
+)		
+slot
+Calculate a perspective projection Matrix4x4.
+
+Parameters
+fovy	Vertical field of view angle in radians
+ratio	Screen ratio
+zNear	Near clipping plane
+zFar	Far clipping plane
+Returns
+Matrix4x4 reference
+◆ print
+void Matrix4x4::print	(	String 	label	)	
+slot
+◆ rotateDegrees
+Matrix4x4& Matrix4x4::rotateDegrees	(	double 	deg,
+Vector3d 	v 
+)		
+slot
+Rotate current Matrix4x4.
+
+Parameters
+deg	Angle in degrees
+v	Axis of rotation
+Returns
+Matrix4x4 reference
+◆ rotatePlane
+Matrix4x4& Matrix4x4::rotatePlane	(	Vector3d 	v,
+Point3d 	p 
+)		
+slot
+Rotate current Matrix4x4.
+
+Parameters
+v	Axis of plane
+p	Center of plane
+Returns
+Matrix4x4 reference
+◆ rotateRadians
+Matrix4x4& Matrix4x4::rotateRadians	(	double 	rad,
+Vector3d 	v 
+)		
+slot
+Rotate current Matrix4x4.
+
+Parameters
+rad	Angle in radians
+v	Axis of rotation
+Returns
+Matrix4x4 reference
+◆ scale
+Matrix4x4& Matrix4x4::scale	(	double 	sx,
+double 	sy,
+double 	sz = 1.0 
+)		
+slot
+Scale current Matrix4x4.
+
+Parameters
+sx	Scale value on x axis
+sy	Scale value on y axis
+sz	Scale value on z axis
+Returns
+Matrix4x4 reference
+◆ setFromEulerAngles
+Matrix4x4& Matrix4x4::setFromEulerAngles	(	double 	rx,
+double 	ry,
+double 	rz 
+)		
+slot
+Set matrix rotation from Euler angles.
+
+Parameters
+rx	Euler Angle first component
+ry	Euler Angle second component
+rz	Euler Angle third component
+Returns
+Matrix4x4 reference
+◆ skew
+Matrix4x4& Matrix4x4::skew	(	double 	sk	)	
+slot
+Shear current Matrix4x4.
+
+Parameters
+sk	Shear value
+Returns
+Matrix4x4 reference
+◆ translate [1/2]
+Matrix4x4& Matrix4x4::translate	(	Vector3d 	v	)	
+slot
+Translate current Matrix4x4 with specified Vector3d.
+
+Parameters
+v	Vector3d
+Returns
+Matrix4x4 reference
+◆ translate [2/2]
+Matrix4x4& Matrix4x4::translate	(	double 	dx,
+double 	dy,
+double 	dz = 0.0 
+)		
+slot
+Translate current Matrix4x4.
+
+Parameters
+dx	Translation distance on x axis
+dy	Translation distance on y axis
+dz	Translation distance on z axis
+Returns
+Matrix4x4 reference
+◆ transpose
+Matrix4x4& Matrix4x4::transpose	(		)	
+slot
+Transpose current Matrix4x4.
+
+Returns
+Matrix4x4 reference
+◆ value
+double Matrix4x4::value	(	int 	row,
+int 	column 
+)		
+slot
+Retrieve single value from Matrix4x4.
+
+Parameters
+row	Row value
+column	Column value
+Returns
+single Matrix4x4 value
+Property Documentation
+◆ m00
+double Matrix4x4::m00
+readwrite
+1st row and 1st column value
+
+◆ m01
+double Matrix4x4::m01
+readwrite
+1st row and 2nd column value
+
+◆ m02
+double Matrix4x4::m02
+readwrite
+1st row and 3rd column value
+
+◆ m03
+double Matrix4x4::m03
+readwrite
+1st row and 4th column value
+
+◆ m10
+double Matrix4x4::m10
+readwrite
+2nd row and 1st column value
+
+◆ m11
+double Matrix4x4::m11
+readwrite
+2nd row and 2nd column value
+
+◆ m12
+double Matrix4x4::m12
+readwrite
+2nd row and 3rd column value
+
+◆ m13
+double Matrix4x4::m13
+readwrite
+2nd row and 4th column value
+
+◆ m20
+double Matrix4x4::m20
+readwrite
+3rd row and 1st column value
+
+◆ m21
+double Matrix4x4::m21
+readwrite
+3rd row and 2nd column value
+
+◆ m22
+double Matrix4x4::m22
+readwrite
+3rd row and 3rd column value
+
+◆ m23
+double Matrix4x4::m23
+readwrite
+3rd row and 4th column value
+
+◆ m30
+double Matrix4x4::m30
+readwrite
+4th row and 1st column value
+
+◆ m31
+double Matrix4x4::m31
+readwrite
+4th row and 2nd column value
+
+◆ m32
+double Matrix4x4::m32
+readwrite
+4th row and 3rd column value
+
+◆ m33
+double Matrix4x4::m33
+readwrite
+4th row and 4th column value
+

@@ -49,6 +49,19 @@
         "cwd": "${workspaceFolder}/harmony-ts/src"
       },
       "problemMatcher": "$tsc-watch"
+    },
+    {
+      "label": "Open Matching JS For Active TS",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$activeFile = \"${file}\"; if ([System.IO.Path]::GetExtension($activeFile).ToLowerInvariant() -ne \".ts\") { Write-Host \"Active file is not a .ts file.\"; exit 0 }; $baseName = [System.IO.Path]::GetFileNameWithoutExtension($activeFile); $searchRoot = \"C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Premium\\2400-scripts\"; $match = Get-ChildItem -Path $searchRoot -Recurse -File -Filter ($baseName + \".js\") | Select-Object -First 1; if ($null -ne $match) { Start-Process $match.FullName; Write-Host (\"Opened: \" + $match.FullName) } else { Write-Error (\"No matching .js file found for \" + $baseName + \" under \" + $searchRoot); exit 1 }"
+      ],
+      "problemMatcher": []
     }
   ]
 }

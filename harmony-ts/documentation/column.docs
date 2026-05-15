@@ -1,0 +1,915 @@
+
+column Class Reference
+Script Editor
+
+The column JavaScript global object. Retrieve add or remove values from columns in your scene. More...
+Public Slots
+Column Data.
+int 	numberOf ()
+ 	Returns the number of columns in the scene. More...
+ 
+String 	getName (int columnNumber)
+ 	Returns the unique identifier that names the column. This is not the display name shown in the xsheet. More...
+ 
+String 	getDisplayName (String columnName)
+ 	Returns the displayable name (similar to the one displayed in the xsheet view) of a column. More...
+ 
+ColorRGBA 	getColorForXSheet (String columnName)
+ 	Returns the colour for the given column. More...
+ 
+void 	resetColorForXSheet (String columnName)
+ 	Resests the colour for an Xsheet column. More...
+ 
+void 	setColorForXSheet (String columnName, ColorRGBA color)
+ 	Sets the colour for an Xsheet column. More...
+ 
+String 	type (String columnName)
+ 	This function returns the column type. More...
+ 
+String 	velocityType (String columnName)
+ 	This function returns the column type of nested velocity. More...
+ 
+String 	getEntry (String columnName, int subColumnIndex, double atFrame)
+ 	Returns the value of a cell in a column. More...
+ 
+bool 	isKeyFrame (String columnName, int subColumn, double atFrame)
+ 	Returns true or false indicating if a cell in a column is a keyframe. More...
+ 
+int 	getElementIdOfDrawing (String columnName)
+ 	Returns the element id associated with a drawing column. More...
+ 
+String 	getTextOfExpr (String columnName)
+ 	Returns the expression text in the identified column. More...
+ 
+Column Edition.
+virtual bool 	add (String columnName, String columnType, String position=tr("BOTTOM"))
+ 	Adds a column with the specified name and type. More...
+ 
+virtual String 	generateAnonymousName ()
+ 	Generate a unique anonymous name in the "ATV-XXXXXXXXXXXXXXXX" format, which can be used in conjunction with column.add() to prevent name collisions. More...
+ 
+virtual bool 	removeSoundColumn (String columnName)
+ 	removes the sound column called name from the scene More...
+ 
+virtual bool 	removeUnlinkedFunctionColumn (String columnName)
+ 	Removes an unlinked function column called name from the scene. More...
+ 
+bool 	rename (String oldName, String newName)
+ 	Renames the specified column. More...
+ 
+bool 	setEntry (String columnName, int subColumn, double atFrame, String value)
+ 	Sets the value of a cell in a column. More...
+ 
+bool 	setKeyFrame (String columnName, double atFrame)
+ 	Makes a cell in a column a keyframe. More...
+ 
+bool 	clearKeyFrame (String columnName, double atFrame)
+ 	Removes a keyframe from a cell in a column. More...
+ 
+Drawing Column Edition.
+bool 	setElementIdOfDrawing (String columnName, int elementId)
+ 	Links an empty Drawing column to an element. More...
+ 
+String 	getDrawingType (String columnName, double atFrame)
+ 	Returns a list of all drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown. More...
+ 
+void 	setDrawingType (String columnName, double atFrame, String drawingType)
+ 	Sets the Drawing type at frame f from column col to be newType. More...
+ 
+StringList 	getDrawingColumnList ()
+ 	Retrieves the list of names of drawing timing columns. More...
+ 
+StringList 	getColumnListOfType (String type)
+ 	Retrieves the list of names of timing columns of the given type. More...
+ 
+StringList 	getDrawingTimings (String columnName)
+ 	Retrieves the list of timings used in a drawing column. More...
+ 
+int 	getNextKeyDrawing (String columnName, int startFrame)
+ 	Returns the next key drawing in a drawing column. More...
+ 
+int 	getCurrentVersionForDrawing (String columnName, String timingName)
+ 	Retrieves the current version of a timing. More...
+ 
+bool 	importSound (String columnName, int atFrame, String soundFilePath)
+ 	Import a sound file in the specified column at the specified frame. This function returns a Boolean indicating the success of the operation. More...
+ 
+Expression Column Edition.
+bool 	setTextOfExpr (String columnName, String text)
+ 	Sets the value in the Expression column to the specified text. More...
+ 
+String 	getDrawingName (String columnName, int frame)
+ 	Returns the drawing name for the specified column at the specified frame. More...
+ 
+Move Columns.
+int 	getPos (String columnName)
+ 	Returns the column's position in the XSheet View. More...
+ 
+void 	move (int columnFrom, int columnTo)
+ 	Sets the column at position columnFrom to position columnTo. More...
+ 
+void 	update ()
+ 	Updates the XSheet with all newly added and moved columns. More...
+ 
+String 	selected ()
+ 	Returns the name of the selected column in the XSheet view, including annotation columns. More...
+ 
+Misc.
+String 	generateTiming (String columnName, double forFrame, bool fileExists)
+ 	Returns a timing created for the given column at the given frame. More...
+ 
+bool 	createDrawing (String columnName, String timing)
+ 	Creates an empty drawing in the specified column. More...
+ 
+bool 	renameDrawing (String columnName, String oldTiming, String newTiming)
+ 	Renames the specified drawing to the new name, in the specified column. More...
+ 
+bool 	renameDrawingWithPrefix (String columnName, String oldTiming, String prefix)
+ 	Prepends the prefix to the drawing name in the specified column. More...
+ 
+bool 	deleteDrawingAt (String columnName, int frame)
+ 	Deletes the drawing at the specified frame in the specified column. More...
+ 
+bool 	duplicateDrawingAt (String columnName, int frame)
+ 	Duplicates the drawing at the specified frame in the specified column. More...
+ 
+bool 	addKeyDrawingExposureAt (String columnName, int frame)
+ 	Adds a key drawing exposure at the specified frame in the specified column. More...
+ 
+bool 	removeKeyDrawingExposureAt (String columnName, int frame)
+ 	Removes a key drawing exposure at the specified frame in the specified column. More...
+ 
+bool 	removeDuplicateKeyDrawingExposureAt (String columnName, int frameNumber)
+ 	Removes duplicate key drawing exposure at the specified frame in the specified column. More...
+ 
+bool 	fillEmptyCels (String columnName, int startFrame, int endFrame)
+ 	Fill with previous exposed drawings for the given range of frame. More...
+ 
+bool 	lineTestFill (String columnName, int startFrame, int nbFrames, String prefix, bool keyFramesOnly)
+ 	Fills the drawings from startFrame to startFrame+nbFrames with drawing duplicates named with a prefix. More...
+ 
+QObject * 	soundColumn (String &columnName)
+ 	Returns a column object that contains a reference to that sound column. The column object contains a useful interface to introspecting the sound and its sound sequences. More...
+ 
+columnMarkers 	columnMarkers (String &columnName)
+ 	Returns the column marker interface for the given column. More...
+ 
+QScriptValue 	getTimesheetEntry (String &columnName, int subColumn, double atFrame)
+ 	Returns an object containing timesheet values for the column and frame requested. That object will have those properties: displayText, heldFrame, emptyCell, isCtrlPnt, isSymbol. More...
+ 
+QImage 	getImageBlock (String &columnName, int startFrame, int nbFrames)
+ 	Returns the annotation image for a given column, for the range of frames requested. The returned image is filled to include empty frames, so it can be easily aligned by client scripts. More...
+ 
+Detailed Description
+
+The column JavaScript global object. Retrieve add or remove values from columns in your scene.
+
+The function below prints information about each column in your scene. For example, one line of output may be ' element = 2 drawingcolumn (DRAWING) myColumn myElement'.
+function printColumnInfo()
+{
+  n = column.numberOf();
+  MessageLog.trace("Columns");
+  for (i = 0; i < n; ++i)
+  {
+    var line;
+    var name = column.getName(i);
+    var displayName = column.getDisplayName(name);
+    var type = column.type(name);
+    var line = i + " " + name + "(" + type + ")  " + displayName;
+    if (type == "DRAWING")
+      line += " element = "
+              + column.getElementIdOfDrawing(name);
+    MessageLog.trace(line);
+  }
+}
+
+The function below adds a new annotation column to the XSheet, and moves it to the left most position.
+function addAnnotationColumn()
+{
+  column.add("Note", "ANNOTATION");
+  column.update();
+  var currentPosition = column.getPos("Note");
+  column.move(currentPosition, 0);
+}
+Member Function Documentation
+◆ add
+virtual bool column::add 	( 	String  	columnName,
+		String  	columnType,
+		String  	position = tr("BOTTOM") 
+	) 		
+	virtualslot
+
+Adds a column with the specified name and type.
+
+Parameters
+    columnName	The name of the column
+    columnType	The type of column you want to add. You can add any of the following: DRAWING, SOUND, 3DPATH, BEZIER, EASE, EXPR (for expression), TIMING, QUARTERNION, ANNOTATION and FILE_LIBRARY.
+    position	Unused.
+
+Returns
+    whether the operation was successful
+
+Example usage:
+column.add ("ATV-0000000000000501", "FILE_LIBRARY" );
+◆ addKeyDrawingExposureAt
+bool column::addKeyDrawingExposureAt 	( 	String  	columnName,
+		int  	frame 
+	) 		
+	slot
+
+Adds a key drawing exposure at the specified frame in the specified column.
+
+Parameters
+    columnName	: The name of the drawing column.
+    frame	: The frame number.
+
+Returns
+    Returns true if successful. 
+
+◆ clearKeyFrame
+bool column::clearKeyFrame 	( 	String  	columnName,
+		double  	atFrame 
+	) 		
+	slot
+
+Removes a keyframe from a cell in a column.
+
+Parameters
+    columnName	: The name of the column.
+    atFrame	: The frame number where you want to clear the keyframe.
+
+Returns
+    Returns true if successful. 
+
+◆ columnMarkers
+columnMarkers column::columnMarkers 	( 	String &  	columnName	) 	
+	slot
+
+Returns the column marker interface for the given column.
+
+Parameters
+    columnName	The name of the column for which to get the column marker.
+
+Returns
+    A reference to the columns' marker manager. 
+
+◆ createDrawing
+bool column::createDrawing 	( 	String  	columnName,
+		String  	timing 
+	) 		
+	slot
+
+Creates an empty drawing in the specified column.
+
+Parameters
+    columnName	: The name of the drawing column.
+    timing	: The timing as shown in the xsheet.
+
+Returns
+    Returns true if successful. 
+
+◆ deleteDrawingAt
+bool column::deleteDrawingAt 	( 	String  	columnName,
+		int  	frame 
+	) 		
+	slot
+
+Deletes the drawing at the specified frame in the specified column.
+
+Parameters
+    columnName	: The name of the drawing column.
+    frame	: The frame number.
+
+Returns
+    Returns true if successful. 
+
+◆ duplicateDrawingAt
+bool column::duplicateDrawingAt 	( 	String  	columnName,
+		int  	frame 
+	) 		
+	slot
+
+Duplicates the drawing at the specified frame in the specified column.
+
+Parameters
+    columnName	: The name of the drawing column.
+    frame	: The frame number.
+
+Returns
+    Returns true if successful. 
+
+◆ fillEmptyCels
+bool column::fillEmptyCels 	( 	String  	columnName,
+		int  	startFrame,
+		int  	endFrame 
+	) 		
+	slot
+
+Fill with previous exposed drawings for the given range of frame.
+
+Parameters
+    columnName	: The name of the drawing column.
+    startFrame	: The starting frame.
+    endFrame	: The ending frame, just after the last filled frame.
+
+Returns
+    Returns true if successful. 
+
+◆ generateAnonymousName
+virtual String column::generateAnonymousName 	( 		) 	
+	virtualslot
+
+Generate a unique anonymous name in the "ATV-XXXXXXXXXXXXXXXX" format, which can be used in conjunction with column.add() to prevent name collisions.
+
+Returns
+    The unique anonymous name string
+
+Example usage:
+var colName = column.generateAnonymousName();
+◆ generateTiming
+String column::generateTiming 	( 	String  	columnName,
+		double  	forFrame,
+		bool  	fileExists 
+	) 		
+	slot
+
+Returns a timing created for the given column at the given frame.
+
+Parameters
+    columnName	: The name of the drawing column.
+    forFrame	: The desired frame to generate a timing for.
+    fileExists	: True if the file exists already.
+
+Returns
+    Returns a timing created for the given column at the given frame. 
+
+◆ getColorForXSheet
+ColorRGBA column::getColorForXSheet 	( 	String  	columnName	) 	
+	slot
+
+Returns the colour for the given column.
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns the colour for the given column. 
+
+◆ getColumnListOfType
+StringList column::getColumnListOfType 	( 	String  	type	) 	
+	slot
+
+Retrieves the list of names of timing columns of the given type.
+
+Parameters
+    type	: The type of column string,i.e."DRAWING".
+
+Returns
+    Returns the list of names of timing columns of the given type. 
+
+◆ getCurrentVersionForDrawing
+int column::getCurrentVersionForDrawing 	( 	String  	columnName,
+		String  	timingName 
+	) 		
+	slot
+
+Retrieves the current version of a timing.
+
+Parameters
+    columnName	: The name of the drawing column.
+    timingName	: The timing as shown in the xsheet.
+
+Returns
+    Returns the current version of a timing. 
+
+◆ getDisplayName
+String column::getDisplayName 	( 	String  	columnName	) 	
+	slot
+
+Returns the displayable name (similar to the one displayed in the xsheet view) of a column.
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns the displayable name of a column. 
+
+◆ getDrawingColumnList
+StringList column::getDrawingColumnList 	( 		) 	
+	slot
+
+Retrieves the list of names of drawing timing columns.
+
+Returns
+    Returns the list of names of drawing timing columns. 
+
+◆ getDrawingName
+String column::getDrawingName 	( 	String  	columnName,
+		int  	frame 
+	) 		
+	slot
+
+Returns the drawing name for the specified column at the specified frame.
+
+Parameters
+    columnName	: The name of the column.
+    frame	: The frame number.
+
+Returns
+    Returns the drawing name for the specified column at the specified frame. 
+
+◆ getDrawingTimings
+StringList column::getDrawingTimings 	( 	String  	columnName	) 	
+	slot
+
+Retrieves the list of timings used in a drawing column.
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns the list of timings used in a drawing column. 
+
+◆ getDrawingType
+String column::getDrawingType 	( 	String  	columnName,
+		double  	atFrame 
+	) 		
+	slot
+
+Returns a list of all drawing types used in the drawing column. K = key drawings, I = inbetween, B = breakdown.
+
+Parameters
+    columnName	: The name of the column.
+    atFrame	: The frame number.
+
+Returns
+    Returns the drawing type in the drawing column at the given frame. 
+
+◆ getElementIdOfDrawing
+int column::getElementIdOfDrawing 	( 	String  	columnName	) 	
+	slot
+
+Returns the element id associated with a drawing column.
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns the element id associated with a drawing column. 
+
+◆ getEntry
+String column::getEntry 	( 	String  	columnName,
+		int  	subColumnIndex,
+		double  	atFrame 
+	) 		
+	slot
+
+Returns the value of a cell in a column.
+
+Parameters
+    columnName	: name of column
+    subColumnIndex	: The index of the sub-column. Only 3D Path columns support sub-column. They have sub-columns for the X, Y, Z and velocity values on the 3D Path. Each sub-column has an index:
+
+        X = 1
+        Y = 2
+        Z = 3
+        Velocity = 4
+
+    atFrame	: The frame number that you want to retrieve the value from.
+
+Returns
+    Returns the value of a cell in a column. 
+
+◆ getImageBlock
+QImage column::getImageBlock 	( 	String &  	columnName,
+		int  	startFrame,
+		int  	nbFrames 
+	) 		
+	slot
+
+Returns the annotation image for a given column, for the range of frames requested. The returned image is filled to include empty frames, so it can be easily aligned by client scripts.
+
+Parameters
+    columnName	Name of the column.
+    startFrame	The starting frame.
+    nbFrames	The desired length.
+
+◆ getName
+String column::getName 	( 	int  	columnNumber	) 	
+	slot
+
+Returns the unique identifier that names the column. This is not the display name shown in the xsheet.
+
+Parameters
+    columnNumber	: This is an integer that represents the numerical value of the column. This integer is between 0 and column.numberOf.
+
+Returns
+    Returns the unique identifier that names the column. 
+
+◆ getNextKeyDrawing
+int column::getNextKeyDrawing 	( 	String  	columnName,
+		int  	startFrame 
+	) 		
+	slot
+
+Returns the next key drawing in a drawing column.
+
+Parameters
+    columnName	: The name of the column.
+    startFrame	: This is the frame number that specifies the search start point.
+
+Returns
+    Returns the starting frame of the next key drawing in a drawing column. 
+
+◆ getPos
+int getPos 	( 	String  	columnName	) 	
+	slot
+
+Returns the column's position in the XSheet View.
+
+This is between 0 and column.numberOf()-1, and is different than the column's index.
+
+Parameters
+    columnName	: The name of the column to get the position of.
+
+Returns
+    the column's position in the XSheet View. 
+
+◆ getTextOfExpr
+String column::getTextOfExpr 	( 	String  	columnName	) 	
+	slot
+
+Returns the expression text in the identified column.
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns the expression text in the identified column. 
+
+◆ getTimesheetEntry
+QScriptValue column::getTimesheetEntry 	( 	String &  	columnName,
+		int  	subColumn,
+		double  	atFrame 
+	) 		
+	slot
+
+Returns an object containing timesheet values for the column and frame requested. That object will have those properties: displayText, heldFrame, emptyCell, isCtrlPnt, isSymbol.
+
+Parameters
+    columnName	name of the column.
+    subColumn	The number value of the sub-column. This only exists in the case of 3D Path columns, which include a group of sub-columns for the X, Y, Z and velocity values on the 3D Path. Each sub-column has a number: X=1 Y=2 Z=3 Velocity = 4
+    atFrame	The frame number.
+
+◆ importSound
+bool column::importSound 	( 	String  	columnName,
+		int  	atFrame,
+		String  	soundFilePath 
+	) 		
+	slot
+
+Import a sound file in the specified column at the specified frame. This function returns a Boolean indicating the success of the operation.
+
+Parameters
+    columnName	: The name of the column.
+    atFrame	: The frame number.
+    soundFilePath	: The path to the sound file.
+
+Returns
+    Returns true if successful. 
+
+◆ isKeyFrame
+bool column::isKeyFrame 	( 	String  	columnName,
+		int  	subColumn,
+		double  	atFrame 
+	) 		
+	slot
+
+Returns true or false indicating if a cell in a column is a keyframe.
+
+Parameters
+    columnName	: name of column
+    subColumn	: The number value of the sub-column. This only exists in the case of 3D Path columns, which include a group of sub-columns for the X, Y, Z and velocity values on the 3D Path. Each sub-column has a number:
+
+        X = 1
+        Y = 2
+        Z = 3
+        Velocity = 4
+
+    atFrame	: The frame number that you want to retrieve the value from.
+
+Returns
+    Returns true if the cell in a column is a keyframe. 
+
+◆ lineTestFill
+bool column::lineTestFill 	( 	String  	columnName,
+		int  	startFrame,
+		int  	nbFrames,
+		String  	prefix,
+		bool  	keyFramesOnly 
+	) 		
+	slot
+
+Fills the drawings from startFrame to startFrame+nbFrames with drawing duplicates named with a prefix.
+
+Parameters
+    columnName	: The name of the column.
+    startFrame	: The starting frame.
+    nbFrames	: The desired length.
+    prefix	: The desired prefix.
+    keyFramesOnly	: It will perform this operation only on drawings marked as "K" if keyOnly is true.
+
+Returns
+    Returns true if successful. 
+
+◆ move
+void move 	( 	int  	columnFrom,
+		int  	columnTo 
+	) 		
+	slot
+
+Sets the column at position columnFrom to position columnTo.
+
+Retrieve the position of a column with getPos(). The position of a column is not the same as it's index.
+
+Parameters
+    columnFrom	: The position of the column you want to move in the XSheet.
+    columnTo	: The position the column will be moved to.
+
+◆ numberOf
+int column::numberOf 	( 		) 	
+	slot
+
+Returns the number of columns in the scene.
+
+Returns
+    Returns the number of columns in the scene. 
+
+◆ removeDuplicateKeyDrawingExposureAt
+bool column::removeDuplicateKeyDrawingExposureAt 	( 	String  	columnName,
+		int  	frameNumber 
+	) 		
+	slot
+
+Removes duplicate key drawing exposure at the specified frame in the specified column.
+
+Parameters
+    columnName	: The name of the drawing column.
+    frameNumber	: The frame number.
+
+Returns
+    Returns true if successful. 
+
+◆ removeKeyDrawingExposureAt
+bool column::removeKeyDrawingExposureAt 	( 	String  	columnName,
+		int  	frame 
+	) 		
+	slot
+
+Removes a key drawing exposure at the specified frame in the specified column.
+
+Parameters
+    columnName	: The name of the drawing column.
+    frame	: The frame number.
+
+Returns
+    Returns true if successful. 
+
+◆ removeSoundColumn
+virtual bool column::removeSoundColumn 	( 	String  	columnName	) 	
+	virtualslot
+
+removes the sound column called name from the scene
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns true if successful. 
+
+◆ removeUnlinkedFunctionColumn
+virtual bool column::removeUnlinkedFunctionColumn 	( 	String  	columnName	) 	
+	virtualslot
+
+Removes an unlinked function column called name from the scene.
+
+In order to unlink the function column from it's module, use node.unlinkAttr on it first.
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns true if successful. 
+
+◆ rename
+bool column::rename 	( 	String  	oldName,
+		String  	newName 
+	) 		
+	slot
+
+Renames the specified column.
+
+Parameters
+    oldName	: The original name of the column you want to change.
+    newName	: The new name of the column.
+
+Returns
+    Returns true if successful. 
+
+◆ renameDrawing
+bool column::renameDrawing 	( 	String  	columnName,
+		String  	oldTiming,
+		String  	newTiming 
+	) 		
+	slot
+
+Renames the specified drawing to the new name, in the specified column.
+
+Parameters
+    columnName	: The name of the drawing column.
+    oldTiming	: The old timing as shown in the xsheet.
+    newTiming	: The desired timing as shown in the xsheet.
+
+Returns
+    Returns true if successful. 
+
+◆ renameDrawingWithPrefix
+bool column::renameDrawingWithPrefix 	( 	String  	columnName,
+		String  	oldTiming,
+		String  	prefix 
+	) 		
+	slot
+
+Prepends the prefix to the drawing name in the specified column.
+
+Parameters
+    columnName	: The name of drawing the column.
+    oldTiming	: The old timing as shown in the xsheet.
+    prefix	: The new prefix.
+
+Returns
+    Returns true if successful. 
+
+◆ resetColorForXSheet
+void column::resetColorForXSheet 	( 	String  	columnName	) 	
+	slot
+
+Resests the colour for an Xsheet column.
+
+Ex. resets a pure RED colour object and sets this colour to the column name Drawing
+var colId = node.linkedColumn(nodeName, "DRAWING.ELEMENT");
+column.resetColorForXSheet( colId);
+
+Parameters
+    columnName	: The name of the column.
+
+◆ selected
+String column::selected 	( 		) 	
+	slot
+
+Returns the name of the selected column in the XSheet view, including annotation columns.
+◆ setColorForXSheet
+void column::setColorForXSheet 	( 	String  	columnName,
+		ColorRGBA  	color 
+	) 		
+	slot
+
+Sets the colour for an Xsheet column.
+
+Ex. create a pure RED colour object and sets this colour to the column name Drawing
+var c = new ColorRGBA( 255,0,0);
+column.setColorForXSheet( "Drawing", c );
+
+Parameters
+    columnName	: The name of the column.
+    color	: A colour object of type Color.
+
+◆ setDrawingType
+void column::setDrawingType 	( 	String  	columnName,
+		double  	atFrame,
+		String  	drawingType 
+	) 		
+	slot
+
+Sets the Drawing type at frame f from column col to be newType.
+
+K = key drawings, I = inbetween, B = breakdown
+
+Parameters
+    columnName	: The name of the column.
+    atFrame	: The frame number.
+    drawingType	: K = key drawings, I = inbetween, B = breakdown.
+
+◆ setElementIdOfDrawing
+bool column::setElementIdOfDrawing 	( 	String  	columnName,
+		int  	elementId 
+	) 		
+	slot
+
+Links an empty Drawing column to an element.
+
+Parameters
+    columnName	: The name of the column.
+    elementId	: The id of the element you want to link to the column.
+
+Returns
+    Returns true if successful. 
+
+◆ setEntry
+bool column::setEntry 	( 	String  	columnName,
+		int  	subColumn,
+		double  	atFrame,
+		String  	value 
+	) 		
+	slot
+
+Sets the value of a cell in a column.
+
+Parameters
+    columnName	: The name of the column
+    subColumn	The number value of the sub-column. This only exists in the case of 3D Path columns, which include a group of sub-columns for the X, Y, Z and velocity values on the 3D Path. Each sub-column has a number: X=1 Y=2 Z=3 Velocity = 4
+    atFrame	The frame number that you want to retrieve the value from.
+    value	: the new value
+
+Returns
+    whether the operation was successful
+
+Example usage:
+column.setEntry("ATV-0000000000000501", 1, 1, "scripts");
+◆ setKeyFrame
+bool column::setKeyFrame 	( 	String  	columnName,
+		double  	atFrame 
+	) 		
+	slot
+
+Makes a cell in a column a keyframe.
+
+Parameters
+    columnName	: The name of the column.
+    atFrame	: The frame number where you want to set the keyframe.
+
+Returns
+    Returns true if successful. 
+
+◆ setTextOfExpr
+bool column::setTextOfExpr 	( 	String  	columnName,
+		String  	text 
+	) 		
+	slot
+
+Sets the value in the Expression column to the specified text.
+
+Parameters
+    columnName	: The name of the column.
+    text	: The expression text.
+
+Returns
+    Returns true if successful. 
+
+◆ soundColumn
+QObject* column::soundColumn 	( 	String &  	columnName	) 	
+	slot
+
+Returns a column object that contains a reference to that sound column. The column object contains a useful interface to introspecting the sound and its sound sequences.
+
+Parameters
+    columnName	: The name of the sound column.
+
+Returns
+    Returns a SoundColumnInterface object that contains a reference to that sound column. 
+
+◆ type
+String column::type 	( 	String  	columnName	) 	
+	slot
+
+This function returns the column type.
+
+There are nine column types: drawing (DRAWING), sound (SOUND), 3D Path (3DPATH), Bezier Curve (BEZIER), Ease Curve (EASE), Expression (EXPR), Timing (TIMING) for timing columns, Quaternion path (QUATERNIONPATH) for 3D rotation and Annotation (ANNOTATION) for annotation columns.
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns the column type. 
+
+◆ update
+void update 	( 		) 	
+	slot
+
+Updates the XSheet with all newly added and moved columns.
+
+update() needs to be called before moving a newly added column.
+◆ velocityType
+String column::velocityType 	( 	String  	columnName	) 	
+	slot
+
+This function returns the column type of nested velocity.
+
+If column is of 3D Path (3DPATH) type, retrieve nested velocity type. Either Bezier Curve (BEZIER) or Ease Curve (EASE).
+
+Parameters
+    columnName	: The name of the column.
+
+Returns
+    Returns the column type of nested velocity. 
+

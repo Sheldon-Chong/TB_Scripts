@@ -11,12 +11,14 @@
     "downlevelIteration": false,
     "noEmitHelpers": true,
     "skipLibCheck": true,
-    "allowJs": false
+    "allowJs": false,
   },
+  "exclude": [
+    "archive"
+  ],
   "include": [
     "src/**/*.ts", 
     "archsrc/test.ts", 
     "src/Toolbar.ts"
 , "frame-change-dialog.ts"  ],
-  "exclude": []
 }
