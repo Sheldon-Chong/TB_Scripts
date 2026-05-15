@@ -8,7 +8,7 @@ include(specialFolders.userScripts + "/utils/utils.js");
 include(specialFolders.userScripts + "/utils/Transformations.js");
 include(specialFolders.userScripts + "/widgets/WidgetUtils.js");
 include(specialFolders.userScripts + "/utils/ColorUtils.js");
-include(specialFolders.userScripts+"/Layers.js");
+include(specialFolders.userScripts + "/Layers.js");
 include(specialFolders.userScripts + "/utils/FileUtils.js");
 // include(specialFolders.userScripts + "/RenderUtils.js");
 // include(specialFolders.userScripts + "/Renderer.js");
@@ -20,7 +20,7 @@ include("Toolbar.js");
 include(specialFolders.userScripts + "/utils/GlobalPalettes.js");
 
 class HarmonyGlobals {
-  Shapes = Shapes;
+  // Shapes = Shapes;
   Math = Maths;
   Transformations = Transformations;
   DrawingView = DrawingView;
@@ -75,19 +75,19 @@ this.__proto__.G = _;
 
 
 var __extends = (this && this.__extends) || (function () {
-	var extendStatics = function (d, b) {
-		extendStatics = Object.setPrototypeOf ||
-			({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-			function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-		return extendStatics(d, b);
-	};
-	return function (d, b) {
-		if (typeof b !== "function" && b !== null)
-			throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-		extendStatics(d, b);
-		function __() { this.constructor = d; }
-		d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
+  var extendStatics = function (d, b) {
+    extendStatics = Object.setPrototypeOf ||
+      ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+      function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+  };
+  return function (d, b) {
+    if (typeof b !== "function" && b !== null)
+      throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
 })();
 
 this.__proto__.__extends = __extends;
