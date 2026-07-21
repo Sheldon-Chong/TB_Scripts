@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "C:/Users/emers/AppData/Roaming/Toon Boom Animation/Toon Boom Harmony Premium/2400-scripts"
+			"path": "C:/Users/emers/AppData/Roaming/Toon Boom Animation/Toon Boom Harmony Advanced/2500-scripts"
 		}
 	],
 	"settings": {
@@ -14,12 +14,15 @@
 			"statusBar.background": "#97ad7a",
 			"statusBar.foreground": "#15202b",
 			"statusBarItem.hoverBackground": "#7e975d",
-			"statusBarItem.remoteBackground": "#97ad7a",
+			"statusBarItem.remoteBackground": "#55738a",
 			"statusBarItem.remoteForeground": "#15202b",
 			"titleBar.activeBackground": "#97ad7a",
 			"titleBar.activeForeground": "#15202b",
 			"titleBar.inactiveBackground": "#97ad7a99",
-			"titleBar.inactiveForeground": "#15202b99"
+			"titleBar.inactiveForeground": "#15202b99",
+			"commandCenter.foreground": "#15202b",
+			"statusBar.debuggingBackground": "#97ad7a",
+			"statusBar.debuggingForeground": "#15202b"
 		},
 		"peacock.color": "#97ad7a",
 		"folder-color.pathColors": []

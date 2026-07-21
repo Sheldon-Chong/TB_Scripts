@@ -19,6 +19,40 @@ include(specialFolders.userScripts + "/utils/renderUtils.js");
 include("Toolbar.js");
 include(specialFolders.userScripts + "/utils/GlobalPalettes.js");
 
+
+function listAll() {
+  var allNodesList = [];
+
+  // Recursive helper function to crawl through groups
+  function findNodesInGroup(parentPath) {
+    var count = node.numberOfSubNodes(parentPath);
+
+    for (var i = 0; i < count; i++) {
+      // Get the full path of the current sub-node
+      var currentNode = node.subNode(parentPath, i);
+      allNodesList.push(currentNode);
+
+      // If this node is a group, look inside it too
+      if (node.isGroup(currentNode)) {
+        findNodesInGroup(currentNode);
+      }
+    }
+  }
+
+  // Start crawling from the very top layer of the project
+  var sceneRoot = node.root();
+  findNodesInGroup(sceneRoot);
+
+  // Print the results to the Message Log
+  MessageLog.trace("--- Found " + allNodesList.length + " Nodes ---");
+  for (var j = 0; j < allNodesList.length; j++) {
+    MessageLog.trace(allNodesList[j]);
+  }
+
+  return allNodesList;
+}
+
+listAll();
 class HarmonyGlobals {
   // Shapes = Shapes;
   Math = Maths;

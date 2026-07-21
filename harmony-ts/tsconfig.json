@@ -2,12 +2,15 @@
   "compilerOptions": {
     "target": "ES5",
     "module": "none",
-    "outDir": "C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Premium\\2400-scripts",
+    "outDir": "C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Advanced\\2500-scripts",
     "removeComments": true,
     "noImplicitAny": false,
     "strict": false,
     // "noLib": false,
-    "lib": ["es5", "dom"],
+    "lib": [
+      "es5",
+      "dom"
+    ],
     "downlevelIteration": false,
     "noEmitHelpers": true,
     "skipLibCheck": true,
@@ -17,8 +20,9 @@
     "archive"
   ],
   "include": [
-    "src/**/*.ts", 
-    "archsrc/test.ts", 
-    "src/Toolbar.ts"
-, "frame-change-dialog.ts"  ],
+    "src/**/*.ts",
+    "archsrc/test.ts",
+    "src/Toolbar.ts",
+    "frame-change-dialog.ts"
+  ],
 }

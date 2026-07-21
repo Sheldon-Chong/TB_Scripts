@@ -9,15 +9,14 @@ class oDrawing {
   constructor(
     name: string,
     element: oElement
-  )
-  {
+  ) {
     this.element = element;
     this.name = name;
 
 
   }
 
-  toString() { 
+  toString() {
     return `Drawing<${this.element.folder}-${this.name}.tvg>`;
   }
 }
@@ -48,7 +47,7 @@ class oElement {
     this.updateDrawingsList();
     return this.drawings;
   }
-  
+
   getDrawing(drawingName: string): oDrawing | null {
     this.updateDrawingsList();
     if (this.exists(drawingName)) {
@@ -75,19 +74,19 @@ class oElement {
   }
 
   duplicateDrawing(
-    newDrawingName: string, 
+    newDrawingName: string,
     sourceDrawingName: string
-  ): oDrawing| null {
+  ): oDrawing | null {
     var sourcePath = this.completeFolder + "/" + `${this.folder}-${sourceDrawingName}.tvg`;
     var uniqueName = this.generateUniqueDrawingName(newDrawingName);
     var destPath = this.completeFolder + "/" + `${this.folder}-${uniqueName}.tvg`;
-    
+
     if (copyFile(sourcePath, destPath)) {
       Drawing.create(this.elementId!, uniqueName, true, true);
 
       return new oDrawing(uniqueName, this);
     }
-    
+
     return null;
   }
 
@@ -117,7 +116,7 @@ class Column {
   getType(): string {
     return column.type(this.name);
   }
-  
+
   getKeyframe(frameNumber: number): any {
     return column.getEntry(this.name, 1, frameNumber);
   }
@@ -125,12 +124,12 @@ class Column {
   toString() {
     return `Column<${this.name}>`;
   }
-  
+
   insertKeyFrame(frameNumber: number): boolean {
     return column.setKeyFrame(this.name, frameNumber);
   }
 
-  deleteKeyframes(selection: oSelection) { 
+  deleteKeyframes(selection: oSelection) {
     for (let frame = selection.startFrame; frame <= selection.endFrame; frame++) {
       column.clearKeyFrame(this.name, frame);
     }
@@ -141,11 +140,11 @@ class Column {
   getKeyframeRange(startOrSelection: number | oSelection, endFrame?: number): any[] {
     let startFrame: number;
     if (typeof startOrSelection === 'number') {
-      if (endFrame === undefined) 
+      if (endFrame === undefined)
         throw new Error("endFrame is required when startFrame is provided");
-      
+
       startFrame = startOrSelection;
-    } 
+    }
     else {
       startFrame = startOrSelection.startFrame;
       endFrame = startOrSelection.endFrame;
@@ -160,10 +159,10 @@ class Column {
   getKeyframeRangeSimplify(startOrSelection: number | oSelection, endFrame?: number): string[] | string {
     let startFrame: number;
     if (typeof startOrSelection === 'number') {
-      if (endFrame === undefined) 
+      if (endFrame === undefined)
         throw new Error("endFrame is required when startFrame is provided");
       startFrame = startOrSelection;
-    } 
+    }
     else {
       startFrame = startOrSelection.startFrame;
       endFrame = startOrSelection.endFrame;
@@ -180,8 +179,8 @@ class Column {
 
   /** Returns the most common keyframe value in the specified range */
   getMostCommonKeyframeFromRange(selection: oSelection): string | null {
-    
-    const values = this.getKeyframeRange(selection); 
+
+    const values = this.getKeyframeRange(selection);
     const valueCounts: { [key: string]: number } = {};
 
     let mostCommonValue: string | null = null;
@@ -215,7 +214,7 @@ class Column {
     }
     for (let frame = startFrame; frame <= endFrameLocal; frame++) {
       const status = column.setEntry(this.name, 1, frame, value.toString());
-      if (!status) 
+      if (!status)
         return false;
     }
     return true;
@@ -233,7 +232,7 @@ class PathColumn3D extends Column {
     super(name, parentLayer);
   }
 
-  
+
   getX(frameNumber: number): string {
     return column.getEntry(this.name, 1, frameNumber);
   }
@@ -263,19 +262,19 @@ class PathColumn3D extends Column {
   }
 
   setX(frameNumber: number, value: string | number): boolean {
-    const formattedValue = typeof value === 'number' 
+    const formattedValue = typeof value === 'number'
       ? Math.abs(value) + (value >= 0 ? " E" : " W")
       : value;
     return column.setEntry(this.name, 1, frameNumber, formattedValue);
   }
   setY(frameNumber: number, value: string | number): boolean {
-    const formattedValue = typeof value === 'number' 
+    const formattedValue = typeof value === 'number'
       ? Math.abs(value) + (value >= 0 ? " N" : " S")
       : value;
     return column.setEntry(this.name, 2, frameNumber, formattedValue);
   }
   setZ(frameNumber: number, value: string | number): boolean {
-    const formattedValue = typeof value === 'number' 
+    const formattedValue = typeof value === 'number'
       ? Math.abs(value) + (value >= 0 ? " F" : " B")
       : value;
     return column.setEntry(this.name, 3, frameNumber, formattedValue);
@@ -298,21 +297,21 @@ class PathColumn3D extends Column {
   /** Returns true if ANY subcolumn (X, Y, Z) has a keyframe at the given frame. */
   isKeyFrameAny(frameNumber: number): boolean {
     return this.isKeyFrameX(frameNumber)
-        || this.isKeyFrameY(frameNumber)
-        || this.isKeyFrameZ(frameNumber);
+      || this.isKeyFrameY(frameNumber)
+      || this.isKeyFrameZ(frameNumber);
   }
 
   /** Returns true if ALL subcolumns (X, Y, Z) have a keyframe at the given frame. */
   isKeyFrameAll(frameNumber: number): boolean {
     return this.isKeyFrameX(frameNumber)
-        && this.isKeyFrameY(frameNumber)
-        && this.isKeyFrameZ(frameNumber);
+      && this.isKeyFrameY(frameNumber)
+      && this.isKeyFrameZ(frameNumber);
   }
 
   toString(): string {
     return `PathColumn3D<${this.name}>`;
   }
-  
+
 }
 
 /* ====================== NODES ====================== */
@@ -329,7 +328,7 @@ class NodeLayer {
   setEnabled(enabled: boolean) {
     node.setEnable(this.nodePath, enabled);
   }
-  
+
   isEnabled(): boolean {
     return node.getEnable(this.nodePath);
   }
@@ -384,7 +383,7 @@ class NodeLayer {
       .map((attr) => attr.fullKeyword());
   }
 
-  
+
 
   getColumn(attrName: string, linkType?: string): Column {
 
@@ -393,7 +392,7 @@ class NodeLayer {
       const path = attrName.substring(0, lastSlashIndex);
       const node = LayerManager.getNodeLayer(this.nodePath + path);
       if (node === null) {
-        throw new Error("Node not found for path: " + this.nodePath+ path);
+        throw new Error("Node not found for path: " + this.nodePath + path);
       }
       const attributeName = attrName.substring(lastSlashIndex + 1);
       return node.getColumn(attributeName, linkType);
@@ -424,13 +423,13 @@ class NodeLayer {
   getType(): string {
     return node.type(this.nodePath);
   }
-  
+
   getFullAttributeList(): any[] {
     function getAttributes(attribute: any, attributeList: any[]): void {
       attributeList.push(attribute);
       const subAttrList = attribute.getSubAttributes();
       for (let j = 0; j < subAttrList.length; ++j) {
-        if (typeof(subAttrList[j].keyword()) === 'undefined' || subAttrList[j].keyword().length === 0) {
+        if (typeof (subAttrList[j].keyword()) === 'undefined' || subAttrList[j].keyword().length === 0) {
           continue;
         }
         getAttributes(subAttrList[j], attributeList);
@@ -452,11 +451,11 @@ class NodeLayer {
     attr.setValue(value);
   }
 
-  getChildren(): NodeLayer [] {
+  getChildren(): NodeLayer[] {
     if (!node.subNodes(this.nodePath)) {
       return [];
     }
-    return node.subNodes(this.nodePath).map((childPath: string) => LayerManager.getNodeLayer(childPath)).filter( (layer): layer is NodeLayer => layer !== null);
+    return node.subNodes(this.nodePath).map((childPath: string) => LayerManager.getNodeLayer(childPath)).filter((layer): layer is NodeLayer => layer !== null);
   }
 
   getLocked(): boolean {
@@ -517,7 +516,7 @@ class objElement {
   get folder(): string { return element.folder(this.id); }
   get completeFolder(): string { return element.completeFolder(this.id); }
   get physicalName(): string { return element.physicalName(this.id); }
-  
+
   modify(scanType: string, fieldChart: number, pixmapFormat: string, vectorType: number): boolean { return element.modify(this.id, scanType, fieldChart, pixmapFormat, vectorType); }
 
   rename(name: string): boolean {
@@ -530,7 +529,7 @@ class objElement {
 }
 
 class objDrawing {
-  
+
   name: string
   element: objElement;
 
@@ -538,16 +537,16 @@ class objDrawing {
     return this.name;
   }
 
-  get exposureName():string {
+  get exposureName(): string {
     return this.name.substring(this.name.lastIndexOf(this.element.folder) + this.element.folder.length + 1);
   }
 
-  get filepath (): string {
+  get filepath(): string {
     return Drawing.filename(this.element.id, this.name);
   }
 
   // returns path without folder
-  get filename (): string {
+  get filename(): string {
     return this.filepath.substring(this.filepath.lastIndexOf("/") + 1);
   }
 
@@ -555,24 +554,24 @@ class objDrawing {
     this.name = name;
     this.element = element;
   }
-  
+
   copy(destFileName?: string, override: boolean = false): objDrawing | null {
     let drawingName = "";
     if (destFileName) {
       drawingName = destFileName;
     }
-    else { 
+    else {
       const filename = this.filename.substring(0, this.filename.lastIndexOf(".tvg"));
       drawingName = G.FileUtils.getUniqueFileName(this.element.completeFolder, filename, ".tvg").replace(".tvg", "");
     }
-    
+
     const destPath = this.element.completeFolder + "/" + drawingName + ".tvg";
-    
+
     if (!override && G.FileUtils.exists(destPath)) {
       MessageLog.trace("File already exists at destination path: " + destPath);
       return null;
     }
-    
+
     // MessageLog.trace("drawing name " + this.exposureName);
     const copiedFile = new G.objDrawing(drawingName, this.element);
     const result = Drawing.create(this.element.id, copiedFile.exposureName, true, true);
@@ -595,7 +594,7 @@ class DrawingElementColumn extends Column {
   getKeyframe(frameNumber: number): any {
     if (super.getKeyframe(frameNumber) === "") {
       return null;
-    } 
+    }
     return new G.objDrawing(super.getKeyframe(frameNumber), this.element);
   }
 
@@ -616,7 +615,7 @@ class DrawingElementColumn extends Column {
       return false;
     }
     MessageLog.trace(copiedDrawing.exposureName);
-    
+
     return this.setKeyFrame(destFrame, copiedDrawing.exposureName);
   }
 }
@@ -642,6 +641,37 @@ class DrawingLayer extends NodeLayer {
   }
 }
 
+function getAllNodesInScene() {
+  var accumulatedNodes = [];
+
+  // Recursive helper function to crawl nested group layers
+  function crawlGroup(groupPath) {
+    var subNodeCount = node.numberOfSubNodes(groupPath);
+
+    for (var i = 0; i < subNodeCount; i++) {
+      // Get the full path of the current child node
+      var currentChild = node.subNode(groupPath, i);
+      accumulatedNodes.push(currentChild);
+
+      // If this child is a Group, recursively look inside it
+      if (node.isGroup(currentChild)) {
+        crawlGroup(currentChild);
+      }
+    }
+  }
+
+  // Start crawling from the absolute top layer ("Top")
+  var absoluteRoot = node.root();
+  crawlGroup(absoluteRoot);
+
+  // Output findings to the Message Log
+  MessageLog.trace("--- total nodes found: " + accumulatedNodes.length + " ---");
+  for (var j = 0; j < accumulatedNodes.length; j++) {
+    MessageLog.trace(accumulatedNodes[j]);
+  }
+
+  return accumulatedNodes;
+}
 
 
 class _LayerManager {
@@ -653,29 +683,55 @@ class _LayerManager {
 
   updateNodeLayers(): void {
     this.nodeLayers = [];
-    for (var i = 0; i < Timeline.numLayers; i++) {
-      var nodePath = Timeline.layerToNode(i);
-      if (Timeline.layerIsNode(i)) {
-        if (node.type(nodePath) === "READ") {
-          this.nodeLayers.push(new DrawingLayer(
-            this.nodeLayers.length,
-            i,
-            nodePath,
-            node.getName(nodePath)
-          ));
-        }
-        else {
-          this.nodeLayers.push(new NodeLayer(
-            this.nodeLayers.length,
-            i,
-            nodePath,
-            node.getName(nodePath)
-          ));
-        }
+
+    // MessageLog.trace(`all nodes: ${.join(", ")}`);
+
+
+    const allNodes = getAllNodesInScene();
+    for (const nodePath of allNodes) {
+      const nodeType = node.type(nodePath);
+      if (nodeType === "READ") {
+        this.nodeLayers.push(new DrawingLayer(
+          this.nodeLayers.length,
+          0,
+          nodePath,
+          node.getName(nodePath)
+        ));
+      }
+      else {
+        this.nodeLayers.push(new NodeLayer(
+          this.nodeLayers.length,
+          0,
+          nodePath,
+          node.getName(nodePath)
+        ));
       }
     }
 
-    
+    // for (var i = 0; i < Timeline.numLayers; i++) {
+    //   var nodePath = Timeline.layerToNode(i);
+    //   MessageLog.trace("nodePath: " + nodePath);
+    //   if (Timeline.layerIsNode(i)) {
+    //     if (node.type(nodePath) === "READ") {
+    //       this.nodeLayers.push(new DrawingLayer(
+    //         this.nodeLayers.length,
+    //         i,
+    //         nodePath,
+    //         node.getName(nodePath)
+    //       ));
+    //     }
+    //     else {
+    //       this.nodeLayers.push(new NodeLayer(
+    //         this.nodeLayers.length,
+    //         i,
+    //         nodePath,
+    //         node.getName(nodePath)
+    //       ));
+    //     }
+    //   }
+    // }
+
+
   }
   getSelectedNodes(): NodeLayer[] {
     const selectedNodePaths = selection.selectedNodes();
@@ -696,10 +752,10 @@ class _LayerManager {
   getNodeLayer(index: string | number): NodeLayer | null {
     for (var i = 0; i < this.nodeLayers.length; i++) {
       if (typeof index === "string") {
-        if (this.nodeLayers[i].nodePath === index) 
+        if (this.nodeLayers[i].nodePath === index)
           return this.nodeLayers[i];
       } else {
-        if (this.nodeLayers[i].index === index) 
+        if (this.nodeLayers[i].index === index)
           return this.nodeLayers[i];
       }
     }
