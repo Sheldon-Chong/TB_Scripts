@@ -13,9 +13,9 @@ function showBasicCheckboxWidget() {
 
 	var checkboxes = [checkbox1, checkbox2, checkbox3];
 
-	layout.addWidget(checkbox1, 0,0);
-	layout.addWidget(checkbox2, 0,0);
-	layout.addWidget(checkbox3, 0,0);
+	layout.addWidget(checkbox1, 0, 0);
+	layout.addWidget(checkbox2, 0, 0);
+	layout.addWidget(checkbox3, 0, 0);
 
 	var button = new QPushButton("Check All");
 	layout.addWidget(button, 0, 0);
@@ -82,13 +82,13 @@ include("Layers.js");
 ///////////////////////////////// CONSTANTS //////////////////////////////////////
 // Debug: Retrieve and log all current scene metadatas
 
-const ArtLayers = {
+const DrawingArtLayers = {
 	UNDERLAY_ART: 0,
 	LINE_ART: 2,
 	COLOUR_ART: 1,
 	OVERLAY_ART: 3
 }
-const ArtLayersList = [ArtLayers.UNDERLAY_ART, ArtLayers.COLOUR_ART, ArtLayers.LINE_ART, ArtLayers.OVERLAY_ART]
+const ArtLayersList = [DrawingArtLayers.UNDERLAY_ART, DrawingArtLayers.COLOUR_ART, DrawingArtLayers.LINE_ART, DrawingArtLayers.OVERLAY_ART]
 
 ///////////////////////////////// PASTING //////////////////////////////////////
 

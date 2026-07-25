@@ -147,10 +147,10 @@ const ArtLayers = {
 }
 
 const ArtLayersList = [
-    ArtLayers.UNDERLAY_ART,
-    ArtLayers.COLOUR_ART,
-    ArtLayers.LINE_ART,
-    ArtLayers.OVERLAY_ART
+    DrawingArtLayers.UNDERLAY_ART,
+    DrawingArtLayers.COLOUR_ART,
+    DrawingArtLayers.LINE_ART,
+    DrawingArtLayers.OVERLAY_ART
 ]
 
 // function getSelection() {
@@ -158,7 +158,7 @@ const ArtLayersList = [
 //     if (!settings.currentDrawing) return;
 
 //     var selected = {};
-    
+
 //     for (i_ArtLayer in ArtLayersList) { const currArtLayer = ArtLayersList[i_ArtLayer];
 //         var output = Drawing.selection.get({
 //             drawing: settings.currentDrawing,

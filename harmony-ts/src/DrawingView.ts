@@ -1,6 +1,6 @@
 function getCurrent4Query() {
     var settings = Tools.getToolSettings();
-    
+
     return {
         drawing: settings.currentDrawing,
         art: settings.activeArt
@@ -9,7 +9,7 @@ function getCurrent4Query() {
 
 
 
-function DrawingView() {};
+function DrawingView() { };
 
 
 
@@ -20,47 +20,47 @@ function calculateBoundingBox(obj) {
     var maxY = Number.NEGATIVE_INFINITY;
 
     function recurse(obj) {
-    if (Array.isArray(obj)) {
-        for (var i = 0; i < obj.length; i++) {
-            var item = obj[i];
-            if (typeof item === "object") recurse(item);
-        }
-    } else if (typeof obj === "object" && obj !== null) {
-        // If it's a path point
-        if ("x" in obj && "y" in obj) {
-            var coordX = new SingularCoordinate(obj.x, "x");
-            var coordY = new SingularCoordinate(obj.y, "y");
-            if (coordX.type === SingularCoordinateType.X) {
-                if (coordX.value < minX) minX = coordX.value;
-                if (coordX.value > maxX) maxX = coordX.value;
+        if (Array.isArray(obj)) {
+            for (var i = 0; i < obj.length; i++) {
+                var item = obj[i];
+                if (typeof item === "object") recurse(item);
             }
-            if (coordY.type === SingularCoordinateType.Y) {
-                if (coordY.value < minY) minY = coordY.value;
-                if (coordY.value > maxY) maxY = coordY.value;
-            }
-        }
-        // If it's a box
-        if ("x0" in obj && "x1" in obj && "y0" in obj && "y1" in obj) {
-            var boxKeys = ["x0", "x1", "y0", "y1"];
-            for (var k = 0; k < boxKeys.length; k++) {
-                var key = boxKeys[k];
-                var coord = new SingularCoordinate(obj[key], key);
-                if (coord.type === SingularCoordinateType.X) {
-                    if (coord.value < minX) minX = coord.value;
-                    if (coord.value > maxX) maxX = coord.value;
-                } else if (coord.type === SingularCoordinateType.Y) {
-                    if (coord.value < minY) minY = coord.value;
-                    if (coord.value > maxY) maxY = coord.value;
+        } else if (typeof obj === "object" && obj !== null) {
+            // If it's a path point
+            if ("x" in obj && "y" in obj) {
+                var coordX = new SingularCoordinate(obj.x, "x");
+                var coordY = new SingularCoordinate(obj.y, "y");
+                if (coordX.type === SingularCoordinateType.X) {
+                    if (coordX.value < minX) minX = coordX.value;
+                    if (coordX.value > maxX) maxX = coordX.value;
+                }
+                if (coordY.type === SingularCoordinateType.Y) {
+                    if (coordY.value < minY) minY = coordY.value;
+                    if (coordY.value > maxY) maxY = coordY.value;
                 }
             }
-        }
-        // Otherwise, recurse into all properties
-        for (var key in obj) {
-            if (!obj.hasOwnProperty(key)) continue;
-            recurse(obj[key]);
+            // If it's a box
+            if ("x0" in obj && "x1" in obj && "y0" in obj && "y1" in obj) {
+                var boxKeys = ["x0", "x1", "y0", "y1"];
+                for (var k = 0; k < boxKeys.length; k++) {
+                    var key = boxKeys[k];
+                    var coord = new SingularCoordinate(obj[key], key);
+                    if (coord.type === SingularCoordinateType.X) {
+                        if (coord.value < minX) minX = coord.value;
+                        if (coord.value > maxX) maxX = coord.value;
+                    } else if (coord.type === SingularCoordinateType.Y) {
+                        if (coord.value < minY) minY = coord.value;
+                        if (coord.value > maxY) maxY = coord.value;
+                    }
+                }
+            }
+            // Otherwise, recurse into all properties
+            for (var key in obj) {
+                if (!obj.hasOwnProperty(key)) continue;
+                recurse(obj[key]);
+            }
         }
     }
-}
 
     recurse(obj);
 
@@ -72,10 +72,10 @@ function calculateBoundingBox(obj) {
     // canvas.createCircle(Point2d(minX, minY), 100); // Draw circle at min point
     // canvas.createCircle(Point2d(maxX, maxY), 100); // Draw circle at min point
     return {
-        x0:minX, 
-        y0:minY, 
-        x1:maxX, 
-        y1:maxY
+        x0: minX,
+        y0: minY,
+        x1: maxX,
+        y1: maxY
     };
 }
 
@@ -90,22 +90,22 @@ function getBoundingBoxCenter(bbox) {
 DrawingView.calculateBoundingBox = calculateBoundingBox;
 DrawingView.getBoundingBoxCenter = getBoundingBoxCenter;
 
-DrawingView.selectAll = function() { Action.perform("selectAll()", "cameraView"); };
+DrawingView.selectAll = function () { Action.perform("selectAll()", "cameraView"); };
 
-DrawingView.groupSelection = function() { Action.perform("onActionGroup()", "cameraView"); };
+DrawingView.groupSelection = function () { Action.perform("onActionGroup()", "cameraView"); };
 
-DrawingView.getCurrentSelection = function(override) {
+DrawingView.getCurrentSelection = function (override) {
     var input = getCurrent4Query();
 
     if (override !== undefined) {
-        return Drawing.selection.get(override); 
+        return Drawing.selection.get(override);
     }
 
-    return Drawing.selection.get(input); 
+    return Drawing.selection.get(input);
 };
 
 
-DrawingView.getSelection = function() {
+DrawingView.getSelection = function () {
     var settings = Tools.getToolSettings();
 
     // Query all art data for the current drawing
@@ -228,17 +228,17 @@ function applyTransform(obj, pairs, methodName, args) {
         fn(pairs[i]);
 }
 
-DrawingView.translateRecursive = function(obj, vector) { recursiveApply(obj, "translate", [vector]); }
-DrawingView.scaleRecursive = function(obj, scaleVec, origin) { recursiveApply(obj, "scale", [scaleVec, origin]); }
-DrawingView.rotateRecursive = function(obj, angleRad, pivot) { recursiveApply(obj, "rotate", [angleRad, pivot]); }
-DrawingView.positionRecursive = function(obj, targetPosition, pivot) {
+DrawingView.translateRecursive = function (obj, vector) { recursiveApply(obj, "translate", [vector]); }
+DrawingView.scaleRecursive = function (obj, scaleVec, origin) { recursiveApply(obj, "scale", [scaleVec, origin]); }
+DrawingView.rotateRecursive = function (obj, angleRad, pivot) { recursiveApply(obj, "rotate", [angleRad, pivot]); }
+DrawingView.positionRecursive = function (obj, targetPosition, pivot) {
     var translateVector = {
         x: targetPosition.x - pivot.x,
         y: targetPosition.y - pivot.y
     };
     DrawingView.translateRecursive(obj, translateVector);
 }
-DrawingView.setScaleRecursive = function(obj, targetSize, center) {
+DrawingView.setScaleRecursive = function (obj, targetSize, center) {
     // Calculate the current bounding box
     var bbox = calculateBoundingBox(obj);
     var currentWidth = bbox.x1 - bbox.x0;
@@ -280,7 +280,7 @@ DrawingView.setScaleRecursive = function(obj, targetSize, center) {
  * @property {object} pivot - Manually specify pivot point
  * @property {object} artLayer - Manually specify artlayer
  */
-DrawingView.paste = function(options) {
+DrawingView.paste = function (options) {
     var settings = Tools.getToolSettings();
     var data = options.data;
 
@@ -305,37 +305,37 @@ DrawingView.paste = function(options) {
     var bbox = calculateBoundingBox(data.arts);   // works with raw JSON
     var center = options.pivot || getBoundingBoxCenter(bbox);   // works with raw JSON
 
-    var drawing = options.drawing || { 
-        node: selection.selectedNode(0), 
+    var drawing = options.drawing || {
+        node: selection.selectedNode(0),
         frame: frame.current()
     };
 
-    var artsCompiled = data.arts.map(function(artLayer) {
+    var artsCompiled = data.arts.map(function (artLayer) {
         var layers = artLayer.layers;
 
         // Normalize stroke colors
-        layers.forEach(function(layer) {
-            (layer.strokes || []).forEach(function(stroke) {
+        layers.forEach(function (layer) {
+            (layer.strokes || []).forEach(function (stroke) {
                 stroke.pencilColorId = stroke.colorId;
             });
         });
 
         // Apply all transformations
-        transformations.forEach(function(curr_Transformation) {
+        transformations.forEach(function (curr_Transformation) {
             if (curr_Transformation instanceof Scale)
                 DrawingView.scaleRecursive(layers, curr_Transformation.size, center);
-            
+
             else if (curr_Transformation instanceof Rotate)
                 DrawingView.rotateRecursive(layers, curr_Transformation.degrees, center);
             else if (curr_Transformation instanceof Translate)
                 DrawingView.translateRecursive(layers, curr_Transformation.vector);
-            else if (curr_Transformation instanceof Position) 
+            else if (curr_Transformation instanceof Position)
                 DrawingView.positionRecursive(layers, curr_Transformation.vector, center);
             else if (curr_Transformation instanceof SetScale) {
                 // For SetScale, use the individual layer's center, not the combined center
                 var layerBbox = calculateBoundingBox(layers);
                 var layerCenter = getBoundingBoxCenter(layerBbox);
-                
+
                 MessageLog.trace("=== SetScale Debug ===");
                 MessageLog.trace("Art: " + artLayer.art);
                 MessageLog.trace("Layer bbox: x0=" + layerBbox.x0 + ", y0=" + layerBbox.y0 + ", x1=" + layerBbox.x1 + ", y1=" + layerBbox.y1);
@@ -343,7 +343,7 @@ DrawingView.paste = function(options) {
                 MessageLog.trace("Layer center: x=" + layerCenter.x + ", y=" + layerCenter.y);
                 MessageLog.trace("Combined center: x=" + center.x + ", y=" + center.y);
                 MessageLog.trace("Target size: x=" + curr_Transformation.size.x + ", y=" + curr_Transformation.size.y);
-                
+
                 DrawingView.setScaleRecursive(layers, curr_Transformation.size, layerCenter);
             }
         });
@@ -404,7 +404,7 @@ DrawingView.createCircle = function (position, radius, outline) {
         layers: data,
     });
 
-    
+
 }
 
 DrawingView.createRectangle = function (box, outline) {
@@ -467,7 +467,7 @@ DrawingView.createRectangle = function (box, outline) {
 //     return output;
 // }
 
-DrawingView.setSelection = function(selection) {
+DrawingView.setSelection = function (selection) {
     var settings = Tools.getToolSettings();
 
     var input = {
@@ -491,13 +491,13 @@ DrawingView.setSelection = function(selection) {
 //     output = Drawing.selection.set(input);
 //     return output;
 // }
-DrawingView.pasteGroup = function(data, pasteTo, transformations, options) {
+DrawingView.pasteGroup = function (data, pasteTo, transformations, options) {
     scene.beginUndoRedoAccum("Create Drawing example");
     var artMap = {};
-    artMap[ArtLayers.UNDERLAY_ART] = DrawingTools.underlayArt;
-    artMap[ArtLayers.COLOUR_ART]   = DrawingTools.colourArt;
-    artMap[ArtLayers.LINE_ART]     = DrawingTools.lineArt;
-    artMap[ArtLayers.OVERLAY_ART]  = DrawingTools.overlayArt;
+    artMap[DrawingArtLayers.UNDERLAY_ART] = DrawingTools.underlayArt;
+    artMap[DrawingArtLayers.COLOUR_ART] = DrawingTools.colourArt;
+    artMap[DrawingArtLayers.LINE_ART] = DrawingTools.lineArt;
+    artMap[DrawingArtLayers.OVERLAY_ART] = DrawingTools.overlayArt;
 
     var options = options || {};
 
@@ -512,12 +512,12 @@ DrawingView.pasteGroup = function(data, pasteTo, transformations, options) {
 
     $.log("arts length: " + data.arts.length);  // Changed to data.arts.length for logging
     var totalLayersPasted = 0;
-    data.arts.forEach(function(sourceArt) {
-        
+    data.arts.forEach(function (sourceArt) {
+
         // Find the corresponding art in drawingData.arts by art index
         var currArt = null;
         if (drawingData.arts) {
-            drawingData.arts.forEach(function(art) {
+            drawingData.arts.forEach(function (art) {
                 if (art.art === sourceArt.art) {
                     currArt = art;
                 }
@@ -525,7 +525,7 @@ DrawingView.pasteGroup = function(data, pasteTo, transformations, options) {
         }
         else {
         }
-        
+
         var priorLayersLength = 0;
         if (currArt) {
             priorLayersLength = currArt.layers ? currArt.layers.length : 0;
@@ -543,25 +543,25 @@ DrawingView.pasteGroup = function(data, pasteTo, transformations, options) {
         });
 
         totalLayersPasted += sourceArt.layers.length;
-        
+
         //todo ALWAYs selection works when it includes another art layer
         DrawingView.selectAll();
         var selectedStrokes = DrawingView.getCurrentSelection({
-            drawing: { node: selection.selectedNode(0), frame: frame.current()},
+            drawing: { node: selection.selectedNode(0), frame: frame.current() },
             art: sourceArt.art  // Use sourceArt.art for consistency
         });
 
         selectedStrokes = selectedStrokes.selectedStrokes || [];
 
-        var narrowedSelection = selectedStrokes.filter(function(sel) {
+        var narrowedSelection = selectedStrokes.filter(function (sel) {
             return sel.layer >= priorLayersLength;
         });
-        
+
         if (narrowedSelection.length <= 0) {
             $.log("skipping : " + priorLayersLength + "/" + selectedStrokes.length);
             return;
         }
-            
+
         DrawingView.setSelection(narrowedSelection);
         DrawingView.groupSelection();
         if (options.sendToBack === true) {
@@ -572,7 +572,7 @@ DrawingView.pasteGroup = function(data, pasteTo, transformations, options) {
 
         // After grouping, get the selectedLayers (which should be the new group layer)
         var groupedSelection = DrawingView.getCurrentSelection({
-            drawing: { node: selection.selectedNode(0), frame: frame.current()},
+            drawing: { node: selection.selectedNode(0), frame: frame.current() },
             art: sourceArt.art
         });
         pastedSelections[sourceArt.art] = groupedSelection.selectedStrokes || [];
@@ -593,7 +593,7 @@ DrawingView.pasteGroup = function(data, pasteTo, transformations, options) {
     //     }
     // });
 
-    
+
     // DrawingView.selectAll();
     //     var selectedStrokes = DrawingView.getCurrentSelection({
     //         drawing: { node: selection.selectedNode(0), frame: frame.current()},
