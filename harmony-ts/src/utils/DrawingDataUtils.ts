@@ -1,4 +1,3 @@
-
 type DrawingData = any;
 
 class DrawingDataUtils {
@@ -10,8 +9,7 @@ class DrawingDataUtils {
     }>;
     cumulativeCount: number;
   }> {
-
-    MessageLog.trace("test");
+    MessageLog.trace('test');
 
     if (!drawingData) {
       return [];
@@ -22,7 +20,7 @@ class DrawingDataUtils {
     // Use recursiveWalk to collect colorIds from raw JSON data
     var colorIds: string[] = [];
     recursiveWalk(drawingData, function (key: string, value: any) {
-      if (key === "colorId") colorIds.push(value);
+      if (key === 'colorId') colorIds.push(value);
     });
 
     var palletesFound: Array<{
@@ -60,7 +58,7 @@ class DrawingDataUtils {
         palletesFound.push({
           pallete: pallete,
           colors: colorsArr,
-          cumulativeCount: cumulativeCount
+          cumulativeCount: cumulativeCount,
         });
       }
     }
@@ -78,11 +76,10 @@ class DrawingDataUtils {
     var data = Drawing.query.getData({
       drawing: {
         node: currentCell.node.nodePath,
-        frame: selection.startFrame
+        frame: selection.startFrame,
       },
-      art: art
+      art: art,
     });
     return data;
   }
 }
-

@@ -1,19 +1,13 @@
-
-include(specialFolders.userScripts + "/utils/utils.js");
+include(specialFolders.userScripts + '/utils/utils.js');
 
 class oDrawing {
   public name: string;
   public element: oElement;
   public fullPath: string;
 
-  constructor(
-    name: string,
-    element: oElement
-  ) {
+  constructor(name: string, element: oElement) {
     this.element = element;
     this.name = name;
-
-
   }
 
   toString() {
@@ -22,7 +16,7 @@ class oDrawing {
 }
 
 class oElement {
-  associatedNode?: NodeLayer
+  associatedNode?: NodeLayer;
   folder: string;
   completeFolder: string;
   drawings: string[];
@@ -40,7 +34,7 @@ class oElement {
   }
 
   updateDrawingsList() {
-    this.drawings = listFilesInDirectory(this.completeFolder, ["*.tvg"]);
+    this.drawings = listFilesInDirectory(this.completeFolder, ['*.tvg']);
   }
 
   getDrawings(): string[] {
@@ -73,13 +67,10 @@ class oElement {
     return uniqueName;
   }
 
-  duplicateDrawing(
-    newDrawingName: string,
-    sourceDrawingName: string
-  ): oDrawing | null {
-    var sourcePath = this.completeFolder + "/" + `${this.folder}-${sourceDrawingName}.tvg`;
+  duplicateDrawing(newDrawingName: string, sourceDrawingName: string): oDrawing | null {
+    var sourcePath = this.completeFolder + '/' + `${this.folder}-${sourceDrawingName}.tvg`;
     var uniqueName = this.generateUniqueDrawingName(newDrawingName);
-    var destPath = this.completeFolder + "/" + `${this.folder}-${uniqueName}.tvg`;
+    var destPath = this.completeFolder + '/' + `${this.folder}-${uniqueName}.tvg`;
 
     if (copyFile(sourcePath, destPath)) {
       Drawing.create(this.elementId!, uniqueName, true, true);
@@ -98,10 +89,6 @@ class oElement {
     return `Element<${this.completeFolder}>`;
   }
 }
-
-
-
-
 
 /* ====================== COLUMN ====================== */
 class Column {
@@ -141,11 +128,10 @@ class Column {
     let startFrame: number;
     if (typeof startOrSelection === 'number') {
       if (endFrame === undefined)
-        throw new Error("endFrame is required when startFrame is provided");
+        throw new Error('endFrame is required when startFrame is provided');
 
       startFrame = startOrSelection;
-    }
-    else {
+    } else {
       startFrame = startOrSelection.startFrame;
       endFrame = startOrSelection.endFrame;
     }
@@ -156,14 +142,16 @@ class Column {
     return values;
   }
 
-  getKeyframeRangeSimplify(startOrSelection: number | oSelection, endFrame?: number): string[] | string {
+  getKeyframeRangeSimplify(
+    startOrSelection: number | oSelection,
+    endFrame?: number,
+  ): string[] | string {
     let startFrame: number;
     if (typeof startOrSelection === 'number') {
       if (endFrame === undefined)
-        throw new Error("endFrame is required when startFrame is provided");
+        throw new Error('endFrame is required when startFrame is provided');
       startFrame = startOrSelection;
-    }
-    else {
+    } else {
       startFrame = startOrSelection.startFrame;
       endFrame = startOrSelection.endFrame;
     }
@@ -171,7 +159,7 @@ class Column {
     for (let frame = startFrame; frame <= endFrame; frame++) {
       values.push(this.getKeyframe(frame));
     }
-    if (values.length > 0 && values.every(v => v === values[0])) {
+    if (values.length > 0 && values.every((v) => v === values[0])) {
       return values[0];
     }
     return values;
@@ -179,7 +167,6 @@ class Column {
 
   /** Returns the most common keyframe value in the specified range */
   getMostCommonKeyframeFromRange(selection: oSelection): string | null {
-
     const values = this.getKeyframeRange(selection);
     const valueCounts: { [key: string]: number } = {};
 
@@ -187,7 +174,7 @@ class Column {
     let highestCount = 0;
 
     for (const value of values) {
-      valueCounts[value] = (value in valueCounts) ? valueCounts[value] + 1 : 1;
+      valueCounts[value] = value in valueCounts ? valueCounts[value] + 1 : 1;
       if (valueCounts[value] > highestCount) {
         highestCount = valueCounts[value];
         mostCommonValue = value;
@@ -214,12 +201,10 @@ class Column {
     }
     for (let frame = startFrame; frame <= endFrameLocal; frame++) {
       const status = column.setEntry(this.name, 1, frame, value.toString());
-      if (!status)
-        return false;
+      if (!status) return false;
     }
     return true;
   }
-
 
   /** Returns true if the specified frame is a keyframe (uses column.isKeyFrame with subColumn 0). */
   isKeyFrame(frameNumber: number): boolean {
@@ -231,7 +216,6 @@ class PathColumn3D extends Column {
   constructor(name: string, parentLayer: NodeLayer) {
     super(name, parentLayer);
   }
-
 
   getX(frameNumber: number): string {
     return column.getEntry(this.name, 1, frameNumber);
@@ -262,21 +246,18 @@ class PathColumn3D extends Column {
   }
 
   setX(frameNumber: number, value: string | number): boolean {
-    const formattedValue = typeof value === 'number'
-      ? Math.abs(value) + (value >= 0 ? " E" : " W")
-      : value;
+    const formattedValue =
+      typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' E' : ' W') : value;
     return column.setEntry(this.name, 1, frameNumber, formattedValue);
   }
   setY(frameNumber: number, value: string | number): boolean {
-    const formattedValue = typeof value === 'number'
-      ? Math.abs(value) + (value >= 0 ? " N" : " S")
-      : value;
+    const formattedValue =
+      typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' N' : ' S') : value;
     return column.setEntry(this.name, 2, frameNumber, formattedValue);
   }
   setZ(frameNumber: number, value: string | number): boolean {
-    const formattedValue = typeof value === 'number'
-      ? Math.abs(value) + (value >= 0 ? " F" : " B")
-      : value;
+    const formattedValue =
+      typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' F' : ' B') : value;
     return column.setEntry(this.name, 3, frameNumber, formattedValue);
   }
 
@@ -289,29 +270,40 @@ class PathColumn3D extends Column {
     return column.isKeyFrame(this.name, subColumn ?? 1, frameNumber);
   }
 
-  isKeyFrameX(frameNumber: number): boolean { return column.isKeyFrame(this.name, 1, frameNumber); }
-  isKeyFrameY(frameNumber: number): boolean { return column.isKeyFrame(this.name, 2, frameNumber); }
-  isKeyFrameZ(frameNumber: number): boolean { return column.isKeyFrame(this.name, 3, frameNumber); }
-  isKeyFrameVelocity(frameNumber: number): boolean { return column.isKeyFrame(this.name, 4, frameNumber); }
+  isKeyFrameX(frameNumber: number): boolean {
+    return column.isKeyFrame(this.name, 1, frameNumber);
+  }
+  isKeyFrameY(frameNumber: number): boolean {
+    return column.isKeyFrame(this.name, 2, frameNumber);
+  }
+  isKeyFrameZ(frameNumber: number): boolean {
+    return column.isKeyFrame(this.name, 3, frameNumber);
+  }
+  isKeyFrameVelocity(frameNumber: number): boolean {
+    return column.isKeyFrame(this.name, 4, frameNumber);
+  }
 
   /** Returns true if ANY subcolumn (X, Y, Z) has a keyframe at the given frame. */
   isKeyFrameAny(frameNumber: number): boolean {
-    return this.isKeyFrameX(frameNumber)
-      || this.isKeyFrameY(frameNumber)
-      || this.isKeyFrameZ(frameNumber);
+    return (
+      this.isKeyFrameX(frameNumber) ||
+      this.isKeyFrameY(frameNumber) ||
+      this.isKeyFrameZ(frameNumber)
+    );
   }
 
   /** Returns true if ALL subcolumns (X, Y, Z) have a keyframe at the given frame. */
   isKeyFrameAll(frameNumber: number): boolean {
-    return this.isKeyFrameX(frameNumber)
-      && this.isKeyFrameY(frameNumber)
-      && this.isKeyFrameZ(frameNumber);
+    return (
+      this.isKeyFrameX(frameNumber) &&
+      this.isKeyFrameY(frameNumber) &&
+      this.isKeyFrameZ(frameNumber)
+    );
   }
 
   toString(): string {
     return `PathColumn3D<${this.name}>`;
   }
-
 }
 
 /* ====================== NODES ====================== */
@@ -358,12 +350,11 @@ class NodeLayer {
   }
 
   getEditableAttributes(): string[] {
-
     function getAttributes(attribute, attributeList) {
       attributeList.push(attribute);
       var subAttrList = attribute.getSubAttributes();
       for (var j = 0; j < subAttrList.length; ++j) {
-        if (typeof (subAttrList[j].keyword()) === 'undefined' || subAttrList[j].keyword().length == 0)
+        if (typeof subAttrList[j].keyword() === 'undefined' || subAttrList[j].keyword().length == 0)
           continue;
         getAttributes(subAttrList[j], attributeList);
       }
@@ -378,21 +369,18 @@ class NodeLayer {
       return attributeList;
     }
 
-    return getFullAttributeList(this.nodePath).filter(
-      (attr) => ["INT", "DOUBLE"].indexOf(attr.typeName()) >= 0)
+    return getFullAttributeList(this.nodePath)
+      .filter((attr) => ['INT', 'DOUBLE'].indexOf(attr.typeName()) >= 0)
       .map((attr) => attr.fullKeyword());
   }
 
-
-
   getColumn(attrName: string, linkType?: string): Column {
-
-    if (attrName.indexOf("|") !== -1) {
-      const lastSlashIndex = attrName.lastIndexOf("|");
+    if (attrName.indexOf('|') !== -1) {
+      const lastSlashIndex = attrName.lastIndexOf('|');
       const path = attrName.substring(0, lastSlashIndex);
       const node = LayerManager.getNodeLayer(this.nodePath + path);
       if (node === null) {
-        throw new Error("Node not found for path: " + this.nodePath + path);
+        throw new Error('Node not found for path: ' + this.nodePath + path);
       }
       const attributeName = attrName.substring(lastSlashIndex + 1);
       return node.getColumn(attributeName, linkType);
@@ -401,19 +389,36 @@ class NodeLayer {
     const col = node.linkedColumn(this.nodePath, attrName);
     if (!col) {
       const colName = column.generateAnonymousName();
-      MessageLog.trace("⚠️ No column linked to attribute '" + attrName + "' on node '" + this.nodePath + "'. Creating new Bezier column: " + colName);
-      column.add(colName, linkType ?? "BEZIER");
+      MessageLog.trace(
+        "⚠️ No column linked to attribute '" +
+          attrName +
+          "' on node '" +
+          this.nodePath +
+          "'. Creating new Bezier column: " +
+          colName,
+      );
+      column.add(colName, linkType ?? 'BEZIER');
       var result = node.linkAttr(this.nodePath, attrName, colName);
       if (!result) {
-        MessageLog.trace("❌ Failed to link new column '" + colName + "' to attribute '" + attrName + " of type " + (linkType ?? "BEZIER") + "' on node '" + this.nodePath + "'.");
+        MessageLog.trace(
+          "❌ Failed to link new column '" +
+            colName +
+            "' to attribute '" +
+            attrName +
+            ' of type ' +
+            (linkType ?? 'BEZIER') +
+            "' on node '" +
+            this.nodePath +
+            "'.",
+        );
       }
       return new G.Column(colName, this);
     }
-    if (attrName === "offset.attr3dpath" || attrName === "position.attr3dpath") {
-      MessageLog.trace(">> 3d PATH");
+    if (attrName === 'offset.attr3dpath' || attrName === 'position.attr3dpath') {
+      MessageLog.trace('>> 3d PATH');
       return new G.PathColumn3D(col, this);
     }
-    if (attrName === "DRAWING.ELEMENT") {
+    if (attrName === 'DRAWING.ELEMENT') {
       return new DrawingElementColumn(col, this);
     }
 
@@ -429,7 +434,10 @@ class NodeLayer {
       attributeList.push(attribute);
       const subAttrList = attribute.getSubAttributes();
       for (let j = 0; j < subAttrList.length; ++j) {
-        if (typeof (subAttrList[j].keyword()) === 'undefined' || subAttrList[j].keyword().length === 0) {
+        if (
+          typeof subAttrList[j].keyword() === 'undefined' ||
+          subAttrList[j].keyword().length === 0
+        ) {
           continue;
         }
         getAttributes(subAttrList[j], attributeList);
@@ -455,7 +463,10 @@ class NodeLayer {
     if (!node.subNodes(this.nodePath)) {
       return [];
     }
-    return node.subNodes(this.nodePath).map((childPath: string) => LayerManager.getNodeLayer(childPath)).filter((layer): layer is NodeLayer => layer !== null);
+    return node
+      .subNodes(this.nodePath)
+      .map((childPath: string) => LayerManager.getNodeLayer(childPath))
+      .filter((layer): layer is NodeLayer => layer !== null);
   }
 
   getLocked(): boolean {
@@ -467,10 +478,9 @@ class NodeLayer {
   }
 
   getChild(name: string): NodeLayer | null {
-    if (name.indexOf("/") !== -1) {
-      return LayerManager.getNodeLayer(this.nodePath + "/" + name);
-    }
-    else {
+    if (name.indexOf('/') !== -1) {
+      return LayerManager.getNodeLayer(this.nodePath + '/' + name);
+    } else {
       const childPath = node.subNodeByName(this.nodePath, name);
       if (!childPath) {
         return null;
@@ -508,16 +518,34 @@ class objElement {
     this.id = elementId;
   }
 
-  get elementName(): string { return element.getNameById(this.id); }
-  get scanType(): string { return element.scanType(this.id); }
-  get fieldChart(): number { return element.fieldChart(this.id); }
-  get vectorType(): number { return element.vectorType(this.id); }
-  get pixmapFormat(): string { return element.pixmapFormat(this.id); }
-  get folder(): string { return element.folder(this.id); }
-  get completeFolder(): string { return element.completeFolder(this.id); }
-  get physicalName(): string { return element.physicalName(this.id); }
+  get elementName(): string {
+    return element.getNameById(this.id);
+  }
+  get scanType(): string {
+    return element.scanType(this.id);
+  }
+  get fieldChart(): number {
+    return element.fieldChart(this.id);
+  }
+  get vectorType(): number {
+    return element.vectorType(this.id);
+  }
+  get pixmapFormat(): string {
+    return element.pixmapFormat(this.id);
+  }
+  get folder(): string {
+    return element.folder(this.id);
+  }
+  get completeFolder(): string {
+    return element.completeFolder(this.id);
+  }
+  get physicalName(): string {
+    return element.physicalName(this.id);
+  }
 
-  modify(scanType: string, fieldChart: number, pixmapFormat: string, vectorType: number): boolean { return element.modify(this.id, scanType, fieldChart, pixmapFormat, vectorType); }
+  modify(scanType: string, fieldChart: number, pixmapFormat: string, vectorType: number): boolean {
+    return element.modify(this.id, scanType, fieldChart, pixmapFormat, vectorType);
+  }
 
   rename(name: string): boolean {
     return element.renameById(this.id, name);
@@ -529,8 +557,7 @@ class objElement {
 }
 
 class objDrawing {
-
-  name: string
+  name: string;
   element: objElement;
 
   getName(): string {
@@ -538,7 +565,9 @@ class objDrawing {
   }
 
   get exposureName(): string {
-    return this.name.substring(this.name.lastIndexOf(this.element.folder) + this.element.folder.length + 1);
+    return this.name.substring(
+      this.name.lastIndexOf(this.element.folder) + this.element.folder.length + 1,
+    );
   }
 
   get filepath(): string {
@@ -547,7 +576,7 @@ class objDrawing {
 
   // returns path without folder
   get filename(): string {
-    return this.filepath.substring(this.filepath.lastIndexOf("/") + 1);
+    return this.filepath.substring(this.filepath.lastIndexOf('/') + 1);
   }
 
   constructor(name: string, element: objElement) {
@@ -556,28 +585,31 @@ class objDrawing {
   }
 
   copy(destFileName?: string, override: boolean = false): objDrawing | null {
-    let drawingName = "";
+    let drawingName = '';
     if (destFileName) {
       drawingName = destFileName;
-    }
-    else {
-      const filename = this.filename.substring(0, this.filename.lastIndexOf(".tvg"));
-      drawingName = G.FileUtils.getUniqueFileName(this.element.completeFolder, filename, ".tvg").replace(".tvg", "");
+    } else {
+      const filename = this.filename.substring(0, this.filename.lastIndexOf('.tvg'));
+      drawingName = G.FileUtils.getUniqueFileName(
+        this.element.completeFolder,
+        filename,
+        '.tvg',
+      ).replace('.tvg', '');
     }
 
-    const destPath = this.element.completeFolder + "/" + drawingName + ".tvg";
+    const destPath = this.element.completeFolder + '/' + drawingName + '.tvg';
 
     if (!override && G.FileUtils.exists(destPath)) {
-      MessageLog.trace("File already exists at destination path: " + destPath);
+      MessageLog.trace('File already exists at destination path: ' + destPath);
       return null;
     }
 
     // MessageLog.trace("drawing name " + this.exposureName);
     const copiedFile = new G.objDrawing(drawingName, this.element);
     const result = Drawing.create(this.element.id, copiedFile.exposureName, true, true);
-    MessageLog.trace("result " + result);
+    MessageLog.trace('result ' + result);
     G.FileUtils.copyTo(this.filepath, destPath);
-    return copiedFile
+    return copiedFile;
   }
 }
 
@@ -585,19 +617,18 @@ class DrawingElementColumn extends Column {
   element: objElement;
 
   constructor(name: string, parentLayer: NodeLayer) {
-    MessageLog.trace("name " + name);
-    MessageLog.trace("name " + column.getEntry(name, 1, frame.current()));
+    MessageLog.trace('name ' + name);
+    MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
     super(name, parentLayer);
     this.element = new G.objElement(node.getElementId(parentLayer.nodePath));
   }
 
   getKeyframe(frameNumber: number): any {
-    if (super.getKeyframe(frameNumber) === "") {
+    if (super.getKeyframe(frameNumber) === '') {
       return null;
     }
     return new G.objDrawing(super.getKeyframe(frameNumber), this.element);
   }
-
 
   setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
   setKeyFrame(selection: oSelection, value: any): boolean;
@@ -611,7 +642,7 @@ class DrawingElementColumn extends Column {
   copyDrawingTo(drawing: objDrawing, destFrame: number): boolean {
     const copiedDrawing = drawing.copy();
     if (!copiedDrawing) {
-      MessageLog.trace("Failed to copy drawing for duplication.");
+      MessageLog.trace('Failed to copy drawing for duplication.');
       return false;
     }
     MessageLog.trace(copiedDrawing.exposureName);
@@ -665,14 +696,13 @@ function getAllNodesInScene() {
   crawlGroup(absoluteRoot);
 
   // Output findings to the Message Log
-  MessageLog.trace("--- total nodes found: " + accumulatedNodes.length + " ---");
+  MessageLog.trace('--- total nodes found: ' + accumulatedNodes.length + ' ---');
   for (var j = 0; j < accumulatedNodes.length; j++) {
     MessageLog.trace(accumulatedNodes[j]);
   }
 
   return accumulatedNodes;
 }
-
 
 class _LayerManager {
   nodeLayers: NodeLayer[] = [];
@@ -686,25 +716,17 @@ class _LayerManager {
 
     // MessageLog.trace(`all nodes: ${.join(", ")}`);
 
-
     const allNodes = getAllNodesInScene();
     for (const nodePath of allNodes) {
       const nodeType = node.type(nodePath);
-      if (nodeType === "READ") {
-        this.nodeLayers.push(new DrawingLayer(
-          this.nodeLayers.length,
-          0,
-          nodePath,
-          node.getName(nodePath)
-        ));
-      }
-      else {
-        this.nodeLayers.push(new NodeLayer(
-          this.nodeLayers.length,
-          0,
-          nodePath,
-          node.getName(nodePath)
-        ));
+      if (nodeType === 'READ') {
+        this.nodeLayers.push(
+          new DrawingLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+        );
+      } else {
+        this.nodeLayers.push(
+          new NodeLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+        );
       }
     }
 
@@ -730,8 +752,6 @@ class _LayerManager {
     //     }
     //   }
     // }
-
-
   }
   getSelectedNodes(): NodeLayer[] {
     const selectedNodePaths = selection.selectedNodes();
@@ -751,12 +771,10 @@ class _LayerManager {
 
   getNodeLayer(index: string | number): NodeLayer | null {
     for (var i = 0; i < this.nodeLayers.length; i++) {
-      if (typeof index === "string") {
-        if (this.nodeLayers[i].nodePath === index)
-          return this.nodeLayers[i];
+      if (typeof index === 'string') {
+        if (this.nodeLayers[i].nodePath === index) return this.nodeLayers[i];
       } else {
-        if (this.nodeLayers[i].index === index)
-          return this.nodeLayers[i];
+        if (this.nodeLayers[i].index === index) return this.nodeLayers[i];
       }
     }
     return null;
@@ -765,13 +783,12 @@ class _LayerManager {
 
 const LayerManager = new _LayerManager();
 
-
-
-
 class _Selection {
   getSelectedNodes(): NodeLayer[] {
     const selectedNodePaths = selection.selectedNodes();
-    return selectedNodePaths.map((nodePath: string) => LayerManager.getNodeLayer(nodePath)).filter((layer): layer is NodeLayer => layer !== null);
+    return selectedNodePaths
+      .map((nodePath: string) => LayerManager.getNodeLayer(nodePath))
+      .filter((layer): layer is NodeLayer => layer !== null);
   }
 }
 

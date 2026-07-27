@@ -36,7 +36,7 @@ interface oTimelineMarker {
   color: number | string;
   name: string;
   notes: string;
-};
+}
 
 declare var specialFolders: {
   userScripts: string;
@@ -167,7 +167,13 @@ declare var scene: {
   getDefaultDisplay(): string;
   closeScene(): void;
   closeSceneAndExit(): void;
-  closeSceneAndOpen(envName: string, jobName: string, sceneName: string, versionName?: string, isReadOnly?: boolean): boolean;
+  closeSceneAndOpen(
+    envName: string,
+    jobName: string,
+    sceneName: string,
+    versionName?: string,
+    isReadOnly?: boolean,
+  ): boolean;
   closeSceneAndOpenOffline(filePath: string): boolean;
   getMissingPalettes(unrecovered: boolean, recoveredNotYetSaved: boolean): string[];
   metadatas(): any;
@@ -188,32 +194,65 @@ declare var Vector2d: {
   new (x: number, y: number): Point2d;
 };
 
-declare class QLabel { constructor(...args: any[]);   [key: string]: any; };
-declare class QWidget { constructor(...args: any[]);   [key: string]: any; };
-declare class QSlider { constructor(...args: any[]);   [key: string]: any; };
-declare class QSpinBox { constructor(...args: any[]);   [key: string]: any; };
-declare class QGroupBox { constructor(...args: any[]);   [key: string]: any; };
-declare class QVBoxLayout { constructor(...args: any[]);   [key: string]: any; };
-declare class QHBoxLayout { constructor(...args: any[]);   [key: string]: any; };
-declare class QPushButton { constructor(...args: any[]);   [key: string]: any; };
-declare class QListWidget { constructor(...args: any[]);   [key: string]: any; };
-declare class QScrollArea { constructor(...args: any[]);   [key: string]: any; };
-declare class QListWidgetItem { constructor(...args: any[]);   [key: string]: any; };
-declare class QCheckBox { constructor(...args: any[]);   [key: string]: any; };
-declare var Qt: { 
-    new (...args: any[]): any;
+declare class QLabel {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QWidget {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QSlider {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QSpinBox {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QGroupBox {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QVBoxLayout {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QHBoxLayout {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QPushButton {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QListWidget {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QScrollArea {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QListWidgetItem {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QCheckBox {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare var Qt: {
+  new (...args: any[]): any;
   (...args: any[]): any;
   [key: string]: any;
 };
 
-
-
 declare var System: {
-  println (text: String): void;
-  getenv (environmentVariable: String): String;
-  processOneEvent (): void;
+  println(text: String): void;
+  getenv(environmentVariable: String): String;
+  processOneEvent(): void;
 };
-
 
 declare var Tools: {
   createDrawing(): any;
@@ -282,13 +321,26 @@ declare var node: {
   moveToGroup(node: string, groupName: string): string;
   explodeGroup(groupName: string): boolean;
   rename(node: string, newName: string, renameElement?: boolean): boolean;
-  createDynamicAttr(node: string, type: string, attrName: string, displayName: string, linkable: boolean): boolean;
+  createDynamicAttr(
+    node: string,
+    type: string,
+    attrName: string,
+    displayName: string,
+    linkable: boolean,
+  ): boolean;
   removeDynamicAttr(node: string, attrName: string): boolean;
   setTextAttr(node: string, attrName: string, atFrame: number, attrValue: string): boolean;
   linkAttr(node: string, attrName: string, columnName: string): boolean;
   unlinkAttr(node: string, attrName: string): boolean;
   link(srcNode: string, srcPort: number, dstNode: string, dstPort: number): boolean;
-  link(srcNode: string, srcPort: number, dstNode: string, dstPort: number, mayAddOutputPort: boolean, mayAddInputPort: boolean): boolean;
+  link(
+    srcNode: string,
+    srcPort: number,
+    dstNode: string,
+    dstPort: number,
+    mayAddOutputPort: boolean,
+    mayAddInputPort: boolean,
+  ): boolean;
   unlink(dstNode: string, inPort: number): boolean;
   setEnable(node: string, flag: boolean): boolean;
   getEnable(node: string): boolean;
@@ -322,7 +374,12 @@ declare var node: {
   getPivot(node: string, frame: number): any; // QObject *
   getColorOverride(node: string): any; // ColorOverride *
   getElementId(nodeName: string): number;
-  explodeElementSymbolsInGroups(element: string, disableElement: boolean, clearExposure: boolean, prefix?: string): void;
+  explodeElementSymbolsInGroups(
+    element: string,
+    disableElement: boolean,
+    clearExposure: boolean,
+    prefix?: string,
+  ): void;
   setShowTimelineThumbnails(node: string, bShow: boolean): boolean;
   getShowTimelineThumbnails(node: string): boolean;
   setOutlineMode(node: string, bOutlineMode: boolean): boolean;
@@ -405,8 +462,20 @@ declare var element: {
   folder(elementId: number): string;
   completeFolder(elementId: number): string;
   physicalName(elementId: number): string;
-  modify(elementId: number, scanType: string, fieldChart: number, pixmapFormat: string, vectorType: number): boolean;
-  add(name: string, scanType: string, fieldChart: number, fileFormat: string, vectorFormat: string): number;
+  modify(
+    elementId: number,
+    scanType: string,
+    fieldChart: number,
+    pixmapFormat: string,
+    vectorType: number,
+  ): boolean;
+  add(
+    name: string,
+    scanType: string,
+    fieldChart: number,
+    fileFormat: string,
+    vectorFormat: string,
+  ): number;
   remove(elementId: number, deleteDiskFile: boolean): boolean;
   renameById(elementId: number, name: string): boolean;
 };
@@ -513,7 +582,13 @@ declare var column: {
   removeKeyDrawingExposureAt(columnName: string, frame: number): boolean;
   removeDuplicateKeyDrawingExposureAt(columnName: string, frameNumber: number): boolean;
   fillEmptyCels(columnName: string, startFrame: number, endFrame: number): boolean;
-  lineTestFill(columnName: string, startFrame: number, nbFrames: number, prefix: string, keyFramesOnly: boolean): boolean;
+  lineTestFill(
+    columnName: string,
+    startFrame: number,
+    nbFrames: number,
+    prefix: string,
+    keyFramesOnly: boolean,
+  ): boolean;
   soundColumn(columnName: string): QObject;
   columnMarkers(columnName: string): columnMarkers;
   getTimesheetEntry(columnName: string, subColumn: number, atFrame: number): QScriptValue;

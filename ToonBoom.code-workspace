@@ -25,6 +25,13 @@
 			"statusBar.debuggingForeground": "#15202b"
 		},
 		"peacock.color": "#97ad7a",
-		"folder-color.pathColors": []
+		"folder-color.pathColors": [],
+		"editor.formatOnSave": true,
+		"[typescript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[typescriptreact]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		}
 	}
 }

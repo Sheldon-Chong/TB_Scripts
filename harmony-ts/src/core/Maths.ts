@@ -8,7 +8,7 @@
 function getPointAtDistance(start, rotation, distance) {
   return {
     x: start.x + Math.cos(rotation) * distance,
-    y: start.y + Math.sin(rotation) * distance
+    y: start.y + Math.sin(rotation) * distance,
   };
 }
 
@@ -35,12 +35,12 @@ function distance2d(a, b) {
 }
 
 function rectanglesCollide(rectA, rectB) {
-    return !(
-        rectA.x1 < rectB.x0 || // A is completely left of B
-        rectA.x0 > rectB.x1 || // A is completely right of B
-        rectA.y1 < rectB.y0 || // A is completely below B
-        rectA.y0 > rectB.y1    // A is completely above B
-    );
+  return !(
+    rectA.x1 < rectB.x0 || // A is completely left of B
+    rectA.x0 > rectB.x1 || // A is completely right of B
+    rectA.y1 < rectB.y0 || // A is completely below B
+    rectA.y0 > rectB.y1 // A is completely above B
+  );
 }
 
 var Maths = {
@@ -50,5 +50,5 @@ var Maths = {
   subtract2d: subtract2d,
   distance2d: distance2d,
   getPointAtDistance: getPointAtDistance,
-  rectanglesCollide: rectanglesCollide
+  rectanglesCollide: rectanglesCollide,
 };

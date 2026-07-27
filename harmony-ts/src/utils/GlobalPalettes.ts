@@ -30,34 +30,58 @@ class PaletteColor {
   constructor(private _native: any) {}
 
   // ── identity ──
-  get id(): string              { return this._native.id; }
-  get name(): string            { return this._native.name; }
-  set name(v: string)           { this._native.setName(v); }
+  get id(): string {
+    return this._native.id;
+  }
+  get name(): string {
+    return this._native.name;
+  }
+  set name(v: string) {
+    this._native.setName(v);
+  }
 
   // ── type ──
-  get colorType(): HarmonyColorType { return this._native.colorType; }
+  get colorType(): HarmonyColorType {
+    return this._native.colorType;
+  }
 
   /** Accepts a HarmonyColorType enum value *or* a ToonBoom string constant. */
   setColorType(type: HarmonyColorType | string): void {
     this._native.setColorType(type);
   }
 
-  get isSolid(): boolean          { return this.colorType === HarmonyColorType.SOLID_COLOR; }
-  get isLinearGradient(): boolean { return this.colorType === HarmonyColorType.LINEAR_GRADIENT; }
-  get isRadialGradient(): boolean { return this.colorType === HarmonyColorType.RADIAL_GRADIENT; }
+  get isSolid(): boolean {
+    return this.colorType === HarmonyColorType.SOLID_COLOR;
+  }
+  get isLinearGradient(): boolean {
+    return this.colorType === HarmonyColorType.LINEAR_GRADIENT;
+  }
+  get isRadialGradient(): boolean {
+    return this.colorType === HarmonyColorType.RADIAL_GRADIENT;
+  }
 
   // ── data ──
-  get colorData(): any          { return this._native.colorData; }
-  set colorData(v: any)         { this._native.setColorData(v); }
+  get colorData(): any {
+    return this._native.colorData;
+  }
+  set colorData(v: any) {
+    this._native.setColorData(v);
+  }
 
   // ── texture ──
-  get isTexture(): boolean      { return this._native.isTexture ? this._native.isTexture() : false; }
+  get isTexture(): boolean {
+    return this._native.isTexture ? this._native.isTexture() : false;
+  }
 
   // ── validation ──
-  get isValid(): boolean        { return true; } // native object should always be valid if it exists
+  get isValid(): boolean {
+    return true;
+  } // native object should always be valid if it exists
 
   /** Access the raw ToonBoom object (for passing back into native API). */
-  getNative(): any { return this._native; }
+  getNative(): any {
+    return this._native;
+  }
 
   toString(): string {
     return `PaletteColor("${this.name}", id=${this.id}, type=${this.colorType})`;
@@ -82,22 +106,50 @@ class Palette {
   constructor(private _native: any) {}
 
   // ── identity / meta ──
-  get id(): string                      { return this._native.id; }
-  get name(): string                    { return this._native.getName(); }
-  set name(v: string)                   { this._native.setName(v); }
-  get path(): string                    { return this._native.getPath(); }
-  get nColors(): number                 { return this._native.nColors; }
-  get location(): PaletteLocation       { return this._native.location; }
-  get elementId(): number               { return this._native.elementId; }
+  get id(): string {
+    return this._native.id;
+  }
+  get name(): string {
+    return this._native.getName();
+  }
+  set name(v: string) {
+    this._native.setName(v);
+  }
+  get path(): string {
+    return this._native.getPath();
+  }
+  get nColors(): number {
+    return this._native.nColors;
+  }
+  get location(): PaletteLocation {
+    return this._native.location;
+  }
+  get elementId(): number {
+    return this._native.elementId;
+  }
 
-  get isValid(): boolean                { return this._native.isValid(); }
-  get isLoaded(): boolean               { return this._native.isLoaded(); }
-  get isNotFound(): boolean             { return this._native.isNotFound(); }
-  get isColorPalette(): boolean         { return this._native.isColorPalette(); }
-  get isTexturePalette(): boolean       { return this._native.isTexturePalette(); }
+  get isValid(): boolean {
+    return this._native.isValid();
+  }
+  get isLoaded(): boolean {
+    return this._native.isLoaded();
+  }
+  get isNotFound(): boolean {
+    return this._native.isNotFound();
+  }
+  get isColorPalette(): boolean {
+    return this._native.isColorPalette();
+  }
+  get isTexturePalette(): boolean {
+    return this._native.isTexturePalette();
+  }
 
-  setToColorPalette(): void             { this._native.setToColorPalette(); }
-  setToTexturePalette(): void           { this._native.setToTexturePalette(); }
+  setToColorPalette(): void {
+    this._native.setToColorPalette();
+  }
+  setToTexturePalette(): void {
+    this._native.setToTexturePalette();
+  }
 
   // ── locking ──
 
@@ -112,7 +164,9 @@ class Palette {
     return ok;
   }
 
-  get lockHeld(): boolean { return this._lockHeld; }
+  get lockHeld(): boolean {
+    return this._lockHeld;
+  }
 
   /** Acquire lock, run `fn`, then release. Returns `null` if lock fails. */
   withLock<T>(fn: () => T): T | null {
@@ -120,8 +174,11 @@ class Palette {
       MessageLog.trace(`[Palette] Failed to acquire lock for "${this.name}"`);
       return null;
     }
-    try { return fn(); }
-    finally { this.releaseLock(); }
+    try {
+      return fn();
+    } finally {
+      this.releaseLock();
+    }
   }
 
   // ── colour access ──
@@ -135,7 +192,7 @@ class Palette {
    * ```
    */
   getColor(key: string | number): PaletteColor | null {
-    if (typeof key === "number") {
+    if (typeof key === 'number') {
       return this._colorFromIndex(key);
     }
     return this._colorByName(key);
@@ -194,20 +251,31 @@ class Palette {
 
   /** Clone a colour (same ID). Optionally replace on ID conflict. */
   cloneColor(source: PaletteColor, replaceOnConflict?: boolean): PaletteColor | null {
-    const c = replaceOnConflict !== undefined
-      ? this._native.cloneColor(source.getNative(), replaceOnConflict)
-      : this._native.cloneColor(source.getNative());
+    const c =
+      replaceOnConflict !== undefined
+        ? this._native.cloneColor(source.getNative(), replaceOnConflict)
+        : this._native.cloneColor(source.getNative());
     return c && new PaletteColor(c);
   }
 
-  removeColor(id: string): boolean              { return this._native.removeColor(id); }
-  moveColor(from: number, toBefore: number): boolean { return this._native.moveColor(from, toBefore); }
+  removeColor(id: string): boolean {
+    return this._native.removeColor(id);
+  }
+  moveColor(from: number, toBefore: number): boolean {
+    return this._native.moveColor(from, toBefore);
+  }
 
   /** Move a colour from another palette into this one. */
-  acquire(color: PaletteColor): boolean          { return this._native.acquire(color.getNative()); }
-  containsUsedColors(colors: any): boolean       { return this._native.containsUsedColors(colors); }
+  acquire(color: PaletteColor): boolean {
+    return this._native.acquire(color.getNative());
+  }
+  containsUsedColors(colors: any): boolean {
+    return this._native.containsUsedColors(colors);
+  }
 
-  getNative(): any { return this._native; }
+  getNative(): any {
+    return this._native;
+  }
 
   toString(): string {
     return `Palette("${this.name}", id=${this.id}, colors=${this.nColors})`;
@@ -286,7 +354,7 @@ class GlobalPaletteManager {
    * @param scenePaletteList  If true, search the scene palette list.
    */
   get(key: string | number, scenePaletteList?: boolean): Palette | null {
-    if (typeof key === "number") {
+    if (typeof key === 'number') {
       return this._paletteFromIndex(key, scenePaletteList);
     }
     return this._paletteFromName(key, scenePaletteList);
@@ -308,7 +376,7 @@ class GlobalPaletteManager {
   /** The palette currently highlighted in the Colour View. */
   get currentPalette(): { id: string; name: string; path: string } {
     return {
-      id:   PaletteManager.getCurrentPaletteId(),
+      id: PaletteManager.getCurrentPaletteId(),
       name: PaletteManager.getCurrentPaletteName(),
       path: PaletteManager.getCurrentPalettePath(),
     };
@@ -317,7 +385,7 @@ class GlobalPaletteManager {
   /** The colour currently highlighted in the Colour View. */
   get currentColor(): { id: string; name: string } {
     return {
-      id:   PaletteManager.getCurrentColorId(),
+      id: PaletteManager.getCurrentColorId(),
       name: PaletteManager.getCurrentColorName(),
     };
   }
@@ -331,22 +399,25 @@ class GlobalPaletteManager {
 
   selectPalette(key: string | number, scenePaletteList?: boolean): boolean {
     let id: string;
-    if (typeof key === "number") {
-      id = scenePaletteList !== undefined
-        ? PaletteManager.getPaletteId(key, scenePaletteList)
-        : PaletteManager.getPaletteId(key);
+    if (typeof key === 'number') {
+      id =
+        scenePaletteList !== undefined
+          ? PaletteManager.getPaletteId(key, scenePaletteList)
+          : PaletteManager.getPaletteId(key);
     } else {
       // Resolve name → id
       const n = this.count(scenePaletteList);
-      let found = "";
+      let found = '';
       for (let i = 0; i < n; i++) {
-        const name = scenePaletteList !== undefined
-          ? PaletteManager.getPaletteName(i, scenePaletteList)
-          : PaletteManager.getPaletteName(i);
+        const name =
+          scenePaletteList !== undefined
+            ? PaletteManager.getPaletteName(i, scenePaletteList)
+            : PaletteManager.getPaletteName(i);
         if (name === key) {
-          found = scenePaletteList !== undefined
-            ? PaletteManager.getPaletteId(i, scenePaletteList)
-            : PaletteManager.getPaletteId(i);
+          found =
+            scenePaletteList !== undefined
+              ? PaletteManager.getPaletteId(i, scenePaletteList)
+              : PaletteManager.getPaletteId(i);
           break;
         }
       }
@@ -392,9 +463,10 @@ class GlobalPaletteManager {
    * the scene PaletteList to obtain the native palette pointer.
    */
   private _paletteFromIndex(index: number, scenePaletteList?: boolean): Palette | null {
-    const id = scenePaletteList !== undefined
-      ? PaletteManager.getPaletteId(index, scenePaletteList)
-      : PaletteManager.getPaletteId(index);
+    const id =
+      scenePaletteList !== undefined
+        ? PaletteManager.getPaletteId(index, scenePaletteList)
+        : PaletteManager.getPaletteId(index);
 
     if (!id) return null;
     return this._resolvePaletteById(id);
@@ -407,9 +479,10 @@ class GlobalPaletteManager {
   private _paletteFromName(name: string, scenePaletteList?: boolean): Palette | null {
     const n = this.count(scenePaletteList);
     for (let i = 0; i < n; i++) {
-      const palName = scenePaletteList !== undefined
-        ? PaletteManager.getPaletteName(i, scenePaletteList)
-        : PaletteManager.getPaletteName(i);
+      const palName =
+        scenePaletteList !== undefined
+          ? PaletteManager.getPaletteName(i, scenePaletteList)
+          : PaletteManager.getPaletteName(i);
 
       if (palName === name) {
         return this._paletteFromIndex(i, scenePaletteList);

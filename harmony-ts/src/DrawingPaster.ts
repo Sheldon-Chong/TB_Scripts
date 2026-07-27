@@ -1,7 +1,7 @@
-include(specialFolders.userScripts + "/utils/FileUtils.js");
-include("JsonParser.js");
-include("PositionTransformer.js");
-include("Palletes.js");
+include(specialFolders.userScripts + '/utils/FileUtils.js');
+include('JsonParser.js');
+include('PositionTransformer.js');
+include(specialFolders.userScripts + '/core/Palletes.js');
 
 // function getSelection() {
 
@@ -14,7 +14,6 @@ include("Palletes.js");
 //         drawing: settings.currentDrawing,
 //         art: settings.activeArt
 //     }
-
 
 //     var data = Drawing.query.getData(config);
 
@@ -66,92 +65,88 @@ include("Palletes.js");
 //     };
 // }
 
-
 function printAllMethods(objectToInspect) {
-    // A header for clarity in the message log
-    MessageLog.trace("--- Methods for object: " + String(objectToInspect) + " ---");
+  // A header for clarity in the message log
+  MessageLog.trace('--- Methods for object: ' + String(objectToInspect) + ' ---');
 
-    for (var propertyName in objectToInspect) {
-        try {
-            // Check if the property is a function
-            if (typeof objectToInspect[propertyName] === 'function') {
-                MessageLog.trace(propertyName);
-            }
-        } catch (e) {
-            // Some properties may not be accessible and will throw an error
-            MessageLog.trace("Could not access property: " + propertyName);
-        }
+  for (var propertyName in objectToInspect) {
+    try {
+      // Check if the property is a function
+      if (typeof objectToInspect[propertyName] === 'function') {
+        MessageLog.trace(propertyName);
+      }
+    } catch (e) {
+      // Some properties may not be accessible and will throw an error
+      MessageLog.trace('Could not access property: ' + propertyName);
     }
+  }
 
-    MessageLog.trace("--- End of methods ---");
+  MessageLog.trace('--- End of methods ---');
 }
-
 
 function getActions() {
-    var responders = Action.getResponderList();
-    for (var i in responders) {
-        MessageLog.trace(responders[i]);
-        // var actions = Action.getActionList(responders[i]);
-        // for (var x in actions) {
-        //     MessageLog.trace("\t" + actions[x]);
-        // }
-    }
+  var responders = Action.getResponderList();
+  for (var i in responders) {
+    MessageLog.trace(responders[i]);
+    // var actions = Action.getActionList(responders[i]);
+    // for (var x in actions) {
+    //     MessageLog.trace("\t" + actions[x]);
+    // }
+  }
 }
 
-
-
 function selectAllStrokes(node, frame, art) {
-    var all = Drawing.selection.get({ drawing: { node: node, frame: frame }, art: art });
-    if (!all || !all.selectedStrokes) return;
+  var all = Drawing.selection.get({ drawing: { node: node, frame: frame }, art: art });
+  if (!all || !all.selectedStrokes) return;
 
-    // Create full selection first
-    Drawing.selection.set({
-        drawing: { node: node, frame: frame },
-        art: art,
-        selectedStrokes: all.selectedStrokes,
-        selectedLayers: all.selectedLayers
-    });
+  // Create full selection first
+  Drawing.selection.set({
+    drawing: { node: node, frame: frame },
+    art: art,
+    selectedStrokes: all.selectedStrokes,
+    selectedLayers: all.selectedLayers,
+  });
 }
 
 function findActionResponder(actionName) {
-    var responders = Action.getResponderList();
-    MessageLog.trace("Searching for: " + actionName);
+  var responders = Action.getResponderList();
+  MessageLog.trace('Searching for: ' + actionName);
 
-    for (var i in responders) {
-        try {
-            var validateData = Action.validate(actionName, responders[i]);
-            if (validateData && validateData.enabled) {
-                MessageLog.trace("✔ " + actionName + " is ENABLED in responder: " + responders[i]);
-            }
-        } catch (err) {
-            // Action not valid for this responder
-        }
+  for (var i in responders) {
+    try {
+      var validateData = Action.validate(actionName, responders[i]);
+      if (validateData && validateData.enabled) {
+        MessageLog.trace('✔ ' + actionName + ' is ENABLED in responder: ' + responders[i]);
+      }
+    } catch (err) {
+      // Action not valid for this responder
     }
+  }
 }
 
 function validateAction(action) {
-    var validateData = Action.validate(action);
+  var validateData = Action.validate(action);
 }
 
 function validateAction2(action, context) {
-    var validateData = Action.validate(action, context);
+  var validateData = Action.validate(action, context);
 }
 
-include("test.js");
+include('test.js');
 
 const ArtLayers = {
-    UNDERLAY_ART: 0,
-    COLOUR_ART: 1,
-    LINE_ART: 2,
-    OVERLAY_ART: 3
-}
+  UNDERLAY_ART: 0,
+  COLOUR_ART: 1,
+  LINE_ART: 2,
+  OVERLAY_ART: 3,
+};
 
 const ArtLayersList = [
-    DrawingArtLayers.UNDERLAY_ART,
-    DrawingArtLayers.COLOUR_ART,
-    DrawingArtLayers.LINE_ART,
-    DrawingArtLayers.OVERLAY_ART
-]
+  DrawingArtLayers.UNDERLAY_ART,
+  DrawingArtLayers.COLOUR_ART,
+  DrawingArtLayers.LINE_ART,
+  DrawingArtLayers.OVERLAY_ART,
+];
 
 // function getSelection() {
 //     var settings = Tools.getToolSettings();
@@ -172,80 +167,62 @@ const ArtLayersList = [
 //         return ("vow");
 //     };
 //     return selected;
-// } 
-
-
-
+// }
 
 function main_paste() {
+  // frame.setCurrent(1);
+  MessageLog.trace('> selected: ' + JSON.stringify(getSelection(), null, 2));
 
-    // frame.setCurrent(1);
-    MessageLog.trace("> selected: " + JSON.stringify(getSelection(), null, 2));
+  // Action.perform("onActionMainGotoPreviousFrame()");
+  // Action.perform("onActionChooseSelectToolOverride()", "cameraView");
+  // Action.perform("onActionSelectAllCurrentPencilTexture()");
 
+  var selectedStrokes = [{ stroke: true, strokeIndex: 0, layer: 0 }];
+  var config = {
+    drawing: { node: 'Top/Drawing', frame: 1 },
+    art: 3,
+    selectedStrokes: selectedStrokes,
+    selectedLayers: [0],
+  };
+  // var output = Drawing.selection.set(config);
+  // Action.perform("onActionGroup()");
 
-    // Action.perform("onActionMainGotoPreviousFrame()");
-    // Action.perform("onActionChooseSelectToolOverride()", "cameraView");
-    // Action.perform("onActionSelectAllCurrentPencilTexture()");
+  // todo call select all command fisrt. Appears that set sleection only works after selectin gsomething else
 
-    var selectedStrokes = [
-        { stroke: true, strokeIndex: 0, layer: 0 },
-    ];
-    var config = {
-        drawing: { node: "Top/Drawing", frame: 1 },
-        art: 3,
-        selectedStrokes: selectedStrokes,
-        selectedLayers: [0]
-    };
-    // var output = Drawing.selection.set(config);
-    // Action.perform("onActionGroup()");
+  // todo sometimes works sometimes doesnt. Need to add a stroke
 
+  // var sel = Drawing.selection.get(config.drawing, config.art);
+  // MessageLog.trace(">>>> after set: " + JSON.stringify(sel, null, 2));
 
+  // var tools = $.app.tools;
 
-    // todo call select all command fisrt. Appears that set sleection only works after selectin gsomething else
+  // $.app.runMenuCommand("Mark Drawing As...", "Mark Drawing as: Sans");
+  // $.app.runMenuCommand("Edit", "Group");
+  // $.app.runMenuCommand("Tools", "Pencil");
 
-    // todo sometimes works sometimes doesnt. Need to add a stroke
+  return;
 
+  var new_frame = new Frame({
+    index: 2,
+    node: 'Top/Drawing_16',
+  });
 
-    // var sel = Drawing.selection.get(config.drawing, config.art);
-    // MessageLog.trace(">>>> after set: " + JSON.stringify(sel, null, 2));
+  // var data = JSON.parse(GetFileContents(FileDialog.getOpenFileName()));
+  var data = new_frame.getDrawingData();
 
-    // var tools = $.app.tools;
+  // // Parse the file data
+  // var parsedData = JSON.parse(data);
 
-    // $.app.runMenuCommand("Mark Drawing As...", "Mark Drawing as: Sans");
-    // $.app.runMenuCommand("Edit", "Group");
-    // $.app.runMenuCommand("Tools", "Pencil");
+  // paste(data["arts"][0]);
 
-    return;
+  data = getSelection();
 
+  MessageLog.clearLog();
+  MessageLog.trace('Data from file: ' + JSON.stringify(data, null, 2));
 
+  paste(data['arts'][0]);
 
-    var new_frame = new Frame({
-        index: 2,
-        node: "Top/Drawing_16",
-    })
-
-    // var data = JSON.parse(GetFileContents(FileDialog.getOpenFileName()));
-    var data = new_frame.getDrawingData();
-
-
-    // // Parse the file data
-    // var parsedData = JSON.parse(data);
-
-    // paste(data["arts"][0]);
-
-    data = getSelection();
-
-    MessageLog.clearLog();
-    MessageLog.trace("Data from file: " + JSON.stringify(data, null, 2));
-
-
-
-    paste(data["arts"][0]);
-
-
-    layers = data["arts"][0]["layers"];
-
-
+  layers = data['arts'][0]['layers'];
 }
 
 // var widget = $.app.getWidgetByName("Tools");
@@ -261,8 +238,6 @@ function main_paste() {
 // printAllMethods(Action);
 
 // return ;
-
-
 
 // var widgets = QApplication.topLevelWidgets();
 // MessageLog.trace(JSON.stringify(widgets[0],null,2));

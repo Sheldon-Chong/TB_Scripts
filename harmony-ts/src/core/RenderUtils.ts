@@ -1,5 +1,5 @@
-include(specialFolders.userScripts + "/utils/utils.js");
-include(specialFolders.userScripts + "/Layers.js");
+include(specialFolders.userScripts + '/utils/utils.js');
+include(specialFolders.userScripts + '/core/Layers.js');
 
 // render.setRenderDisplay("Top/Display");
 render.setResolution(256, 256);
@@ -9,7 +9,7 @@ interface RenderQueueItem {
   frame: number;
   onFinished: (filepath: string) => void;
   nodes?: string[];
-  type?: "scene" | "nodes";
+  type?: 'scene' | 'nodes';
 }
 
 const renderQueue: RenderQueueItem[] = [];
@@ -27,11 +27,11 @@ function listFilesInDirectory(dirPath: string, filters: string[]): string[] {
 }
 
 function processNextInQueue() {
-  MessageLog.trace("Processing next item in render queue...");
+  MessageLog.trace('Processing next item in render queue...');
   if (isRendering || renderQueue.length === 0) return;
   currentItem = renderQueue.shift()!;
   isRendering = true;
-  if (currentItem.type === "scene") {
+  if (currentItem.type === 'scene') {
     render.renderScene(currentItem.frame, currentItem.frame);
     return;
   }
@@ -40,8 +40,10 @@ function processNextInQueue() {
 
 render.nodeFrameReady.connect((frame, celImage, nodePath) => {
   // Save the image to the cache
-  MessageLog.trace("☑️ ready " + nodePath);
-  celImage.imageFile(`${specialFolders.userScripts}/image_cache/${frame}${(nodePath as string).replace(/\//g, "_")}.png`);
+  MessageLog.trace('☑️ ready ' + nodePath);
+  celImage.imageFile(
+    `${specialFolders.userScripts}/image_cache/${frame}${(nodePath as string).replace(/\//g, '_')}.png`,
+  );
 });
 
 render.renderFinished.connect(() => {
@@ -55,7 +57,7 @@ render.renderFinished.connect(() => {
       currentItem.onFinished(imgPath);
     } else {
       MessageLog.trace(`Image for frame ${currentItem.frame} not found in cache.`);
-      currentItem.onFinished("");
+      currentItem.onFinished('');
     }
   }
   isRendering = false;
@@ -73,10 +75,7 @@ function renderNodes(nodes: string[], frame: number, onFinished: (filepath: stri
   addToRenderQueue({ nodes, frame, onFinished });
 }
 
-
-
-
 const RenderUtils = {
   addToRenderQueue,
-  renderNodes
+  renderNodes,
 };
