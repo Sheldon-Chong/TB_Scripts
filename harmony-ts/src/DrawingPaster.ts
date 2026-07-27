@@ -1,4 +1,4 @@
-include(specialFolders.userScripts + '/utils/FileUtils.js');
+include(specialFolders.userScripts + '/core/FileUtils.js');
 include('JsonParser.js');
 include('PositionTransformer.js');
 include(specialFolders.userScripts + '/core/Palletes.js');

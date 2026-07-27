@@ -1,6 +1,6 @@
 // include("Shapes.js");
 include(specialFolders.userScripts + '/core/FileUtils.js');
-include(specialFolders.userScripts + '/core/Frame.js');
+include('Frame.js');
 
 // Generic recursive walker: applies callback to each key/value pair
 function recursiveWalk(obj, callback) {

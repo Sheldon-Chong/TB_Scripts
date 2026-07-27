@@ -1,4 +1,4 @@
-include(specialFolders.userScripts + '/utils/utils.js');
+include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/Layers.js');
 
 const RESOLUTION = {

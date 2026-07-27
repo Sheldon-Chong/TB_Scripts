@@ -1,4 +1,4 @@
-/// <reference path="./utils/GlobalPalettes.ts" />
+/// <reference path="./core/GlobalPalettes.ts" />
 
 /**
  * Example usage of the Palette Manager OOP System

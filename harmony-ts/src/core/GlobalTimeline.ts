@@ -1,8 +1,8 @@
 include(specialFolders.userScripts + '/core/Frame.js');
 include('Layer.js');
 
-include(specialFolders.userScripts + '/utils/utils.js');
-include(specialFolders.userScripts + '/utils/DrawingDataUtils.js');
+include(specialFolders.userScripts + '/core/utils.js');
+include(specialFolders.userScripts + '/core/DrawingDataUtils.js');
 
 class Cell {
   frame: number;

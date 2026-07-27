@@ -67,13 +67,13 @@ include('openHarmony.js');
 include('DrawingPaster.js');
 include('test.js');
 include(specialFolders.userScripts + '/core/Transformations.js');
-include(specialFolders.userScripts + '/utils/utils.js');
+include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/ColorUtils.js');
 
 include(specialFolders.userScripts + '/core/Frame.js');
 include('GlobalTimeline.js');
 include(specialFolders.userScripts + '/core/DrawingView.js');
-include(specialFolders.userScripts + '/utils/LogUtils.js');
+include(specialFolders.userScripts + '/core/LogUtils.js');
 include(specialFolders.userScripts + '/core/Shapes.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
 include('globals.js');

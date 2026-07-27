@@ -1,5 +1,5 @@
 include(specialFolders.userScripts + '/core/utils.js');
-include(specialFolders.userScripts + '/core/Layers.js');
+include(specialFolders.userScripts + '/Layers.js');
 
 // render.setRenderDisplay("Top/Display");
 render.setResolution(256, 256);

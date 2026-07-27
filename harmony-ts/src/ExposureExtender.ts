@@ -1,5 +1,5 @@
 include(specialFolders.userScripts + '/core/Layers.js');
-include(specialFolders.userScripts + '/utils/utils.js');
+include(specialFolders.userScripts + '/core/utils.js');
 
 function collectInitialExposures() {
   var rows = [];

@@ -394,18 +394,6 @@ function disconnectAllOutputPorts(sourceNode) {
 
 /* INITIALIZATION */
 
-// Initialize all color mattes globally
-
-// const colorMattes: ColorMatte[] = [];
-
-// MessageLog.trace(`layer : ${G.LayerManager.getNodeLayer("Top/1")}`);
-// MessageLog.trace(`all node layers : ${G.LayerManager.getNodeLayers().map(layer => layer.nodePath).join(", ")}`);
-// MessageLog.trace(`timeline num layers: ${Timeline.numLayers}`);
-
-// for (let i = MIN_PASS; i <= MAX_PASS; i++) {
-//   colorMattes.push(new ColorMatte(i));
-// }
-
 /* UPDATE COLOR MAP FOR SELECTION */
 
 function updateColorMapForSelectionSeperatePaths() {
@@ -593,41 +581,7 @@ function toggleColorMapMode() {
   }
   scene.endUndoRedoAccum();
 }
-// if (!palette) {
-//   MessageLog.trace("Palette not found");
-// } else {
-//   const color = palette.getColor("Pass_1"); // or palette.getColor(0)
-//   if (!color) {
-//     MessageLog.trace("Color not found");
-//   } else {
 
-//     color.colorData = { r: 255, g: 120, b: 0, a: 255 };
-//   }
-// }
-
-function rgbToHex(r: number, g: number, b: number): string {
-  return (
-    '#' +
-    [r, g, b]
-      .map((x) => {
-        const hex = x.toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-      })
-      .join('')
-  );
-}
-
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!match) {
-    return null;
-  }
-  return {
-    r: parseInt(match[1], 16),
-    g: parseInt(match[2], 16),
-    b: parseInt(match[3], 16),
-  };
-}
 
 function printPaletteColors() {
   const passPalette = G.Palettes.get('Passes');

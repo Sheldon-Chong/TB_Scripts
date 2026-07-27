@@ -6,11 +6,11 @@ include(specialFolders.userScripts + '/core/Frame.js');
 include(specialFolders.userScripts + '/core/Transformations.js');
 include(specialFolders.userScripts + '/core/ColorUtils.js');
 include(specialFolders.userScripts + '/core/Layers.js');
-include(specialFolders.userScripts + '/utils/FileUtils.js');
-include(specialFolders.userScripts + '/utils/DrawingDataUtils.js');
-include(specialFolders.userScripts + '/utils/renderUtils.js');
-include(specialFolders.userScripts + '/utils/utils.js');
-include(specialFolders.userScripts + '/utils/GlobalPalettes.js');
+include(specialFolders.userScripts + '/core/FileUtils.js');
+include(specialFolders.userScripts + '/core/DrawingDataUtils.js');
+include(specialFolders.userScripts + '/core/renderUtils2.js');
+include(specialFolders.userScripts + '/core/utils.js');
+include(specialFolders.userScripts + '/core/GlobalPalettes.js');
 
 include(specialFolders.userScripts + '/widgets/WidgetUtils.js');
 
