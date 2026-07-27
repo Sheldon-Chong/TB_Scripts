@@ -57,7 +57,7 @@ class HarmonyGlobals {
   GlobalTimeline = GlobalTimeline;
   Utils = Utils;
   ColorUtils = ColorUtils;
-  Widgets = Widgets;
+  // Widgets = Widgets;
   LayerManager = LayerManager;
   FileUtils: typeof ReadWriteOperations = ReadWriteOperations;
   Frame = Frame;

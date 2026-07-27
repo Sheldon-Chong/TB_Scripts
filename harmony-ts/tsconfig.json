@@ -3,6 +3,7 @@
     "target": "ES5",
     "module": "none",
     "outDir": "C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Advanced\\2500-scripts",
+    "rootDir": "src",
     "removeComments": true,
     "noImplicitAny": false,
     "strict": false,
@@ -16,13 +17,7 @@
     "skipLibCheck": true,
     "allowJs": false,
   },
-  "exclude": [
-    "archive"
-  ],
   "include": [
-    "src/**/*.ts",
-    "archsrc/test.ts",
-    "src/Toolbar.ts",
-    "frame-change-dialog.ts"
-, "archive/MatteToggle.ts", "tests/frame-change-dialog.ts"  ],
+    "src/**/*.ts"
+  ]
 }
