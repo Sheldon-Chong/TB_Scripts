@@ -1,4 +1,4 @@
-include('GlobalTimeline.js');
+include('TimelineKit.js');
 include('openHarmony.ts');
 
 const destinationNode = 'Top/lighting_controller_8';
@@ -73,7 +73,7 @@ function registerTestAction() {
         saveNodes.sort(function (a, b) {
           return node.coordX(a) - node.coordX(b);
         });
-        _.GlobalTimeline.setMetadata('selectedNodes', JSON.stringify(saveNodes)); //todo scope doesnt cover set/get metadata  }
+        _.TimelineKit.setMetadata('selectedNodes', JSON.stringify(saveNodes)); //todo scope doesnt cover set/get metadata  }
       } catch (e) {
         MessageLog.trace(
           'Error collecting selected nodes: ' + e.message + ' | line number ' + e.lineNumber,
@@ -93,16 +93,16 @@ function registerTestAction() {
 
         if (destinationNodes.length === 0) {
           MessageLog.trace('No destination nodes selected.');
-          destinationNodes = JSON.parse(_.GlobalTimeline.getMetadata('savedDestinationNodes'));
+          destinationNodes = JSON.parse(_.TimelineKit.getMetadata('savedDestinationNodes'));
         }
 
-        var savedNodes = JSON.parse(_.GlobalTimeline.getMetadata('selectedNodes'));
+        var savedNodes = JSON.parse(_.TimelineKit.getMetadata('selectedNodes'));
 
         MessageLog.trace(JSON.stringify(savedNodes, null, 2));
         MessageLog.trace(JSON.stringify(destinationNodes, null, 2));
         MessageLog.trace(JSON.stringify(node.numberOfOutputPorts(savedNodes[0]), null, 2));
 
-        _.GlobalTimeline.setMetadata('savedDestinationNodes', JSON.stringify(destinationNodes));
+        _.TimelineKit.setMetadata('savedDestinationNodes', JSON.stringify(destinationNodes));
 
         var allDestNodesHaveSamePortCount = true;
         var firstNodePortCount = node.numberOfInputPorts(destinationNodes[0]);

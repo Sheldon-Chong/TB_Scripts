@@ -39,7 +39,7 @@ class DrawingCell extends Cell {
 }
 
 function saveKeyFramesFrom3DPath() {
-  const selection = G.GlobalTimeline.getSelection();
+  const selection = TimelineKit.getSelection();
   const PathColumn3D = selection.selectedNodes[0].getColumn('offset.attr3dpath') as PathColumn3D;
   // const RotationColumn = selection.selectedNodes[0].getColumn("ROTATION") as PathColumn3D;
   const ScaleXCol = selection.selectedNodes[0].getColumn('scale.x') as oColumn;
@@ -78,7 +78,7 @@ function saveKeyFramesFrom3DPath() {
 }
 
 function serializeKeyFramesFromSplittedPath(selection: oSelection) {
-  // const selection = G.GlobalTimeline.getSelection();
+  // const selection = TimelineKit.getSelection();
   const layer = selection.selectedNodes[0];
   const xCol = layer.getColumn('offset.X');
   const yCol = layer.getColumn('offset.Y');
@@ -179,10 +179,12 @@ class oSelection {
 
 type frameRange = Omit<oSelection, 'selectedNodes'>;
 
-class GlobalTimelineClass {
-  layers: any[];
+// ─── TimelineKit namespace ──────────────────────────────────────────────────
 
-  applyKeyFramesTo3DPath(selection: oSelection, keyframes: any[]) {
+namespace TimelineKit {
+  export let layers: any[] = updateLayers();
+
+  export function applyKeyFramesTo3DPath(selection: oSelection, keyframes: any[]) {
     const layer = selection.selectedNodes[0];
     const PathColumn3D = layer.getColumn('position.attr3dpath') as PathColumn3D;
     const ScaleXCol = layer.getColumn('scale.x') as oColumn;
@@ -211,7 +213,7 @@ class GlobalTimelineClass {
     scene.endUndoRedoAccum();
   }
 
-  applyKeyFramesToSplittedPath(selection, keyframes) {
+  export function applyKeyFramesToSplittedPath(selection, keyframes) {
     for (const currentNode of selection.selectedNodes) {
       const layer = currentNode;
       const xCol = layer.getColumn('offset.X');
@@ -256,7 +258,7 @@ class GlobalTimelineClass {
     }
   }
 
-  createFrameMarkers(marker: any, selection: oSelection) {
+  export function createFrameMarkers(marker: any, selection: oSelection) {
     for (const node of selection.selectedNodes) {
       for (let f = selection.startFrame; f <= selection.endFrame; f++) {
         try {
@@ -279,13 +281,7 @@ class GlobalTimelineClass {
     }
   }
 
-  deleteFrameMarkers(selection: oSelection) {
-    // var frameMarkers = Timeline.getAllFrameMarkers(selection.selectedNodes[0].index);
-    // stringify(frameMarkers);
-    // for (const marker of  frameMarkers) {
-    // 	Timeline.deleteFrameMarker(selection.selectedNodes[0].index, marker.id);
-    // }
-    // return;
+  export function deleteFrameMarkers(selection: oSelection) {
     for (const node of selection.selectedNodes) {
       for (let f = selection.startFrame; f <= selection.endFrame; f++) {
         var marker = Timeline.getFrameMarker(node.index, f);
@@ -309,20 +305,16 @@ class GlobalTimelineClass {
     }
   }
 
-  constructor() {
-    this.layers = this.updateLayers();
-  }
-
-  resetFocusedNodes() {
+  export function resetFocusedNodes() {
     Action.perform('onActionTimelineViewModeNormal()', 'timelineView');
   }
 
-  focusOnNodes(nodes: string[]) {
+  export function focusOnNodes(nodes: string[]) {
     selection.addNodesToSelection(nodes);
     Action.perform('onActionTimelineViewModeSelectionOnly()', 'timelineView');
   }
 
-  focusOnColumns(columnNames: string[]) {
+  export function focusOnColumns(columnNames: string[]) {
     for (const colName of columnNames) {
       selection.addColumnToSelection(colName);
     }
@@ -334,22 +326,22 @@ class GlobalTimelineClass {
     }
   }
 
-  getSelection() {
+  export function getSelection() {
     return new G.oSelection();
   }
 
   /**
    * @param {FrameOptions} options - The configuration object.
    */
-  getFrame(options) {
+  export function getFrame(options) {
     return new Frame(options);
   }
 
-  getLayer(index) {
-    return this.layers[index];
+  export function getLayer(index) {
+    return layers[index];
   }
 
-  updateLayers() {
+  export function updateLayers() {
     var numColumns = column.numberOf();
     var columns = [];
     for (var i = 0; i < numColumns; i++) {
@@ -367,11 +359,11 @@ class GlobalTimelineClass {
     return columns;
   }
 
-  getAllLayers() {
-    return this.layers;
+  export function getAllLayers() {
+    return layers;
   }
 
-  getSceneMetadata(key, type) {
+  export function getSceneMetadata(key, type) {
     try {
       var meta = scene.metadata(key, type);
       if (meta && meta.hasOwnProperty('value')) return meta.value;
@@ -381,7 +373,7 @@ class GlobalTimelineClass {
     return null;
   }
 
-  setSceneMetadata(key, type, value, creator, version) {
+  export function setSceneMetadata(key, type, value, creator, version) {
     try {
       var metaObj = {
         name: key,
@@ -397,7 +389,7 @@ class GlobalTimelineClass {
     }
   }
 
-  setMetadata(key, value) {
+  export function setMetadata(key, value) {
     try {
       var metaObj = {
         name: key,
@@ -412,7 +404,7 @@ class GlobalTimelineClass {
     }
   }
 
-  getMetadata(key) {
+  export function getMetadata(key) {
     try {
       var meta = scene.metadata(key, 'string');
       if (meta && meta.hasOwnProperty('value')) return meta.value;
@@ -433,9 +425,6 @@ function TimelineLayer(name, displayName, orderIndex, trueIndex) {
 TimelineLayer.prototype.toString = function () {
   return this.name + ' (' + this.displayName + ') - OrderIndex: ' + this.orderIndex;
 };
-
-// Create the global instance
-var GlobalTimeline = new GlobalTimelineClass();
 
 function createDrawingAtFrame(nodePath, frameNum) {
   var settings = Tools.getToolSettings();

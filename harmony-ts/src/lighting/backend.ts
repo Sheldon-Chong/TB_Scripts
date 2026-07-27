@@ -7,7 +7,7 @@ include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/ColorUtils.js');
 
 include(specialFolders.userScripts + '/core/Frame.js');
-include('GlobalTimeline.js');
+include('TimelineKit.js');
 include(specialFolders.userScripts + '/core/DrawingView.js');
 include(specialFolders.userScripts + '/core/LogUtils.js');
 include(specialFolders.userScripts + '/core/Shapes.js');
@@ -150,7 +150,7 @@ class MasterLightingController {
   setLightingGroupOfSelection(lightingGroup: LightingGroup, selection: oSelection) {
     scene.beginUndoRedoAccum('Apply Lighting Passes');
     lightingGroup.masterLightingController.clearLighting(selection);
-    G.GlobalTimeline.createFrameMarkers(lightingGroup.passManager.marker, selection);
+    G.TimelineKit.createFrameMarkers(lightingGroup.passManager.marker, selection);
 
     // lightingGroup.passManager.setAllPasses(selection, true);
     for (const node of selection.selectedNodes) {
@@ -236,7 +236,7 @@ class MasterLightingController {
         lightingGroup.passManager.setPass(index, selection, false);
       }
 
-      G.GlobalTimeline.deleteFrameMarkers(selection);
+      G.TimelineKit.deleteFrameMarkers(selection);
     }
     scene.endUndoRedoAccum();
   }
@@ -268,7 +268,7 @@ class PassManager {
   layer: NodeLayer;
   lightingGroup: LightingGroup;
 
-  passes: Column[];
+  passes: oColumn[];
 
   static ENABLED = 1;
   static DISABLED = 0;
@@ -431,7 +431,7 @@ class LightingGroup {
 
   index: LightingGroupRange;
   controlNodes: any;
-  controls: Record<string, Record<string, Column>> = {};
+  controls: Record<string, Record<string, oColumn>> = {};
 
   masterLightingController: MasterLightingController;
 
@@ -510,7 +510,7 @@ class LightingGroup {
 
   editProperty(name: string) {
     selection.clearSelection();
-    G.GlobalTimeline.focusOnNodes(
+    G.TimelineKit.focusOnNodes(
       this.layer
         .getChildrenRecursive()
         .filter(function (child: NodeLayer) {
@@ -529,7 +529,7 @@ class LightingGroup {
   editPropertyAttribute(name: string, attribute: string) {
     var name = this.layer.getColumn(name).name;
     MessageLog.trace('Focusing on column: ' + name);
-    G.GlobalTimeline.focusOnColumns([name]);
+    G.TimelineKit.focusOnColumns([name]);
   }
 
   editLight() {
@@ -607,12 +607,12 @@ class LightingGroup {
     return copy;
   }
 
-  getFlattenedColumns(): Record<string, Column> {
+  getFlattenedColumns(): Record<string, oColumn> {
     var attributeColumns = this.getColumns();
-    var flatColumns: Record<string, Column> = {};
+    var flatColumns: Record<string, oColumn> = {};
     G.Utils.forEachLeafValue(attributeColumns, (value: any, path: string) => {
       if (value.constructor.name === 'Column') {
-        flatColumns[path] = value as Column;
+        flatColumns[path] = value as oColumn;
       }
     });
     return flatColumns;
@@ -626,7 +626,7 @@ class LightingGroup {
 
     G.Utils.forEachLeafValue(attributeColumns, (value: any, path: string) => {
       if (value.constructor.name === 'Column') {
-        var col = value as Column;
+        var col = value as oColumn;
 
         // var keyframeOrKeyframes = col.getKeyframeRangeSimplify(selection);
         var keyframeOrKeyframes = col.getKeyframe(selection.startFrame);
@@ -666,7 +666,7 @@ class LightingGroup {
     var savePath = QFileDialog.getSaveFileName(0, 'Save As', defaultPath);
     if (!savePath) return;
 
-    var data = this.serializeLighting(G.GlobalTimeline.getSelection());
+    var data = this.serializeLighting(G.TimelineKit.getSelection());
     G.FileUtils.writeTo(savePath, JSON.stringify(data, null, 2));
   }
 
@@ -705,7 +705,7 @@ class LightingGroup {
     var columns = this.getColumns();
     G.Utils.forEachLeafValue(columns, (value, path, isLeaf: boolean) => {
       if (value.constructor.name === 'Column') {
-        var col = value as Column;
+        var col = value as oColumn;
         if (col.getType() === 'DRAWING') {
           var elementId = col.parent.getElementId();
           var element = new G.oElement(elementId);

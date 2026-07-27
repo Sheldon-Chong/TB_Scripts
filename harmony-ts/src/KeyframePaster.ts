@@ -37,7 +37,7 @@ const CAMERA_PRESETS = [
 function saveAllKeyframePresets() {
   try {
     const presetRegions = TimelineMarker.getAllMarkers();
-    const currentNode = G.GlobalTimeline.getSelection().selectedNodes[0];
+    const currentNode = G.TimelineKit.getSelection().selectedNodes[0];
 
     function savePreset(presetRegion: any, keyframes: any, presetsPath: string) {
       let i = presetRegion.frame;
@@ -138,7 +138,7 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
 
     const data = JSON.parse(content);
     let currentFrame = frame.current();
-    const selection = G.GlobalTimeline.getSelection();
+    const selection = G.TimelineKit.getSelection();
 
     if (presetSettings.edgeSnappingEnabled)
       currentFrame = getSnappedFrame(currentFrame, selection, presetSettings);
@@ -153,7 +153,7 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
     }
 
     // Use the currently selected nodes
-    G.GlobalTimeline[applyFnName](new G.oSelection(trueStart, undefined, selected), data.keyframes);
+    G.TimelineKit[applyFnName](new G.oSelection(trueStart, undefined, selected), data.keyframes);
 
     frame.setCurrent(trueStart);
 

@@ -71,7 +71,7 @@ include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/ColorUtils.js');
 
 include(specialFolders.userScripts + '/core/Frame.js');
-include('GlobalTimeline.js');
+include('TimelineKit.js');
 include(specialFolders.userScripts + '/core/DrawingView.js');
 include(specialFolders.userScripts + '/core/LogUtils.js');
 include(specialFolders.userScripts + '/core/Shapes.js');
@@ -190,7 +190,7 @@ function getPalletesUsedFromJson(jsonData) {
 }
 
 function getProfile(selection) {
-  var border = GlobalTimeline.getFrame({
+  var border = TimelineKit.getFrame({
     node: 'Top/Drawing_9',
   });
 
@@ -229,7 +229,7 @@ class Region {
  * @property {Object} drawing - { node: string }
  */
 function ProfileRegionSet(params) {
-  this.drawing = GlobalTimeline.getFrame(params.drawing);
+  this.drawing = TimelineKit.getFrame(params.drawing);
   this.regions = {};
   this.centerLines = [];
 
@@ -302,9 +302,9 @@ function saveProfilesToJSON(params) {
   });
 
   var levelLayers = {
-    upper: GlobalTimeline.getFrame(params.upper).getDrawingData(),
-    middle: GlobalTimeline.getFrame(params.middle).getDrawingData(),
-    lower: GlobalTimeline.getFrame(params.lower).getDrawingData(),
+    upper: TimelineKit.getFrame(params.upper).getDrawingData(),
+    middle: TimelineKit.getFrame(params.middle).getDrawingData(),
+    lower: TimelineKit.getFrame(params.lower).getDrawingData(),
   };
 
   var profiles = {};
@@ -422,11 +422,11 @@ class ProfileSet {
   }
 
   getLastSelectedNode() {
-    return this._.GlobalTimeline.getSceneMetadata('LastSelectedNode', 'string');
+    return this._.TimelineKit.getSceneMetadata('LastSelectedNode', 'string');
   }
 
   updateLastSelectedNode(nodePath) {
-    this._.GlobalTimeline.setSceneMetadata(
+    this._.TimelineKit.setSceneMetadata(
       'LastSelectedNode',
       'string',
       nodePath,
@@ -455,13 +455,13 @@ class ProfileSet {
     var activeProfileData = this.levels[selectedLevel][selectedProfile];
     if (!activeProfileData) throw new Error('Profile not found: ' + selectedProfile);
 
-    var srcFrame = this._.GlobalTimeline.getFrame({
+    var srcFrame = this._.TimelineKit.getFrame({
       node: this.layers[selectedLevel].node,
       index: this.frame,
     });
     var data = srcFrame.getDrawingData();
 
-    var dstFrame = this._.GlobalTimeline.getFrame({});
+    var dstFrame = this._.TimelineKit.getFrame({});
 
     data.arts.forEach(function (c_artLayer) {
       var artKey = c_artLayer.art;
@@ -552,7 +552,7 @@ class PasteProfileTool implements HarmonyTool {
     // Store pathBuffer in scene metadata for later preview
     var pathBuffer = this.ProfileSet.getAllPathsFromStructure(layersToPaste);
     if (typeof scene !== 'undefined' && typeof scene.setMetadata === 'function') {
-      this._.GlobalTimeline.setSceneMetadata(
+      this._.TimelineKit.setSceneMetadata(
         'PasteProfileToolPreview',
         'string',
         JSON.stringify(pathBuffer),
@@ -624,12 +624,12 @@ class PasteProfileTool implements HarmonyTool {
 
   getLatestSelectedLevel() {
     return {
-      selectedProfile: this.activeProfileSet._.GlobalTimeline.getSceneMetadata(
+      selectedProfile: this.activeProfileSet._.TimelineKit.getSceneMetadata(
         'SelectedProfile',
         'string',
       ),
       currentLevelIndex: parseInt(
-        this.activeProfileSet._.GlobalTimeline.getSceneMetadata('CurrentLevelIndex', 'string') ||
+        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
           '0',
       ),
     };
@@ -651,7 +651,7 @@ class PasteProfileTool implements HarmonyTool {
 
       var latestSelectedLevel = this.getLatestSelectedLevel();
       var currentLevel = this.ProfileSet.LEVEL[latestSelectedLevel.currentLevelIndex];
-      var srcFrame = this.activeProfileSet._.GlobalTimeline.getFrame({
+      var srcFrame = this.activeProfileSet._.TimelineKit.getFrame({
         node: this.activeProfileSet.layers[currentLevel].node,
         index: this.activeProfileSet.frame,
       });
@@ -696,29 +696,29 @@ class PasteProfileTool implements HarmonyTool {
   }
 
   onMouseMove(ctx) {
-    var isPreviewUpdated = this._.GlobalTimeline.getSceneMetadata('isPreviewUpdated', 'string');
+    var isPreviewUpdated = this._.TimelineKit.getSceneMetadata('isPreviewUpdated', 'string');
     MessageLog.trace('On mouse move - Updating preview, isPreviewUpdated: ' + isPreviewUpdated);
     const COLORS = this.PasteProfileTool.COLORS;
     if (!ctx.origin) return true;
     try {
       // If preview needs to be updated, recalculate and reset the flag
       if (isPreviewUpdated === 'true') {
-        var selectedProfile = this.activeProfileSet._.GlobalTimeline.getSceneMetadata(
+        var selectedProfile = this.activeProfileSet._.TimelineKit.getSceneMetadata(
           'SelectedProfile',
           'string',
         );
         var currentLevelIndex = parseInt(
-          this.activeProfileSet._.GlobalTimeline.getSceneMetadata('CurrentLevelIndex', 'string') ||
+          this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
             '0',
         );
         var currentLevel = this.ProfileSet.LEVEL[currentLevelIndex];
-        var srcFrame = this.activeProfileSet._.GlobalTimeline.getFrame({
+        var srcFrame = this.activeProfileSet._.TimelineKit.getFrame({
           node: this.activeProfileSet.layers[currentLevel].node,
           index: this.activeProfileSet.frame,
         });
         var srcFrameDrawingData = srcFrame.getDrawingData();
         this.updatePasteProfilePreview(selectedProfile, currentLevel, srcFrameDrawingData);
-        this._.GlobalTimeline.setSceneMetadata(
+        this._.TimelineKit.setSceneMetadata(
           'isPreviewUpdated',
           'string',
           'false',
@@ -862,12 +862,12 @@ class PasteProfileTool implements HarmonyTool {
       });
 
       // Add bbox preview at screen center for current profile/level using Rectangle class
-      var selectedProfile = this.activeProfileSet._.GlobalTimeline.getSceneMetadata(
+      var selectedProfile = this.activeProfileSet._.TimelineKit.getSceneMetadata(
         'SelectedProfile',
         'string',
       );
       var currentLevelIndex = parseInt(
-        this.activeProfileSet._.GlobalTimeline.getSceneMetadata('CurrentLevelIndex', 'string') ||
+        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
           '0',
       );
       var currentLevel = this.ProfileSet.LEVEL_SHORT[currentLevelIndex];
@@ -917,7 +917,7 @@ class PasteProfileTool implements HarmonyTool {
     if (!ctx.origin) return true;
 
     // Set the last snap distance in metadata if a snap occurred
-    var levelIndex = this.activeProfileSet._.GlobalTimeline.getSceneMetadata(
+    var levelIndex = this.activeProfileSet._.TimelineKit.getSceneMetadata(
       'CurrentLevelIndex',
       'string',
     );
@@ -943,7 +943,7 @@ class PasteProfileTool implements HarmonyTool {
         }
       }
     }
-    this.activeProfileSet._.GlobalTimeline.setSceneMetadata(
+    this.activeProfileSet._.TimelineKit.setSceneMetadata(
       'SnapDistance',
       'double',
       lastDragged,
@@ -970,13 +970,13 @@ class PasteProfileTool implements HarmonyTool {
         new this._.Transformations.Scale(new Vector2d(ctx.scale / 20, ctx.scale / 20), ctx.center), // Scale from center
         new this._.Transformations.Position(ctx.center), // Translate to center
       ];
-      var selectedProfile = this.activeProfileSet._.GlobalTimeline.getSceneMetadata(
+      var selectedProfile = this.activeProfileSet._.TimelineKit.getSceneMetadata(
         'SelectedProfile',
         'string',
       );
       if (!selectedProfile) throw new Error('No profile selected for pasting.');
       var currentLevelIndex = parseInt(
-        this.activeProfileSet._.GlobalTimeline.getSceneMetadata('CurrentLevelIndex', 'string') ||
+        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
           '0',
       );
       var currentLevel = this.ProfileSet.LEVEL[currentLevelIndex];
@@ -1034,7 +1034,7 @@ function evalData() {
           try {
             var latestSelectedLevel = toolInstance.getLatestSelectedLevel();
             var currentLevel = toolInstance.ProfileSet.LEVEL[latestSelectedLevel.currentLevelIndex];
-            var srcFrame = toolInstance.activeProfileSet._.GlobalTimeline.getFrame({
+            var srcFrame = toolInstance.activeProfileSet._.TimelineKit.getFrame({
               node: toolInstance.activeProfileSet.layers[currentLevel].node,
               index: toolInstance.activeProfileSet.frame,
             });
@@ -1046,7 +1046,7 @@ function evalData() {
               srcFrameDrawingData,
             );
 
-            activeProfileSet._.GlobalTimeline.setSceneMetadata(
+            activeProfileSet._.TimelineKit.setSceneMetadata(
               'isPreviewUpdated',
               'string',
               'true',
@@ -1057,10 +1057,10 @@ function evalData() {
             MessageLog.trace('updated preview');
             MessageLog.trace(
               'preview ' +
-                activeProfileSet._.GlobalTimeline.getSceneMetadata('isPreviewUpdated', 'string'),
+                activeProfileSet._.TimelineKit.getSceneMetadata('isPreviewUpdated', 'string'),
             );
 
-            activeProfileSet._.GlobalTimeline.setSceneMetadata(
+            activeProfileSet._.TimelineKit.setSceneMetadata(
               'SelectedProfile',
               'string',
               profileName,
@@ -1085,11 +1085,11 @@ function evalData() {
       callback: function () {
         try {
           var currentIndex = parseInt(
-            activeProfileSet._.GlobalTimeline.getSceneMetadata('CurrentLevelIndex', 'string') ||
+            activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
               '0',
           );
           currentIndex = (currentIndex + 1) % 3;
-          activeProfileSet._.GlobalTimeline.setSceneMetadata(
+          activeProfileSet._.TimelineKit.setSceneMetadata(
             'CurrentLevelIndex',
             'string',
             currentIndex.toString(),

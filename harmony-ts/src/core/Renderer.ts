@@ -18,7 +18,7 @@ function testRenderTask() {
 }
 
 function testRenderScene() {
-  const currentSelection = G.GlobalTimeline.getSelection();
+  const currentSelection = G.TimelineKit.getSelection();
 
   render.setWriteEnabled(false);
   render.setRenderDisplay('Top/Display');

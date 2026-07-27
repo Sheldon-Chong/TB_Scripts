@@ -84,7 +84,7 @@ function LightTest() {
 
   // return ;
 
-  GlobalTimeline.resetFocusedNodes();
+  TimelineKit.resetFocusedNodes();
   const window = QApplication.activeWindow();
   const dialog = new PopupPresetDialog(
     'C:/Users/emers/Desktop/Coding projects/Python Bot/ToonBoom_Automations/test/lightingPresets',
@@ -170,7 +170,7 @@ class ToggleButton extends QPushButton {
 
 // 	constructor() {
 // 		Action.perform("onActionTimelineViewModeNormal()", "timelineView");
-// 		GlobalTimeline.resetFocusedNodes();
+// 		TimelineKit.resetFocusedNodes();
 
 // 		var baseUi = UiLoader.load(specialFolders.userScripts + "/untitled.ui");
 // 		var masterLightingController = this.masterLightingController;
@@ -191,7 +191,7 @@ class ToggleButton extends QPushButton {
 // 		const tabs = baseUi.tabWidget;
 
 // 		baseUi.button_reset_layer_view["clicked()"].connect(function () {
-// 			G.GlobalTimeline.resetFocusedNodes();
+// 			G.TimelineKit.resetFocusedNodes();
 // 		})
 
 // 		tabs.clear();

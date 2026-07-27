@@ -1,7 +1,7 @@
 include(specialFolders.userScripts + '/core/Shapes.js');
 include(specialFolders.userScripts + '/core/Maths.js');
 include(specialFolders.userScripts + '/core/DrawingView.js');
-include(specialFolders.userScripts + '/core/GlobalTimeline.js');
+include(specialFolders.userScripts + '/core/TimelineKit.js');
 include(specialFolders.userScripts + '/core/Frame.js');
 include(specialFolders.userScripts + '/core/Transformations.js');
 include(specialFolders.userScripts + '/core/ColorUtils.js');
@@ -54,7 +54,7 @@ class HarmonyGlobals {
   Math = Maths;
   Transformations = Transformations;
   DrawingView = DrawingView;
-  GlobalTimeline = GlobalTimeline;
+  TimelineKit = TimelineKit;
   Utils = Utils;
   ColorUtils = ColorUtils;
   // Widgets = Widgets;
@@ -68,7 +68,7 @@ class HarmonyGlobals {
   DrawingDataUtils = DrawingDataUtils;
   Cell = Cell;
   DrawingCell = DrawingCell;
-  Column = Column;
+  Column = oColumn;
   PathColumn3D = PathColumn3D;
   Palettes = GlobalPalettes;
   objDrawing = objDrawing;

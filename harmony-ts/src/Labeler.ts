@@ -1,4 +1,4 @@
-include('GlobalTimeline.js');
+include('TimelineKit.js');
 include('globals.js');
 
 function recursiveWalk(obj, callback) {
@@ -59,12 +59,12 @@ function openFrameMonitorWindow() {
   const frameNotifier = new SceneChangeNotifier(layout);
 
   // Store the initial frame as previousFrame
-  G.GlobalTimeline.setMetadata('previousFrame', frame.current());
+  G.TimelineKit.setMetadata('previousFrame', frame.current());
 
   const frameChangedHandler = G.Utils.bind(function () {
     try {
-      const previousFrame = parseInt(G.GlobalTimeline.getMetadata('previousFrame'));
-      const currentSelection = G.GlobalTimeline.getSelection();
+      const previousFrame = parseInt(G.TimelineKit.getMetadata('previousFrame'));
+      const currentSelection = G.TimelineKit.getSelection();
       const currentCell = currentSelection.getCell();
 
       frameLabel.text = 'Current Frame: ' + currentCell.frame;
@@ -92,7 +92,7 @@ function openFrameMonitorWindow() {
         MessageLog.trace(
           'No palettes found in ' + currentCell.node.nodePath + ' at frame ' + previousFrame,
         );
-        G.GlobalTimeline.setMetadata('previousFrame', currentCell.frame);
+        G.TimelineKit.setMetadata('previousFrame', currentCell.frame);
         return;
       }
 
@@ -103,7 +103,7 @@ function openFrameMonitorWindow() {
       MessageLog.trace(JSON.stringify(palleteName, null, 2));
       const colName = currentCell.node.getColumn('DRAWING.ELEMENT').name;
       column.setDrawingType(colName, previousFrame, palleteName);
-      G.GlobalTimeline.setMetadata('previousFrame', currentCell.frame);
+      G.TimelineKit.setMetadata('previousFrame', currentCell.frame);
     } catch (error) {
       MessageLog.trace(
         'Error in frameChangedHandler: ' +

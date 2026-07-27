@@ -86,7 +86,7 @@ function configureNodes() {
 }
 
 function updatePassKeyframes() {
-  const selection = G.GlobalTimeline.getSelection();
+  const selection = G.TimelineKit.getSelection();
   let startFrame: number;
   let endFrame: number;
 
@@ -293,9 +293,9 @@ function toggleColorMapMode2() {
 // --- LEGACY CODE BELOW ---
 
 class ColorMatte {
-  drawingCol: Column;
-  transparencyCol: Column;
-  passCol: Column;
+  drawingCol: oColumn;
+  transparencyCol: oColumn;
+  passCol: oColumn;
   initialPassDrawing: string;
 
   drawingLayer: NodeLayer;
@@ -399,11 +399,11 @@ function disconnectAllOutputPorts(sourceNode) {
 function updateColorMapForSelectionSeperatePaths() {
   scene.beginUndoRedoAccum(`Toggle Color Map for Pass`);
 
-  const selection = G.GlobalTimeline.getSelection();
+  const selection = G.TimelineKit.getSelection();
 
-  var originalPositionX = CAMERA_PEG.getColumn('position.x') as Column;
-  var originalPositionY = CAMERA_PEG.getColumn('position.y') as Column;
-  var originalPositionZ = CAMERA_PEG.getColumn('position.z') as Column;
+  var originalPositionX = CAMERA_PEG.getColumn('position.x') as oColumn;
+  var originalPositionY = CAMERA_PEG.getColumn('position.y') as oColumn;
+  var originalPositionZ = CAMERA_PEG.getColumn('position.z') as oColumn;
 
   var offsetPositionColX = CAMERA_OFFSET_PEG.getColumn('position.x');
   var offsetPositionColY = CAMERA_OFFSET_PEG.getColumn('position.y');
@@ -434,7 +434,7 @@ function updateColorMapForSelectionSeperatePaths() {
 function updateColorMapForSelection() {
   scene.beginUndoRedoAccum(`Toggle Color Map for Pass`);
   MessageLog.trace('>>> Updating color map for selection');
-  const selection = G.GlobalTimeline.getSelection();
+  const selection = G.TimelineKit.getSelection();
 
   for (let i = MIN_PASS; i <= MAX_PASS; i++) {
     MessageLog.trace(`----  Toggling Color Map for Pass_${i} ---- `);
@@ -581,7 +581,6 @@ function toggleColorMapMode() {
   }
   scene.endUndoRedoAccum();
 }
-
 
 function printPaletteColors() {
   const passPalette = G.Palettes.get('Passes');

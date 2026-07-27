@@ -212,7 +212,7 @@ class Column {
   }
 }
 
-class PathColumn3D extends Column {
+class PathColumn3D extends oColumn {
   constructor(name: string, parentLayer: NodeLayer) {
     super(name, parentLayer);
   }
@@ -374,7 +374,7 @@ class NodeLayer {
       .map((attr) => attr.fullKeyword());
   }
 
-  getColumn(attrName: string, linkType?: string): Column {
+  getColumn(attrName: string, linkType?: string): oColumn {
     if (attrName.indexOf('|') !== -1) {
       const lastSlashIndex = attrName.lastIndexOf('|');
       const path = attrName.substring(0, lastSlashIndex);
@@ -613,7 +613,7 @@ class objDrawing {
   }
 }
 
-class DrawingElementColumn extends Column {
+class DrawingElementColumn extends oColumn {
   element: objElement;
 
   constructor(name: string, parentLayer: NodeLayer) {

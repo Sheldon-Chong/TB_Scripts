@@ -18,9 +18,9 @@ function Frame(options) {
   this.isNull = false;
   if (this._frameData.isNull === true) this.isNull = true;
 
-  for (var column in GlobalTimeline.layers) {
-    if ('Top/' + GlobalTimeline.layers[column].displayName === this.node) {
-      this.column = GlobalTimeline.layers[column];
+  for (var column in TimelineKit.layers) {
+    if ('Top/' + TimelineKit.layers[column].displayName === this.node) {
+      this.column = TimelineKit.layers[column];
     }
   }
 

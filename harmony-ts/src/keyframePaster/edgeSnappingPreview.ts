@@ -43,7 +43,7 @@ function updateSnappingPreview(statusLabel: any) {
     const snappedFrame = getSnappedFrame(currentFrame, selection, settings);
 
     // Guard: Only update if the snapped frame or selection changed
-    const lastMarkerData = _G.GlobalTimeline.getMetadata('lastSnappingMarker');
+    const lastMarkerData = _G.TimelineKit.getMetadata('lastSnappingMarker');
     if (lastMarkerData) {
       try {
         const lastMarker = JSON.parse(lastMarkerData);
@@ -69,12 +69,12 @@ function updateSnappingPreview(statusLabel: any) {
           });
         if (lastNodes.length > 0) {
           const lastSelection = new _G.oSelection(lastMarker.start, lastMarker.end, lastNodes);
-          _G.GlobalTimeline.deleteFrameMarkers(lastSelection);
+          _G.TimelineKit.deleteFrameMarkers(lastSelection);
         }
       } catch (e) {
         MessageLog.trace('Error clearing old marker: ' + e.toString());
       }
-      _G.GlobalTimeline.setMetadata('lastSnappingMarker', '');
+      _G.TimelineKit.setMetadata('lastSnappingMarker', '');
     }
 
     scene.beginUndoRedoAccum('Snapping Preview');
@@ -84,12 +84,12 @@ function updateSnappingPreview(statusLabel: any) {
     const end = snappedFrame + 2;
     const markerSelection = new _G.oSelection(start, end, selection.selectedNodes);
 
-    _G.GlobalTimeline.createFrameMarkers('Red', markerSelection);
+    _G.TimelineKit.createFrameMarkers('Red', markerSelection);
 
     scene.endUndoRedoAccum();
 
     // Store new marker in metadata
-    _G.GlobalTimeline.setMetadata(
+    _G.TimelineKit.setMetadata(
       'lastSnappingMarker',
       JSON.stringify({
         start: start,
@@ -150,7 +150,7 @@ function openLiveSnappingPreviewWindow() {
   frameNotifier.selectionChanged.connect(onUpdate);
 
   window.closeEvent = function (event: any) {
-    const lastMarkerData = _G.GlobalTimeline.getMetadata('lastSnappingMarker');
+    const lastMarkerData = _G.TimelineKit.getMetadata('lastSnappingMarker');
     if (lastMarkerData) {
       try {
         const lastMarker = JSON.parse(lastMarkerData);
@@ -163,10 +163,10 @@ function openLiveSnappingPreviewWindow() {
           });
         if (lastNodes.length > 0) {
           const lastSelection = new _G.oSelection(lastMarker.start, lastMarker.end, lastNodes);
-          _G.GlobalTimeline.deleteFrameMarkers(lastSelection);
+          _G.TimelineKit.deleteFrameMarkers(lastSelection);
         }
       } catch (e) {}
-      _G.GlobalTimeline.setMetadata('lastSnappingMarker', '');
+      _G.TimelineKit.setMetadata('lastSnappingMarker', '');
     }
     frameNotifier.currentFrameChanged.disconnect(onUpdate);
     frameNotifier.selectionChanged.disconnect(onUpdate);
@@ -183,7 +183,7 @@ this.__proto__.updateSnappingPreview = updateSnappingPreview;
 // --- End Global Snapping Preview Logic ---
 
 function saveKeyFramesFrom3DPath() {
-  const selection = G.GlobalTimeline.getSelection();
+  const selection = G.TimelineKit.getSelection();
 
   MessageLog.trace(JSON.stringify(selection.selectedNodes[0].getAttributeKeywords(), null, 2));
 
@@ -193,8 +193,8 @@ function saveKeyFramesFrom3DPath() {
   MessageLog.trace(JSON.stringify(PathColumn3D.constructor.name, null, 2));
 
   // const RotationColumn = selection.selectedNodes[0].getColumn("ROTATION") as PathColumn3D;
-  const ScaleXCol = selection.selectedNodes[0].getColumn('scale.x') as Column;
-  const ScaleYCol = selection.selectedNodes[0].getColumn('scale.y') as Column;
+  const ScaleXCol = selection.selectedNodes[0].getColumn('scale.x') as oColumn;
+  const ScaleYCol = selection.selectedNodes[0].getColumn('scale.y') as oColumn;
 
   // MessageLog.trace(JSON.stringify(selection.selectedNodes[0].getAttributeKeywords(), null, 2));
 
@@ -229,7 +229,7 @@ function saveKeyFramesFrom3DPath() {
 }
 
 function loadKeyFramesTo3DPath() {
-  const selection = G.GlobalTimeline.getSelection();
+  const selection = G.TimelineKit.getSelection();
   if (selection.selectedNodes.length === 0) {
     MessageLog.trace('No node selected.');
     return;
@@ -247,7 +247,7 @@ function loadKeyFramesTo3DPath() {
     if (content) {
       try {
         const keyframes = JSON.parse(content);
-        G.GlobalTimeline.applyKeyFramesTo3DPath(selection, keyframes);
+        G.TimelineKit.applyKeyFramesTo3DPath(selection, keyframes);
         MessageLog.trace('Keyframes loaded and applied from: ' + openPath);
       } catch (e) {
         MessageLog.trace('Error parsing JSON: ' + e.toString());
@@ -288,8 +288,8 @@ function serializeKeyFramesFromSplittedPath(selection: oSelection) {
 function serializeKeyFramesFrom3DPath(selection: oSelection) {
   const layer = selection.selectedNodes[0];
   const PathColumn3D = layer.getColumn('position.attr3dpath') as PathColumn3D;
-  const ScaleXCol = layer.getColumn('scale.x') as Column;
-  const ScaleYCol = layer.getColumn('scale.y') as Column;
+  const ScaleXCol = layer.getColumn('scale.x') as oColumn;
+  const ScaleYCol = layer.getColumn('scale.y') as oColumn;
   const keyframes: {
     frame: number;
     x: number;

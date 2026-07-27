@@ -305,17 +305,17 @@ class ColorPickerController {
   color: oColor;
   button: QPushButton;
   colors: {
-    red: { value: number; column: Column };
-    green: { value: number; column: Column };
-    blue: { value: number; column: Column };
+    red: { value: number; column: oColumn };
+    green: { value: number; column: oColumn };
+    blue: { value: number; column: oColumn };
   };
   constructor(
     button: QPushButton,
     param: string,
     startingColor: oColor,
-    redColumn: Column,
-    greenColumn: Column,
-    blueColumn: Column,
+    redColumn: oColumn,
+    greenColumn: oColumn,
+    blueColumn: oColumn,
     onDragStart?: () => void,
     onDragEnd?: () => void,
     onDragMove?: (newColor: oColor) => void,
@@ -494,16 +494,16 @@ class LightingPage {
 
     initializeButtons(controlInterface.children(), {
       copy: () => {
-        G.GlobalTimeline.setMetadata(
+        G.TimelineKit.setMetadata(
           'lighting_copy_data',
           JSON.stringify(this.lightingGroup.getValues(), null, 2),
         );
         MessageLog.trace(
-          'Copied lighting data to metadata.' + G.GlobalTimeline.getMetadata('lighting_copy_data'),
+          'Copied lighting data to metadata.' + G.TimelineKit.getMetadata('lighting_copy_data'),
         );
       },
       paste: () => {
-        var dataStr = G.GlobalTimeline.getMetadata('lighting_copy_data');
+        var dataStr = G.TimelineKit.getMetadata('lighting_copy_data');
         if (!dataStr) throw new Error('No lighting data found in metadata to paste.');
         this.setLighting(JSON.parse(dataStr));
         G.Utils.toast(
@@ -695,7 +695,7 @@ class LightingPage {
           case 'Slider': {
             /* Slider */
             var layout = controllerFrame.layout();
-            const currentColumn = G.Utils.getValueByPath(initialColumns, param) as Column;
+            const currentColumn = G.Utils.getValueByPath(initialColumns, param) as oColumn;
 
             var controller = new SliderController({
               label: layout.itemAt(0).widget(),
@@ -725,7 +725,7 @@ class LightingPage {
 
               callback: function (value) {
                 MessageLog.trace(
-                  `${(this.currentColumn as Column).parent.nodePath} set to ${value}`,
+                  `${(this.currentColumn as oColumn).parent.nodePath} set to ${value}`,
                 );
                 this.currentColumn.setKeyFrame(new G.oSelection(), value);
               },
@@ -1025,7 +1025,7 @@ class DrawingController {
 
     editButton['clicked()'].connect(() => {});
     editButton['pressed()'].connect(() => {
-      G.GlobalTimeline.resetFocusedNodes();
+      G.TimelineKit.resetFocusedNodes();
     });
 
     editButton['released()'].connect(
@@ -1143,7 +1143,7 @@ class PopupPresetDialog extends QDialog {
         G.Utils.bind(() => {
           this.updateLightingPage();
           if (this.settings.followSelectionLightingGroup) {
-            MessageLog.trace(JSON.stringify(G.GlobalTimeline.getSelection(), null, 2));
+            MessageLog.trace(JSON.stringify(G.TimelineKit.getSelection(), null, 2));
           }
         }, this),
       );
@@ -1153,10 +1153,10 @@ class PopupPresetDialog extends QDialog {
           try {
             if (!this.settings.liveControlsEnabled) return;
             if (this.settings.followSelectionLightingGroup) {
-              // const selection = new G.oSelection(frame.current(), undefined, [G.GlobalTimeline.getSelection().selectedNodes[0]]);
+              // const selection = new G.oSelection(frame.current(), undefined, [G.TimelineKit.getSelection().selectedNodes[0]]);
               // const appliedLightingGroup = this.masterLightingController.getAppliedLightingGroups(selection);
               // this.lightingGroup = appliedLightingGroup[0] || this.masterLightingController.getLightingGroup(1);
-              // const selection = G.GlobalTimeline.getSelection();
+              // const selection = G.TimelineKit.getSelection();
               // MessageLog.trace(JSON.stringify(marker));
               // MessageLog.trace(` >> lighting group for ${selection.toString()}: ${appliedLightingGroup.join("\n -")}`);
             }
@@ -1198,10 +1198,7 @@ class PopupPresetDialog extends QDialog {
       G.TooltipToast.destroyAllTooltips();
       MessageLog.trace('closed');
       this.removeNotifiers();
-      G.GlobalTimeline.setMetadata(
-        'lighting_preset_dialog_settings',
-        JSON.stringify(this.settings),
-      );
+      G.TimelineKit.setMetadata('lighting_preset_dialog_settings', JSON.stringify(this.settings));
     } catch (e) {
       MessageLog.trace(
         'Error saving settings on close: ' +
@@ -1219,7 +1216,7 @@ class PopupPresetDialog extends QDialog {
 
     MessageLog.trace('Mouse entered the dialog area!');
     this.lightingPage.updateDrawingControls();
-    const currentSelection = G.GlobalTimeline.getSelection();
+    const currentSelection = G.TimelineKit.getSelection();
     const marker = Timeline.getFrameMarker(
       currentSelection.selectedNodes[0].index,
       frame.current(),
@@ -1239,7 +1236,7 @@ class PopupPresetDialog extends QDialog {
   constructor(presetDir, onSelect) {
     super();
 
-    const parsed = JSON.parse(GlobalTimeline.getMetadata('lighting_preset_dialog_settings')) || {};
+    const parsed = JSON.parse(TimelineKit.getMetadata('lighting_preset_dialog_settings')) || {};
     for (const key in parsed) {
       if (this.settings.hasOwnProperty(key)) {
         this.settings[key] = parsed[key];
@@ -1250,7 +1247,7 @@ class PopupPresetDialog extends QDialog {
     this.masterLightingController = new MasterLightingController();
     this.lightingGroup = this.masterLightingController.getLightingGroup(1);
 
-    GlobalTimeline.resetFocusedNodes();
+    TimelineKit.resetFocusedNodes();
 
     this.setupWindow();
     const mainVerticalLayout = new QVBoxLayout(this);
@@ -1454,7 +1451,7 @@ class PopupPresetDialog extends QDialog {
       }, this),
     );
 
-    const selection = G.GlobalTimeline.getSelection();
+    const selection = G.TimelineKit.getSelection();
     const appliedLightingGroup = this.masterLightingController.getAppliedLightingGroup(selection);
     MessageLog.trace('applied lighting group : ' + appliedLightingGroup);
     if (appliedLightingGroup) {
@@ -1573,7 +1570,7 @@ class PopupPresetDialog extends QDialog {
       resetFocusNodeButton.text = 'reset timeline view';
       renderPreviewRow.addWidget(resetFocusNodeButton, 0, 0);
       resetFocusNodeButton['clicked()'].connect(() => {
-        G.GlobalTimeline.resetFocusedNodes();
+        G.TimelineKit.resetFocusedNodes();
         G.CameraView.showCurrentDrawingOnTop(false);
       });
     }

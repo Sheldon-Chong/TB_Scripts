@@ -48,7 +48,7 @@ function selectWithinBoundaries() {
   return;
 
   try {
-    const selectRange = G.GlobalTimeline.getSelection();
+    const selectRange = G.TimelineKit.getSelection();
     const start = Math.floor(selectRange.startFrame / BOUNDARY_LENGTH) * BOUNDARY_LENGTH;
     const end = Math.ceil(selectRange.endFrame / BOUNDARY_LENGTH) * BOUNDARY_LENGTH - 1;
 
@@ -99,7 +99,7 @@ function registerBoundaryNavigationShortcuts() {
 
 function loopSelection() {
   try {
-    const selection = G.GlobalTimeline.getSelection();
+    const selection = G.TimelineKit.getSelection();
 
     scene.beginUndoRedoAccum('Loop Selection');
     selection.selectedNodes.forEach((node) => {
