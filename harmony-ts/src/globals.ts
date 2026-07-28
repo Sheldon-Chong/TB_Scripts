@@ -11,6 +11,7 @@ include(specialFolders.userScripts + '/core/DrawingDataUtils.js');
 include(specialFolders.userScripts + '/core/renderUtils2.js');
 include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/GlobalPalettes.js');
+include(specialFolders.userScripts + '/core/ColumnGroupings.js');
 
 include(specialFolders.userScripts + '/widgets/WidgetUtils.js');
 
@@ -69,10 +70,14 @@ class HarmonyGlobals {
   Cell = Cell;
   DrawingCell = DrawingCell;
   Column = oColumn;
-  PathColumn3D = PathColumn3D;
+  PathColumn3D = oPathColumn3D;
   Palettes = GlobalPalettes;
   objDrawing = objDrawing;
   objElement = objElement;
+  oDrawingLayer = oDrawingLayer;
+  ColorCardNode = oColorCardNode;
+  columnGroupingColor = columnGroupingColor;
+  columnGrouping = columnGrouping;
 
   assign = function (target, source) {
     if (!target || !source) return target;

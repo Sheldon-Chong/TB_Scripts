@@ -94,10 +94,10 @@ const MarkerColors = {
 
 class LitDrawing {
   name: String;
-  layer: NodeLayer;
+  layer: oNodeLayer;
   masterLightingController: MasterLightingController;
 
-  constructor(name: String, layer: NodeLayer, masterLightingController: MasterLightingController) {
+  constructor(name: String, layer: oNodeLayer, masterLightingController: MasterLightingController) {
     this.name = name;
     this.layer = layer;
     this.masterLightingController = masterLightingController;
@@ -130,7 +130,7 @@ class MasterLightingController {
 
   lightingGroups: LightingGroup[];
 
-  renderPreviewNode: NodeLayer;
+  renderPreviewNode: oNodeLayer;
 
   static LIGHTING_CONTROLLER_PREFIX: string = 'lighting_controller_';
 
@@ -265,7 +265,7 @@ class MasterLightingController {
 class PassManager {
   marker: typeof MarkerColors | null = null;
   index: number = -1;
-  layer: NodeLayer;
+  layer: oNodeLayer;
   lightingGroup: LightingGroup;
 
   passes: oColumn[];
@@ -334,7 +334,7 @@ class PassManager {
     scene.endUndoRedoAccum();
   }
 
-  constructor(layer: NodeLayer, index: number, lightingGroup: LightingGroup) {
+  constructor(layer: oNodeLayer, index: number, lightingGroup: LightingGroup) {
     this.marker = PassManager.MAPPINGS[index].marker;
     this.layer = layer;
     this.index = index;
@@ -375,7 +375,7 @@ class PassManager {
       this.passes[i].setKeyFrame(selection, enabled ? PassManager.ENABLED : PassManager.DISABLED);
   }
 
-  addToGroup(nodes: NodeLayer[]) {
+  addToGroup(nodes: oNodeLayer[]) {
     this._validateNodeIsDrawingPass(nodes);
 
     var self = this;
@@ -399,7 +399,7 @@ class PassManager {
     return passValue === PassManager.ENABLED;
   }
 
-  removeFromGroup(nodes: NodeLayer[]) {
+  removeFromGroup(nodes: oNodeLayer[]) {
     this._validateNodeIsDrawingPass(nodes);
     var self = this;
     nodes.forEach(function (currentNode) {
@@ -410,7 +410,7 @@ class PassManager {
 
   /* GROUP MANAGEMENT */
 
-  _validateNodeIsDrawingPass(nodes: NodeLayer[]) {
+  _validateNodeIsDrawingPass(nodes: oNodeLayer[]) {
     var allParentsAreDrawings = nodes.every(function (node) {
       return node.getParent() && node.getParent().name === 'Drawings';
     });
@@ -424,7 +424,7 @@ this.__proto__.PassManager = PassManager;
 
 // Usage:
 class LightingGroup {
-  public layer: NodeLayer;
+  public layer: oNodeLayer;
   passManager: PassManager;
 
   public name: string;
@@ -452,7 +452,7 @@ class LightingGroup {
   }
 
   constructor(
-    layer: NodeLayer,
+    layer: oNodeLayer,
     index: LightingGroupRange,
     masterLightingController: MasterLightingController,
     name: string,
@@ -478,7 +478,7 @@ class LightingGroup {
 
     this.controls = {};
     objectForEach(this.controlNodes, (name, node: string) => {
-      var node = this.layer.getChild(node) as NodeLayer;
+      var node = this.layer.getChild(node) as oNodeLayer;
 
       const type = node.getType();
       const map = {};
@@ -498,7 +498,7 @@ class LightingGroup {
     selection.addNodesToSelection(
       this.layer
         .getChildrenRecursive()
-        .filter(function (child: NodeLayer) {
+        .filter(function (child: oNodeLayer) {
           return child.getLocked() === false && child.isGroup() === false;
         })
         .map(function (child) {
@@ -513,7 +513,7 @@ class LightingGroup {
     G.TimelineKit.focusOnNodes(
       this.layer
         .getChildrenRecursive()
-        .filter(function (child: NodeLayer) {
+        .filter(function (child: oNodeLayer) {
           return (
             child.getLocked() === false &&
             child.isGroup() === false &&
@@ -545,7 +545,7 @@ class LightingGroup {
     this.editProperty('Shadow');
   }
 
-  static getColumns(layer: NodeLayer, selection: oSelection) {
+  static getColumns(layer: oNodeLayer, selection: oSelection) {
     var data = {
       mood: {
         colorGain: layer.getColumn('/Mood|COLOUR_GAIN'),

@@ -16,14 +16,14 @@ class oDrawing {
 }
 
 class oElement {
-  associatedNode?: NodeLayer;
+  associatedNode?: oNodeLayer;
   folder: string;
   completeFolder: string;
   drawings: string[];
 
   elementId?: number;
 
-  constructor(elementId: number, associatedNode?: NodeLayer) {
+  constructor(elementId: number, associatedNode?: oNodeLayer) {
     this.elementId = elementId;
     this.completeFolder = element.completeFolder(elementId);
     this.folder = element.folder(elementId);
@@ -93,9 +93,9 @@ class oElement {
 /* ====================== COLUMN ====================== */
 class oColumn {
   name: string;
-  parent: NodeLayer;
+  parent: oNodeLayer;
 
-  constructor(name: string, parentLayer: NodeLayer) {
+  constructor(name: string, parentLayer: oNodeLayer) {
     this.name = name;
     this.parent = parentLayer;
   }
@@ -212,8 +212,8 @@ class oColumn {
   }
 }
 
-class PathColumn3D extends oColumn {
-  constructor(name: string, parentLayer: NodeLayer) {
+class oPathColumn3D extends oColumn {
+  constructor(name: string, parentLayer: oNodeLayer) {
     super(name, parentLayer);
   }
 
@@ -307,7 +307,7 @@ class PathColumn3D extends oColumn {
 }
 
 /* ====================== NODES ====================== */
-class NodeLayer {
+class oNodeLayer {
   displayOrder: number;
   index: number;
   nodePath: string;
@@ -419,7 +419,7 @@ class NodeLayer {
       return new G.PathColumn3D(col, this);
     }
     if (attrName === 'DRAWING.ELEMENT') {
-      return new DrawingElementColumn(col, this);
+      return new oDrawingElementColumn(col, this);
     }
 
     return new G.Column(col, this);
@@ -459,14 +459,14 @@ class NodeLayer {
     attr.setValue(value);
   }
 
-  getChildren(): NodeLayer[] {
+  getChildren(): oNodeLayer[] {
     if (!node.subNodes(this.nodePath)) {
       return [];
     }
     return node
       .subNodes(this.nodePath)
       .map((childPath: string) => LayerManager.getNodeLayer(childPath))
-      .filter((layer): layer is NodeLayer => layer !== null);
+      .filter((layer): layer is oNodeLayer => layer !== null);
   }
 
   getLocked(): boolean {
@@ -477,7 +477,7 @@ class NodeLayer {
     node.setLocked(this.nodePath, locked);
   }
 
-  getChild(name: string): NodeLayer | null {
+  getChild(name: string): oNodeLayer | null {
     if (name.indexOf('/') !== -1) {
       return LayerManager.getNodeLayer(this.nodePath + '/' + name);
     } else {
@@ -489,8 +489,8 @@ class NodeLayer {
     }
   }
 
-  getChildrenRecursive(): NodeLayer[] {
-    const result: NodeLayer[] = [];
+  getChildrenRecursive(): oNodeLayer[] {
+    const result: oNodeLayer[] = [];
     const children = this.getChildren();
     for (const child of children) {
       result.push(child);
@@ -499,7 +499,7 @@ class NodeLayer {
     return result;
   }
 
-  getParent(): NodeLayer | null {
+  getParent(): oNodeLayer | null {
     if (node.parentNode(this.nodePath) === node.root()) {
       return null;
     }
@@ -613,10 +613,10 @@ class objDrawing {
   }
 }
 
-class DrawingElementColumn extends oColumn {
+class oDrawingElementColumn extends oColumn {
   element: objElement;
 
-  constructor(name: string, parentLayer: NodeLayer) {
+  constructor(name: string, parentLayer: oNodeLayer) {
     MessageLog.trace('name ' + name);
     MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
     super(name, parentLayer);
@@ -651,7 +651,7 @@ class DrawingElementColumn extends oColumn {
   }
 }
 
-class DrawingLayer extends NodeLayer {
+class oDrawingLayer extends oNodeLayer {
   constructor(displayOrder: number, index: number, nodePath: string, name: string) {
     super(displayOrder, index, nodePath, name);
   }
@@ -704,8 +704,120 @@ function getAllNodesInScene() {
   return accumulatedNodes;
 }
 
+/* ====================== COLUMN GROUPING ====================== */
+
+/**
+ * Base class for grouping related oColumns together.
+ * Provides shared utilities for checking keyframes and iterating over grouped columns.
+ */
+class columnGrouping {
+  protected columns: oColumn[] = [];
+
+  /** Add a column to this grouping. */
+  addColumn(col: oColumn): void {
+    this.columns.push(col);
+  }
+
+  /** Returns all columns in this grouping. */
+  getColumns(): oColumn[] {
+    return this.columns;
+  }
+
+  /** Returns true if ANY column in the group has a keyframe at the given frame. */
+  isKeyFrameAny(frameNumber: number): boolean {
+    for (const col of this.columns) {
+      if (col.isKeyFrame(frameNumber)) return true;
+    }
+    return false;
+  }
+
+  /** Returns true if ALL columns in the group have a keyframe at the given frame. */
+  isKeyFrameAll(frameNumber: number): boolean {
+    if (this.columns.length === 0) return false;
+    for (const col of this.columns) {
+      if (!col.isKeyFrame(frameNumber)) return false;
+    }
+    return true;
+  }
+
+  /** Insert a keyframe on all grouped columns at the given frame. */
+  insertKeyFrame(frameNumber: number): boolean {
+    for (const col of this.columns) {
+      if (!col.insertKeyFrame(frameNumber)) return false;
+    }
+    return true;
+  }
+
+  toString(): string {
+    return `columnGrouping<${this.columns.map((c) => c.name).join(', ')}>`;
+  }
+}
+
+/* ====================== COLOR COLUMN GROUPING ====================== */
+
+/**
+ * Groups the four RGBA colour columns and provides intuitive get/set methods.
+ *
+ * Accepts any ColorInput:
+ *   cc.setColor(frame, "#FF8040");                           // alpha untouched
+ *   cc.setColor(frame, { r: 255, g: 128, b: 64 });           // alpha untouched
+ *   cc.setColor(frame, { r: 255, g: 128, b: 64, a: 128 });   // alpha set
+ *   cc.setColor(frame, { h: 30, s: 75, v: 100 });             // alpha untouched
+ *   cc.setColor(frame, new ColorObj("#FF8040"));              // alpha from ColorObj
+ */
+
+/* ====================== COLOR CARD NODE ====================== */
+
+class oPegNode extends oNodeLayer {
+  constructor(displayOrder: number, index: number, nodePath: string, name: string) {
+    super(displayOrder, index, nodePath, name);
+  }
+
+  // getPosition(frameNumber: number): Vec3 {
+  //   const xCol = this.getColumn('position.attr3dpath.x');
+  //   const yCol = this.getColumn('position.attr3dpath.y');
+  //   const zCol = this.getColumn('position.attr3dpath.z');
+
+  //   return new Vec3(
+  //     x: parseFloat(xCol.getKeyframe(frameNumber)),
+  //     y: parseFloat(yCol.getKeyframe(frameNumber)),
+  //     z: parseFloat(zCol.getKeyframe(frameNumber)),
+  //   };
+}
+
+/**
+ * Specialised oNodeLayer for COLOR_CARD nodes.
+ * Provides type-safe access to the RGBA colour columns instead of relying
+ * on generic getColumn() calls.
+ */
+class oColorCardNode extends oNodeLayer {
+  private _colorGrouping: columnGroupingColor | null = null;
+
+  constructor(displayOrder: number, index: number, nodePath: string, name: string) {
+    super(displayOrder, index, nodePath, name);
+  }
+
+  get color(): columnGroupingColor {
+    if (!this._colorGrouping) {
+      this._colorGrouping = columnGroupingColor.fromNode(this);
+    }
+    return this._colorGrouping;
+  }
+
+  getColor(frameNumber: number): ColorObj {
+    return this.color.getColor(frameNumber);
+  }
+  setColor(frameNumber: number, color: ColorInput): boolean {
+    return this.color.setColor(frameNumber, color);
+  }
+
+  toString() {
+    return `ColorCardNode<${this.nodePath}>`;
+  }
+}
+
 class _LayerManager {
-  nodeLayers: NodeLayer[] = [];
+  nodeLayers: oNodeLayer[] = [];
 
   constructor() {
     this.updateNodeLayers();
@@ -714,50 +826,35 @@ class _LayerManager {
   updateNodeLayers(): void {
     this.nodeLayers = [];
 
-    // MessageLog.trace(`all nodes: ${.join(", ")}`);
-
     const allNodes = getAllNodesInScene();
     for (const nodePath of allNodes) {
       const nodeType = node.type(nodePath);
+      if (nodeType === 'COLOR_CARD') {
+        this.nodeLayers.push(
+          new oColorCardNode(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+        );
+      }
+      if (nodeType === 'PEG') {
+        this.nodeLayers.push(
+          new oPegNode(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+        );
+      }
       if (nodeType === 'READ') {
         this.nodeLayers.push(
-          new DrawingLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+          new oDrawingLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
         );
       } else {
         this.nodeLayers.push(
-          new NodeLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+          new oNodeLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
         );
       }
     }
-
-    // for (var i = 0; i < Timeline.numLayers; i++) {
-    //   var nodePath = Timeline.layerToNode(i);
-    //   MessageLog.trace("nodePath: " + nodePath);
-    //   if (Timeline.layerIsNode(i)) {
-    //     if (node.type(nodePath) === "READ") {
-    //       this.nodeLayers.push(new DrawingLayer(
-    //         this.nodeLayers.length,
-    //         i,
-    //         nodePath,
-    //         node.getName(nodePath)
-    //       ));
-    //     }
-    //     else {
-    //       this.nodeLayers.push(new NodeLayer(
-    //         this.nodeLayers.length,
-    //         i,
-    //         nodePath,
-    //         node.getName(nodePath)
-    //       ));
-    //     }
-    //   }
-    // }
   }
-  getSelectedNodes(): NodeLayer[] {
+  getSelectedNodes(): oNodeLayer[] {
     const selectedNodePaths = selection.selectedNodes();
     const selectedNodes = selectedNodePaths
       .map((nodePath: string) => this.getNodeLayer(nodePath))
-      .filter((layer): layer is NodeLayer => layer !== null);
+      .filter((layer): layer is oNodeLayer => layer !== null);
 
     // Sort by displayOrder property
     selectedNodes.sort((a, b) => a.displayOrder - b.displayOrder);
@@ -765,11 +862,11 @@ class _LayerManager {
     return selectedNodes;
   }
 
-  getNodeLayers(): NodeLayer[] {
+  getNodeLayers(): oNodeLayer[] {
     return this.nodeLayers;
   }
 
-  getNodeLayer(index: string | number): NodeLayer | null {
+  getNodeLayer(index: string | number): oNodeLayer | null {
     for (var i = 0; i < this.nodeLayers.length; i++) {
       if (typeof index === 'string') {
         if (this.nodeLayers[i].nodePath === index) return this.nodeLayers[i];
@@ -784,11 +881,11 @@ class _LayerManager {
 const LayerManager = new _LayerManager();
 
 class _Selection {
-  getSelectedNodes(): NodeLayer[] {
+  getSelectedNodes(): oNodeLayer[] {
     const selectedNodePaths = selection.selectedNodes();
     return selectedNodePaths
       .map((nodePath: string) => LayerManager.getNodeLayer(nodePath))
-      .filter((layer): layer is NodeLayer => layer !== null);
+      .filter((layer): layer is oNodeLayer => layer !== null);
   }
 }
 

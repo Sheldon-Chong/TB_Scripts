@@ -104,9 +104,9 @@ function loopSelection() {
     scene.beginUndoRedoAccum('Loop Selection');
     selection.selectedNodes.forEach((node) => {
       const drawingsList = [];
-      const drawingCol: DrawingElementColumn = node.getColumn(
+      const drawingCol: oDrawingElementColumn = node.getColumn(
         'DRAWING.ELEMENT',
-      ) as DrawingElementColumn;
+      ) as oDrawingElementColumn;
 
       let loopStart = -1;
       let i = selection.endFrame;

@@ -19,5 +19,5 @@
   },
   "include": [
     "src/**/*.ts"
-  ]
+, "types/harmony-api.d.ts", "types/harmony-node-api.d.ts", "types/es3-shim.d.ts"  ]
 }

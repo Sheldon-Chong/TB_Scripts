@@ -13,6 +13,46 @@ enum HarmonyColorType {
   RADIAL_GRADIENT = 2,
 }
 
+// ─── ColorInput helpers ──────────────────────────────────────────────────────
+
+/**
+ * Converts any {@link ColorInput} value to the native `{r,g,b,a}` object
+ * that ToonBoom's `setColorData` expects.
+ *
+ * Accepts:
+ * - hex strings (`"#FF8040"`, `"FF8040"`)
+ * - RGB(A) objects (`{r,g,b,a?}`)
+ * - HSV(A) objects (`{h,s,v,a?}`)
+ * - {@link ColorObj} instances
+ *
+ * If alpha is missing / null it defaults to 255 (fully opaque).
+ */
+function colorInputToNative(input: ColorInput): { r: number; g: number; b: number; a: number } {
+  const color = ColorObj.fromColorInput(input);
+  const rgba = color.toRgba();
+  return {
+    r: rgba.r,
+    g: rgba.g,
+    b: rgba.b,
+    a: rgba.a !== null ? rgba.a : 255,
+  };
+}
+
+/**
+ * Type guard — returns `true` when `v` is a {@link ColorInput}.
+ * Non‑ColorInput values (gradient arrays, raw native objects, …) pass through
+ * unchanged so the setter stays backward‑compatible.
+ */
+function isColorInput(v: any): v is ColorInput {
+  if (typeof v === 'string') return true;
+  if (v instanceof ColorObj) return true;
+  if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
+    if ('h' in v && 's' in v && 'v' in v) return true;
+    if ('r' in v && 'g' in v && 'b' in v) return true;
+  }
+  return false;
+}
+
 // ─── PaletteColor ────────────────────────────────────────────────────────────
 
 /**
@@ -23,7 +63,10 @@ enum HarmonyColorType {
  *
  * ```ts
  * const c = palette.getColor("Outline");
- * c.colorData = { r: 255, g: 0, b: 0, a: 255 };
+ * c.colorData = "#FF0000";                       // hex string
+ * c.colorData = { r: 255, g: 0, b: 0, a: 255 }; // RGB object
+ * c.colorData = { h: 0, s: 100, v: 100 };        // HSV object
+ * c.colorData = ColorObj.fromHex("#FF0000");     // ColorObj instance
  * ```
  */
 class PaletteColor {
@@ -64,8 +107,17 @@ class PaletteColor {
   get colorData(): any {
     return this._native.colorData;
   }
-  set colorData(v: any) {
-    this._native.setColorData(v);
+  /**
+   * Accepts any {@link ColorInput} (hex string, RGB/HSV object, ColorObj)
+   * and converts it to the native `{r,g,b,a}` format.
+   * Gradient arrays and raw native objects are passed through unchanged.
+   */
+  set colorData(v: ColorInput | any) {
+    if (isColorInput(v)) {
+      this._native.setColorData(colorInputToNative(v));
+    } else {
+      this._native.setColorData(v);
+    }
   }
 
   // ── texture ──

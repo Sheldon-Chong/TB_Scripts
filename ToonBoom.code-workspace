@@ -32,6 +32,7 @@
 		},
 		"[typescriptreact]": {
 			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		}
+		},
+		"powershell.cwd": "ToonBoom"
 	}
 }

@@ -187,7 +187,7 @@ function saveKeyFramesFrom3DPath() {
 
   MessageLog.trace(JSON.stringify(selection.selectedNodes[0].getAttributeKeywords(), null, 2));
 
-  const PathColumn3D = selection.selectedNodes[0].getColumn('position.attr3dpath') as PathColumn3D;
+  const PathColumn3D = selection.selectedNodes[0].getColumn('position.attr3dpath') as oPathColumn3D;
 
   MessageLog.trace(JSON.stringify(PathColumn3D, null, 2));
   MessageLog.trace(JSON.stringify(PathColumn3D.constructor.name, null, 2));
@@ -287,7 +287,7 @@ function serializeKeyFramesFromSplittedPath(selection: oSelection) {
 
 function serializeKeyFramesFrom3DPath(selection: oSelection) {
   const layer = selection.selectedNodes[0];
-  const PathColumn3D = layer.getColumn('position.attr3dpath') as PathColumn3D;
+  const PathColumn3D = layer.getColumn('position.attr3dpath') as oPathColumn3D;
   const ScaleXCol = layer.getColumn('scale.x') as oColumn;
   const ScaleYCol = layer.getColumn('scale.y') as oColumn;
   const keyframes: {

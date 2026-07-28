@@ -6,8 +6,8 @@ include(specialFolders.userScripts + '/core/DrawingDataUtils.js');
 
 class Cell {
   frame: number;
-  node: NodeLayer;
-  constructor(frame: number, node: NodeLayer) {
+  node: oNodeLayer;
+  constructor(frame: number, node: oNodeLayer) {
     this.frame = frame;
     this.node = node;
   }
@@ -20,7 +20,7 @@ class Cell {
 class DrawingCell extends Cell {
   drawingName: string;
 
-  constructor(frame: number, node: NodeLayer) {
+  constructor(frame: number, node: oNodeLayer) {
     super(frame, node);
     this.drawingName = node.getColumn('DRAWING.ELEMENT').getKeyframe(frame);
   }
@@ -40,7 +40,7 @@ class DrawingCell extends Cell {
 
 function saveKeyFramesFrom3DPath() {
   const selection = TimelineKit.getSelection();
-  const PathColumn3D = selection.selectedNodes[0].getColumn('offset.attr3dpath') as PathColumn3D;
+  const PathColumn3D = selection.selectedNodes[0].getColumn('offset.attr3dpath') as oPathColumn3D;
   // const RotationColumn = selection.selectedNodes[0].getColumn("ROTATION") as PathColumn3D;
   const ScaleXCol = selection.selectedNodes[0].getColumn('scale.x') as oColumn;
   const ScaleYCol = selection.selectedNodes[0].getColumn('scale.y') as oColumn;
@@ -122,9 +122,9 @@ class oSelection {
   isRange: boolean;
   length: number;
 
-  selectedNodes: NodeLayer[];
+  selectedNodes: oNodeLayer[];
 
-  constructor(startFrame?: number, endFrame?: number, selectedNodes?: NodeLayer[]) {
+  constructor(startFrame?: number, endFrame?: number, selectedNodes?: oNodeLayer[]) {
     if (startFrame !== undefined) {
       this.startFrame = startFrame;
       this.endFrame = endFrame !== undefined ? endFrame : startFrame;
@@ -160,7 +160,7 @@ class oSelection {
     return this.length * this.selectedNodes.length;
   }
 
-  forEach(callback: (node: NodeLayer, frame: number) => void) {
+  forEach(callback: (node: oNodeLayer, frame: number) => void) {
     for (const node of this.selectedNodes) {
       for (let f = this.startFrame; f <= this.endFrame; f++) {
         callback(node, f);
@@ -186,7 +186,7 @@ namespace TimelineKit {
 
   export function applyKeyFramesTo3DPath(selection: oSelection, keyframes: any[]) {
     const layer = selection.selectedNodes[0];
-    const PathColumn3D = layer.getColumn('position.attr3dpath') as PathColumn3D;
+    const PathColumn3D = layer.getColumn('position.attr3dpath') as oPathColumn3D;
     const ScaleXCol = layer.getColumn('scale.x') as oColumn;
     const ScaleYCol = layer.getColumn('scale.y') as oColumn;
 
