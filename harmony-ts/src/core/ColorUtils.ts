@@ -166,6 +166,19 @@ class ColorObj {
     return this._a !== null;
   }
 
+  setRed(value: number): void {
+    this._r = value;
+  }
+  setGreen(value: number): void {
+    this._g = value;
+  }
+  setBlue(value: number): void {
+    this._b = value;
+  }
+  setAlpha(value: number | null): void {
+    this._a = value;
+  }
+
   toRgb(): { r: number; g: number; b: number } {
     return {
       r: this._r,
@@ -234,9 +247,14 @@ class ColorObj {
    *  - ColorObj        → returned as-is (without cloning)
    *  - {h,s,v,a?}      → converted HSV→RGB
    *  - {r,g,b,a?}      → passed through directly  */
-  static fromColorInput(input: ColorInput): ColorObj {
+  static fromColorInput(input: ColorInput, alpha: number | null = null): ColorObj {
     if (input instanceof ColorObj) return input;
-    return new ColorObj(input as any);
+    const colorObj = new ColorObj(input as any);
+    if (alpha !== null) {
+      colorObj.setAlpha(alpha);
+    }
+
+    return colorObj;
   }
 }
 

@@ -1,4 +1,5 @@
 include(specialFolders.userScripts + '/core/utils.js');
+include(specialFolders.userScripts + '/core/Attributes.js');
 
 class oDrawing {
   public name: string;
@@ -262,6 +263,46 @@ class oPathColumn3D extends oColumn {
   }
 
   /**
+   * Set the 3D path position at a given frame using `func.addKeyFramePath3d`.
+   *
+   * @param frameNumber  The frame at which to set the keyframe.
+   * @param position     Any VectorInput form:
+   *   - `5`              → scalar: all components = 5
+   *   - `[1, 2, 3]`      → array
+   *   - `{ x:1, y:2, z:3 }` → object literal
+   *   - `new Vec3(1,2,3)`   → another Vec3
+   *   - `new Vec3(1, 2, 3)` → individual components (if supported)
+   * @param tension      Spline tension (default 0).
+   * @param continuity    Spline continuity (default 0).
+   * @param bias          Spline bias (default 0).
+   */
+  setPosition(
+    frameNumber: number,
+    position: VectorInput,
+    tension: number = 0,
+    continuity: number = 0,
+    bias: number = 0,
+  ): void {
+    const v = this.resolveVec3(position);
+    func.addKeyFramePath3d(this.name, frameNumber, v.x, v.y, v.z, tension, continuity, bias);
+  }
+
+  /** Resolve a VectorInput into plain {x, y, z} numbers. */
+  private resolveVec3(input: VectorInput): { x: number; y: number; z: number } {
+    if (typeof input === 'number') {
+      return { x: input, y: input, z: input };
+    }
+    if (input instanceof Vec3) {
+      return { x: input.x, y: input.y, z: input.z };
+    }
+    if (Array.isArray(input)) {
+      return { x: input[0] ?? 0, y: input[1] ?? 0, z: input[2] ?? 0 };
+    }
+    const obj = input as { x: number; y: number; z: number };
+    return { x: obj.x, y: obj.y, z: obj.z };
+  }
+
+  /**
    * Check if a specific subcolumn has a keyframe at the given frame.
    * @param frameNumber The frame to check.
    * @param subColumn 1=X, 2=Y, 3=Z, 4=Velocity. Defaults to 1 (X).
@@ -374,7 +415,18 @@ class oNodeLayer {
       .map((attr) => attr.fullKeyword());
   }
 
-  getColumn(attrName: string, linkType?: string): oColumn {
+  getColumn(
+    attrName: 'offset.attr3dpath',
+    linkType?: string,
+    createColumn?: boolean,
+  ): oPathColumn3D;
+  getColumn(
+    attrName: 'position.attr3dpath',
+    linkType?: string,
+    createColumn?: boolean,
+  ): oPathColumn3D;
+  getColumn(attrName: string, linkType?: string, createColumn?: boolean): oColumn;
+  getColumn(attrName: string, linkType?: string, createColumn: boolean = true): oColumn {
     if (attrName.indexOf('|') !== -1) {
       const lastSlashIndex = attrName.lastIndexOf('|');
       const path = attrName.substring(0, lastSlashIndex);
@@ -388,6 +440,11 @@ class oNodeLayer {
 
     const col = node.linkedColumn(this.nodePath, attrName);
     if (!col) {
+      if (!createColumn) {
+        throw new Error(
+          "Column not found for attribute '" + attrName + "' on node '" + this.nodePath + "'.",
+        );
+      }
       const colName = column.generateAnonymousName();
       MessageLog.trace(
         "⚠️ No column linked to attribute '" +
@@ -412,17 +469,12 @@ class oNodeLayer {
             "'.",
         );
       }
-      return new G.Column(colName, this);
+      return new oColumn(colName, this);
     }
     if (attrName === 'offset.attr3dpath' || attrName === 'position.attr3dpath') {
-      MessageLog.trace('>> 3d PATH');
-      return new G.PathColumn3D(col, this);
+      return new oPathColumn3D(col, this);
     }
-    if (attrName === 'DRAWING.ELEMENT') {
-      return new oDrawingElementColumn(col, this);
-    }
-
-    return new G.Column(col, this);
+    return new oColumn(col, this);
   }
 
   getType(): string {
@@ -605,7 +657,7 @@ class objDrawing {
     }
 
     // MessageLog.trace("drawing name " + this.exposureName);
-    const copiedFile = new G.objDrawing(drawingName, this.element);
+    const copiedFile = new objDrawing(drawingName, this.element);
     const result = Drawing.create(this.element.id, copiedFile.exposureName, true, true);
     MessageLog.trace('result ' + result);
     G.FileUtils.copyTo(this.filepath, destPath);
@@ -620,20 +672,20 @@ class oDrawingElementColumn extends oColumn {
     MessageLog.trace('name ' + name);
     MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
     super(name, parentLayer);
-    this.element = new G.objElement(node.getElementId(parentLayer.nodePath));
+    this.element = new objElement(node.getElementId(parentLayer.nodePath));
   }
 
   getKeyframe(frameNumber: number): any {
     if (super.getKeyframe(frameNumber) === '') {
       return null;
     }
-    return new G.objDrawing(super.getKeyframe(frameNumber), this.element);
+    return new objDrawing(super.getKeyframe(frameNumber), this.element);
   }
 
   setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
   setKeyFrame(selection: oSelection, value: any): boolean;
   setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
-    if (value instanceof G.objDrawing) {
+    if (value instanceof objDrawing) {
       return super.setKeyFrame(startOrSelection as any, value.exposureName, endFrame);
     }
     return super.setKeyFrame(startOrSelection as any, value, endFrame);
@@ -651,7 +703,13 @@ class oDrawingElementColumn extends oColumn {
   }
 }
 
-class oDrawingLayer extends oNodeLayer {
+class oDrawingNode extends oNodeLayer {
+  drawing = new oTextAttr(this.nodePath, 'DRAWING');
+  /** Position (OFFSET attribute, type POSITION_3D) */
+  position = new oPosition3D(this.nodePath, 'OFFSET');
+
+  scale = new oScale3D(this.nodePath);
+
   constructor(displayOrder: number, index: number, nodePath: string, name: string) {
     super(displayOrder, index, nodePath, name);
   }
@@ -768,21 +826,54 @@ class columnGrouping {
 
 /* ====================== COLOR CARD NODE ====================== */
 
+function is3DPath(n): boolean {
+  const attrs = n.getAllAttributes();
+  for (const attr of attrs) {
+    if (attr.keyword() === 'POSITION') {
+      MessageLog.trace('POSITION attribute found');
+      const subs = attr.getSubAttributes();
+      for (let i = 0; i < subs.length; i++) {
+        if (subs[i].keyword() === 'SEPARATE') {
+          MessageLog.trace('SEPARATE: ' + subs[i].boolValue());
+          return subs[i].boolValue() === false;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function return3DPath(n: oNodeLayer): oPathColumn3D | null {
+  try {
+    n.getAttributeNames().forEach((attrName) => {
+      MessageLog.trace('Attribute: ' + attrName);
+    });
+    n.getAttributeKeywords().forEach((attrKeyword) => {
+      MessageLog.trace('Attribute Keyword: ' + attrKeyword);
+    });
+    const col = n.getColumn('position.attr3dpath', undefined, false);
+    MessageLog.trace('return3DPath: ' + col);
+    return col;
+  } catch {
+    return null;
+  }
+}
+// use toonboom "func" namespace
+
 class oPegNode extends oNodeLayer {
+  /** Position (POSITION attribute, type POSITION_3D) — access .x, .y, .z or use .get() / .set(). */
+  position = is3DPath(this) ? return3DPath(this) : new oPosition3D(this.nodePath, 'POSITION');
+
+  /** Scale (SCALE_3D) — access .x, .y, .z or use .get() / .set(). */
+  scale = new oScale3D(this.nodePath);
+
+  /** Rotation (ROTATION_3D) — Euler angles via .x, .y, .z or .get() / .set(). */
+  rotation = new oRotation3D(this.nodePath);
+
   constructor(displayOrder: number, index: number, nodePath: string, name: string) {
     super(displayOrder, index, nodePath, name);
+    MessageLog.trace('oPegNode created for ' + this.nodePath);
   }
-
-  // getPosition(frameNumber: number): Vec3 {
-  //   const xCol = this.getColumn('position.attr3dpath.x');
-  //   const yCol = this.getColumn('position.attr3dpath.y');
-  //   const zCol = this.getColumn('position.attr3dpath.z');
-
-  //   return new Vec3(
-  //     x: parseFloat(xCol.getKeyframe(frameNumber)),
-  //     y: parseFloat(yCol.getKeyframe(frameNumber)),
-  //     z: parseFloat(zCol.getKeyframe(frameNumber)),
-  //   };
 }
 
 /**
@@ -841,7 +932,7 @@ class _LayerManager {
       }
       if (nodeType === 'READ') {
         this.nodeLayers.push(
-          new oDrawingLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+          new oDrawingNode(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
         );
       } else {
         this.nodeLayers.push(

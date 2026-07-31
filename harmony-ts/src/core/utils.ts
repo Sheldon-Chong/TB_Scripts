@@ -237,7 +237,7 @@ function toast(labelText, position, duration, color, window?) {
   toast.setStyleSheet(styleSheet);
 
   var layout = new QHBoxLayout(toast);
-  layout.addWidget(new QLabel(labelText), 0, 0);
+  layout.addWidget(new QLabel(labelText), 0, Qt.AlignmentFlag.AlignLeft);
 
   toast.setAttribute(Qt.WA_DeleteOnClose);
 
@@ -346,4 +346,226 @@ const Utils = {
   listFilesInDirectory,
   openWithDefaultApp,
   openInFileExplorer,
+  confirm,
+  prompt,
 };
+
+function getHoverColor(color) {
+  // Convert hex color to RGB
+  const hex = color.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Increase brightness by 20%
+  const increaseBrightness = (value) => Math.min(Math.floor(value * 1.2), 255);
+
+  const newR = increaseBrightness(r);
+  const newG = increaseBrightness(g);
+  const newB = increaseBrightness(b);
+
+  // Convert back to hex (compatible with older JS engines)
+  const toHex = (value) => (value < 16 ? '0' : '') + value.toString(16);
+  return '#' + toHex(newR) + toHex(newG) + toHex(newB);
+}
+
+interface StyledButtonOptions {
+  label: string;
+  onClick: () => void;
+  width?: number;
+  height?: number;
+  color?: string;
+}
+
+function styledButton(options: StyledButtonOptions) {
+  var label = options.label;
+  var onClick = options.onClick;
+  var width = options.width !== undefined ? options.width : 100;
+  var height = options.height !== undefined ? options.height : 30;
+  var color = options.color !== undefined ? options.color : '#4CAF50';
+
+  var button = new QPushButton(label);
+  button.setFixedSize(width, height);
+  button.setStyleSheet(
+    'QPushButton {' +
+      'background-color: ' +
+      color +
+      ';' +
+      'color: white;' +
+      'border: none;' +
+      'border-radius: 4px;' +
+      'padding: 6px 12px;' +
+      'font-size: 14px;' +
+      '}' +
+      'QPushButton:hover {' +
+      'background-color: ' +
+      getHoverColor(color) +
+      '}',
+  );
+  button['clicked()'].connect(onClick);
+  return button;
+}
+
+function buttonRow(buttons: QPushButton[], spacing: number = 10) {
+  var layout = new QHBoxLayout();
+  layout.spacing = spacing;
+  for (var i = 0; i < buttons.length; i++) {
+    layout.addWidget(buttons[i], 0, 0);
+  }
+  return layout;
+}
+
+/**
+ * Custom confirmation dialog — drop-in replacement for the broken MessageBox API.
+ * Shows a modal dialog with a message and OK/Cancel (or custom) buttons.
+ *
+ * @param {string}  message     - The message text to display.
+ * @param {string}  title       - Dialog title (default: "Confirm").
+ * @param {string}  confirmText - Label for the confirm button (default: "OK").
+ * @param {string}  cancelText  - Label for the cancel button (default: "Cancel").
+ *                                Pass null or an empty string to show a single-button dialog.
+ * @returns {boolean} true when the user clicks the confirm button, false otherwise.
+ */
+function confirm(
+  message: string,
+  title?: string,
+  confirmText?: string,
+  cancelText?: string,
+): boolean {
+  var dialog = new QDialog();
+  dialog.windowTitle = title || 'Confirm';
+  dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
+  dialog.minimumWidth = 340;
+  dialog.modal = true;
+
+  var mainLayout = new QVBoxLayout(dialog);
+  mainLayout.setContentsMargins(24, 20, 24, 20);
+  mainLayout.spacing = 18;
+
+  // --- message label ---
+  var label = new QLabel(message);
+  label.wordWrap = true;
+  label.textFormat = Qt.PlainText;
+  label.styleSheet = 'font-size: 12pt; color: #e0e0e0;';
+  mainLayout.addWidget(label, 0, Qt.AlignmentFlag.AlignLeft);
+
+  var result = false;
+
+  var buttons: QPushButton[] = [];
+
+  // Cancel / secondary button
+  if (cancelText !== null && cancelText !== '') {
+    buttons.push(
+      styledButton({
+        color: '#555555',
+        label: cancelText || 'Cancel',
+        onClick: function () {
+          result = false;
+          dialog.reject();
+        },
+      }),
+    );
+  }
+
+  // Confirm / primary button
+  buttons.push(
+    styledButton({
+      color: '#4CAF50',
+      label: confirmText || 'OK',
+      onClick: function () {
+        result = true;
+        dialog.accept();
+      },
+    }),
+  );
+
+  // --- button row (right-aligned via stretch) ---
+  var buttonRowLayout = buttonRow(buttons);
+  buttonRowLayout.addStretch(1);
+  mainLayout.addLayout(buttonRowLayout, 0);
+  dialog.layout = mainLayout;
+
+  // Style the dialog background
+  dialog.styleSheet =
+    'QDialog { background-color: #2d2d2d; border: 1px solid #555; border-radius: 6px; }';
+
+  dialog.exec();
+  return result;
+}
+
+/**
+ * Custom text input dialog — prompts the user for a single line of text.
+ *
+ * @param {string}  message     - The prompt message to display.
+ * @param {string}  title       - Dialog title (default: "Input").
+ * @param {string}  defaultText - Default value for the text field (default: "").
+ * @returns {string | null} The entered text, or null if cancelled.
+ */
+function prompt(message: string, title?: string, defaultText?: string): string | null {
+  var dialog = new QDialog();
+  dialog.windowTitle = title || 'Input';
+  dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
+  dialog.minimumWidth = 340;
+  dialog.modal = true;
+
+  var mainLayout = new QVBoxLayout(dialog);
+  mainLayout.setContentsMargins(24, 20, 24, 20);
+  mainLayout.spacing = 18;
+
+  // --- message label ---
+  var label = new QLabel(message);
+  label.wordWrap = true;
+  label.textFormat = Qt.PlainText;
+  label.styleSheet = 'font-size: 12pt; color: #e0e0e0;';
+  mainLayout.addWidget(label, 0, Qt.AlignmentFlag.AlignLeft);
+
+  // --- text input ---
+  var input = new QLineEdit();
+  input.text = defaultText || '';
+  input.styleSheet =
+    'QLineEdit { background-color: #3d3d3d; color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 6px; font-size: 12pt; }';
+  mainLayout.addWidget(input, 0, 0);
+
+  var result: string | null = null;
+
+  // --- button row (Cancel left, OK right) ---
+  var buttonLayout = new QHBoxLayout();
+
+  buttonLayout.addWidget(
+    styledButton({
+      color: '#555555',
+      label: 'Cancel',
+      onClick: function () {
+        result = null;
+        dialog.reject();
+      },
+    }),
+    0,
+    0,
+  );
+
+  buttonLayout.addStretch(1);
+
+  buttonLayout.addWidget(
+    styledButton({
+      color: '#4CAF50',
+      label: 'OK',
+      onClick: function () {
+        result = input.text;
+        dialog.accept();
+      },
+    }),
+    0,
+    0,
+  );
+
+  mainLayout.addLayout(buttonLayout, 0);
+  dialog.layout = mainLayout;
+
+  // Style the dialog background
+  dialog.styleSheet =
+    'QDialog { background-color: #2d2d2d; border: 1px solid #555; border-radius: 6px; }';
+
+  dialog.exec();
+  return result;
+}

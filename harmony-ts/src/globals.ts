@@ -41,10 +41,6 @@ function listAll() {
   findNodesInGroup(sceneRoot);
 
   // Print the results to the Message Log
-  MessageLog.trace('--- Found ' + allNodesList.length + ' Nodes ---');
-  for (var j = 0; j < allNodesList.length; j++) {
-    MessageLog.trace(allNodesList[j]);
-  }
 
   return allNodesList;
 }
@@ -74,7 +70,7 @@ class HarmonyGlobals {
   Palettes = GlobalPalettes;
   objDrawing = objDrawing;
   objElement = objElement;
-  oDrawingLayer = oDrawingLayer;
+  oDrawingLayer = oDrawingNode;
   ColorCardNode = oColorCardNode;
   columnGroupingColor = columnGroupingColor;
   columnGrouping = columnGrouping;
