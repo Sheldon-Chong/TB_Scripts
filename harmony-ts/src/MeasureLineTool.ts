@@ -7,6 +7,54 @@ _.CameraSwipe = CameraSwipe;
 _.FrameSnapping = FrameSnapping;
 G.FrameSnapping = FrameSnapping;
 
+//////////////////////////////////////////////////////////
+// captureGlobals — copies all needed globals onto an
+// object so they survive Harmony's tool-callback scope
+// chain breakage.  Call once in your constructor.
+//////////////////////////////////////////////////////////
+
+// Qt globals provided by Harmony's QtScript runtime
+declare var QApplication: any;
+declare var QFrame: any;
+declare var QTimer: any;
+
+function captureGlobals(target: any) {
+  // 1. Flatten all _ namespace properties (Vec2, LayerManager, etc.)
+  for (var key in _) {
+    if (Object.prototype.hasOwnProperty.call(_, key)) {
+      target[key] = _[key];
+    }
+  }
+  // 2. Standalone Harmony globals
+  target.scene = scene;
+  target.MessageLog = MessageLog;
+  target.Tools = Tools;
+  target.preferences = preferences;
+  // 3. JS built-ins
+  target.JSON = JSON;
+  // 4. Qt widget classes
+  target.QWidget = QWidget;
+  target.Qt = Qt;
+  target.QApplication = QApplication;
+  target.QCheckBox = QCheckBox;
+  target.QVBoxLayout = QVBoxLayout;
+  target.QHBoxLayout = QHBoxLayout;
+  target.QLabel = QLabel;
+  target.QFrame = QFrame;
+  target.QTimer = QTimer;
+  // 5. Included script globals
+  target.Shapes = Shapes;
+  target.Maths = Maths;
+  target.CameraSwipe = CameraSwipe;
+  target.FrameSnapping = FrameSnapping;
+  target.G = G;
+  target.registerAction = registerAction;
+  // 6. Overwrite _.Math (which is the Maths utility) with real JS Math
+  target.Math = Math;
+  // 7. Static class members that methods reference by name
+  target.COLORS = MeasureLineTool.COLORS;
+}
+
 interface HarmonyTool {}
 
 /**
@@ -30,10 +78,16 @@ class MeasureLineTool implements HarmonyTool {
   defaultOptions: { snapToBoundary: boolean } = { snapToBoundary: true };
 
   public _: HarmonyGlobals = _;
-  // Store captured globals so they're accessible in mouse callbacks
+  // All globals are populated by captureGlobals() in the constructor.
+  // The explicit assignments below are fallbacks in case captureGlobals
+  // hasn't run yet (they get overwritten by the capture).
   public Shapes = Shapes;
   public Maths = Maths;
   public Math = Math;
+
+  constructor() {
+    captureGlobals(this);
+  }
 
   /** Pixels-per-unit scaling for swipe magnitude (higher = more dramatic). */
   public swipeScale: number = 80;
@@ -52,19 +106,22 @@ class MeasureLineTool implements HarmonyTool {
 
   loadFromPreferences() {
     try {
-      var v = preferences.getString(this.preferenceName(), JSON.stringify(this.defaultOptions));
-      this.options = JSON.parse(v);
+      var v = this.preferences.getString(
+        this.preferenceName(),
+        this.JSON.stringify(this.defaultOptions),
+      );
+      this.options = this.JSON.parse(v);
     } catch (e) {
       this.options = this.defaultOptions;
     }
   }
 
   storeToPreferences() {
-    preferences.setString(this.preferenceName(), JSON.stringify(this.options));
+    this.preferences.setString(this.preferenceName(), this.JSON.stringify(this.options));
   }
 
   onRegister() {
-    MessageLog.trace('Registered tool: MeasureLineTool');
+    this.MessageLog.trace('Registered tool: MeasureLineTool');
     this.loadFromPreferences();
   }
 
@@ -77,15 +134,17 @@ class MeasureLineTool implements HarmonyTool {
    */
   onMouseDown(ctx: any): boolean {
     try {
-      MessageLog.trace(new this._.Vec2(1).toString());
-      MessageLog.trace('MeasureLineTool: mouse down at ' + JSON.stringify(ctx.currentPoint));
+      this.MessageLog.trace(new this.Vec2(1).toString());
+      this.MessageLog.trace(
+        'MeasureLineTool: mouse down at ' + this.JSON.stringify(ctx.currentPoint),
+      );
 
       // Store the starting point
       ctx.origin = ctx.currentPoint;
 
-      return true; // tool consumes the event
+      return true;
     } catch (e) {
-      MessageLog.trace('MeasureLineTool onMouseDown error: ' + e.toString());
+      this.MessageLog.trace('MeasureLineTool onMouseDown error: ' + e.toString());
       return false;
     }
   }
@@ -119,9 +178,7 @@ class MeasureLineTool implements HarmonyTool {
       }
 
       // Draw the measurement line
-      var lineColor = ctx.shiftPressed
-        ? MeasureLineTool.COLORS.lineSnapped
-        : MeasureLineTool.COLORS.lineDefault;
+      var lineColor = ctx.shiftPressed ? this.COLORS.lineSnapped : this.COLORS.lineDefault;
 
       var line = new this.Shapes.Line({
         start: start,
@@ -164,9 +221,9 @@ class MeasureLineTool implements HarmonyTool {
 
       ctx.overlay = { paths: overlayPaths };
     } catch (e) {
-      MessageLog.trace('MeasureLineTool onMouseMove error: ' + e.toString());
-      MessageLog.trace(e.stack);
-      MessageLog.trace(JSON.stringify(e));
+      this.MessageLog.trace('MeasureLineTool onMouseMove error: ' + e.toString());
+      this.MessageLog.trace(e.stack);
+      this.MessageLog.trace(this.JSON.stringify(e));
     }
 
     return true;
@@ -189,29 +246,29 @@ class MeasureLineTool implements HarmonyTool {
       // Only apply swipe if the line has meaningful length
       if (dist > 2) {
         // Direction: normalized vector from start → end
-        var dirVec = new this._.Vec2(end).subtract(start).normalized();
+        var dirVec = new this.Vec2(end).subtract(start).normalized();
 
         // Scale magnitude by line length relative to swipeScale
         var magnitude = dist / this.swipeScale;
 
-        var camPeg = this._.LayerManager.getNodeLayer(this.cameraPegPath) as oPegNode;
+        var camPeg = this.LayerManager.getNodeLayer(this.cameraPegPath) as oPegNode;
         if (!camPeg) {
-          MessageLog.trace(
+          this.MessageLog.trace(
             "MeasureLineTool: Camera peg '" + this.cameraPegPath + "' not found in scene.",
           );
         } else {
           var pos = camPeg.position as oPathColumn3D;
-          var sel = new this._.oSelection();
+          var sel = new this.oSelection();
           var startFrame = sel.startFrame;
 
           // Snap to nearest boundary frame if option is enabled
           if (this.options.snapToBoundary) {
-            startFrame = this._.FrameSnapping.getNearestBoundaryFrame(startFrame) - 1;
+            startFrame = this.FrameSnapping.getNearestBoundaryFrame(startFrame) - 1;
           }
 
-          scene.beginUndoRedoAccum('Camera Swipe');
-          this._.CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
-          scene.endUndoRedoAccum();
+          this.scene.beginUndoRedoAccum('Camera Swipe');
+          this.CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
+          this.scene.endUndoRedoAccum();
 
           var msg =
             'Swipe: ' +
@@ -220,14 +277,14 @@ class MeasureLineTool implements HarmonyTool {
             angleDeg +
             '\u00B0  |  mag: ' +
             magnitude.toFixed(2);
-          MessageLog.trace('MeasureLineTool: ' + msg);
+          this.MessageLog.trace('MeasureLineTool: ' + msg);
           this.showMeasureToast(msg, 1500);
         }
       }
     } catch (e) {
-      MessageLog.trace('MeasureLineTool onMouseUp error: ' + e.toString());
-      MessageLog.trace(e.stack);
-      MessageLog.trace(JSON.stringify(e));
+      this.MessageLog.trace('MeasureLineTool onMouseUp error: ' + e.toString());
+      this.MessageLog.trace(e.stack);
+      this.MessageLog.trace(this.JSON.stringify(e));
     }
 
     // Reset
@@ -250,8 +307,10 @@ class MeasureLineTool implements HarmonyTool {
    * Shows a floating toast widget with the measurement info.
    */
   showMeasureToast(labelText: string, duration: number) {
-    var toast = new QWidget();
-    toast.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.ToolTip);
+    var toast = new this.QWidget();
+    toast.setWindowFlags(
+      this.Qt.WindowStaysOnTopHint | this.Qt.FramelessWindowHint | this.Qt.ToolTip,
+    );
 
     var styleSheet =
       'QWidget { background-color: rgba(30,30,30,0.85); color: #00ccff; ' +
@@ -259,12 +318,12 @@ class MeasureLineTool implements HarmonyTool {
       'font-family: Arial; font-size: 11pt; font-weight: bold; }';
     toast.setStyleSheet(styleSheet);
 
-    var layout = new QHBoxLayout(toast);
-    layout.addWidget(new QLabel(labelText), 0, 0);
+    var layout = new this.QHBoxLayout(toast);
+    layout.addWidget(new this.QLabel(labelText), 0, 0);
 
-    toast.setAttribute(Qt.WA_DeleteOnClose);
+    toast.setAttribute(this.Qt.WA_DeleteOnClose);
 
-    var win = QApplication.activeWindow();
+    var win = this.QApplication.activeWindow();
     if (win && win.geometry) {
       var geom = win.geometry;
       toast.move(geom.x() + 10, geom.y() + 10);
@@ -272,7 +331,7 @@ class MeasureLineTool implements HarmonyTool {
 
     toast.show();
 
-    var timer = new QTimer();
+    var timer = new this.QTimer();
     timer.singleShot = true;
     timer.timeout.connect(function () {
       toast.close();
@@ -282,7 +341,7 @@ class MeasureLineTool implements HarmonyTool {
 
   loadPanel(dialog: any, responder: any) {
     try {
-      var snapCheckbox = new QCheckBox('Snap to nearest boundary (every 32 frames)');
+      var snapCheckbox = new this.QCheckBox('Snap to nearest boundary (every 32 frames)');
       snapCheckbox.setChecked(this.options.snapToBoundary);
       snapCheckbox.toggled.connect(this, function (checked: boolean) {
         this.options.snapToBoundary = checked;
@@ -290,28 +349,55 @@ class MeasureLineTool implements HarmonyTool {
         responder.settingsChanged();
       });
 
-      var layout = new QVBoxLayout(dialog);
+      var layout = new this.QVBoxLayout(dialog);
       layout.setContentsMargins(8, 8, 8, 8);
       layout.addWidget(snapCheckbox, 0, 0);
       layout.addStretch(1);
 
-      // Store reference so refreshPanel can find the widgets
-      (this as any).ui = { snapCheckbox: snapCheckbox };
+      this.ui = { snapCheckbox: snapCheckbox };
     } catch (e) {
-      MessageLog.trace('MeasureLineTool loadPanel error: ' + e.toString());
+      this.MessageLog.trace('MeasureLineTool loadPanel error: ' + e.toString());
     }
   }
 
   refreshPanel(dialog: any, responder: any) {
     try {
-      var ui = (this as any).ui;
+      var ui = this.ui;
       if (ui && ui.snapCheckbox) {
         ui.snapCheckbox.setChecked(this.options.snapToBoundary);
       }
     } catch (e) {
-      MessageLog.trace('MeasureLineTool refreshPanel error: ' + e.toString());
+      this.MessageLog.trace('MeasureLineTool refreshPanel error: ' + e.toString());
     }
   }
+}
+
+//////////////////////////////////////////////////////////
+// Declaration merging — tells TypeScript about all the
+// dynamically-captured properties from captureGlobals()
+//////////////////////////////////////////////////////////
+
+interface MeasureLineTool {
+  MessageLog: any;
+  JSON: any;
+  Vec2: any;
+  preferences: any;
+  scene: any;
+  LayerManager: any;
+  oSelection: any;
+  FrameSnapping: any;
+  CameraSwipe: any;
+  COLORS: typeof MeasureLineTool.COLORS;
+  QWidget: any;
+  Qt: any;
+  QApplication: any;
+  QCheckBox: any;
+  QVBoxLayout: any;
+  QHBoxLayout: any;
+  QLabel: any;
+  QFrame: any;
+  QTimer: any;
+  ui: any;
 }
 
 //////////////////////////////////////////////////////////
@@ -330,7 +416,7 @@ var _measureLineToolId: any = null;
     MessageLog.trace('MeasureLineTool registered with ID: ' + _measureLineToolId);
 
     // Expose on global _ namespace so other scripts (e.g. floating panel) can access it
-    _._measureLineToolId = _measureLineToolId;
+    (_ as any)._measureLineToolId = _measureLineToolId;
 
     scene.setMetadata({
       name: 'Measure Line Tool',

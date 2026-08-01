@@ -115,6 +115,8 @@ class Rectangle {
   rotation: number;
   color: { r: number; g: number; b: number; a: number };
 
+  Math = Math;
+
   constructor(options: {
     center?: Point2d;
     width?: number;
