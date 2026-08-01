@@ -28,22 +28,8 @@
    =================================================================== */
 
 /* -------------------------------------------------------------------
-   Helpers (expects resolveVec3 & Vec3 from ColumnGroupings.ts via G)
+   Helpers (expects resolveVec3 & Vec3 from Vectors.ts via globals)
    ------------------------------------------------------------------- */
-
-function resolveVec3Local(input: VectorInput): { x: number; y: number; z: number } {
-  if (typeof input === 'number') {
-    return { x: input, y: input, z: input };
-  }
-  if (input instanceof Vec3) {
-    return { x: input.x, y: input.y, z: input.z };
-  }
-  if (Array.isArray(input)) {
-    return { x: input[0] ?? 0, y: input[1] ?? 0, z: input[2] ?? 0 };
-  }
-  const obj = input as { x: number; y: number; z: number };
-  return { x: obj.x, y: obj.y, z: obj.z };
-}
 
 /* ===================================================================
    Type-name constants — matches Harmony's Attribute::typeName() values
@@ -337,7 +323,7 @@ class oAttr3D {
     const x = this._readAxis('x', f);
     const y = this._readAxis('y', f);
     const z = this._readAxis('z', f);
-    return new Vec3(x, y, z);
+    return new G.Vec3(x, y, z);
   }
 
   /** Set all three axes at the current frame. */
@@ -345,7 +331,7 @@ class oAttr3D {
   /** Set all three axes at the given frame. */
   set(value: VectorInput, atFrame: number): void;
   set(value: VectorInput, atFrame?: number): void {
-    const v = resolveVec3Local(value);
+    const v = G.Vectors.resolveVec3(value);
     const f = atFrame !== undefined ? atFrame : frame.current();
     this._setAxis('x', v.x, f);
     this._setAxis('y', v.y, f);
@@ -359,7 +345,7 @@ class oAttr3D {
    * which persists as the non-animated default across the whole scene.
    */
   setGlobal(value: VectorInput): void {
-    const v = resolveVec3Local(value);
+    const v = G.Vectors.resolveVec3(value);
     const parent = node.getAttr(this._nodePath, frame.current(), this._keyword);
     if (!parent) {
       throw new Error(

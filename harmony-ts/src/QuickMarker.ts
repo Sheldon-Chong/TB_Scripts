@@ -1,5 +1,5 @@
 include('globals.js');
-include(specialFolders.userScripts + '/core/CameraSwipe.js');
+include('KeyframeProfiles.js');
 
 function createMarker() {
   const selection = new G.oSelection();
@@ -23,6 +23,18 @@ function generateShake(
   initialShakeAmount: number,
   decayExponent: number,
 ) {
+  MessageLog.trace(
+    'testing generateShake with column: ' +
+      column.toString() +
+      ', startFrame: ' +
+      startFrame +
+      ', endFrame: ' +
+      endFrame +
+      ', initialShakeAmount: ' +
+      initialShakeAmount +
+      ', decayExponent: ' +
+      decayExponent,
+  );
   const totalFrames = endFrame - startFrame;
   const minStepRatio = 0.7;
 
@@ -67,81 +79,6 @@ function testShake() {
   scene.endUndoRedoAccum();
 }
 
-function smoothInPosition(
-  column: oPathColumn3D,
-  startFrame: number,
-  endFrame: number,
-  startPos: Vec2,
-  endPos: Vec2,
-  exponent: number = 2,
-) {
-  const totalFrames = endFrame - startFrame;
-
-  for (let i = startFrame; i <= endFrame; i++) {
-    const progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
-    // Ease-In curve: progress^exponent
-    const t = Math.pow(progress, exponent);
-
-    // Linear interpolation using Vec2 math
-    const current = startPos.lerp(endPos, t);
-    column.setPosition(i, current.toVec3(), 0, 0, 0);
-  }
-}
-
-/**
- * Smooth-Out (Ease-Out): Starts fast and decelerates smoothly into the target position.
- */
-function smoothOutPosition(
-  column: oPathColumn3D,
-  startFrame: number,
-  endFrame: number,
-  startPos: Vec2,
-  endPos: Vec2,
-  exponent: number = 2,
-) {
-  const totalFrames = endFrame - startFrame;
-
-  for (let i = startFrame; i <= endFrame; i++) {
-    const progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
-    // Ease-Out curve: 1 - (1 - progress)^exponent
-    const t = 1 - Math.pow(1 - progress, exponent);
-
-    // Linear interpolation using Vec2 math
-    const current = startPos.lerp(endPos, t);
-    column.setPosition(i, current.toVec3(), 0, 0, 0);
-  }
-}
-
-function applyScalarCurveInDirection(
-  column: oPathColumn3D,
-  startFrame: number,
-  scalarValues: number[],
-  direction: Vector2Input,
-  origin: Vector2Input = new Vec2(0, 0),
-) {
-  // Normalize direction vector so scalar values retain exact magnitude
-  const dirVec = new Vec2(direction).normalized();
-  const originVec = new Vec2(origin);
-
-  for (let idx = 0; idx < scalarValues.length; idx++) {
-    const frame = startFrame + idx;
-    const scalarVal = scalarValues[idx];
-
-    // Position = origin + (directionUnitVector * scalarValue)
-    const currentPos = originVec.add(dirVec.scale(scalarVal));
-
-    column.setPosition(frame, currentPos.toVec3(), 0, 0, 0);
-  }
-}
-
-/**
- * Resamples hand-tuned animation curves to any target length while strictly
- * preserving monotonic velocity (prevents spline overshoot/dips).
- */
-function stretchScalarCurve(sourceCurve: number[], targetLength: number): number[] {
-  return _.CameraSwipe.stretchScalarCurve(sourceCurve, targetLength);
-}
-
 function testApplyScalar() {
   const startFrame = new G.oSelection().startFrame;
   const camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
@@ -150,13 +87,13 @@ function testApplyScalar() {
   const width = 1920;
   const height = 1080;
 
-  const topRightDir = new Vec2(width / 2, height / 2).normalized();
-  const topLeftDir = new Vec2(-width / 2, height / 2).normalized();
-  const bottomRightDir = new Vec2(width / 2, -height / 2).normalized();
-  const bottomLeftDir = new Vec2(-width / 2, -height / 2).normalized();
+  const topRightDir = new G.Vec2(width / 2, height / 2).normalized();
+  const topLeftDir = new G.Vec2(-width / 2, height / 2).normalized();
+  const bottomRightDir = new G.Vec2(width / 2, -height / 2).normalized();
+  const bottomLeftDir = new G.Vec2(-width / 2, -height / 2).normalized();
 
   const directionVec = [-1, 0.2];
-  applyCameraSwipe(pos, startFrame, directionVec, 0);
+  G.CameraSwipe.applyCameraSwipe(pos, startFrame, directionVec, 0);
 }
 
 function serializeKeyframesOfSelection() {

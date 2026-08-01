@@ -414,6 +414,7 @@ declare var node: {
 declare var frame: {
   current(): number;
   setCurrent(frame: number): void;
+  numberOf(): number;
 };
 
 declare var scene: {

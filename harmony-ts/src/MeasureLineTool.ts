@@ -1,7 +1,9 @@
 include(specialFolders.userScripts + '/core/Shapes.js');
 include(specialFolders.userScripts + '/core/Maths.js');
 include('globals.js');
-include(specialFolders.userScripts + '/core/CameraSwipe.js');
+include('KeyframeProfiles.js');
+include(specialFolders.userScripts + '/FrameSnapping.js');
+_.CameraSwipe = CameraSwipe;
 
 interface HarmonyTool {}
 
@@ -21,9 +23,9 @@ class MeasureLineTool implements HarmonyTool {
   icon: string = 'MyTool.png';
   toolType: string = 'drawing';
   canBeOverridenBySelectOrTransformTool: boolean = false;
-  options: object = {};
+  options: { snapToBoundary: boolean } = { snapToBoundary: true };
   resourceFolder: string = 'resources';
-  defaultOptions: object = {};
+  defaultOptions: { snapToBoundary: boolean } = { snapToBoundary: true };
 
   public _: HarmonyGlobals = _;
   // Store captured globals so they're accessible in mouse callbacks
@@ -33,7 +35,6 @@ class MeasureLineTool implements HarmonyTool {
   /** Pixels-per-unit scaling for swipe magnitude (higher = more dramatic). */
   public swipeScale: number = 80;
   /** Extra ease frames added to both ease-out and ease-in phases. */
-  public extraFrames: number = 0;
   /** Camera peg node path. */
   public cameraPegPath: string = 'Top/Camera-P';
 
@@ -73,6 +74,7 @@ class MeasureLineTool implements HarmonyTool {
    */
   onMouseDown(ctx: any): boolean {
     try {
+      MessageLog.trace(new this._.Vec2(1).toString());
       MessageLog.trace('MeasureLineTool: mouse down at ' + JSON.stringify(ctx.currentPoint));
 
       // Store the starting point
@@ -182,30 +184,40 @@ class MeasureLineTool implements HarmonyTool {
       // Only apply swipe if the line has meaningful length
       if (dist > 2) {
         // Direction: normalized vector from start → end
-        var dirX = Math.cos(angleRad);
-        var dirY = Math.sin(angleRad);
+        var dirVec = new this._.Vec2(end).subtract(start).normalized();
 
         // Scale magnitude by line length relative to swipeScale
         var magnitude = dist / this.swipeScale;
 
-        var camPeg = this._.LayerManager.getNodeLayer(this.cameraPegPath);
-        var pos = camPeg.position;
-        var sel = new this._.oSelection();
-        var startFrame = sel.startFrame;
+        var camPeg = this._.LayerManager.getNodeLayer(this.cameraPegPath) as oPegNode;
+        if (!camPeg) {
+          MessageLog.trace(
+            "MeasureLineTool: Camera peg '" + this.cameraPegPath + "' not found in scene.",
+          );
+        } else {
+          var pos = camPeg.position as oPathColumn3D;
+          var sel = new this._.oSelection();
+          var startFrame = sel.startFrame;
 
-        scene.beginUndoRedoAccum('Camera Swipe');
-        this._.CameraSwipe.apply(pos, startFrame, [dirX, dirY], magnitude, this.extraFrames);
-        scene.endUndoRedoAccum();
+          // Snap to nearest boundary frame if option is enabled
+          if (this.options.snapToBoundary) {
+            startFrame = this._.FrameSnapping.getNearestBoundaryFrame(startFrame) - 1;
+          }
 
-        var msg =
-          'Swipe: ' +
-          Math.round(dist) +
-          'px @ ' +
-          angleDeg +
-          '\u00B0  |  mag: ' +
-          magnitude.toFixed(2);
-        MessageLog.trace('MeasureLineTool: ' + msg);
-        this.showMeasureToast(msg, 1500);
+          scene.beginUndoRedoAccum('Camera Swipe');
+          this._.CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
+          scene.endUndoRedoAccum();
+
+          var msg =
+            'Swipe: ' +
+            Math.round(dist) +
+            'px @ ' +
+            angleDeg +
+            '\u00B0  |  mag: ' +
+            magnitude.toFixed(2);
+          MessageLog.trace('MeasureLineTool: ' + msg);
+          this.showMeasureToast(msg, 1500);
+        }
       }
     } catch (e) {
       MessageLog.trace('MeasureLineTool onMouseUp error: ' + e.toString());
@@ -261,36 +273,77 @@ class MeasureLineTool implements HarmonyTool {
     timer.start(duration || 1500);
   }
 
-  loadPanel(dialog: any, responder: any) {}
+  loadPanel(dialog: any, responder: any) {
+    try {
+      var snapCheckbox = new QCheckBox('Snap to nearest boundary (every 32 frames)');
+      snapCheckbox.setChecked(this.options.snapToBoundary);
+      snapCheckbox.toggled.connect(this, function (checked: boolean) {
+        this.options.snapToBoundary = checked;
+        this.storeToPreferences();
+        responder.settingsChanged();
+      });
 
-  refreshPanel(dialog: any, responder: any) {}
+      var layout = new QVBoxLayout(dialog);
+      layout.setContentsMargins(8, 8, 8, 8);
+      layout.addWidget(snapCheckbox, 0, 0);
+      layout.addStretch(1);
+
+      // Store reference so refreshPanel can find the widgets
+      (this as any).ui = { snapCheckbox: snapCheckbox };
+    } catch (e) {
+      MessageLog.trace('MeasureLineTool loadPanel error: ' + e.toString());
+    }
+  }
+
+  refreshPanel(dialog: any, responder: any) {
+    try {
+      var ui = (this as any).ui;
+      if (ui && ui.snapCheckbox) {
+        ui.snapCheckbox.setChecked(this.options.snapToBoundary);
+      }
+    } catch (e) {
+      MessageLog.trace('MeasureLineTool refreshPanel error: ' + e.toString());
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////
-// Registration — called when the script loads
+// Registration at startup — runs when the script file is
+// loaded (before UI init), so the Tool Properties panel
+// can find loadPanel / refreshPanel.
 //////////////////////////////////////////////////////////
 
-function evalData() {
+var _measureLineToolId: any = null;
+
+(function () {
   try {
     var toolInstance = new MeasureLineTool();
-    var tid = Tools.registerTool(toolInstance);
+    _measureLineToolId = Tools.registerTool(toolInstance);
 
-    // Auto-activate the tool on load
-    Tools.setCurrentTool(tid);
-
-    // Also register an action with a shortcut so you can re-activate it later
+    // Register a keyboard shortcut so the tool can be re-activated
     registerAction({
       name: 'Measure Line Tool',
       icon: 'earth.png',
       callback: function () {
-        Tools.setCurrentTool(tid);
+        Tools.setCurrentTool(_measureLineToolId);
       },
       shortcut: 'Ctrl+Alt+M',
     });
 
-    MessageLog.trace('MeasureLineTool registered with ID: ' + tid);
+    MessageLog.trace('MeasureLineTool registered with ID: ' + _measureLineToolId);
   } catch (e) {
     MessageLog.trace('Error initializing MeasureLineTool: ' + e.toString());
     MessageLog.trace(e.stack);
+  }
+})();
+
+//////////////////////////////////////////////////////////
+// evalData — called by buttonlist.xml on button click.
+// Tool is already registered; just activate it.
+//////////////////////////////////////////////////////////
+
+function evalData() {
+  if (_measureLineToolId) {
+    Tools.setCurrentTool(_measureLineToolId);
   }
 }

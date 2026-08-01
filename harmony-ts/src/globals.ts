@@ -1,5 +1,6 @@
 include(specialFolders.userScripts + '/core/Shapes.js');
 include(specialFolders.userScripts + '/core/Maths.js');
+include(specialFolders.userScripts + '/core/Vectors.js');
 include(specialFolders.userScripts + '/core/DrawingView.js');
 include(specialFolders.userScripts + '/core/TimelineKit.js');
 include(specialFolders.userScripts + '/core/Frame.js');
@@ -49,11 +50,14 @@ listAll();
 class HarmonyGlobals {
   // Shapes = Shapes;
   Math = Maths;
+  Vec2 = vectors.Vec2;
+  Vec3 = vectors.Vec3;
   Transformations = Transformations;
   DrawingView = DrawingView;
   TimelineKit = TimelineKit;
   Utils = Utils;
   ColorUtils = ColorUtils;
+  Vectors = vectors;
   // Widgets = Widgets;
   LayerManager = LayerManager;
   FileUtils: typeof ReadWriteOperations = ReadWriteOperations;

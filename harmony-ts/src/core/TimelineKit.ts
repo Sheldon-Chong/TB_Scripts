@@ -184,6 +184,39 @@ type frameRange = Omit<oSelection, 'selectedNodes'>;
 namespace TimelineKit {
   export let layers: any[] = updateLayers();
 
+  export function startFrame() {
+    return scene.getStartFrame();
+  }
+
+  export function endFrame() {
+    return frame.numberOf();
+  }
+
+  export function createMarker(
+    frame: number,
+    name: string = '',
+    color: string = '#FF0000',
+    notes: string = '',
+    length: number = 1,
+  ): boolean {
+    try {
+      TimelineMarker.createMarker({
+        frame: frame,
+        color: color,
+        name: name,
+        notes: notes,
+        length: length,
+      });
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  export function setCurrentFrame(frameNumber: number) {
+    frame.setCurrent(frameNumber);
+  }
+
   export function applyKeyFramesTo3DPath(selection: oSelection, keyframes: any[]) {
     const layer = selection.selectedNodes[0];
     const PathColumn3D = layer.getColumn('position.attr3dpath') as oPathColumn3D;

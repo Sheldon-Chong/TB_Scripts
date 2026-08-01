@@ -1,4 +1,5 @@
 include(specialFolders.userScripts + '/core/utils.js');
+include(specialFolders.userScripts + '/core/Vectors.js');
 include(specialFolders.userScripts + '/core/Attributes.js');
 
 class oDrawing {
@@ -292,7 +293,7 @@ class oPathColumn3D extends oColumn {
     if (typeof input === 'number') {
       return { x: input, y: input, z: input };
     }
-    if (input instanceof Vec3) {
+    if (input instanceof G.Vec3) {
       return { x: input.x, y: input.y, z: input.z };
     }
     if (Array.isArray(input)) {
