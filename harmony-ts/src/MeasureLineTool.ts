@@ -4,6 +4,8 @@ include('globals.js');
 include('KeyframeProfiles.js');
 include(specialFolders.userScripts + '/FrameSnapping.js');
 _.CameraSwipe = CameraSwipe;
+_.FrameSnapping = FrameSnapping;
+G.FrameSnapping = FrameSnapping;
 
 interface HarmonyTool {}
 
@@ -31,6 +33,7 @@ class MeasureLineTool implements HarmonyTool {
   // Store captured globals so they're accessible in mouse callbacks
   public Shapes = Shapes;
   public Maths = Maths;
+  public Math = Math;
 
   /** Pixels-per-unit scaling for swipe magnitude (higher = more dramatic). */
   public swipeScale: number = 80;
@@ -104,14 +107,14 @@ class MeasureLineTool implements HarmonyTool {
       if (ctx.shiftPressed) {
         var dx = end.x - start.x;
         var dy = end.y - start.y;
-        var angle = Math.atan2(dy, dx);
+        var angle = this.Math.atan2(dy, dx);
 
         // Snap to nearest 45° increment
-        var snapAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
-        var dist = Math.sqrt(dx * dx + dy * dy);
+        var snapAngle = this.Math.round(angle / (this.Math.PI / 4)) * (this.Math.PI / 4);
+        var dist = this.Math.sqrt(dx * dx + dy * dy);
         end = {
-          x: start.x + Math.cos(snapAngle) * dist,
-          y: start.y + Math.sin(snapAngle) * dist,
+          x: start.x + this.Math.cos(snapAngle) * dist,
+          y: start.y + this.Math.sin(snapAngle) * dist,
         };
       }
 
@@ -157,11 +160,13 @@ class MeasureLineTool implements HarmonyTool {
 
       // Cache distance/angle for onMouseUp toast
       ctx.lastDistance = this.Maths.distance2d(start, end);
-      ctx.lastAngle = Math.atan2(end.y - start.y, end.x - start.x);
+      ctx.lastAngle = this.Math.atan2(end.y - start.y, end.x - start.x);
 
       ctx.overlay = { paths: overlayPaths };
     } catch (e) {
       MessageLog.trace('MeasureLineTool onMouseMove error: ' + e.toString());
+      MessageLog.trace(e.stack);
+      MessageLog.trace(JSON.stringify(e));
     }
 
     return true;
@@ -179,7 +184,7 @@ class MeasureLineTool implements HarmonyTool {
       var end = ctx.currentPoint;
       var dist = ctx.lastDistance || 0;
       var angleRad = ctx.lastAngle || 0;
-      var angleDeg = Math.round((angleRad * 180) / Math.PI);
+      var angleDeg = this.Math.round((angleRad * 180) / this.Math.PI);
 
       // Only apply swipe if the line has meaningful length
       if (dist > 2) {
@@ -210,7 +215,7 @@ class MeasureLineTool implements HarmonyTool {
 
           var msg =
             'Swipe: ' +
-            Math.round(dist) +
+            this.Math.round(dist) +
             'px @ ' +
             angleDeg +
             '\u00B0  |  mag: ' +
@@ -221,6 +226,8 @@ class MeasureLineTool implements HarmonyTool {
       }
     } catch (e) {
       MessageLog.trace('MeasureLineTool onMouseUp error: ' + e.toString());
+      MessageLog.trace(e.stack);
+      MessageLog.trace(JSON.stringify(e));
     }
 
     // Reset
@@ -320,6 +327,21 @@ var _measureLineToolId: any = null;
     var toolInstance = new MeasureLineTool();
     _measureLineToolId = Tools.registerTool(toolInstance);
 
+    MessageLog.trace('MeasureLineTool registered with ID: ' + _measureLineToolId);
+
+    // Expose on global _ namespace so other scripts (e.g. floating panel) can access it
+    _._measureLineToolId = _measureLineToolId;
+
+    scene.setMetadata({
+      name: 'Measure Line Tool',
+      type: 'int',
+      creator: 'Harmony Premium',
+      version: '1.0',
+      value: `${_measureLineToolId}`,
+    });
+
+    MessageLog.trace('>>' + Number(scene.metadata('Measure Line Tool', 'int').value));
+
     // Register a keyboard shortcut so the tool can be re-activated
     registerAction({
       name: 'Measure Line Tool',
@@ -342,7 +364,7 @@ var _measureLineToolId: any = null;
 // Tool is already registered; just activate it.
 //////////////////////////////////////////////////////////
 
-function evalData() {
+function evaluateAndRun() {
   if (_measureLineToolId) {
     Tools.setCurrentTool(_measureLineToolId);
   }

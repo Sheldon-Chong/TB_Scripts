@@ -426,13 +426,7 @@ class ProfileSet {
   }
 
   updateLastSelectedNode(nodePath) {
-    this._.TimelineKit.setSceneMetadata(
-      'LastSelectedNode',
-      'string',
-      nodePath,
-      'MyScript',
-      '1.0',
-    );
+    this._.TimelineKit.setSceneMetadata('LastSelectedNode', 'string', nodePath, 'MyScript', '1.0');
   }
 
   getActiveNode() {
@@ -629,8 +623,7 @@ class PasteProfileTool implements HarmonyTool {
         'string',
       ),
       currentLevelIndex: parseInt(
-        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
-          '0',
+        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') || '0',
       ),
     };
   }
@@ -867,8 +860,7 @@ class PasteProfileTool implements HarmonyTool {
         'string',
       );
       var currentLevelIndex = parseInt(
-        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
-          '0',
+        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') || '0',
       );
       var currentLevel = this.ProfileSet.LEVEL_SHORT[currentLevelIndex];
       var profilesData = this.activeProfileSet ? this.activeProfileSet : null;
@@ -976,8 +968,7 @@ class PasteProfileTool implements HarmonyTool {
       );
       if (!selectedProfile) throw new Error('No profile selected for pasting.');
       var currentLevelIndex = parseInt(
-        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
-          '0',
+        this.activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') || '0',
       );
       var currentLevel = this.ProfileSet.LEVEL[currentLevelIndex];
       this.activeProfileSet.pasteProfile(selectedProfile, currentLevel, transformations, {
@@ -1013,7 +1004,7 @@ class PasteProfileTool implements HarmonyTool {
   refreshPanel(dialog, responder) {}
 }
 
-function evalData() {
+function evaluateAndRun() {
   try {
     var activeProfileSet = new ProfileSet(
       'C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Premium\\2400-scripts\\characters\\papyrus.json',
@@ -1085,8 +1076,7 @@ function evalData() {
       callback: function () {
         try {
           var currentIndex = parseInt(
-            activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') ||
-              '0',
+            activeProfileSet._.TimelineKit.getSceneMetadata('CurrentLevelIndex', 'string') || '0',
           );
           currentIndex = (currentIndex + 1) % 3;
           activeProfileSet._.TimelineKit.setSceneMetadata(

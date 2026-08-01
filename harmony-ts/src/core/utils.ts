@@ -326,49 +326,6 @@ var __extends =
 
 this.__proto__.__extends = __extends;
 
-const Utils = {
-  stringify,
-  hasKeys,
-  merge,
-  copyFile,
-  arrayToDict,
-  objectForEach,
-  getCurrentXstage,
-  deepCopy,
-  shallowCopy,
-  filterArray,
-  forEachLeafValue,
-  getValueByPath,
-  bind,
-  deepClone,
-  getMethods,
-  toast,
-  listFilesInDirectory,
-  openWithDefaultApp,
-  openInFileExplorer,
-  confirm,
-  prompt,
-};
-
-function getHoverColor(color) {
-  // Convert hex color to RGB
-  const hex = color.replace('#', '');
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-
-  // Increase brightness by 20%
-  const increaseBrightness = (value) => Math.min(Math.floor(value * 1.2), 255);
-
-  const newR = increaseBrightness(r);
-  const newG = increaseBrightness(g);
-  const newB = increaseBrightness(b);
-
-  // Convert back to hex (compatible with older JS engines)
-  const toHex = (value) => (value < 16 ? '0' : '') + value.toString(16);
-  return '#' + toHex(newR) + toHex(newG) + toHex(newB);
-}
-
 interface StyledButtonOptions {
   label: string;
   onClick: () => void;
@@ -404,6 +361,50 @@ function styledButton(options: StyledButtonOptions) {
   );
   button['clicked()'].connect(onClick);
   return button;
+}
+
+const Utils = {
+  stringify,
+  hasKeys,
+  merge,
+  copyFile,
+  arrayToDict,
+  objectForEach,
+  getCurrentXstage,
+  deepCopy,
+  shallowCopy,
+  filterArray,
+  forEachLeafValue,
+  getValueByPath,
+  bind,
+  deepClone,
+  getMethods,
+  toast,
+  listFilesInDirectory,
+  openWithDefaultApp,
+  openInFileExplorer,
+  confirm,
+  prompt,
+  styledButton,
+};
+
+function getHoverColor(color) {
+  // Convert hex color to RGB
+  const hex = color.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Increase brightness by 20%
+  const increaseBrightness = (value) => Math.min(Math.floor(value * 1.2), 255);
+
+  const newR = increaseBrightness(r);
+  const newG = increaseBrightness(g);
+  const newB = increaseBrightness(b);
+
+  // Convert back to hex (compatible with older JS engines)
+  const toHex = (value) => (value < 16 ? '0' : '') + value.toString(16);
+  return '#' + toHex(newR) + toHex(newG) + toHex(newB);
 }
 
 function buttonRow(buttons: QPushButton[], spacing: number = 10) {
