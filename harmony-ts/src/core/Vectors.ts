@@ -30,7 +30,7 @@ namespace vectors {
     return { x: obj.x, y: obj.y, z: obj.z };
   }
 
-  type Vector2Input = number | number[] | { x: number; y: number } | Vec2;
+  export type Vector2Input = number | number[] | { x: number; y: number } | Vec2;
 
   /** Normalize any Vector2Input into plain {x, y} numbers. */
   export function resolveVec2(input: Vector2Input): { x: number; y: number } {
@@ -249,5 +249,125 @@ namespace vectors {
     toString(): string {
       return `Vec3(${this.x}, ${this.y}, ${this.z})`;
     }
+  }
+}
+
+export namespace Shapes {
+  export class Line {
+    start: Point2d;
+    end: Point2d;
+    color: { r: number; g: number; b: number; a: number };
+
+    constructor(options: {
+      start: Point2d;
+      end: Point2d;
+      color?: { r: number; g: number; b: number; a: number };
+    }) {
+      this.start = options.start;
+      this.end = options.end;
+      this.color = options.color || { r: 0, g: 0, b: 0, a: 255 };
+    }
+
+    toPath(): Point2d[] {
+      return [this.start, this.end];
+    }
+  }
+
+  Math = Math;
+  const _ = Object._;
+
+  export function Rectangle(options: {
+    center?: vectors.Vector2Input;
+    width?: number;
+    height?: number;
+    start?: vectors.Vector2Input;
+    end?: vectors.Vector2Input;
+    x0?: number;
+    y0?: number;
+    x1?: number;
+    y1?: number;
+    rotation?: number;
+    color?: { r: number; g: number; b: number; a: number };
+  }) {
+    var start: vectors.Vec2;
+    var end: vectors.Vec2;
+    var width: number;
+    var height: number;
+    var center: vectors.Vec2;
+
+    if (
+      options.x0 !== undefined &&
+      options.y0 !== undefined &&
+      options.x1 !== undefined &&
+      options.y1 !== undefined
+    ) {
+      start = new _.Vec2(options.x0, options.y0);
+      end = new _.Vec2(options.x1, options.y1);
+      width = Math.abs(options.x1 - options.x0);
+      height = Math.abs(options.y1 - options.y0);
+      center = start.add(end).scale(0.5);
+    } else if (options.start && options.end) {
+      start = new _.Vec2(options.start);
+      end = new _.Vec2(options.end);
+      var diff = end.subtract(start);
+      width = Math.abs(diff.x);
+      height = Math.abs(diff.y);
+      center = start.add(end).scale(0.5);
+    } else if (options.start && options.width !== undefined && options.height !== undefined) {
+      start = new _.Vec2(options.start);
+      width = options.width;
+      height = options.height;
+      end = start.add(new _.Vec2(width, height));
+      center = start.add(new _.Vec2(width / 2, height / 2));
+    } else {
+      center = new _.Vec2(options.center!);
+      width = options.width!;
+      height = options.height!;
+      var half = new _.Vec2(width! / 2, height! / 2);
+      start = center.subtract(half);
+      end = center.add(half);
+    }
+
+    var rotation = options.rotation || 0;
+    var color = options.color || { r: 0, g: 0, b: 0, a: 255 };
+
+    return {
+      start: start,
+      end: end,
+      width: width,
+      height: height,
+      center: center,
+      rotation: rotation,
+      color: color,
+
+      getCorners: function (): vectors.Vec2[] {
+        var w2 = width / 2;
+        var h2 = height / 2;
+        var cosA = Math.cos(rotation);
+        var sinA = Math.sin(rotation);
+        var cx = center.x;
+        var cy = center.y;
+        var signs: [number, number][] = [
+          [1, 1],
+          [-1, 1],
+          [-1, -1],
+          [1, -1],
+        ];
+        var corners: vectors.Vec2[] = [];
+        for (var i = 0; i < signs.length; i++) {
+          var sx = signs[i][0];
+          var sy = signs[i][1];
+          var rx = sx * w2 * cosA - sy * h2 * sinA;
+          var ry = sx * w2 * sinA + sy * h2 * cosA;
+          corners.push(new _.Vec2(cx + rx, cy + ry));
+        }
+        return corners;
+      },
+
+      toPath: function (): vectors.Vec2[] {
+        var c = this.getCorners();
+        return [c[0], c[1], c[2], c[3], c[0]];
+      },
+    };
   }
 }

@@ -48,7 +48,7 @@ function listAll() {
 
 listAll();
 class HarmonyGlobals {
-  // Shapes = Shapes;
+  Shapes = Shapes;
   Math = Maths;
   Vec2 = vectors.Vec2;
   Vec3 = vectors.Vec3;
@@ -58,6 +58,7 @@ class HarmonyGlobals {
   Utils = Utils;
   ColorUtils = ColorUtils;
   Vectors = vectors;
+
   // Widgets = Widgets;
   LayerManager = LayerManager;
   FileUtils: typeof ReadWriteOperations = ReadWriteOperations;
