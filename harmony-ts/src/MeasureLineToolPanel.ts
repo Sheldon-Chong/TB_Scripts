@@ -1,5 +1,5 @@
 include(specialFolders.userScripts + '/core/utils.js');
-include('globals.js');
+// include('globals.js');
 
 //////////////////////////////////////////////////////////
 // Interfaces — following patterns established in utils.ts
@@ -35,18 +35,14 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
     return _measureLinePanel;
   }
 
-  var opts: FloatingPanelOptions = Object._.Utils.merge(
-    {
-      title: 'Measure Line',
-      width: 220,
-      buttonLabel: '📏 Measure Line',
-      buttonColor: '#2196F3',
-    },
-    options || {},
-  );
+  var opts: FloatingPanelOptions = {
+    title: 'Measure Line',
+    width: 220,
+    buttonLabel: '📏 Measure Line',
+    buttonColor: '#2196F3',
+  };
 
   // Capture _ for use in Qt signal callbacks (QtScript context loses the _ global)
-  var _global = _;
 
   // --- Create the panel window ---
   var panel = new QWidget();
@@ -54,7 +50,6 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
   panel.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.Dialog);
   panel.minimumWidth = opts.width;
   panel.maximumWidth = opts.width;
-  panel.setAttribute(Qt.WA_DeleteOnClose);
 
   // --- Main layout ---
   var mainLayout = new QVBoxLayout(panel);
@@ -106,8 +101,7 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
     width: opts.width - 32,
     height: 28,
     onClick: function () {
-      panel.close();
-      _measureLinePanel = null;
+      panel.hide();
     },
   });
 
@@ -140,8 +134,7 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
 
 function run() {
   if (_measureLinePanel && _measureLinePanel.isVisible()) {
-    _measureLinePanel.close();
-    _measureLinePanel = null;
+    _measureLinePanel.hide();
   } else {
     showMeasureLinePanel();
   }

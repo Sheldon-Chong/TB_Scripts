@@ -1,4 +1,4 @@
-export namespace ArtTools {
+namespace ArtTools {
   /**
    * Type definition representing layer masks or bitwise combinations.
    */
@@ -53,7 +53,7 @@ MessageLog.trace(
   'settings.currentDrawing' + preferences.getBool('DRAWING_SCALE_PENCIL_THICKNESS', false),
 );
 
-export enum ActionType {
+enum ActionType {
   ToggleApplyToolToAllLayers = 'onActionToggleApplyToolToAllLayers()',
   ToggleApplyToOnionSkinFrames = 'onActionToggleApplyToOnionSkinFrames()',
 }
@@ -90,7 +90,7 @@ namespace SelectionProperties {
   }
 }
 
-export namespace ArtistTools {
+namespace ArtistTools {
   export function setFacialExpressionMode(enabled: boolean): void {
     if (enabled) {
       ArtTools.setCurrentArt(ArtTools.ArtLayers.OverlayArt);

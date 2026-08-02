@@ -12,6 +12,8 @@
  */
 
 namespace vectors {
+  Array = Array;
+
   type VectorInput = number | number[] | { x: number; y: number; z: number } | Vec3;
 
   /** Normalize any VectorInput into plain {x, y, z} numbers. */
@@ -252,7 +254,7 @@ namespace vectors {
   }
 }
 
-export namespace Shapes {
+namespace Shapes {
   export class Line {
     start: Point2d;
     end: Point2d;

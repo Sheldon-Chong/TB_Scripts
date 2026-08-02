@@ -282,14 +282,27 @@ scene.setMetadata({
 MessageLog.trace('>>' + Number(scene.metadata('Measure Line Tool', 'int').value));
 
 // Register a keyboard shortcut so the tool can be re-activated
+// NOTE: Must be a named function declaration (not var/const assignment)
+// for Harmony's registerAction callback resolution to work reliably.
+function activateMeasureLineTool() {
+  try {
+    MessageLog.trace('MeasureLineTool action triggered');
+    Tools.setCurrentTool('com.toonboom.measureLineTool');
+  } catch (e) {
+    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
+  }
+}
+
+MessageLog.trace('><');
 registerAction({
-  name: 'Measure Line Tool',
+  name: 'Measure Line Tool e',
   icon: 'earth.png',
-  callback: function () {
-    Tools.setCurrentTool(_measureLineToolId);
-  },
+  callback: activateMeasureLineTool,
   shortcut: 'Ctrl+Alt+M',
+  category: 'custom',
 });
+
+finalizeToolbars();
 
 MessageLog.trace('MeasureLineTool registered with ID: ' + _measureLineToolId);
 
@@ -299,7 +312,10 @@ MessageLog.trace('MeasureLineTool registered with ID: ' + _measureLineToolId);
 //////////////////////////////////////////////////////////
 
 function evaluateAndRun() {
-  if (_measureLineToolId) {
-    Tools.setCurrentTool(_measureLineToolId);
+  try {
+    MessageLog.trace('MeasureLineTool evaluateAndRun triggered');
+    Tools.setCurrentTool('com.toonboom.measureLineTool');
+  } catch (e) {
+    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
   }
 }
