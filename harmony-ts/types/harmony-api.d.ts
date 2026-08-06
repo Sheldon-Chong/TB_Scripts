@@ -208,6 +208,10 @@ declare var scene: {
   removeMetadata(meta: any): boolean;
   setProcessingBitDepth(bitDepth: number): void;
   getProcessingBitDepth(): number;
+  /** The current frame number. */
+  current(): number;
+  /** Set the current frame number. */
+  setCurrent(frame: number): void;
 };
 
 declare class Point2d {
@@ -283,8 +287,8 @@ declare var System: {
 declare var Tools: {
   createDrawing(): any;
   getToolSettings(): any;
-  registerTool(toolDefinition): number;
-  setCurrentTool(tool): boolean;
+  registerTool(toolDefinition: HarmonyToolDefinition): number;
+  setCurrentTool(tool: any): boolean;
   setToolSettings(arg): any;
 };
 
@@ -299,6 +303,35 @@ declare var preferences: {
   setString(key: string, value: string): void;
   getString(key: string, defaultValue: string): string;
 };
+
+interface HarmonyToolDefinition {
+  name: string;
+  displayName: string;
+  icon: string;
+  toolType: string;
+  canBeOverridenBySelectOrTransformTool: boolean;
+  options: { snapToBoundary: boolean };
+  resourceFolder: string;
+  defaultOptions: { snapToBoundary: boolean };
+  [key: string]: any;
+
+  preferenceName: () => string;
+  loadFromPreferences: () => void;
+  storeToPreferences: () => void;
+  onRegister: () => void;
+  onCreate: (ctx: any) => void;
+  onMouseDown: (ctx: any) => boolean;
+  onMouseMove: (ctx: any) => boolean;
+  onMouseUp: (ctx: any) => boolean;
+  onResetTool: (ctx: any) => void;
+  showMeasureToast: (labelText: string, duration: number) => void;
+  loadPanel: (dialog: any, responder: any) => void;
+  refreshPanel: (dialog: any, responder: any) => void;
+
+  ui?: {
+    snapCheckbox: any;
+  };
+}
 
 declare var node: {
   root(): string;
@@ -415,13 +448,6 @@ declare var frame: {
   current(): number;
   setCurrent(frame: number): void;
   numberOf(): number;
-};
-
-declare var scene: {
-  currentProjectPath(): string;
-  currentVersionName(): string;
-  current(): number;
-  setCurrent(frame: number): void;
 };
 
 declare var selection: {

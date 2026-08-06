@@ -20,6 +20,15 @@
       "problemMatcher": []
     },
     {
+      "label": "Open Test Project",
+      "type": "shell",
+      "command": "Start-Process",
+      "args": [
+        "D:\\YT projects\\Coding\\ToonBoom\\Test\\Test.xstage"
+      ],
+      "problemMatcher": []
+    },
+    {
       "label": "Open Rig",
       "type": "shell",
       "command": "Start-Process",

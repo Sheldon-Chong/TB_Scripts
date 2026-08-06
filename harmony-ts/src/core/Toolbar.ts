@@ -213,12 +213,37 @@ interface RegisterActionOptions {
 
 /**
  * Registers an action with optional toolbar button and keyboard shortcut.
+ *
+ * Uses scene metadata to guard against duplicate registrations, which are
+ * known to cause crashes in Toon Boom.  When a scene is open the guard
+ * persists across script reloads; when no scene is open the action is
+ * always registered (actions are ephemeral in that case anyway).
+ *
  * @param options - Configuration for the action
  */
 function registerAction(options: RegisterActionOptions) {
   var globals = _;
+  var actionId = 'com.toonboom.' + options.name.replace(/\s+/g, '').toLowerCase();
+  var metaKey = 'registered action: ' + actionId;
+
+  // ── Duplicate-registration guard ──────────────────────────────
+  try {
+    if (SceneKit.metadata.has(metaKey)) {
+      MessageLog.trace(
+        '[registerAction] Action "' + actionId + '" is already registered (metadata). Skipping.',
+      );
+      return;
+    }
+  } catch (e) {
+    // No scene loaded — metadata is unavailable.  Actions can't persist
+    // across sessions anyway, so it's safe to proceed.
+    MessageLog.trace(
+      '[registerAction] Metadata unavailable (no scene?). Proceeding without guard.',
+    );
+  }
+
   var action = {
-    id: 'com.toonboom.' + options.name.replace(/\s+/g, '').toLowerCase(),
+    id: actionId,
     text: options.name,
     icon: options.icon,
     _: _,
@@ -228,6 +253,13 @@ function registerAction(options: RegisterActionOptions) {
     },
   };
   ScriptManager.addAction(action);
+
+  // Persist the registration so future reloads skip it
+  try {
+    SceneKit.metadata.set(metaKey, true);
+  } catch (e) {
+    // Metadata not available — fine, guard just won't persist
+  }
 
   if (options.shortcut) {
     var shortcut = {

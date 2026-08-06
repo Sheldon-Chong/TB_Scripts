@@ -293,7 +293,7 @@ class oPathColumn3D extends oColumn {
     if (typeof input === 'number') {
       return { x: input, y: input, z: input };
     }
-    if (input instanceof G.Vec3) {
+    if (input instanceof Vec3) {
       return { x: input.x, y: input.y, z: input.z };
     }
     if (Array.isArray(input)) {
@@ -643,7 +643,7 @@ class objDrawing {
       drawingName = destFileName;
     } else {
       const filename = this.filename.substring(0, this.filename.lastIndexOf('.tvg'));
-      drawingName = G.FileUtils.getUniqueFileName(
+      drawingName = FileUtils.getUniqueFileName(
         this.element.completeFolder,
         filename,
         '.tvg',
@@ -652,7 +652,7 @@ class objDrawing {
 
     const destPath = this.element.completeFolder + '/' + drawingName + '.tvg';
 
-    if (!override && G.FileUtils.exists(destPath)) {
+    if (!override && FileUtils.exists(destPath)) {
       MessageLog.trace('File already exists at destination path: ' + destPath);
       return null;
     }
@@ -661,7 +661,7 @@ class objDrawing {
     const copiedFile = new objDrawing(drawingName, this.element);
     const result = Drawing.create(this.element.id, copiedFile.exposureName, true, true);
     MessageLog.trace('result ' + result);
-    G.FileUtils.copyTo(this.filepath, destPath);
+    FileUtils.copyTo(this.filepath, destPath);
     return copiedFile;
   }
 }

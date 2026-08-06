@@ -1,4 +1,7 @@
+include('globals.js');
 namespace CameraSwipe {
+  const G = Object._;
+
   export function smoothInPosition(
     column: oPathColumn3D,
     startFrame: number,

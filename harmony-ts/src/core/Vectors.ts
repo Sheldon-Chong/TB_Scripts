@@ -12,7 +12,7 @@
  */
 
 namespace vectors {
-  Array = Array;
+  // Array = Array;
 
   type VectorInput = number | number[] | { x: number; y: number; z: number } | Vec3;
 
@@ -74,7 +74,7 @@ namespace vectors {
 
     /** Convert to a Vec3 with the given z component (default 0). */
     toVec3(z: number = 0): Vec3 {
-      return new G.Vec3(this.x, this.y, z);
+      return new Vec3(this.x, this.y, z);
     }
 
     // ---- arithmetic (all accept any Vector2Input) ----
@@ -161,7 +161,7 @@ namespace vectors {
         this.y = y;
         this.z = z;
       } else {
-        const v = G.Vectors.resolveVec3(input);
+        const v = Vectors.resolveVec3(input);
         this.x = v.x;
         this.y = v.y;
         this.z = v.z;
@@ -179,33 +179,33 @@ namespace vectors {
     // ---- arithmetic (all accept any VectorInput) ----
 
     add(other: VectorInput): Vec3 {
-      const v = G.Vectors.resolveVec3(other);
-      return new G.Vec3(this.x + v.x, this.y + v.y, this.z + v.z);
+      const v = Vectors.resolveVec3(other);
+      return new Vec3(this.x + v.x, this.y + v.y, this.z + v.z);
     }
 
     subtract(other: VectorInput): Vec3 {
-      const v = G.Vectors.resolveVec3(other);
-      return new G.Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
+      const v = Vectors.resolveVec3(other);
+      return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
     }
 
     multiply(other: VectorInput): Vec3 {
-      const v = G.Vectors.resolveVec3(other);
-      return new G.Vec3(this.x * v.x, this.y * v.y, this.z * v.z);
+      const v = Vectors.resolveVec3(other);
+      return new Vec3(this.x * v.x, this.y * v.y, this.z * v.z);
     }
 
     divide(other: VectorInput): Vec3 {
-      const v = G.Vectors.resolveVec3(other);
-      return new G.Vec3(this.x / v.x, this.y / v.y, this.z / v.z);
+      const v = Vectors.resolveVec3(other);
+      return new Vec3(this.x / v.x, this.y / v.y, this.z / v.z);
     }
 
     scale(s: number): Vec3 {
-      return new G.Vec3(this.x * s, this.y * s, this.z * s);
+      return new Vec3(this.x * s, this.y * s, this.z * s);
     }
 
     // ---- comparison / query ----
 
     equals(other: VectorInput): boolean {
-      const v = G.Vectors.resolveVec3(other);
+      const v = Vectors.resolveVec3(other);
       return this.x === v.x && this.y === v.y && this.z === v.z;
     }
 
@@ -218,20 +218,20 @@ namespace vectors {
       return Math.sqrt(this.lengthSquared());
     }
 
-    /** Return a new G.Vec3 with the same direction but length 1. */
+    /** Return a new Vec3 with the same direction but length 1. */
     normalized(): Vec3 {
       const len = this.length();
-      return len === 0 ? new G.Vec3(0) : this.scale(1 / len);
+      return len === 0 ? new Vec3(0) : this.scale(1 / len);
     }
 
     dot(other: VectorInput): number {
-      const v = G.Vectors.resolveVec3(other);
+      const v = Vectors.resolveVec3(other);
       return this.x * v.x + this.y * v.y + this.z * v.z;
     }
 
     cross(other: VectorInput): Vec3 {
-      const v = G.Vectors.resolveVec3(other);
-      return new G.Vec3(
+      const v = Vectors.resolveVec3(other);
+      return new Vec3(
         this.y * v.z - this.z * v.y,
         this.z * v.x - this.x * v.z,
         this.x * v.y - this.y * v.x,

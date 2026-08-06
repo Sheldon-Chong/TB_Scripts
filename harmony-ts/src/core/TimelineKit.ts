@@ -381,9 +381,9 @@ namespace TimelineKit {
       var colName = column.getName(i);
       var pos = column.getPos(colName);
       var displayName = column.getDisplayName(colName);
-      columns.push(new TimelineLayer(colName, displayName, pos, i));
     }
     columns = columns.filter(function (col) {
+      columns.push(new TimelineLayer(colName, displayName, pos, i));
       return col.orderIndex !== -1;
     });
     columns.sort(function (a, b) {

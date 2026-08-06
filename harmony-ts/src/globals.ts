@@ -13,74 +13,79 @@ include(specialFolders.userScripts + '/core/renderUtils2.js');
 include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/GlobalPalettes.js');
 include(specialFolders.userScripts + '/core/ColumnGroupings.js');
-
-include(specialFolders.userScripts + '/widgets/WidgetUtils.js');
-
+include(specialFolders.userScripts + '/core/MetadataKit.js');
+include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
 
-function listAll() {
-  var allNodesList = [];
+// function listAll() {
+//   var allNodesList = [];
 
-  // Recursive helper function to crawl through groups
-  function findNodesInGroup(parentPath) {
-    var count = node.numberOfSubNodes(parentPath);
+//   // Recursive helper function to crawl through groups
+//   function findNodesInGroup(parentPath) {
+//     var count = node.numberOfSubNodes(parentPath);
 
-    for (var i = 0; i < count; i++) {
-      // Get the full path of the current sub-node
-      var currentNode = node.subNode(parentPath, i);
-      allNodesList.push(currentNode);
+//     for (var i = 0; i < count; i++) {
+//       // Get the full path of the current sub-node
+//       var currentNode = node.subNode(parentPath, i);
+//       allNodesList.push(currentNode);
 
-      // If this node is a group, look inside it too
-      if (node.isGroup(currentNode)) {
-        findNodesInGroup(currentNode);
-      }
-    }
-  }
+//       // If this node is a group, look inside it too
+//       if (node.isGroup(currentNode)) {
+//         findNodesInGroup(currentNode);
+//       }
+//     }
+//   }
 
-  // Start crawling from the very top layer of the project
-  var sceneRoot = node.root();
-  findNodesInGroup(sceneRoot);
+//   // Start crawling from the very top layer of the project
+//   var sceneRoot = node.root();
+//   findNodesInGroup(sceneRoot);
 
-  // Print the results to the Message Log
+//   // Print the results to the Message Log
 
-  return allNodesList;
-}
+//   return allNodesList;
+// }
 
-listAll();
-class HarmonyGlobals {
-  Shapes = Shapes;
-  Math = Maths;
-  Vec2 = vectors.Vec2;
-  Vec3 = vectors.Vec3;
-  Transformations = Transformations;
-  DrawingView = DrawingView;
-  TimelineKit = TimelineKit;
-  Utils = Utils;
-  ColorUtils = ColorUtils;
-  Vectors = vectors;
+// listAll();
+// IMPORTANT: Using a plain function constructor (NOT a TypeScript class) to avoid
+// the IIFE wrapper that TS emits for classes targeting ES5.  IIFEs create closure
+// scopes that interact badly with QtScript's GC — when Qt widget wrappers are
+// created (e.g. in MeasureLineToolPanel), the GC can corrupt built-in globals like
+// Array, causing crashes or "Array is undefined" errors.
+function HarmonyGlobals() {
+  this.Shapes = Shapes;
+  this.Math = Maths;
+  this.Vec2 = vectors.Vec2;
+  this.Vec3 = vectors.Vec3;
+  this.Transformations = Transformations;
+  this.DrawingView = DrawingView;
+  this.TimelineKit = TimelineKit;
+  this.Utils = Utils;
+  this.ColorUtils = ColorUtils;
+  this.Vectors = vectors;
+  this.Scene = SceneKit;
 
   // Widgets = Widgets;
-  LayerManager = LayerManager;
-  FileUtils: typeof ReadWriteOperations = ReadWriteOperations;
-  Frame = Frame;
-  oSelection = oSelection;
-  ColorObj = ColorObj;
-  oElement = oElement;
-  Renderer = Renderer;
-  DrawingDataUtils = DrawingDataUtils;
-  Cell = Cell;
-  DrawingCell = DrawingCell;
-  Column = oColumn;
-  PathColumn3D = oPathColumn3D;
-  Palettes = GlobalPalettes;
-  objDrawing = objDrawing;
-  objElement = objElement;
-  oDrawingLayer = oDrawingNode;
-  ColorCardNode = oColorCardNode;
-  columnGroupingColor = columnGroupingColor;
-  columnGrouping = columnGrouping;
+  this.LayerManager = LayerManager;
+  this.FileUtils = ReadWriteOperations;
+  this.Frame = Frame;
+  this.oSelection = oSelection;
+  this.ColorObj = ColorObj;
+  this.oElement = oElement;
+  this.Renderer = Renderer;
+  this.DrawingDataUtils = DrawingDataUtils;
+  this.Cell = Cell;
+  this.DrawingCell = DrawingCell;
+  this.Column = oColumn;
+  this.PathColumn3D = oPathColumn3D;
+  this.Palettes = GlobalPalettes;
+  this.objDrawing = objDrawing;
+  this.objElement = objElement;
+  this.oDrawingLayer = oDrawingNode;
+  this.ColorCardNode = oColorCardNode;
+  this.columnGroupingColor = columnGroupingColor;
+  this.columnGrouping = columnGrouping;
 
-  assign = function (target, source) {
+  this.assign = function (target, source) {
     if (!target || !source) return target;
     for (var key in source) {
       if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -89,49 +94,39 @@ class HarmonyGlobals {
     }
     return target;
   };
-
-  constructor() {
-    Object._ = this;
-  }
 }
 
 const _ = new HarmonyGlobals();
 
-// for (var key in HarmonyGlobals.prototype) {
-//   MessageLog.trace("key " + key + " value " + HarmonyGlobals.prototype[key]);
-//   this.__proto__[key] = HarmonyGlobals.prototype[key];
-// }
-
 Object._ = _;
 
-const G = _;
+const G: HarmonyGlobals = _;
 
-this.__proto__.G = _;
+// this.__proto__.G = _;
 
-var __extends =
-  (this && this.__extends) ||
-  (function () {
-    var extendStatics = function (d, b) {
-      extendStatics =
-        Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array &&
-          function (d, b) {
-            d.__proto__ = b;
-          }) ||
-        function (d, b) {
-          for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
-        };
-      return extendStatics(d, b);
-    };
-    return function (d, b) {
-      if (typeof b !== 'function' && b !== null)
-        throw new TypeError('Class extends value ' + String(b) + ' is not a constructor or null');
-      extendStatics(d, b);
-      function __() {
-        this.constructor = d;
-      }
-      d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
-    };
-  })();
+// // __extends helper for ES5 class inheritance.
+// // NOTE: The usual __proto__ / Object.setPrototypeOf feature detection
+// // (e.g. ({ __proto__: [] } instanceof Array)) creates an object whose
+// // [[Prototype]] is an Array instance — an unusual prototype chain that
+// // QtScript's GC can't handle.  When the GC runs after creating Qt widget
+// // wrappers, it corrupts built-in globals like Array.
+// // We use only the safe for…in copy for static inheritance.
+// var __extends =
+//   (this && this.__extends) ||
+//   (function () {
+//     var extendStatics = function (d, b) {
+//       for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+//       return d;
+//     };
+//     return function (d, b) {
+//       if (typeof b !== 'function' && b !== null)
+//         throw new TypeError('Class extends value ' + String(b) + ' is not a constructor or null');
+//       extendStatics(d, b);
+//       function __() {
+//         this.constructor = d;
+//       }
+//       d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
+//     };
+//   })();
 
-this.__proto__.__extends = __extends;
+// this.__proto__.__extends = __extends;
