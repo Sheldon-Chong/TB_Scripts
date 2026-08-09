@@ -1,0 +1,3 @@
+ToonBoomAnimationInc PaletteList 1
+palette-library/NewScene LINK "D:/YT projects/Coding/ToonBoom/NewScene/palette-library/NewScene.plt"
+palette-library/NewScene_pencil_texture LINK "D:/YT projects/Coding/ToonBoom/NewScene/palette-library/NewScene_pencil_texture.plt"

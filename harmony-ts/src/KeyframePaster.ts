@@ -160,7 +160,17 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
     scene.endUndoRedoAccum();
     G.Utils.toast('Applied ' + label + ': ' + presetName, { x: 20, y: 20 }, 2000, '#333333');
   } catch (e) {
-    MessageLog.trace('Error applying ' + label + " '" + presetName + "': " + e.toString());
+    MessageLog.trace(
+      'Error applying ' +
+        label +
+        " '" +
+        presetName +
+        "': " +
+        e.toString() +
+        e.lineNumber +
+        e.fileName,
+    );
+    scene.endUndoRedoAccum();
   }
 }
 
@@ -233,9 +243,9 @@ function registerAllActions() {
   });
 
   // Finalize all toolbars after registering actions
-  finalizeToolbars();
+  updateToolbars();
 
   // Test first preset
   // presetCallbacks["gentle_jump_bob"]();
-  presetCallbacks['pan_down']();
+  // presetCallbacks['pan_down']();
 }

@@ -1,4 +1,4 @@
-MessageLog.clearLog();
+// MessageLog.clearLog();
 
 function readFrom(file_path) {
   var file = new PermanentFile(file_path);

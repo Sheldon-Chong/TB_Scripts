@@ -96,37 +96,60 @@ function HarmonyGlobals() {
   };
 }
 
-const _ = new HarmonyGlobals();
+var _ = new HarmonyGlobals();
 
-Object._ = _;
+var G: HarmonyGlobals = _;
 
-const G: HarmonyGlobals = _;
+// MessageLog.trace(
+//   '>>>>>' + JSON.stringify(Object.keys(this.__proto__).indexOf('G') !== -1, null, 2),
+// );
 
-// this.__proto__.G = _;
+if (Object.keys(this.__proto__).indexOf('G') === -1) {
+  this.__proto__.G = _;
 
-// // __extends helper for ES5 class inheritance.
-// // NOTE: The usual __proto__ / Object.setPrototypeOf feature detection
-// // (e.g. ({ __proto__: [] } instanceof Array)) creates an object whose
-// // [[Prototype]] is an Array instance — an unusual prototype chain that
-// // QtScript's GC can't handle.  When the GC runs after creating Qt widget
-// // wrappers, it corrupts built-in globals like Array.
-// // We use only the safe for…in copy for static inheritance.
-// var __extends =
-//   (this && this.__extends) ||
-//   (function () {
-//     var extendStatics = function (d, b) {
-//       for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
-//       return d;
-//     };
-//     return function (d, b) {
-//       if (typeof b !== 'function' && b !== null)
-//         throw new TypeError('Class extends value ' + String(b) + ' is not a constructor or null');
-//       extendStatics(d, b);
-//       function __() {
-//         this.constructor = d;
-//       }
-//       d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
-//     };
-//   })();
+  Object._ = _;
 
-// this.__proto__.__extends = __extends;
+  this.__proto__.registeredTools = this.__proto__.registeredTools || {};
+  this.__proto__.registeredActions = this.__proto__.registeredActions || {};
+  this.__proto__.registeredToolbars = this.__proto__.registeredToolbars || {};
+
+  this.__proto__.oColumn = oColumn;
+  this.__proto__.oPathColumn3D = oPathColumn3D;
+  this.__proto__.PermanentFile = PermanentFile;
+  this.__proto__.Array = Array;
+
+  var __extends =
+    (this && this.__extends) ||
+    (function () {
+      var extendStatics = function (d, b) {
+        for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+        return d;
+      };
+      return function (d, b) {
+        if (typeof b !== 'function' && b !== null)
+          throw new TypeError('Class extends value ' + String(b) + ' is not a constructor or null');
+        extendStatics(d, b);
+        function __() {
+          this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
+      };
+    })();
+
+  this.__proto__.__extends = __extends;
+  MessageLog.trace('[globals.ts] G assigned to this.__proto__');
+} else {
+  MessageLog.trace(
+    '[globals.ts] ' +
+      JSON.stringify(Object.keys(this.__proto__).indexOf('G') !== -1, null, 2) +
+      ' — G already exists in this.__proto__, skipping assignment',
+  );
+}
+
+// __extends helper for ES5 class inheritance.
+// NOTE: The usual __proto__ / Object.setPrototypeOf feature detection
+// (e.g. ({ __proto__: [] } instanceof Array)) creates an object whose
+// [[Prototype]] is an Array instance — an unusual prototype chain that
+// QtScript's GC can't handle.  When the GC runs after creating Qt widget
+// wrappers, it corrupts built-in globals like Array.
+// We use only the safe for…in copy for static inheritance.

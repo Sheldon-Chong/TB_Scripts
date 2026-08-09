@@ -11,6 +11,17 @@
 // Interfaces — following patterns established in utils.ts
 //////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////
+// Floating panel — a persistent, stay-on-top window with
+// a single button that activates the MeasureLineTool.
+//////////////////////////////////////////////////////////
+
+// process.exit(0);
+// include('globals.js');
+
+// include('MeasureLineTool.js');
+include('globals.js');
+
 interface FloatingPanelOptions {
   /** Window title shown in the title bar. */
   title?: string;
@@ -26,17 +37,6 @@ interface FloatingPanelOptions {
   y?: number;
 }
 
-//////////////////////////////////////////////////////////
-// Floating panel — a persistent, stay-on-top window with
-// a single button that activates the MeasureLineTool.
-//////////////////////////////////////////////////////////
-
-// process.exit(0);
-// include('globals.js');
-
-// include('MeasureLineTool.js');
-
-include('globals.js');
 function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
   // evaluateAndRunMeasureLineTool();
   // registerMeasureLineTool();
@@ -71,22 +71,56 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
   separator.setStyleSheet('QFrame { color: #555; }');
   mainLayout.addWidget(separator, 0, 0);
   // --- Activate button ---
-  var activateBtn = _.Utils.styledButton({
+
+  function testBtn(options: StyledButtonOptions) {
+    var label = options.label;
+    var onClick = options.onClick;
+    var width = options.width !== undefined ? options.width : 100;
+    var height = options.height !== undefined ? options.height : 30;
+    var color = options.color !== undefined ? options.color : '#4CAF50';
+
+    var button = new QPushButton(label);
+
+    button.setFixedSize(width, height);
+    button.setStyleSheet(
+      'QPushButton {' +
+        'background-color: ' +
+        color +
+        ';' +
+        'color: white;' +
+        'border: none;' +
+        'border-radius: 4px;' +
+        'padding: 6px 12px;' +
+        'font-size: 14px;' +
+        '}' +
+        'QPushButton:hover {' +
+        'background-color: ' +
+        getHoverColor(color) +
+        '}',
+    );
+
+    return button;
+  }
+
+  function test11() {}
+
+  var activateBtn = testBtn({
     label: opts.buttonLabel,
     color: opts.buttonColor,
     width: opts.width - 32,
     height: 38,
-    onClick: function () {
-      try {
-        Tools.setCurrentTool('com.toonboom.measureLineTool');
-        // G.Scene.switchTool('com.toonboom.measureLineTool');
-        MessageLog.trace('[MeasureLineToolPanel.ts] ' + '>activated MeasureLineTool');
-      } catch (e) {
-        MessageLog.trace('MeasureLineToolPanel: error activating tool: ' + e);
-      }
-    },
+    onClick: test11,
   });
   mainLayout.addWidget(activateBtn, 0, Qt.AlignmentFlag.AlignCenter);
+  MessageLog.trace(
+    `${JSON.stringify(Object.keys(activateBtn['clicked()']), null, 2)} | ${activateBtn['clicked()']} | ${activateBtn['clicked()'].connect}`,
+  );
+  // activateBtn['clicked()'].connect(() => {
+  //   MessageLog.trace('Activate button clicked');
+  // });
+  activateBtn.clicked.connect(() => {
+    MessageLog.trace('Activate button clicked');
+  });
   // --- Close button ---
   var closeBtn = _.Utils.styledButton({
     label: '✕ Close',
@@ -114,6 +148,7 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
   } else {
     panel.move(opts.x || 100, opts.y || 100);
   }
+
   panel.show();
   // CRITICAL: Keep all Qt widget wrappers alive by storing them on the panel.
   // If local vars go out of scope and GC collects the JS wrappers while the

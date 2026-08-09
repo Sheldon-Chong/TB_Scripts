@@ -12,7 +12,7 @@
  */
 
 namespace vectors {
-  // Array = Array;
+  Array = Array;
 
   type VectorInput = number | number[] | { x: number; y: number; z: number } | Vec3;
 
@@ -161,7 +161,7 @@ namespace vectors {
         this.y = y;
         this.z = z;
       } else {
-        const v = Vectors.resolveVec3(input);
+        const v = resolveVec3(input);
         this.x = v.x;
         this.y = v.y;
         this.z = v.z;
@@ -179,22 +179,22 @@ namespace vectors {
     // ---- arithmetic (all accept any VectorInput) ----
 
     add(other: VectorInput): Vec3 {
-      const v = Vectors.resolveVec3(other);
+      const v = resolveVec3(other);
       return new Vec3(this.x + v.x, this.y + v.y, this.z + v.z);
     }
 
     subtract(other: VectorInput): Vec3 {
-      const v = Vectors.resolveVec3(other);
+      const v = resolveVec3(other);
       return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
     }
 
     multiply(other: VectorInput): Vec3 {
-      const v = Vectors.resolveVec3(other);
+      const v = resolveVec3(other);
       return new Vec3(this.x * v.x, this.y * v.y, this.z * v.z);
     }
 
     divide(other: VectorInput): Vec3 {
-      const v = Vectors.resolveVec3(other);
+      const v = resolveVec3(other);
       return new Vec3(this.x / v.x, this.y / v.y, this.z / v.z);
     }
 
@@ -205,7 +205,7 @@ namespace vectors {
     // ---- comparison / query ----
 
     equals(other: VectorInput): boolean {
-      const v = Vectors.resolveVec3(other);
+      const v = resolveVec3(other);
       return this.x === v.x && this.y === v.y && this.z === v.z;
     }
 
@@ -225,12 +225,12 @@ namespace vectors {
     }
 
     dot(other: VectorInput): number {
-      const v = Vectors.resolveVec3(other);
+      const v = resolveVec3(other);
       return this.x * v.x + this.y * v.y + this.z * v.z;
     }
 
     cross(other: VectorInput): Vec3 {
-      const v = Vectors.resolveVec3(other);
+      const v = resolveVec3(other);
       return new Vec3(
         this.y * v.z - this.z * v.y,
         this.z * v.x - this.x * v.z,

@@ -25,11 +25,18 @@
 	// 	"exclude": ["**/temp/*.ts"],
 	// 	"description": "Insert test block"
 	// }
-  "MessageLog Trace with Context": {
-    "prefix": "mltrace",
-    "body": [
-      "MessageLog.trace(\"[$TM_FILENAME] \" + $1)"
-    ],
-    "description": "Insert MessageLog.trace statement with current filename"
-  }
+	"MessageLog Trace with Context": {
+		"prefix": "mltrace",
+		"body": [
+			"MessageLog.trace(\"[$TM_FILENAME] \" + $1)"
+		],
+		"description": "Insert MessageLog.trace statement with current filename"
+	},
+	"MessageLog Trace with JSON formatting": {
+		"prefix": "mltracejson",
+		"body": [
+			"MessageLog.trace(\"[$TM_FILENAME] \" + JSON.stringify($1, null, 2))"
+		],
+		"description": "Insert MessageLog.trace statement with current filename"
+	}
 }

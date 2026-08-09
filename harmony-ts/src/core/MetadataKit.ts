@@ -107,7 +107,13 @@ namespace MetadataKit {
 
   export function removeAll(): void {
     const all = scene.metadatas();
+
+    const skipNames = ['guideList', 'symmetryGuideList', 'alignmentGuideList'];
+
     for (let i = 0; i < all.length; i++) {
+      if (all[i].name && skipNames.indexOf(all[i].name) !== -1) {
+        continue;
+      }
       if (all[i] && all[i].name) {
         scene.removeMetadata({ name: all[i].name, type: all[i].type });
       }

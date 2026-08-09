@@ -169,6 +169,5 @@ function registerTestAction() {
     },
   });
 
-  finalizeToolbars();
+  updateToolbars();
 }
-

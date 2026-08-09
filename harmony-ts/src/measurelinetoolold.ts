@@ -1,4 +1,3 @@
-
 var COLORS = {
   lineDefault: { r: 0, g: 200, b: 255, a: 200 },
   lineSnapped: { r: 0, g: 255, b: 0, a: 200 },
@@ -275,6 +274,6 @@ registerAction({
   category: 'custom',
 });
 
-finalizeToolbars();
+updateToolbars();
 
 MessageLog.trace('MeasureLineTool registered with ID: ' + _measureLineToolId);

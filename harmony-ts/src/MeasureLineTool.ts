@@ -18,6 +18,8 @@ _.FrameSnapping = FrameSnapping;
 // accessible through the normal scope chain.
 //////////////////////////////////////////////////////////
 
+const MEASURE_LINE_TOOL_ID = 'com.toonboom.measureLineTool';
+
 function register() {
   var COLORS = {
     lineDefault: { r: 0, g: 200, b: 255, a: 200 },
@@ -33,7 +35,7 @@ function register() {
     Maths: Maths,
     COLORS: COLORS,
 
-    name: 'com.toonboom.measureLineTool',
+    name: MEASURE_LINE_TOOL_ID,
     displayName: 'Measure Line Tool',
     icon: 'MyTool.png',
     toolType: 'drawing',
@@ -270,7 +272,7 @@ function register() {
   //////////////////////////////////////////////////////////
 
   // Expose on global _ namespace so other scripts (e.g. floating panel) can access it
-  // (_ as any)._measureLineToolId = _measureLineToolId;
+  // (_ as any)._measureLineToolId = MEASURE_LINE_TOOL_ID;
 
   // Register a keyboard shortcut so the tool can be re-activated
   // NOTE: Must be a named function declaration (not var/const assignment)
@@ -284,27 +286,23 @@ function register() {
     }
   }
 
-  if (!G.Scene.metadata.has('registered action: com.toonboom.measureLineTool')) {
-    registerAction({
-      name: 'Measure Line Tool e',
-      icon: 'earth.png',
-      callback: activateMeasureLineTool,
-      shortcut: 'Ctrl+Alt+M',
-      category: 'custom',
-    });
+  registerAction({
+    name: 'Measure Line Tool',
+    icon: 'earth.png',
+    callback: activateMeasureLineTool,
+    shortcut: 'Ctrl+Alt+M',
+    category: 'custom',
+  });
+  registerAction({
+    name: 'Measure Line Tool 2',
+    icon: 'earth.png',
+    callback: activateMeasureLineTool,
+    shortcut: 'Ctrl+Alt+M',
+    category: 'custom',
+  });
 
-    finalizeToolbars();
-    MessageLog.trace(
-      '>>>> MeasureLineTool registered with ID: ' + JSON.stringify(_measureLineToolId, null, 2),
-    );
-    G.Scene.metadata.set('registered action: com.toonboom.measureLineTool', true);
-  } else {
-    MessageLog.trace(
-      `MeasureLineTool already registered: ${JSON.stringify(G.Scene.metadata.get('registered action: com.toonboom.measureLineTool'), null, 2)}`,
-    );
-    MessageLog.trace('MeasureLineTool already registered, skipping action registration');
-  }
-  Tools.setCurrentTool('com.toonboom.measureLineTool');
+  updateToolbars();
+  // Tools.setCurrentTool(MEASURE_LINE_TOOL_ID);
 
   MessageLog.trace('MeasureLineTool evaluateAndRun triggered');
 }
@@ -316,7 +314,7 @@ function register() {
 function evaluateAndRunMeasureLineTool() {
   try {
     MessageLog.trace('MeasureLineTool evaluateAndRun triggered');
-    Tools.setCurrentTool('com.toonboom.measureLineTool');
+    Tools.setCurrentTool(MEASURE_LINE_TOOL_ID);
   } catch (e) {
     MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
   }

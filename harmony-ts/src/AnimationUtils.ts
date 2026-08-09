@@ -94,7 +94,7 @@ function registerBoundaryNavigationShortcuts() {
     });
   } catch (error) {}
 
-  finalizeToolbars();
+  updateToolbars();
 }
 
 function loopSelection() {
@@ -154,5 +154,3 @@ function loopSelection() {
 
   // openInFileExplorer(scene.currentProjectPath());
 }
-
-

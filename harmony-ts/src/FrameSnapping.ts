@@ -11,43 +11,56 @@ namespace FrameSnapping {
   }
 
   export function getNearestBoundaryFrame(frame: number): number {
-    const remainder = frame % BOUNDARY_DISTANCE;
-    if (remainder === 0) {
-      return frame; // Already at a boundary
+    const markers = TimelineMarker.getAllMarkers();
+    if (markers.length === 0) return frame;
+
+    let closestMarker = markers[0];
+    let closestDistance = Math.abs(frame - closestMarker.frame);
+
+    for (let i = 1; i < markers.length; i++) {
+      const distance = Math.abs(frame - markers[i].frame);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestMarker = markers[i];
+      }
     }
-    const lowerBoundary = frame - remainder;
-    const upperBoundary = lowerBoundary + BOUNDARY_DISTANCE;
-    return frame - lowerBoundary < upperBoundary - frame ? lowerBoundary : upperBoundary;
+
+    return closestMarker.frame;
   }
 
   export function gotoPreviousBoundaryMarker() {
     const currentFrame = G.TimelineKit.getSelection().startFrame;
-    if (currentFrame % BOUNDARY_DISTANCE === 0) {
-      // If already at a boundary, move to the previous one
-      G.TimelineKit.setCurrentFrame(currentFrame - BOUNDARY_DISTANCE);
-      return;
+    const markers = TimelineMarker.getAllMarkers();
+
+    // Find markers before the current frame, pick the closest one
+    const previousMarkers = markers
+      .filter((m) => m.frame < currentFrame)
+      .sort((a, b) => b.frame - a.frame);
+
+    if (previousMarkers.length > 0) {
+      G.TimelineKit.setCurrentFrame(previousMarkers[0].frame);
     }
-    const previousBoundaryFrame = Math.floor(currentFrame / BOUNDARY_DISTANCE) * BOUNDARY_DISTANCE;
-    G.TimelineKit.setCurrentFrame(previousBoundaryFrame);
   }
 
   export function gotoNextBoundaryMarker() {
     const currentFrame = G.TimelineKit.getSelection().startFrame;
+    const markers = TimelineMarker.getAllMarkers();
 
-    if (currentFrame % BOUNDARY_DISTANCE === 0) {
-      // If already at a boundary, move to the next one
-      G.TimelineKit.setCurrentFrame(currentFrame + BOUNDARY_DISTANCE);
-      return;
+    // Find markers after the current frame, pick the closest one
+    const nextMarkers = markers
+      .filter((m) => m.frame > currentFrame)
+      .sort((a, b) => a.frame - b.frame);
+
+    if (nextMarkers.length > 0) {
+      G.TimelineKit.setCurrentFrame(nextMarkers[0].frame);
     }
-    const nextBoundaryFrame = Math.ceil(currentFrame / BOUNDARY_DISTANCE) * BOUNDARY_DISTANCE;
-    G.TimelineKit.setCurrentFrame(nextBoundaryFrame);
   }
 
   export function populateFrameSnappingMarkers(startFrame: number, endFrame: number) {
     scene.beginUndoRedoAccum('Populate Frame Snapping Markers');
     MessageLog.trace(`Populating frame snapping markers from ${startFrame} to ${endFrame}`);
     while (startFrame <= endFrame) {
-      if (startFrame % BOUNDARY_DISTANCE === 0) {
+      if ((startFrame - 1) % BOUNDARY_DISTANCE === 0) {
         createBoundaryMarker(startFrame);
       }
       startFrame++;
@@ -77,10 +90,10 @@ function testGoingToPreviousBoundaryMarker() {
 
 function test9() {
   FrameSnapping.populateFrameSnappingMarkersAll();
-  const nearestBoundaryMarker = FrameSnapping.getNearestBoundaryFrame(
-    G.TimelineKit.getSelection().startFrame,
-  );
-  MessageLog.trace('Nearest boundary marker to current frame: ' + nearestBoundaryMarker);
+  // const nearestBoundaryMarker = FrameSnapping.getNearestBoundaryFrame(
+  //   G.TimelineKit.getSelection().startFrame,
+  // );
+  // MessageLog.trace('Nearest boundary marker to current frame: ' + nearestBoundaryMarker);
 }
 
 interface HarmonyGlobals {

@@ -185,18 +185,35 @@ function testPolygon() {
   Tools.setCurrentTool(tid); // Or use "com.toonboom.regularPolygonTool"
 }
 
-// Global toolbar registry to track toolbars by category
+// Global toolbar registry to track toolbar definitions by category.
+// Toolbars are built lazily in registerAction() and only handed to
+// ScriptManager.addToolbar() when updateToolbars() is called.
 var _toolbarRegistry = _toolbarRegistry || {};
 
 /**
- * Finalizes and registers all toolbars. Call this AFTER all registerAction calls.
+ * Registers or refreshes all toolbars.  Safe to call repeatedly —
+ * duplicates are skipped via the session-level registeredToolbars guard
+ * and a per-toolbar button-dedup set.
+ *
+ * Call this AFTER all registerAction calls (and any time you add new
+ * actions that need toolbar buttons).
  */
-function finalizeToolbars() {
+function updateToolbars() {
   for (var toolbarId in _toolbarRegistry) {
-    if (!_toolbarRegistry[toolbarId]._isRegistered) {
-      MessageLog.trace('Finalizing toolbar: ' + toolbarId);
-      ScriptManager.addToolbar(_toolbarRegistry[toolbarId]);
-      _toolbarRegistry[toolbarId]._isRegistered = true;
+    var toolbarDef = _toolbarRegistry[toolbarId];
+
+    // Only call ScriptManager.addToolbar ONCE per session per toolbar.
+    // Re-registering a toolbar that Harmony already knows about can crash.
+    // Use a flag on the toolbar def itself (which lives in the persistent
+    // _toolbarRegistry global) instead of this.__proto__, whose identity
+    // can vary across separate Harmony script entry points.
+    if (!toolbarDef.__registered) {
+      MessageLog.trace('Registering toolbar: ' + toolbarId);
+      ScriptManager.addToolbar(toolbarDef);
+      toolbarDef.__registered = true;
+      MessageLog.trace('[Toolbar.ts] Toolbar registered: ' + toolbarId);
+    } else {
+      MessageLog.trace('Toolbar already registered (session): ' + toolbarId);
     }
   }
 }
@@ -221,26 +238,17 @@ interface RegisterActionOptions {
  *
  * @param options - Configuration for the action
  */
+
 function registerAction(options: RegisterActionOptions) {
   var globals = _;
   var actionId = 'com.toonboom.' + options.name.replace(/\s+/g, '').toLowerCase();
-  var metaKey = 'registered action: ' + actionId;
 
-  // ── Duplicate-registration guard ──────────────────────────────
-  try {
-    if (SceneKit.metadata.has(metaKey)) {
-      MessageLog.trace(
-        '[registerAction] Action "' + actionId + '" is already registered (metadata). Skipping.',
-      );
-      return;
-    }
-  } catch (e) {
-    // No scene loaded — metadata is unavailable.  Actions can't persist
-    // across sessions anyway, so it's safe to proceed.
-    MessageLog.trace(
-      '[registerAction] Metadata unavailable (no scene?). Proceeding without guard.',
-    );
+  var actionKey = 'action: ' + actionId;
+  if (this.__proto__.registeredActions[actionKey]) {
+    MessageLog.trace('MeasureLineTool already registered (session): ' + actionKey);
+    return;
   }
+  this.__proto__.registeredActions[actionKey] = true;
 
   var action = {
     id: actionId,
@@ -253,13 +261,6 @@ function registerAction(options: RegisterActionOptions) {
     },
   };
   ScriptManager.addAction(action);
-
-  // Persist the registration so future reloads skip it
-  try {
-    SceneKit.metadata.set(metaKey, true);
-  } catch (e) {
-    // Metadata not available — fine, guard just won't persist
-  }
 
   if (options.shortcut) {
     var shortcut = {
@@ -285,19 +286,26 @@ function registerAction(options: RegisterActionOptions) {
       text: category.charAt(0).toUpperCase() + category.slice(1) + ' Toolbar',
       customizable: false,
     });
-
+    // Attach a dedup set so we never add the same button twice,
+    // even when registerAction is called repeatedly.
+    toolbar._buttonActions = toolbar._buttonActions || {};
     _toolbarRegistry[toolbarId] = toolbar;
   }
 
-  // Add button to the toolbar - DO NOT register yet
-  MessageLog.trace('Adding button: ' + options.name + ' to toolbar: ' + toolbarId);
-  _toolbarRegistry[toolbarId].addButton({
-    text: options.name,
-    icon: options.icon,
-    action: action.id,
-  });
+  // Guard against duplicate buttons on the same toolbar
+  if (_toolbarRegistry[toolbarId]._buttonActions[action.id]) {
+    MessageLog.trace('Button already on toolbar: ' + action.id + ' -> ' + toolbarId);
+  } else {
+    _toolbarRegistry[toolbarId]._buttonActions[action.id] = true;
+    MessageLog.trace('Adding button: ' + options.name + ' to toolbar: ' + toolbarId);
+    _toolbarRegistry[toolbarId].addButton({
+      text: options.name,
+      icon: options.icon,
+      action: action.id,
+    });
+  }
 
-  MessageLog.trace('Button added successfully. Call finalizeToolbars() to register.');
+  MessageLog.trace('Button added successfully. Call updateToolbars() to register.');
 }
 
 function main7() {
