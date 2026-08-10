@@ -12,7 +12,7 @@
  */
 
 namespace vectors {
-  Array = Array;
+  // Array = Array;
 
   type VectorInput = number | number[] | { x: number; y: number; z: number } | Vec3;
 

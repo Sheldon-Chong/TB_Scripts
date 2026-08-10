@@ -42,9 +42,9 @@ function showCameraSwipeToolPanel(options?: FloatingPanelOptions): QWidget {
   // registerCameraSwipeTool();
   // return;
   var opts: FloatingPanelOptions = {
-    title: 'Measure Line',
+    title: 'Camera Swipe Tool',
     width: 220,
-    buttonLabel: '📏 Measure Line',
+    buttonLabel: '📏 Camera Swipe',
     buttonColor: '#2196F3',
   };
   // Capture _ for use in Qt signal callbacks (QtScript context loses the _ global)

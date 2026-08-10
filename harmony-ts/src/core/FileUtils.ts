@@ -1,5 +1,7 @@
 // MessageLog.clearLog();
 
+// this.__proto__.PermanentFile = PermanentFile;
+
 function readFrom(file_path) {
   var file = new PermanentFile(file_path);
   if (file.open(1)) {

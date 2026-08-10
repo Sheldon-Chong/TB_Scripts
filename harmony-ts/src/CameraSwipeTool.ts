@@ -45,6 +45,9 @@ include(specialFolders.userScripts + '/KeyframeGenerator.js');
 this.__proto__.G.KeyframeGeneratorKit = KeyframeGeneratorKit;
 
 function activateApplyShakeTool() {
+  throw new Error('activateApplyShakeTool is disabled for now');
+
+  return;
   try {
     const selection = new G.oSelection();
     const camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
@@ -122,7 +125,7 @@ function register() {
 
     onMouseDown: function (ctx: any): boolean {
       try {
-        MessageLog.trace(new this._.Vec2(1).toString());
+        MessageLog.trace(new G.Vec2(1).toString());
         MessageLog.trace(`CameraSwipeTool: mouse down at ${JSON.stringify(ctx.currentPoint)}`);
         ctx.origin = ctx.currentPoint;
         return true;
@@ -154,17 +157,17 @@ function register() {
 
         var lineColor = ctx.shiftPressed ? this.COLORS.lineSnapped : this.COLORS.lineDefault;
 
-        var line = new this._.Shapes.Line({ start: start, end: end, color: lineColor });
+        var line = new G.Shapes.Line({ start: start, end: end, color: lineColor });
         overlayPaths.push({ path: line.toPath(), color: line.color });
 
         var dotRadius = 4;
-        var startDot = new this._.Shapes.Rectangle({
+        var startDot = new G.Shapes.Rectangle({
           center: start,
           width: dotRadius * 2,
           height: dotRadius * 2,
           color: { r: 255, g: 255, b: 255, a: 200 },
         });
-        var endDot = new this._.Shapes.Rectangle({
+        var endDot = new G.Shapes.Rectangle({
           center: end,
           width: dotRadius * 2,
           height: dotRadius * 2,
@@ -197,17 +200,17 @@ function register() {
         var angleDeg = Math.round((angleRad * 180) / Math.PI);
 
         if (dist > 2) {
-          var dirVec = new this._.Vec2(end).subtract(start).normalized();
+          var dirVec = new G.Vec2(end).subtract(start).normalized();
           var magnitude = dist / this.swipeScale;
 
-          var camPeg = this._.LayerManager.getNodeLayer(this.cameraPegPath) as oPegNode;
+          var camPeg = G.LayerManager.getNodeLayer(this.cameraPegPath) as oPegNode;
           if (!camPeg) {
             MessageLog.trace(
               `CameraSwipeTool: Camera peg '${this.cameraPegPath}' not found in scene.`,
             );
           } else {
             var pos = camPeg.position as oPathColumn3D;
-            var sel = new this._.oSelection();
+            var sel = new G.oSelection();
             var startFrame = sel.startFrame;
 
             if (this.options.snapToBoundary) {

@@ -84,6 +84,7 @@ class HarmonyGlobals {
   ColorCardNode = oColorCardNode;
   columnGroupingColor = columnGroupingColor;
   columnGrouping = columnGrouping;
+  PermanentFile = PermanentFile;
 }
 
 var _ = new HarmonyGlobals();
@@ -119,10 +120,10 @@ if (Object.keys(this.__proto__).indexOf('G') === -1) {
   this.__proto__.registeredTools = this.__proto__.registeredTools || {};
   this.__proto__.registeredActions = this.__proto__.registeredActions || {};
   this.__proto__.registeredToolbars = this.__proto__.registeredToolbars || {};
+  this.__proto__.PermanentFile = PermanentFile;
 
   this.__proto__.oColumn = oColumn;
   this.__proto__.oPathColumn3D = oPathColumn3D;
-  this.__proto__.PermanentFile = PermanentFile;
   this.__proto__.Vec2 = vectors.Vec2;
 
   var __extends =
