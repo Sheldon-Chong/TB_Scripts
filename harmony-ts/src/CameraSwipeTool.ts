@@ -70,72 +70,83 @@ function activateApplyZoomTool() {
 
 const MEASURE_LINE_TOOL_ID = 'com.toonboom.cameraSwipeTool';
 
-function register() {
-  var COLORS = {
-    lineDefault: { r: 0, g: 200, b: 255, a: 200 },
-    lineSnapped: { r: 0, g: 255, b: 0, a: 200 },
-  };
-
+function registerCameraSwipeTool() {
   var _cameraSwipeToolId: any = null;
 
-  // Capture user-defined globals that Harmony's C++ dispatcher can't see
-  _cameraSwipeToolId = SceneKit.registerTool({
-    _: G,
-    Shapes: Shapes,
-    Maths: Maths,
-    COLORS: COLORS,
+  // CameraSwipeTool — class for proper `this` intellisense.
+  // Compiled to ES5 prototype pattern; fully compatible with Harmony's QtScript runtime.
+  class CameraSwipeTool {
+    // Dependencies injected from register() scope
+    _: any;
+    Shapes: any;
+    Maths: any;
+    COLORS = {
+      lineDefault: { r: 0, g: 200, b: 255, a: 200 }, // cyan – idle drag
+      lineSnapped: { r: 255, g: 180, b: 0, a: 200 }, // amber – angle-locked
+      lineActive: { r: 0, g: 255, b: 0, a: 255 }, // green – will apply
+    };
 
-    name: MEASURE_LINE_TOOL_ID,
-    displayName: 'Camera Swipe Tool',
-    icon: 'MyTool.png',
-    toolType: 'drawing',
-    canBeOverridenBySelectOrTransformTool: false,
-    options: { snapToBoundary: true },
-    resourceFolder: 'resources',
-    defaultOptions: { snapToBoundary: true },
+    // Tool identity
+    name: string = MEASURE_LINE_TOOL_ID;
+    displayName: string = 'Camera Swipe Tool';
+    icon: string = 'MyTool.png';
+    toolType: string = 'drawing';
+    canBeOverridenBySelectOrTransformTool: boolean = false;
+    options: { snapToBoundary: boolean };
+    resourceFolder: string = 'resources';
+    defaultOptions: { snapToBoundary: boolean };
 
-    swipeScale: 80,
-    cameraPegPath: 'Top/Camera-P',
+    // Custom properties
+    swipeScale: number = 80;
+    cameraPegPath: string = 'Top/Camera-P';
+    ui: { snapCheckbox: any } | undefined;
 
-    preferenceName: function () {
+    constructor(deps: { _: any; Shapes: any; Maths: any }) {
+      this._ = deps._;
+      this.Shapes = deps.Shapes;
+      this.Maths = deps.Maths;
+      this.options = { snapToBoundary: true };
+      this.defaultOptions = { snapToBoundary: true };
+    }
+
+    preferenceName(): string {
       return `${this.name}.settings`;
-    },
+    }
 
-    loadFromPreferences: function () {
+    loadFromPreferences(): void {
       try {
         var v = preferences.getString(this.preferenceName(), JSON.stringify(this.defaultOptions));
         this.options = JSON.parse(v);
       } catch (e) {
         this.options = this.defaultOptions;
       }
-    },
+    }
 
-    storeToPreferences: function () {
+    storeToPreferences(): void {
       preferences.setString(this.preferenceName(), JSON.stringify(this.options));
-    },
+    }
 
-    onRegister: function () {
+    onRegister(): void {
       MessageLog.trace('Registered tool: CameraSwipeTool');
       this.loadFromPreferences();
-    },
+    }
 
-    onCreate: function (ctx: any) {
+    onCreate(ctx: any): void {
       ctx.origin = null;
-    },
+    }
 
-    onMouseDown: function (ctx: any): boolean {
+    onMouseDown(ctx: any): boolean {
       try {
         MessageLog.trace(new G.Vec2(1).toString());
-        MessageLog.trace(`CameraSwipeTool: mouse down at ${JSON.stringify(ctx.currentPoint)}`);
         ctx.origin = ctx.currentPoint;
         return true;
       } catch (e) {
         MessageLog.trace(`CameraSwipeTool onMouseDown error: ${e.toString()}`);
         return false;
       }
-    },
+    }
 
-    onMouseMove: function (ctx: any): boolean {
+    onMouseMove(ctx: any): boolean {
       if (!ctx.origin) return true;
 
       try {
@@ -143,41 +154,86 @@ function register() {
         var start = ctx.origin;
         var end = ctx.currentPoint;
 
+        // Compute zoom scale BEFORE shift-snap, using the original end point
+        // (after snap, end is a Vec2 without screenX/screenY).
+        var rawDiff = new G.Vec2(end).subtract(start);
+        var rawFieldDist = rawDiff.length();
+        var screenDist = new G.Vec2(end.screenX, end.screenY)
+          .subtract(new G.Vec2(start.screenX, start.screenY))
+          .length();
+        var pxPerFieldUnit = rawFieldDist > 0.001 ? screenDist / rawFieldDist : 1;
+
         if (ctx.shiftPressed) {
-          var dx = end.x - start.x;
-          var dy = end.y - start.y;
-          var angle = Math.atan2(dy, dx);
-          var snapAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          end = {
-            x: start.x + Math.cos(snapAngle) * dist,
-            y: start.y + Math.sin(snapAngle) * dist,
-          };
+          var angle = Math.atan2(rawDiff.y, rawDiff.x);
+          var dist = rawDiff.length();
+
+          // Snap to 16:9 aspect-ratio angles (1920×1080)
+          var diag = Math.atan2(9, 16);
+          var snapAngles = [
+            0,
+            diag,
+            Math.PI / 2,
+            Math.PI - diag,
+            Math.PI,
+            Math.PI + diag,
+            (3 * Math.PI) / 2,
+            2 * Math.PI - diag,
+          ];
+
+          var best = snapAngles[0];
+          var bestDiff = Infinity;
+          for (var i = 0; i < snapAngles.length; i++) {
+            var d = Math.abs(angle - snapAngles[i]);
+            var wrapD = Math.abs(angle - (snapAngles[i] - 2 * Math.PI));
+            if (wrapD < d) d = wrapD;
+            wrapD = Math.abs(angle - (snapAngles[i] + 2 * Math.PI));
+            if (wrapD < d) d = wrapD;
+            if (d < bestDiff) {
+              bestDiff = d;
+              best = snapAngles[i];
+            }
+          }
+          var snapAngle = best;
+
+          end = new G.Vec2(start).add(
+            new G.Vec2(Math.cos(snapAngle), Math.sin(snapAngle)).scale(dist),
+          );
         }
 
-        var lineColor = ctx.shiftPressed ? this.COLORS.lineSnapped : this.COLORS.lineDefault;
+        // Derive field distance from the (possibly snapped) end point.
+        var fieldVec = new G.Vec2(end).subtract(start);
+        var fieldDist = fieldVec.length();
+        var isActive = fieldDist > 2;
 
-        var line = new G.Shapes.Line({ start: start, end: end, color: lineColor });
+        // Green when active, blue/cyan otherwise (snapped or default)
+        var lineColor = isActive
+          ? this.COLORS.lineActive
+          : ctx.shiftPressed
+            ? this.COLORS.lineSnapped
+            : this.COLORS.lineDefault;
+        var dotColor = isActive ? this.COLORS.lineActive : this.COLORS.lineDefault;
+
+        var line = new G.Shapes.Line({ start, end, color: lineColor });
         overlayPaths.push({ path: line.toPath(), color: line.color });
 
-        var dotRadius = 4;
+        var screenDotRadius = 6; // desired radius in screen pixels
+        var dotRadius = screenDotRadius / pxPerFieldUnit;
+        var dot = new G.Vec2(dotRadius * 2).toWidthHeight();
+
         var startDot = new G.Shapes.Rectangle({
           center: start,
-          width: dotRadius * 2,
-          height: dotRadius * 2,
-          color: { r: 255, g: 255, b: 255, a: 200 },
+          ...dot,
         });
         var endDot = new G.Shapes.Rectangle({
           center: end,
-          width: dotRadius * 2,
-          height: dotRadius * 2,
-          color: { r: 0, g: 200, b: 255, a: 200 },
+          ...dot,
         });
-        overlayPaths.push({ path: startDot.toPath(), color: startDot.color });
-        overlayPaths.push({ path: endDot.toPath(), color: endDot.color });
+        var startDotColor = isActive ? this.COLORS.lineActive : this.COLORS.lineDefault;
+        overlayPaths.push({ path: startDot.toPath(), color: startDotColor });
+        overlayPaths.push({ path: endDot.toPath(), color: dotColor });
 
-        ctx.lastDistance = this.Maths.distance2d(start, end);
-        ctx.lastAngle = Math.atan2(end.y - start.y, end.x - start.x);
+        ctx.lastDistance = fieldDist;
+        ctx.lastAngle = Math.atan2(fieldVec.y, fieldVec.x);
 
         ctx.overlay = { paths: overlayPaths };
       } catch (e) {
@@ -187,9 +243,9 @@ function register() {
       }
 
       return true;
-    },
+    }
 
-    onMouseUp: function (ctx: any): boolean {
+    onMouseUp(ctx: any): boolean {
       if (!ctx.origin) return true;
 
       try {
@@ -238,16 +294,16 @@ function register() {
       ctx.overlay = {};
 
       return true;
-    },
+    }
 
-    onResetTool: function (ctx: any) {
+    onResetTool(ctx: any): void {
       ctx.origin = null;
       ctx.lastDistance = null;
       ctx.lastAngle = null;
       ctx.overlay = {};
-    },
+    }
 
-    showMeasureToast: function (labelText: string, duration: number) {
+    showMeasureToast(labelText: string, duration: number): void {
       var toast = new QWidget();
       toast.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.ToolTip);
 
@@ -276,9 +332,9 @@ function register() {
         toast.close();
       });
       timer.start(duration || 1500);
-    },
+    }
 
-    loadPanel: function (dialog: any, responder: any) {
+    loadPanel(dialog: any, responder: any): void {
       try {
         var snapCheckbox = new QCheckBox('Snap to nearest boundary (every 32 frames)');
         snapCheckbox.setChecked(this.options.snapToBoundary);
@@ -297,9 +353,9 @@ function register() {
       } catch (e) {
         MessageLog.trace('CameraSwipeTool loadPanel error: ' + e.toString());
       }
-    },
+    }
 
-    refreshPanel: function (dialog: any, responder: any) {
+    refreshPanel(dialog: any, responder: any): void {
       try {
         var ui = this.ui;
         if (ui && ui.snapCheckbox) {
@@ -308,8 +364,13 @@ function register() {
       } catch (e) {
         MessageLog.trace(`CameraSwipeTool refreshPanel error: ${e.toString()}`);
       }
-    },
-  });
+    }
+  }
+
+  // Capture user-defined globals that Harmony's C++ dispatcher can't see
+  _cameraSwipeToolId = SceneKit.registerTool(
+    new CameraSwipeTool({ _: G, Shapes: Shapes, Maths: Maths }),
+  );
 
   registerAction({
     name: 'Camera Swipe Tool',

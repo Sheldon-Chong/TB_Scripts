@@ -396,6 +396,10 @@ namespace TimelineKit {
     return layers;
   }
 
+  export function setFrame(number: number) {
+    frame.setCurrent(number);
+  }
+
   export function getSceneMetadata(key, type) {
     try {
       var meta = scene.metadata(key, type);

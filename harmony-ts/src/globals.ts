@@ -91,10 +91,6 @@ var _ = new HarmonyGlobals();
 
 var G: HarmonyGlobals = _;
 
-// MessageLog.trace(
-//   '>>>>>' + JSON.stringify(Object.keys(this.__proto__).indexOf('G') !== -1, null, 2),
-// );
-
 var __assign =
   (this && this.__assign) ||
   function (target) {
@@ -125,6 +121,8 @@ if (Object.keys(this.__proto__).indexOf('G') === -1) {
   this.__proto__.oColumn = oColumn;
   this.__proto__.oPathColumn3D = oPathColumn3D;
   this.__proto__.Vec2 = vectors.Vec2;
+  this.__proto__.Vec3 = vectors.Vec3;
+  this.__proto__.vectors = vectors;
 
   var __extends =
     (this && this.__extends) ||
