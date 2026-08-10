@@ -18,6 +18,94 @@ _.FrameSnapping = FrameSnapping;
 // accessible through the normal scope chain.
 //////////////////////////////////////////////////////////
 
+function generateShake(
+  column: oPathColumn3D,
+  startFrame: number,
+  endFrame: number,
+  initialShakeAmount: number,
+  decayExponent: number,
+) {
+  MessageLog.trace(
+    'testing generateShake with column: ' +
+      column.toString() +
+      ', startFrame: ' +
+      startFrame +
+      ', endFrame: ' +
+      endFrame +
+      ', initialShakeAmount: ' +
+      initialShakeAmount +
+      ', decayExponent: ' +
+      decayExponent,
+  );
+  const totalFrames = endFrame - startFrame;
+  const minStepRatio = 0.7;
+
+  let prev = new Vec2(0, 0);
+
+  for (let i = startFrame; i <= endFrame; i++) {
+    const progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
+    const remainingRatio = 1 - progress;
+    const currentShakeAmount = initialShakeAmount * Math.pow(remainingRatio, decayExponent);
+
+    let current: Vec2;
+
+    if (currentShakeAmount > 0.001) {
+      const minDistSq = Math.pow(currentShakeAmount * minStepRatio, 2);
+      let attempts = 0;
+
+      do {
+        current = new Vec2(Math.random(), Math.random())
+          .subtract(0.5)
+          .scale(2 * currentShakeAmount);
+        attempts++;
+      } while (attempts < 15 && current.distanceToSquared(prev) < minDistSq);
+    } else {
+      current = new Vec2(0, 0);
+    }
+
+    prev = current;
+    column.setPosition(i, current.toVec3(), 0, 0, 0);
+  }
+}
+
+function testShake() {
+  scene.beginUndoRedoAccum('Shake Camera');
+
+  const selection = new G.oSelection();
+
+  const camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
+  const pos = camPeg.position as oPathColumn3D;
+
+  generateShake(pos, selection.startFrame, selection.endFrame, 10, 3);
+
+  scene.endUndoRedoAccum();
+}
+
+function activateMeasureLineTool() {
+  try {
+    MessageLog.trace('MeasureLineTool action triggered');
+    Tools.setCurrentTool('com.toonboom.measureLineTool');
+  } catch (e) {
+    MessageLog.trace(`error: ${e.toString()} | stack: ${e.stack || 'none'}`);
+  }
+}
+
+function activateApplyShakeTool() {
+  try {
+    MessageLog.trace('Apply Shake action triggered');
+  } catch (e) {
+    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
+  }
+}
+
+function activateApplyZoomTool() {
+  try {
+    MessageLog.trace('Apply Zoom action triggered');
+  } catch (e) {
+    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
+  }
+}
+
 const MEASURE_LINE_TOOL_ID = 'com.toonboom.measureLineTool';
 
 function register() {
@@ -48,7 +136,7 @@ function register() {
     cameraPegPath: 'Top/Camera-P',
 
     preferenceName: function () {
-      return this.name + '.settings';
+      return `${this.name}.settings`;
     },
 
     loadFromPreferences: function () {
@@ -76,11 +164,11 @@ function register() {
     onMouseDown: function (ctx: any): boolean {
       try {
         MessageLog.trace(new this._.Vec2(1).toString());
-        MessageLog.trace('MeasureLineTool: mouse down at ' + JSON.stringify(ctx.currentPoint));
+        MessageLog.trace(`MeasureLineTool: mouse down at ${JSON.stringify(ctx.currentPoint)}`);
         ctx.origin = ctx.currentPoint;
         return true;
       } catch (e) {
-        MessageLog.trace('MeasureLineTool onMouseDown error: ' + e.toString());
+        MessageLog.trace(`MeasureLineTool onMouseDown error: ${e.toString()}`);
         return false;
       }
     },
@@ -131,7 +219,7 @@ function register() {
 
         ctx.overlay = { paths: overlayPaths };
       } catch (e) {
-        MessageLog.trace('MeasureLineTool onMouseMove error: ' + e.toString());
+        MessageLog.trace(`MeasureLineTool onMouseMove error: ${e.toString()}`);
         MessageLog.trace(e.stack);
         MessageLog.trace(JSON.stringify(e));
       }
@@ -156,7 +244,7 @@ function register() {
           var camPeg = this._.LayerManager.getNodeLayer(this.cameraPegPath) as oPegNode;
           if (!camPeg) {
             MessageLog.trace(
-              "MeasureLineTool: Camera peg '" + this.cameraPegPath + "' not found in scene.",
+              `MeasureLineTool: Camera peg '${this.cameraPegPath}' not found in scene.`,
             );
           } else {
             var pos = camPeg.position as oPathColumn3D;
@@ -171,19 +259,13 @@ function register() {
             this._.CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
             scene.endUndoRedoAccum();
 
-            var msg =
-              'Swipe: ' +
-              Math.round(dist) +
-              'px @ ' +
-              angleDeg +
-              '\u00B0  |  mag: ' +
-              magnitude.toFixed(2);
-            MessageLog.trace('MeasureLineTool: ' + msg);
+            var msg = `Swipe: ${Math.round(dist)}px @ ${angleDeg}\u00B0  |  mag: ${magnitude.toFixed(2)}`;
+            MessageLog.trace(`MeasureLineTool: ${msg}`);
             this.showMeasureToast(msg, 1500);
           }
         }
       } catch (e) {
-        MessageLog.trace('MeasureLineTool onMouseUp error: ' + e.toString());
+        MessageLog.trace(`MeasureLineTool onMouseUp error: ${e.toString()}`);
         MessageLog.trace(e.stack);
         MessageLog.trace(JSON.stringify(e));
       }
@@ -262,29 +344,10 @@ function register() {
           ui.snapCheckbox.setChecked(this.options.snapToBoundary);
         }
       } catch (e) {
-        MessageLog.trace('MeasureLineTool refreshPanel error: ' + e.toString());
+        MessageLog.trace(`MeasureLineTool refreshPanel error: ${e.toString()}`);
       }
     },
   });
-
-  //////////////////////////////////////////////////////////
-  // Post-registration setup
-  //////////////////////////////////////////////////////////
-
-  // Expose on global _ namespace so other scripts (e.g. floating panel) can access it
-  // (_ as any)._measureLineToolId = MEASURE_LINE_TOOL_ID;
-
-  // Register a keyboard shortcut so the tool can be re-activated
-  // NOTE: Must be a named function declaration (not var/const assignment)
-  // for Harmony's registerAction callback resolution to work reliably.
-  function activateMeasureLineTool() {
-    try {
-      MessageLog.trace('MeasureLineTool action triggered');
-      Tools.setCurrentTool('com.toonboom.measureLineTool');
-    } catch (e) {
-      MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
-    }
-  }
 
   registerAction({
     name: 'Measure Line Tool',
@@ -294,9 +357,16 @@ function register() {
     category: 'custom',
   });
   registerAction({
-    name: 'Measure Line Tool 2',
+    name: 'Apply shake',
     icon: 'earth.png',
-    callback: activateMeasureLineTool,
+    callback: activateApplyShakeTool,
+    shortcut: 'Ctrl+Alt+M',
+    category: 'custom',
+  });
+  registerAction({
+    name: 'Apply Zoom',
+    icon: 'earth.png',
+    callback: activateApplyZoomTool,
     shortcut: 'Ctrl+Alt+M',
     category: 'custom',
   });
@@ -316,6 +386,6 @@ function evaluateAndRunMeasureLineTool() {
     MessageLog.trace('MeasureLineTool evaluateAndRun triggered');
     Tools.setCurrentTool(MEASURE_LINE_TOOL_ID);
   } catch (e) {
-    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
+    MessageLog.trace(`error: ${e.toString()} | stack: ${e.stack || 'none'}`);
   }
 }

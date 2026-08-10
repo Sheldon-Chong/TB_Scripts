@@ -51,41 +51,41 @@ include(specialFolders.userScripts + '/core/Toolbar.js');
 // scopes that interact badly with QtScript's GC — when Qt widget wrappers are
 // created (e.g. in MeasureLineToolPanel), the GC can corrupt built-in globals like
 // Array, causing crashes or "Array is undefined" errors.
-function HarmonyGlobals() {
-  this.Shapes = Shapes;
-  this.Math = Maths;
-  this.Vec2 = vectors.Vec2;
-  this.Vec3 = vectors.Vec3;
-  this.Transformations = Transformations;
-  this.DrawingView = DrawingView;
-  this.TimelineKit = TimelineKit;
-  this.Utils = Utils;
-  this.ColorUtils = ColorUtils;
-  this.Vectors = vectors;
-  this.Scene = SceneKit;
+class HarmonyGlobals {
+  Shapes = Shapes;
+  Math = Maths;
+  Vec2 = vectors.Vec2;
+  Vec3 = vectors.Vec3;
+  Transformations = Transformations;
+  DrawingView = DrawingView;
+  TimelineKit = TimelineKit;
+  Utils = Utils;
+  ColorUtils = ColorUtils;
+  Vectors = vectors;
+  Scene = SceneKit;
 
-  // Widgets = Widgets;
-  this.LayerManager = LayerManager;
-  this.FileUtils = ReadWriteOperations;
-  this.Frame = Frame;
-  this.oSelection = oSelection;
-  this.ColorObj = ColorObj;
-  this.oElement = oElement;
-  this.Renderer = Renderer;
-  this.DrawingDataUtils = DrawingDataUtils;
-  this.Cell = Cell;
-  this.DrawingCell = DrawingCell;
-  this.Column = oColumn;
-  this.PathColumn3D = oPathColumn3D;
-  this.Palettes = GlobalPalettes;
-  this.objDrawing = objDrawing;
-  this.objElement = objElement;
-  this.oDrawingLayer = oDrawingNode;
-  this.ColorCardNode = oColorCardNode;
-  this.columnGroupingColor = columnGroupingColor;
-  this.columnGrouping = columnGrouping;
+  // dgets = Widgets;
+  LayerManager = LayerManager;
+  FileUtils = ReadWriteOperations;
+  Frame = Frame;
+  oSelection = oSelection;
+  ColorObj = ColorObj;
+  oElement = oElement;
+  Renderer = Renderer;
+  DrawingDataUtils = DrawingDataUtils;
+  Cell = Cell;
+  DrawingCell = DrawingCell;
+  Column = oColumn;
+  PathColumn3D = oPathColumn3D;
+  Palettes = GlobalPalettes;
+  objDrawing = objDrawing;
+  objElement = objElement;
+  oDrawingLayer = oDrawingNode;
+  ColorCardNode = oColorCardNode;
+  columnGroupingColor = columnGroupingColor;
+  columnGrouping = columnGrouping;
 
-  this.assign = function (target, source) {
+  assign = function (target, source) {
     if (!target || !source) return target;
     for (var key in source) {
       if (Object.prototype.hasOwnProperty.call(source, key)) {
