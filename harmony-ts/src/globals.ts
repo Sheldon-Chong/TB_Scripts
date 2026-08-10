@@ -49,7 +49,7 @@ include(specialFolders.userScripts + '/core/Toolbar.js');
 // IMPORTANT: Using a plain function constructor (NOT a TypeScript class) to avoid
 // the IIFE wrapper that TS emits for classes targeting ES5.  IIFEs create closure
 // scopes that interact badly with QtScript's GC — when Qt widget wrappers are
-// created (e.g. in MeasureLineToolPanel), the GC can corrupt built-in globals like
+// created (e.g. in CameraSwipeToolPanel), the GC can corrupt built-in globals like
 // Array, causing crashes or "Array is undefined" errors.
 class HarmonyGlobals {
   Shapes = Shapes;
@@ -84,16 +84,6 @@ class HarmonyGlobals {
   ColorCardNode = oColorCardNode;
   columnGroupingColor = columnGroupingColor;
   columnGrouping = columnGrouping;
-
-  assign = function (target, source) {
-    if (!target || !source) return target;
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-    return target;
-  };
 }
 
 var _ = new HarmonyGlobals();
@@ -103,6 +93,23 @@ var G: HarmonyGlobals = _;
 // MessageLog.trace(
 //   '>>>>>' + JSON.stringify(Object.keys(this.__proto__).indexOf('G') !== -1, null, 2),
 // );
+
+var __assign =
+  (this && this.__assign) ||
+  function (target) {
+    for (var source, i = 1, n = arguments.length; i < n; i++) {
+      source = arguments[i];
+      for (var prop in source) {
+        if (Object.prototype.hasOwnProperty.call(source, prop)) {
+          target[prop] = source[prop];
+        }
+      }
+    }
+    return target;
+  };
+
+this.__proto__.__assign = __assign;
+this.__proto__.Array = Array;
 
 if (Object.keys(this.__proto__).indexOf('G') === -1) {
   this.__proto__.G = _;
@@ -116,7 +123,7 @@ if (Object.keys(this.__proto__).indexOf('G') === -1) {
   this.__proto__.oColumn = oColumn;
   this.__proto__.oPathColumn3D = oPathColumn3D;
   this.__proto__.PermanentFile = PermanentFile;
-  this.__proto__.Array = Array;
+  this.__proto__.Vec2 = vectors.Vec2;
 
   var __extends =
     (this && this.__extends) ||

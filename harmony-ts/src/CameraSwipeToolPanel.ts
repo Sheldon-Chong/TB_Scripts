@@ -13,13 +13,13 @@
 
 //////////////////////////////////////////////////////////
 // Floating panel — a persistent, stay-on-top window with
-// a single button that activates the MeasureLineTool.
+// a single button that activates the CameraSwipeTool.
 //////////////////////////////////////////////////////////
 
 // process.exit(0);
 // include('globals.js');
 
-// include('MeasureLineTool.js');
+// include('CameraSwipeTool.js');
 include('globals.js');
 
 interface FloatingPanelOptions {
@@ -37,9 +37,9 @@ interface FloatingPanelOptions {
   y?: number;
 }
 
-function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
-  // evaluateAndRunMeasureLineTool();
-  // registerMeasureLineTool();
+function showCameraSwipeToolPanel(options?: FloatingPanelOptions): QWidget {
+  // evaluateAndRunCameraSwipeTool();
+  // registerCameraSwipeTool();
   // return;
   var opts: FloatingPanelOptions = {
     title: 'Measure Line',
@@ -153,7 +153,7 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
   // CRITICAL: Keep all Qt widget wrappers alive by storing them on the panel.
   // If local vars go out of scope and GC collects the JS wrappers while the
   // C++ Qt objects still exist, QtScript's GC corrupts built-in globals like
-  // Array, breaking ALL other loaded scripts (e.g. MeasureLineTool).
+  // Array, breaking ALL other loaded scripts (e.g. CameraSwipeTool).
   (panel as any)._widgets = {
     mainLayout: mainLayout,
     headerLabel: headerLabel,
@@ -165,5 +165,5 @@ function showMeasureLinePanel(options?: FloatingPanelOptions): QWidget {
 }
 
 function run() {
-  showMeasureLinePanel();
+  showCameraSwipeToolPanel();
 }

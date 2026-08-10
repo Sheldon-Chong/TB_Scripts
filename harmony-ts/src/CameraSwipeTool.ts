@@ -3,8 +3,8 @@
 include('globals.js');
 include('KeyframeProfiles.js');
 include(specialFolders.userScripts + '/FrameSnapping.js');
-_.CameraSwipe = CameraSwipe;
-_.FrameSnapping = FrameSnapping;
+this.__proto__.G.CameraSwipe = CameraSwipe;
+this.__proto__.G.FrameSnapping = FrameSnapping;
 // G.FrameSnapping = FrameSnapping;
 
 // Qt globals provided by Harmony's QtScript runtime
@@ -12,86 +12,45 @@ _.FrameSnapping = FrameSnapping;
 // declare var QTimer: any;
 
 //////////////////////////////////////////////////////////
-// MeasureLineTool — plain object literal, registered
+// CameraSwipeTool — plain object literal, registered
 // directly with Tools.registerTool().  No class, no IIFE,
 // so all globals (Math, _, scene, MessageLog, etc.) are
 // accessible through the normal scope chain.
 //////////////////////////////////////////////////////////
 
-function generateShake(
-  column: oPathColumn3D,
-  startFrame: number,
-  endFrame: number,
-  initialShakeAmount: number,
-  decayExponent: number,
-) {
-  MessageLog.trace(
-    'testing generateShake with column: ' +
-      column.toString() +
-      ', startFrame: ' +
-      startFrame +
-      ', endFrame: ' +
-      endFrame +
-      ', initialShakeAmount: ' +
-      initialShakeAmount +
-      ', decayExponent: ' +
-      decayExponent,
-  );
-  const totalFrames = endFrame - startFrame;
-  const minStepRatio = 0.7;
+// function testShake() {
+//   scene.beginUndoRedoAccum('Shake Camera');
 
-  let prev = new Vec2(0, 0);
+//   const selection = new G.oSelection();
 
-  for (let i = startFrame; i <= endFrame; i++) {
-    const progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
-    const remainingRatio = 1 - progress;
-    const currentShakeAmount = initialShakeAmount * Math.pow(remainingRatio, decayExponent);
+//   const camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
+//   const pos = camPeg.position as oPathColumn3D;
 
-    let current: Vec2;
+//   generateShake(pos, selection.startFrame, selection.endFrame, 10, 3);
 
-    if (currentShakeAmount > 0.001) {
-      const minDistSq = Math.pow(currentShakeAmount * minStepRatio, 2);
-      let attempts = 0;
+//   scene.endUndoRedoAccum();
+// }
 
-      do {
-        current = new Vec2(Math.random(), Math.random())
-          .subtract(0.5)
-          .scale(2 * currentShakeAmount);
-        attempts++;
-      } while (attempts < 15 && current.distanceToSquared(prev) < minDistSq);
-    } else {
-      current = new Vec2(0, 0);
-    }
-
-    prev = current;
-    column.setPosition(i, current.toVec3(), 0, 0, 0);
-  }
-}
-
-function testShake() {
-  scene.beginUndoRedoAccum('Shake Camera');
-
-  const selection = new G.oSelection();
-
-  const camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
-  const pos = camPeg.position as oPathColumn3D;
-
-  generateShake(pos, selection.startFrame, selection.endFrame, 10, 3);
-
-  scene.endUndoRedoAccum();
-}
-
-function activateMeasureLineTool() {
+function activateCameraSwipeTool() {
   try {
-    MessageLog.trace('MeasureLineTool action triggered');
-    Tools.setCurrentTool('com.toonboom.measureLineTool');
+    MessageLog.trace('CameraSwipeTool action triggered');
+    Tools.setCurrentTool('com.toonboom.cameraSwipeTool');
   } catch (e) {
     MessageLog.trace(`error: ${e.toString()} | stack: ${e.stack || 'none'}`);
   }
 }
 
+include(specialFolders.userScripts + '/KeyframeGenerator.js');
+
+this.__proto__.G.KeyframeGeneratorKit = KeyframeGeneratorKit;
+
 function activateApplyShakeTool() {
   try {
+    const selection = new G.oSelection();
+    const camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
+    const pos = camPeg.position as oPathColumn3D;
+
+    G.KeyframeGeneratorKit.generateShake(pos, selection.startFrame, selection.endFrame, 10, 3);
     MessageLog.trace('Apply Shake action triggered');
   } catch (e) {
     MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
@@ -106,7 +65,7 @@ function activateApplyZoomTool() {
   }
 }
 
-const MEASURE_LINE_TOOL_ID = 'com.toonboom.measureLineTool';
+const MEASURE_LINE_TOOL_ID = 'com.toonboom.cameraSwipeTool';
 
 function register() {
   var COLORS = {
@@ -114,17 +73,17 @@ function register() {
     lineSnapped: { r: 0, g: 255, b: 0, a: 200 },
   };
 
-  var _measureLineToolId: any = null;
+  var _cameraSwipeToolId: any = null;
 
   // Capture user-defined globals that Harmony's C++ dispatcher can't see
-  _measureLineToolId = SceneKit.registerTool({
-    _: _,
+  _cameraSwipeToolId = SceneKit.registerTool({
+    _: G,
     Shapes: Shapes,
     Maths: Maths,
     COLORS: COLORS,
 
     name: MEASURE_LINE_TOOL_ID,
-    displayName: 'Measure Line Tool',
+    displayName: 'Camera Swipe Tool',
     icon: 'MyTool.png',
     toolType: 'drawing',
     canBeOverridenBySelectOrTransformTool: false,
@@ -153,7 +112,7 @@ function register() {
     },
 
     onRegister: function () {
-      MessageLog.trace('Registered tool: MeasureLineTool');
+      MessageLog.trace('Registered tool: CameraSwipeTool');
       this.loadFromPreferences();
     },
 
@@ -164,11 +123,11 @@ function register() {
     onMouseDown: function (ctx: any): boolean {
       try {
         MessageLog.trace(new this._.Vec2(1).toString());
-        MessageLog.trace(`MeasureLineTool: mouse down at ${JSON.stringify(ctx.currentPoint)}`);
+        MessageLog.trace(`CameraSwipeTool: mouse down at ${JSON.stringify(ctx.currentPoint)}`);
         ctx.origin = ctx.currentPoint;
         return true;
       } catch (e) {
-        MessageLog.trace(`MeasureLineTool onMouseDown error: ${e.toString()}`);
+        MessageLog.trace(`CameraSwipeTool onMouseDown error: ${e.toString()}`);
         return false;
       }
     },
@@ -219,7 +178,7 @@ function register() {
 
         ctx.overlay = { paths: overlayPaths };
       } catch (e) {
-        MessageLog.trace(`MeasureLineTool onMouseMove error: ${e.toString()}`);
+        MessageLog.trace(`CameraSwipeTool onMouseMove error: ${e.toString()}`);
         MessageLog.trace(e.stack);
         MessageLog.trace(JSON.stringify(e));
       }
@@ -244,7 +203,7 @@ function register() {
           var camPeg = this._.LayerManager.getNodeLayer(this.cameraPegPath) as oPegNode;
           if (!camPeg) {
             MessageLog.trace(
-              `MeasureLineTool: Camera peg '${this.cameraPegPath}' not found in scene.`,
+              `CameraSwipeTool: Camera peg '${this.cameraPegPath}' not found in scene.`,
             );
           } else {
             var pos = camPeg.position as oPathColumn3D;
@@ -252,20 +211,20 @@ function register() {
             var startFrame = sel.startFrame;
 
             if (this.options.snapToBoundary) {
-              startFrame = this._.FrameSnapping.getNearestBoundaryFrame(startFrame) - 1;
+              startFrame = G.FrameSnapping.getNearestBoundaryFrame(startFrame) - 1;
             }
 
             scene.beginUndoRedoAccum('Camera Swipe');
-            this._.CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
+            G.CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
             scene.endUndoRedoAccum();
 
             var msg = `Swipe: ${Math.round(dist)}px @ ${angleDeg}\u00B0  |  mag: ${magnitude.toFixed(2)}`;
-            MessageLog.trace(`MeasureLineTool: ${msg}`);
+            MessageLog.trace(`CameraSwipeTool: ${msg}`);
             this.showMeasureToast(msg, 1500);
           }
         }
       } catch (e) {
-        MessageLog.trace(`MeasureLineTool onMouseUp error: ${e.toString()}`);
+        MessageLog.trace(`CameraSwipeTool onMouseUp error: ${e.toString()}`);
         MessageLog.trace(e.stack);
         MessageLog.trace(JSON.stringify(e));
       }
@@ -333,7 +292,7 @@ function register() {
 
         this.ui = { snapCheckbox: snapCheckbox };
       } catch (e) {
-        MessageLog.trace('MeasureLineTool loadPanel error: ' + e.toString());
+        MessageLog.trace('CameraSwipeTool loadPanel error: ' + e.toString());
       }
     },
 
@@ -344,15 +303,15 @@ function register() {
           ui.snapCheckbox.setChecked(this.options.snapToBoundary);
         }
       } catch (e) {
-        MessageLog.trace(`MeasureLineTool refreshPanel error: ${e.toString()}`);
+        MessageLog.trace(`CameraSwipeTool refreshPanel error: ${e.toString()}`);
       }
     },
   });
 
   registerAction({
-    name: 'Measure Line Tool',
+    name: 'Camera Swipe Tool',
     icon: 'earth.png',
-    callback: activateMeasureLineTool,
+    callback: activateCameraSwipeTool,
     shortcut: 'Ctrl+Alt+M',
     category: 'custom',
   });
@@ -374,16 +333,16 @@ function register() {
   updateToolbars();
   // Tools.setCurrentTool(MEASURE_LINE_TOOL_ID);
 
-  MessageLog.trace('MeasureLineTool evaluateAndRun triggered');
+  MessageLog.trace('CameraSwipeTool evaluateAndRun triggered');
 }
 //////////////////////////////////////////////////////////
 // evalData — called by buttonlist.xml on button click.
 // Tool is already registered; just activate it.
 //////////////////////////////////////////////////////////
 
-function evaluateAndRunMeasureLineTool() {
+function evaluateAndRunCameraSwipeTool() {
   try {
-    MessageLog.trace('MeasureLineTool evaluateAndRun triggered');
+    MessageLog.trace('CameraSwipeTool evaluateAndRun triggered');
     Tools.setCurrentTool(MEASURE_LINE_TOOL_ID);
   } catch (e) {
     MessageLog.trace(`error: ${e.toString()} | stack: ${e.stack || 'none'}`);

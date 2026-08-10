@@ -245,7 +245,7 @@ function registerAction(options: RegisterActionOptions) {
 
   var actionKey = 'action: ' + actionId;
   if (this.__proto__.registeredActions[actionKey]) {
-    MessageLog.trace('MeasureLineTool already registered (session): ' + actionKey);
+    MessageLog.trace('CameraSwipeTool already registered (session): ' + actionKey);
     return;
   }
   this.__proto__.registeredActions[actionKey] = true;

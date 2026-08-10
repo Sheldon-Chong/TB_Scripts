@@ -68,6 +68,18 @@ function copypasteTest() {
 }
 
 function run10() {
+  const obj1 = {
+    name: 'Object 1',
+  };
+
+  const obj2 = {
+    name2: 'Object 2',
+  };
+
+  const objCombined = { ...obj1, ...obj2 };
+  MessageLog.trace('[spoil.ts] ' + JSON.stringify(objCombined, null, 2));
+
+  return;
   // copyPaste.usePasteSpecial(true);
   // copyPaste.setPasteSpecialDrawingFileMode('ALWAYS_CREATE');
 
@@ -157,7 +169,7 @@ function run10() {
   // });
   activateBtn.clicked.connect(() => {
     MessageLog.trace('Activate button clicked');
-    Tools.setCurrentTool('com.toonboom.measureLineTool');
+    Tools.setCurrentTool('com.toonboom.cameraSwipeTool');
   });
   // --- Close button ---
   var closeBtn = _.Utils.styledButton({
@@ -191,7 +203,7 @@ function run10() {
   // CRITICAL: Keep all Qt widget wrappers alive by storing them on the panel.
   // If local vars go out of scope and GC collects the JS wrappers while the
   // C++ Qt objects still exist, QtScript's GC corrupts built-in globals like
-  // Array, breaking ALL other loaded scripts (e.g. MeasureLineTool).
+  // Array, breaking ALL other loaded scripts (e.g. CameraSwipeTool).
   (panel as any)._widgets = {
     mainLayout: mainLayout,
     headerLabel: headerLabel,
