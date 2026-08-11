@@ -72,4 +72,114 @@ namespace KeyframeGeneratorKit {
       column.setPosition(i, new Vec3(current.x, current.y, 0), 0, 0, 0);
     }
   }
+
+  /** Hardcoded Z curve for zoom — 8 key values distributed across the frame range. */
+
+  var FIRST_HALF_VALUES = [-0.0, -0.96, -1.247, -4.935];
+  var SECOND_HALF_VALUES = [3.354, 0.946, 0.189, 0.0];
+
+  //todo: Adjust the values for smoothness
+
+  var ZOOM_Z_VALUES = FIRST_HALF_VALUES.concat(SECOND_HALF_VALUES);
+
+  /**
+   * Generate a camera zoom on a path column using a hardcoded Z curve.
+   *
+   * @param column       The 3D-path column to keyframe (camera peg).
+   * @param startFrame   First frame of the zoom.
+   * @param endFrame     Last frame of the zoom.
+   * @param xy           Optional target XY position for non-centered zooms.
+   *                     If provided, X and Y are interpolated from their
+   *                     values at startFrame toward this target.
+   */
+  export function generateZoom(
+    column: oPathColumn3D,
+    startFrame: number,
+    endFrame: number,
+    xy?: vectors.Vector2Input,
+  ) {
+    MessageLog.trace(
+      '[generateZoom] has xy: ' + (xy ? 'yes' : 'no') + ' (type: ' + typeof xy + ')',
+    );
+
+    var targetXY = xy ? vectors.resolveVec2(xy) : null;
+
+    if (targetXY) {
+      MessageLog.trace('[generateZoom] targetXY.x=' + targetXY.x + ' targetXY.y=' + targetXY.y);
+    } else {
+      MessageLog.trace('[generateZoom] targetXY is null/falsy');
+    }
+
+    MessageLog.trace(
+      'generateZoom: ' +
+        column.toString() +
+        ', frames ' +
+        startFrame +
+        '-' +
+        endFrame +
+        (targetXY ? ', xy ' + JSON.stringify(targetXY) : ''),
+    );
+
+    var zCount = ZOOM_Z_VALUES.length;
+    MessageLog.trace('[generateZoom] zCount: ' + zCount);
+
+    for (var i = 0; i < zCount; i++) {
+      var frame = startFrame + i;
+      var z = ZOOM_Z_VALUES[i];
+
+      // Interpolate XY toward target only during the first half,
+      // or keep existing values
+      var x: number;
+      var y: number;
+      if (targetXY) {
+        var firstHalfCount = FIRST_HALF_VALUES.length;
+        if (i < firstHalfCount) {
+          var progress = i / (firstHalfCount - 1);
+          x = targetXY.x * progress;
+          y = targetXY.y * progress;
+        } else {
+          x = 0;
+          y = 0;
+        }
+      } else {
+        x = column.getXVal(frame);
+        y = column.getYVal(frame);
+      }
+
+      MessageLog.trace(
+        '[generateZoom] frame ' +
+          frame +
+          ' | i=' +
+          i +
+          ' | z=' +
+          z +
+          ' | x=' +
+          x +
+          ' | y=' +
+          y +
+          (targetXY ? ' | progress=' + progress.toFixed(3) : ' (no xy)'),
+      );
+
+      column.setPosition(frame, new Vec3(x, y, z), 0, 0, 0);
+    }
+
+    MessageLog.trace('[generateZoom] done');
+  }
+}
+
+function testGenerateZoom() {
+  var camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
+  if (!camPeg) {
+    MessageLog.trace('testGenerateZoom: Camera peg not found.');
+    return;
+  }
+
+  var pos = camPeg.position as oPathColumn3D;
+  var sel = new G.oSelection();
+
+  MessageLog.trace('[KeyframeGenerator.ts] ' + 'start');
+  scene.beginUndoRedoAccum('Apply Zoom');
+  KeyframeGeneratorKit.generateZoom(pos, sel.startFrame, sel.startFrame + 7, new Vec2(0, 5));
+  scene.endUndoRedoAccum();
+  MessageLog.trace('[KeyframeGenerator.ts] ' + 'end');
 }

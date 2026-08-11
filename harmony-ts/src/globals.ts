@@ -105,10 +105,9 @@ var __assign =
     return target;
   };
 
-this.__proto__.__assign = __assign;
-this.__proto__.Array = Array;
-
 if (Object.keys(this.__proto__).indexOf('G') === -1) {
+  this.__proto__.__assign = __assign;
+  this.__proto__.Array = Array;
   this.__proto__.G = _;
 
   Object._ = _;
@@ -123,6 +122,7 @@ if (Object.keys(this.__proto__).indexOf('G') === -1) {
   this.__proto__.Vec2 = vectors.Vec2;
   this.__proto__.Vec3 = vectors.Vec3;
   this.__proto__.vectors = vectors;
+  this.__proto__.selection = selection;
 
   var __extends =
     (this && this.__extends) ||

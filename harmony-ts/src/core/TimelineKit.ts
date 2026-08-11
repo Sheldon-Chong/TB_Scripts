@@ -39,17 +39,17 @@ class DrawingCell extends Cell {
 }
 
 function saveKeyFramesFrom3DPath() {
-  const selection = TimelineKit.getSelection();
-  const PathColumn3D = selection.selectedNodes[0].getColumn('offset.attr3dpath') as oPathColumn3D;
+  const sel = TimelineKit.getSelection();
+  const PathColumn3D = sel.selectedNodes[0].getColumn('offset.attr3dpath') as oPathColumn3D;
   // const RotationColumn = selection.selectedNodes[0].getColumn("ROTATION") as PathColumn3D;
-  const ScaleXCol = selection.selectedNodes[0].getColumn('scale.x') as oColumn;
-  const ScaleYCol = selection.selectedNodes[0].getColumn('scale.y') as oColumn;
+  const ScaleXCol = sel.selectedNodes[0].getColumn('scale.x') as oColumn;
+  const ScaleYCol = sel.selectedNodes[0].getColumn('scale.y') as oColumn;
 
   // MessageLog.trace(JSON.stringify(selection.selectedNodes[0].getAttributeKeywords(), null, 2));
 
   const keyframes: { frame: number; x: number; y: number; z: number }[] = [];
   var relativeIndex = 0;
-  for (let i = selection.startFrame; i <= selection.endFrame; i++) {
+  for (let i = sel.startFrame; i <= sel.endFrame; i++) {
     keyframes.push({
       frame: relativeIndex,
       x: PathColumn3D.getX(i),

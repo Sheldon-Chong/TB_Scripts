@@ -99,20 +99,20 @@ function registerBoundaryNavigationShortcuts() {
 
 function loopSelection() {
   try {
-    const selection = G.TimelineKit.getSelection();
+    const sel = G.TimelineKit.getSelection();
 
     scene.beginUndoRedoAccum('Loop Selection');
-    selection.selectedNodes.forEach((node) => {
+    sel.selectedNodes.forEach((node) => {
       const drawingsList = [];
       const drawingCol: oDrawingElementColumn = node.getColumn(
         'DRAWING.ELEMENT',
       ) as oDrawingElementColumn;
 
       let loopStart = -1;
-      let i = selection.endFrame;
-      while (i >= selection.startFrame && drawingCol.getKeyframe(i) === null) i--;
+      let i = sel.endFrame;
+      while (i >= sel.startFrame && drawingCol.getKeyframe(i) === null) i--;
       loopStart = i;
-      while (i >= selection.startFrame) {
+      while (i >= sel.startFrame) {
         const drawing = drawingCol.getKeyframe(i);
         drawingsList.unshift(drawing);
         i--;
@@ -122,7 +122,7 @@ function loopSelection() {
         MessageLog.trace('element ' + element);
       });
 
-      for (let i = loopStart; i <= selection.endFrame; i++) {
+      for (let i = loopStart; i <= sel.endFrame; i++) {
         let index = (i - loopStart) % drawingsList.length;
 
         if (index === 0) Timeline.createFrameMarker(node.index, 'Red', i + 1);

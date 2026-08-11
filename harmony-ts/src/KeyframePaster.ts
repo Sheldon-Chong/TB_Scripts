@@ -43,10 +43,10 @@ function saveAllKeyframePresets() {
       let i = presetRegion.frame;
       let marker = null;
       let center = null;
-      const selection = new oSelection();
+      const sel = new oSelection();
 
       while (i < presetRegion.frame + presetRegion.length) {
-        marker = Timeline.getFrameMarker(selection.selectedNodes[0].index, i);
+        marker = Timeline.getFrameMarker(sel.selectedNodes[0].index, i);
         MessageLog.trace('preset region ' + presetRegion.toString());
         MessageLog.trace('preset region ' + presetRegion.constructor.name);
         if (marker) {
@@ -72,23 +72,23 @@ function saveAllKeyframePresets() {
     }
 
     const processAnimation = G.Utils.bind(function (presetRegion: any) {
-      const selection = new oSelection(
+      const sel = new oSelection(
         presetRegion.frame,
         presetRegion.frame + presetRegion.length - 1,
         undefined,
       );
-      const keyframes = serializeKeyFramesFromSplittedPath(selection);
+      const keyframes = serializeKeyFramesFromSplittedPath(sel);
       savePreset(presetRegion, keyframes, ANIMATION_PRESETS_PATH);
     }, this);
 
     const processCamera = G.Utils.bind(function (presetRegion: any) {
-      const selection = new oSelection(
+      const sel = new oSelection(
         presetRegion.frame,
         presetRegion.frame + presetRegion.length - 1,
         undefined,
       );
-      MessageLog.trace('SELECTION ' + selection.toString());
-      const keyframes = serializeKeyFramesFrom3DPath(selection);
+      MessageLog.trace('SELECTION ' + sel.toString());
+      const keyframes = serializeKeyFramesFrom3DPath(sel);
       savePreset(presetRegion, keyframes, CAMERA_PRESETS_PATH);
     }, this);
 
@@ -138,14 +138,14 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
 
     const data = JSON.parse(content);
     let currentFrame = frame.current();
-    const selection = G.TimelineKit.getSelection();
+    const sel = G.TimelineKit.getSelection();
 
     if (presetSettings.edgeSnappingEnabled)
-      currentFrame = getSnappedFrame(currentFrame, selection, presetSettings);
+      currentFrame = getSnappedFrame(currentFrame, sel, presetSettings);
 
     const trueStart = currentFrame - (data.center || 0);
 
-    let selected = selection.selectedNodes;
+    let selected = sel.selectedNodes;
 
     if (label === 'camera preset') {
       MessageLog.trace('cameras');

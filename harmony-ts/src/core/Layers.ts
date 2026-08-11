@@ -942,6 +942,7 @@ class _LayerManager {
       }
     }
   }
+
   getSelectedNodes(): oNodeLayer[] {
     const selectedNodePaths = selection.selectedNodes();
     const selectedNodes = selectedNodePaths

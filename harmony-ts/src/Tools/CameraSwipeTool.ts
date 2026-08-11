@@ -49,11 +49,11 @@ function activateApplyShakeTool() {
 
   return;
   try {
-    const selection = new G.oSelection();
+    const sel = new G.oSelection();
     const camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
     const pos = camPeg.position as oPathColumn3D;
 
-    G.KeyframeGeneratorKit.generateShake(pos, selection.startFrame, selection.endFrame, 10, 3);
+    G.KeyframeGeneratorKit.generateShake(pos, sel.startFrame, sel.endFrame, 10, 3);
     MessageLog.trace('Apply Shake action triggered');
   } catch (e) {
     MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
@@ -379,25 +379,6 @@ function registerCameraSwipeTool() {
     shortcut: 'Ctrl+Alt+M',
     category: 'custom',
   });
-  registerAction({
-    name: 'Apply shake',
-    icon: 'earth.png',
-    callback: activateApplyShakeTool,
-    shortcut: 'Ctrl+Alt+M',
-    category: 'custom',
-  });
-  registerAction({
-    name: 'Apply Zoom',
-    icon: 'earth.png',
-    callback: activateApplyZoomTool,
-    shortcut: 'Ctrl+Alt+M',
-    category: 'custom',
-  });
-
-  updateToolbars();
-  // Tools.setCurrentTool(MEASURE_LINE_TOOL_ID);
-
-  MessageLog.trace('CameraSwipeTool evaluateAndRun triggered');
 }
 //////////////////////////////////////////////////////////
 // evalData — called by buttonlist.xml on button click.

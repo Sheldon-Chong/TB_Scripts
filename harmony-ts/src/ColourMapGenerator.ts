@@ -108,6 +108,29 @@ namespace ColorMattes {
 
 ColorMattes.load();
 
+/**
+ * Creates COLOR_CARD nodes for passes 1–MAX_PASS under the Passes group
+ * if they don't already exist, then reloads the ColorMattes list.
+ */
+function ensurePassColorCardsExist(): void {
+  const parentGroup = 'Top';
+
+  for (let i = MIN_PASS; i <= MAX_PASS; i++) {
+    const nodeName = `${PASS_PREFIX}${i}`;
+    const existing = G.LayerManager.getNodeLayer(`Top/Passes/${nodeName}`);
+
+    if (!existing) {
+      MessageLog.trace(`Creating COLOR_CARD: ${nodeName}`);
+      node.add(parentGroup, nodeName, 'COLOR_CARD', 0, 0, 0);
+    }
+  }
+
+  ColorMattes.reload();
+}
+
+// Auto-create missing pass nodes on script load
+ensurePassColorCardsExist();
+
 function disconnectOutputPort(sourceNode, outputPortIndex) {
   // 1. Find out how many wires are coming out of this specific output port
   var numLinks = node.numberOfOutputLinks(sourceNode, outputPortIndex);
@@ -141,16 +164,36 @@ function disconnectAllOutputPorts(sourceNode) {
   }
 }
 
-function updateCameraOffsetForRange(startFrame: number, endFrame: number) {
-  scene.beginUndoRedoAccum('Update Camera Offset Keyframes');
+function updateCameraRange() {
+  const sel = new G.oSelection();
+  MessageLog.trace('[ColourMapGenerator.ts] ' + NODES.CAMERA_OFFSET_PEG.position);
+  (NODES.CAMERA_OFFSET_PEG.position as oPathColumn3D).setX(5, 2);
+  updateCameraOffsetForRange(sel.startFrame, sel.endFrame);
+}
 
-  for (let frame = startFrame; frame <= endFrame; frame++) {
-    const originalPos = NODES.CAMERA_PEG.position.get(frame);
-    NODES.CAMERA_OFFSET_PEG.position.set(
-      { x: originalPos.x * -0.5, y: originalPos.y * -0.5, z: 0 },
-      frame,
-    );
+function updateCameraOffsetForRange(startFrame: number, endFrame: number) {
+  try {
+    scene.beginUndoRedoAccum('Update Camera Offset Keyframes');
+    for (let frame = startFrame; frame <= endFrame; frame++) {
+      const pos = NODES.CAMERA_PEG.position as oPathColumn3D;
+      const originalPos = {
+        x: pos.getXVal(frame),
+        y: pos.getYVal(frame),
+        z: pos.getZVal(frame),
+      };
+      NODES.CAMERA_OFFSET_PEG.position.setX(frame, originalPos.x * -0.5);
+      NODES.CAMERA_OFFSET_PEG.position.setY(frame, originalPos.y * -0.5);
+      NODES.CAMERA_OFFSET_PEG.position.setZ(frame, 0);
+      0;
+      MessageLog.trace(
+        `[ColourMapGenerator.ts] Frame ${frame}: originalPos=(${originalPos.x}, ${originalPos.y}, ${originalPos.z})`,
+      );
+    }
+  } catch (e) {
+    MessageLog.trace('[ColourMapGenerator.ts] Error updating camera offset: ' + e.toString());
+    MessageLog.trace(e.fileName + ':' + e.lineNumber);
   }
+
   scene.endUndoRedoAccum();
 }
 
@@ -167,13 +210,13 @@ function configureNodes() {
 }
 
 function updatePassKeyframes() {
-  const selection = G.TimelineKit.getSelection();
+  const sel = new G.oSelection();
   let startFrame: number;
   let endFrame: number;
 
-  if (selection.length > 1) {
-    startFrame = selection.startFrame;
-    endFrame = selection.endFrame;
+  if (sel.length > 1) {
+    startFrame = sel.startFrame;
+    endFrame = sel.endFrame;
     MessageLog.trace(`Updating pass keyframes for selection: ${startFrame} to ${endFrame}...`);
   } else {
     startFrame = 1;
@@ -252,7 +295,6 @@ function toggleColorMapMode2() {
       node.link(matte.drawingLayer.nodePath, 0, 'Top/Composite', currentPorts, false, true);
     }
   }
-
   if (!toggleOn) {
     NODES.BG.setEnabled(true);
     NODES.CAMERA_OFFSET_PEG.scale.setGlobal(new Vec3(1));

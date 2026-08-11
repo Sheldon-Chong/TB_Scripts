@@ -2,14 +2,14 @@ include('globals.js');
 include('KeyframeProfiles.js');
 
 function createMarker() {
-  const selection = new G.oSelection();
-  MessageLog.trace('selection: ' + selection.toString());
+  const sel = new G.oSelection();
+  MessageLog.trace('selection: ' + sel.toString());
 
   const name = G.Utils.prompt('name');
 
   TimelineMarker.createMarker({
-    frame: selection.startFrame,
-    length: selection.length,
+    frame: sel.startFrame,
+    length: sel.length,
     color: '#9caddb',
     name: name,
     notes: 'extended exposures',
@@ -34,13 +34,13 @@ function testApplyScalar() {
 }
 
 function serializeKeyframesOfSelection() {
-  const selection = new G.oSelection();
+  const sel = new G.oSelection();
 
   const pos = (G.LayerManager.getNodeLayer('Top/Drawing') as oDrawingNode).position;
   const scale = (G.LayerManager.getNodeLayer('Top/Drawing') as oDrawingNode).scale;
 
   let keyframes: any[] = [];
-  for (let i = selection.startFrame; i <= selection.endFrame; i++) {
+  for (let i = sel.startFrame; i <= sel.endFrame; i++) {
     const p = pos.get(i);
     const s = scale.get(i);
     keyframes.push({

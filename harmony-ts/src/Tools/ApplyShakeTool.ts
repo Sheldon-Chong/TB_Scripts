@@ -1,4 +1,4 @@
-// CenterRectTool.ts — draws a rectangle from the center of the field.
+// ApplyShakeTool.ts — draws a rectangle from the center of the field.
 // The rectangle is centered at (0, 0) and grows symmetrically;
 // the mouse position defines the half-width and half-height.
 
@@ -6,21 +6,21 @@ include('globals.js');
 include(specialFolders.userScripts + '/KeyframeGenerator.js');
 this.__proto__.G.KeyframeGeneratorKit = KeyframeGeneratorKit;
 
-function activateCenterRectTool() {
+function activateApplyShakeTool() {
   try {
-    MessageLog.trace('CenterRectTool action triggered');
-    Tools.setCurrentTool('com.toonboom.centerRectTool');
+    MessageLog.trace('ApplyShakeTool action triggered');
+    Tools.setCurrentTool('com.toonboom.applyShakeTool');
   } catch (e) {
     MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
   }
 }
 
-const CENTER_RECT_TOOL_ID = 'com.toonboom.centerRectTool';
+const APPLY_SHAKE_TOOL_ID = 'com.toonboom.applyShakeTool';
 
-function registerRect() {
-  var _centerRectToolId: any = null;
+function registerApplyShakeTool() {
+  var _applyShakeToolId: any = null;
 
-  class CenterRectTool {
+  class ApplyShakeTool {
     _: any;
     Shapes: any;
 
@@ -29,8 +29,8 @@ function registerRect() {
       rectActive: { r: 0, g: 255, b: 0, a: 255 }, // green
     };
 
-    name: string = CENTER_RECT_TOOL_ID;
-    displayName: string = 'Center Rectangle Tool';
+    name: string = APPLY_SHAKE_TOOL_ID;
+    displayName: string = 'Apply Shake Tool';
     icon: string = 'MyTool.png';
     toolType: string = 'drawing';
     canBeOverridenBySelectOrTransformTool: boolean = false;
@@ -40,7 +40,7 @@ function registerRect() {
 
     // Captured once on the first drag — never changes, so shake magnitude
     // stays consistent even if the camera drifts to extreme positions.
-    _pxPerFieldUnit: number | null = null;
+    _pxPerFieldUnit: number | null = 174;
 
     constructor(deps: { _: any; Shapes: any }) {
       this._ = deps._;
@@ -48,7 +48,7 @@ function registerRect() {
     }
 
     onRegister(): void {
-      MessageLog.trace('Registered tool: CenterRectTool');
+      MessageLog.trace('Registered tool: ApplyShakeTool');
     }
 
     onCreate(ctx: any): void {
@@ -63,7 +63,7 @@ function registerRect() {
         ctx._rectCenter = ctx.currentPoint;
         return true;
       } catch (e) {
-        MessageLog.trace('CenterRectTool onMouseDown error: ' + e.toString());
+        MessageLog.trace('ApplyShakeTool onMouseDown error: ' + e.toString());
         return false;
       }
     }
@@ -102,7 +102,7 @@ function registerRect() {
         if (this._pxPerFieldUnit === null && fieldDist > 0.5) {
           this._pxPerFieldUnit = screenDist / fieldDist;
           MessageLog.trace(
-            '[CenterRectTool.ts] locked pxPerFieldUnit = ' + this._pxPerFieldUnit.toFixed(2),
+            '[ApplyShakeTool.ts] locked pxPerFieldUnit = ' + this._pxPerFieldUnit.toFixed(2),
           );
         }
 
@@ -112,7 +112,7 @@ function registerRect() {
         var rect = new G.Shapes.Rectangle({ start: start, end: end, color: color });
         ctx.overlay = { paths: [{ path: rect.toPath(), color: rect.color }] };
       } catch (e) {
-        MessageLog.trace('CenterRectTool onMouseMove error: ' + e.toString());
+        MessageLog.trace('ApplyShakeTool onMouseMove error: ' + e.toString());
         MessageLog.trace(e.stack);
         MessageLog.trace(JSON.stringify(e));
       }
@@ -138,7 +138,7 @@ function registerRect() {
         var h = halfY * 2;
 
         MessageLog.trace(
-          'CenterRectTool: rect ' + w.toFixed(1) + ' x ' + h.toFixed(1) + ' field units',
+          'ApplyShakeTool: rect ' + w.toFixed(1) + ' x ' + h.toFixed(1) + ' field units',
         );
 
         const sensitivity = 2.5;
@@ -147,19 +147,19 @@ function registerRect() {
 
         var camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
         if (!camPeg) {
-          MessageLog.trace('CenterRectTool: Camera peg not found.');
+          MessageLog.trace('ApplyShakeTool: Camera peg not found.');
         } else {
           var pos = camPeg.position as oPathColumn3D;
           var sel = new G.oSelection();
           var startFrame = sel.startFrame;
           var endFrame = sel.endFrame;
 
-          scene.beginUndoRedoAccum('Center Rect Shake');
+          scene.beginUndoRedoAccum('Apply Shake');
           G.KeyframeGeneratorKit.generateShake(pos, startFrame, endFrame, shakeAmount, decay);
           scene.endUndoRedoAccum();
         }
       } catch (e) {
-        MessageLog.trace('CenterRectTool onMouseUp error: ' + e.toString());
+        MessageLog.trace('ApplyShakeTool onMouseUp error: ' + e.toString());
         MessageLog.trace(e.stack);
         MessageLog.trace(JSON.stringify(e));
       }
@@ -177,25 +177,25 @@ function registerRect() {
     }
   }
 
-  _centerRectToolId = SceneKit.registerTool(new CenterRectTool({ _: G, Shapes: Shapes }));
+  _applyShakeToolId = SceneKit.registerTool(new ApplyShakeTool({ _: G, Shapes: Shapes }));
 
   registerAction({
-    name: 'Center Rectangle Tool',
+    name: 'Apply Shake Tool',
     icon: 'earth.png',
-    callback: activateCenterRectTool,
+    callback: activateApplyShakeTool,
     shortcut: 'Ctrl+Alt+R',
     category: 'custom',
   });
 
-  updateToolbars();
+  // updateToolbars();
 
-  MessageLog.trace('CenterRectTool evaluateAndRun triggered');
+  // MessageLog.trace('ApplyShakeTool evaluateAndRun triggered');
 }
 
-function evaluateAndRunCenterRectTool() {
+function evaluateAndRunApplyShakeTool() {
   try {
-    MessageLog.trace('CenterRectTool evaluateAndRun triggered');
-    Tools.setCurrentTool(CENTER_RECT_TOOL_ID);
+    MessageLog.trace('ApplyShakeTool evaluateAndRun triggered');
+    Tools.setCurrentTool(APPLY_SHAKE_TOOL_ID);
   } catch (e) {
     MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
   }
