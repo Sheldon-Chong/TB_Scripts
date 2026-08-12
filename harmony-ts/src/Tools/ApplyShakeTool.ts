@@ -154,6 +154,12 @@ function registerApplyShakeTool() {
           var startFrame = sel.startFrame;
           var endFrame = sel.endFrame;
 
+          // Ensure minimum range of 5 frames — extend end forward if needed.
+          var minRange = 5;
+          if (endFrame - startFrame < minRange) {
+            endFrame = startFrame + minRange;
+          }
+
           scene.beginUndoRedoAccum('Apply Shake');
           G.KeyframeGeneratorKit.generateShake(pos, startFrame, endFrame, shakeAmount, decay);
           scene.endUndoRedoAccum();

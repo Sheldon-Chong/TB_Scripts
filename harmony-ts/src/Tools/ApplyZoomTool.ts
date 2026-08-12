@@ -133,7 +133,7 @@ function registerApplyZoomTool() {
           var dirLen = Math.sqrt(dirX * dirX + dirY * dirY);
           var dragLen = Math.sqrt(ctx._dragX * ctx._dragX + ctx._dragY * ctx._dragY);
 
-          var sensitivity = 0.03;
+          var sensitivity = 0.08;
           var scale = dragLen * sensitivity;
           var xy: G.Vec2;
           if (dirLen > 0.001) {
