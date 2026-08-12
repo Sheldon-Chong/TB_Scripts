@@ -1,0 +1,165 @@
+ {
+  "element_name": "Drawing_16",
+  "drawings": [
+    {
+      "profile": "Sans",
+      "drawing_name": "1",
+      "frame_number": 2
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "2",
+      "frame_number": 3
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "3",
+      "frame_number": 4
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "4",
+      "frame_number": 5
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "5",
+      "frame_number": 6
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "6",
+      "frame_number": 8
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "7",
+      "frame_number": 9
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "8",
+      "frame_number": 12
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "9",
+      "frame_number": 16
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "11",
+      "frame_number": 17
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "11_1",
+      "frame_number": 18
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "12",
+      "frame_number": 19
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "13",
+      "frame_number": 43
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "13_1",
+      "frame_number": 44
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "14",
+      "frame_number": 46
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "15",
+      "frame_number": 47
+    },
+    {
+      "profile": "Sans",
+      "drawing_name": "22",
+      "frame_number": 91
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "67_3",
+      "frame_number": 122
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "37",
+      "frame_number": 139
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "38",
+      "frame_number": 140
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "49_1",
+      "frame_number": 149
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "49_2",
+      "frame_number": 150
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "49_3",
+      "frame_number": 151
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "80",
+      "frame_number": 182
+    },
+    {
+      "profile": "CyberLegends",
+      "drawing_name": "80_1",
+      "frame_number": 184
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "59_1",
+      "frame_number": 294
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "59_2",
+      "frame_number": 295
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "74",
+      "frame_number": 331
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "74_1",
+      "frame_number": 332
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "74_2",
+      "frame_number": 333
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "74_4",
+      "frame_number": 334
+    },
+    {
+      "profile": "Papyrus",
+      "drawing_name": "74_5",
+      "frame_number": 335
+    }
+  ]
+}

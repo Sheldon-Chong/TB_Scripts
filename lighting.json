@@ -1,0 +1,44 @@
+{
+  "mood": {
+    "colorGain": 1.1,
+    "drawing": 0
+  },
+  "light": {
+    "drawing": 0,
+    "transparency": 29,
+    "bloom": {
+      "colorGain": 4.625,
+      "color": {
+        "r": 0,
+        "g": 255,
+        "b": 81,
+        "a": 255
+      },
+      "radius": 99
+    }
+  },
+  "shadow": {}, 
+  "rimlight": {
+    "drawing": 0,
+    "left": {
+      "colorGain": 10,
+      "color": {
+        "r": 255,
+        "g": 0,
+        "b": 153,
+        "a": 255
+      },
+      "radius": 19
+    },
+    "right": {
+      "colorGain": 44,
+      "color": {
+        "r": 255,
+        "g": 164,
+        "b": 94,
+        "a": 255
+      },
+      "radius": 11
+    }
+  }
+}

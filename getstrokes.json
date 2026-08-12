@@ -1,0 +1,1162 @@
+ {
+  "layers": [
+    {
+      "index": 0,
+      "shaders": [
+        {
+          "colorId": "0c0b25adddd01184"
+        }
+      ],
+      "joints": [
+        {
+          "x": 1198.453125,
+          "y": 2290.28125,
+          "strokes": [
+            {
+              "strokeIndex": 7,
+              "vertex": 1
+            },
+            {
+              "strokeIndex": 1,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 1198.453125,
+          "y": 3137.671875,
+          "strokes": [
+            {
+              "strokeIndex": 1,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 2,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 1205.34375,
+          "y": 2283.390625,
+          "strokes": [
+            {
+              "strokeIndex": 3,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 7,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 1205.34375,
+          "y": 3137.671875,
+          "strokes": [
+            {
+              "strokeIndex": 5,
+              "vertex": 1
+            },
+            {
+              "strokeIndex": 2,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 2506.359375,
+          "y": 2489.90625,
+          "strokes": [
+            {
+              "strokeIndex": 3,
+              "vertex": 1
+            },
+            {
+              "strokeIndex": 4,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 2507.4375,
+          "y": 2490.078125,
+          "strokes": [
+            {
+              "strokeIndex": 4,
+              "vertex": 1
+            },
+            {
+              "strokeIndex": 6,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 2507.609375,
+          "y": 2490.109375,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 2514.328125,
+          "y": 2490.078125,
+          "strokes": [
+            {
+              "strokeIndex": 5,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 6,
+              "vertex": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 4,
+          "toJoint": 6,
+          "path": [
+            {
+              "x": 2506.359375,
+              "y": 2489.90625,
+              "onCurve": true
+            },
+            {
+              "x": 2507.609375,
+              "y": 2490.109375,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderLeft": 0,
+          "shaderRight": 0
+        },
+        {
+          "fromJoint": 1,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 1198.453125,
+              "y": 3137.671875,
+              "onCurve": true
+            },
+            {
+              "x": 1198.453125,
+              "y": 2290.28125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderRight": 0
+        },
+        {
+          "fromJoint": 1,
+          "toJoint": 3,
+          "path": [
+            {
+              "x": 1198.453125,
+              "y": 3137.671875,
+              "onCurve": true
+            },
+            {
+              "x": 1205.34375,
+              "y": 3137.671875,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderLeft": 0
+        },
+        {
+          "fromJoint": 2,
+          "toJoint": 4,
+          "path": [
+            {
+              "x": 1205.34375,
+              "y": 2283.390625,
+              "onCurve": true
+            },
+            {
+              "x": 2506.359375,
+              "y": 2489.90625,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderRight": 0
+        },
+        {
+          "fromJoint": 4,
+          "toJoint": 5,
+          "path": [
+            {
+              "x": 2506.359375,
+              "y": 2489.90625,
+              "onCurve": true
+            },
+            {
+              "x": 2507.4375,
+              "y": 2490.078125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderRight": 0
+        },
+        {
+          "fromJoint": 7,
+          "toJoint": 3,
+          "path": [
+            {
+              "x": 2514.328125,
+              "y": 2490.078125,
+              "onCurve": true
+            },
+            {
+              "x": 1205.34375,
+              "y": 3137.671875,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderRight": 0
+        },
+        {
+          "fromJoint": 7,
+          "toJoint": 5,
+          "path": [
+            {
+              "x": 2514.328125,
+              "y": 2490.078125,
+              "onCurve": true
+            },
+            {
+              "x": 2507.4375,
+              "y": 2490.078125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderLeft": 0
+        },
+        {
+          "fromJoint": 2,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 1205.34375,
+              "y": 2283.390625,
+              "onCurve": true
+            },
+            {
+              "x": 1198.453125,
+              "y": 2290.28125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderLeft": 0
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "shaders": [],
+      "joints": [
+        {
+          "x": 1198.453125,
+          "y": 2290.28125,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 1198.453125,
+          "y": 3137.671875,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        }
+      ],
+      "thicknessPaths": [
+        {
+          "minThickness": 23,
+          "maxThickness": 23,
+          "keys": [
+            {
+              "t": 0,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0,
+              "rightFromCtrlParam": 0,
+              "leftToCtrlParam": 0.3333282470703125,
+              "rightToCtrlParam": 0.3333282470703125
+            },
+            {
+              "t": 1,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.3333282470703125,
+              "rightFromCtrlParam": 0.3333282470703125,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 1,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 1198.453125,
+              "y": 3137.671875,
+              "onCurve": true
+            },
+            {
+              "x": 1198.453125,
+              "y": 2290.28125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0,
+            "toThickness": 1,
+            "thicknessPath": 0
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "shaders": [],
+      "joints": [
+        {
+          "x": 1198.453125,
+          "y": 2290.28125,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 1205.34375,
+          "y": 2283.390625,
+          "strokes": [
+            {
+              "strokeIndex": 1,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 2506.359375,
+          "y": 2489.90625,
+          "strokes": [
+            {
+              "strokeIndex": 1,
+              "vertex": 1
+            },
+            {
+              "strokeIndex": 2,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 2507.4375,
+          "y": 2490.078125,
+          "strokes": [
+            {
+              "strokeIndex": 2,
+              "vertex": 1
+            }
+          ]
+        }
+      ],
+      "thicknessPaths": [
+        {
+          "minThickness": 23,
+          "maxThickness": 23,
+          "keys": [
+            {
+              "t": 0,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0,
+              "rightFromCtrlParam": 0,
+              "leftToCtrlParam": 0.3333282470703125,
+              "rightToCtrlParam": 0.3333282470703125
+            },
+            {
+              "t": 1,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.3333282470703125,
+              "rightFromCtrlParam": 0.3333282470703125,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 1,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 1205.34375,
+              "y": 2283.390625,
+              "onCurve": true
+            },
+            {
+              "x": 1198.453125,
+              "y": 2290.28125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "invisible": true
+        },
+        {
+          "fromJoint": 1,
+          "toJoint": 2,
+          "path": [
+            {
+              "x": 1205.34375,
+              "y": 2283.390625,
+              "onCurve": true
+            },
+            {
+              "x": 2506.359375,
+              "y": 2489.90625,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0,
+            "toThickness": 0.999176025390625,
+            "thicknessPath": 0
+          }
+        },
+        {
+          "fromJoint": 2,
+          "toJoint": 3,
+          "path": [
+            {
+              "x": 2506.359375,
+              "y": 2489.90625,
+              "onCurve": true
+            },
+            {
+              "x": 2507.4375,
+              "y": 2490.078125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0.999176025390625,
+            "toThickness": 1,
+            "thicknessPath": 0
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "shaders": [],
+      "joints": [
+        {
+          "x": 1198.453125,
+          "y": 3137.671875,
+          "strokes": [
+            {
+              "strokeIndex": 1,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 1205.34375,
+          "y": 3137.671875,
+          "strokes": [
+            {
+              "strokeIndex": 2,
+              "vertex": 1
+            },
+            {
+              "strokeIndex": 1,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 2507.4375,
+          "y": 2490.078125,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 2514.328125,
+          "y": 2490.078125,
+          "strokes": [
+            {
+              "strokeIndex": 2,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        }
+      ],
+      "thicknessPaths": [
+        {
+          "minThickness": 23,
+          "maxThickness": 23,
+          "keys": [
+            {
+              "t": 0,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0,
+              "rightFromCtrlParam": 0,
+              "leftToCtrlParam": 0.3333282470703125,
+              "rightToCtrlParam": 0.3333282470703125
+            },
+            {
+              "t": 1,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.3333282470703125,
+              "rightFromCtrlParam": 0.3333282470703125,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 3,
+          "toJoint": 2,
+          "path": [
+            {
+              "x": 2514.328125,
+              "y": 2490.078125,
+              "onCurve": true
+            },
+            {
+              "x": 2507.4375,
+              "y": 2490.078125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "invisible": true
+        },
+        {
+          "fromJoint": 1,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 1205.34375,
+              "y": 3137.671875,
+              "onCurve": true
+            },
+            {
+              "x": 1198.453125,
+              "y": 3137.671875,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "invisible": true
+        },
+        {
+          "fromJoint": 3,
+          "toJoint": 1,
+          "path": [
+            {
+              "x": 2514.328125,
+              "y": 2490.078125,
+              "onCurve": true
+            },
+            {
+              "x": 1205.34375,
+              "y": 3137.671875,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0,
+            "toThickness": 1,
+            "thicknessPath": 0
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "shaders": [
+        {
+          "colorId": "0c0b25adddd01184"
+        }
+      ],
+      "joints": [
+        {
+          "x": 919.828125,
+          "y": 4152.5,
+          "strokes": [
+            {
+              "strokeIndex": 2,
+              "vertex": 1
+            },
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 3539.0625,
+          "y": 3868.359375,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 6
+            },
+            {
+              "strokeIndex": 1,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 1,
+              "vertex": 2
+            },
+            {
+              "strokeIndex": 2,
+              "vertex": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 0,
+          "toJoint": 1,
+          "path": [
+            {
+              "x": 919.828125,
+              "y": 4152.5,
+              "onCurve": true
+            },
+            {
+              "x": 910.140625,
+              "y": 4169.421875,
+              "onCurve": true
+            },
+            {
+              "x": 1354.8125,
+              "y": 5804.828125,
+              "onCurve": true
+            },
+            {
+              "x": 1368.109375,
+              "y": 5801.203125,
+              "onCurve": true
+            },
+            {
+              "x": 3554.53125,
+              "y": 3864.5,
+              "onCurve": true
+            },
+            {
+              "x": 3541.234375,
+              "y": 3868.125,
+              "onCurve": true
+            },
+            {
+              "x": 3539.0625,
+              "y": 3868.359375,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 6,
+          "closed": false,
+          "shaderLeft": 0
+        },
+        {
+          "fromJoint": 1,
+          "toJoint": 1,
+          "path": [
+            {
+              "x": 3539.0625,
+              "y": 3868.359375,
+              "onCurve": true
+            },
+            {
+              "x": 3541.578125,
+              "y": 3868.09375,
+              "onCurve": true
+            },
+            {
+              "x": 3539.0625,
+              "y": 3868.359375,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 2,
+          "closed": true,
+          "shaderLeft": 0
+        },
+        {
+          "fromJoint": 1,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 3539.0625,
+              "y": 3868.359375,
+              "onCurve": true
+            },
+            {
+              "x": 919.828125,
+              "y": 4152.5,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "shaderLeft": 0
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "shaders": [],
+      "joints": [
+        {
+          "x": 910.140625,
+          "y": 4169.421875,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 1354.8125,
+          "y": 5804.828125,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        }
+      ],
+      "thicknessPaths": [
+        {
+          "minThickness": 23,
+          "maxThickness": 23,
+          "keys": [
+            {
+              "t": 0,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.3333282470703125,
+              "rightFromCtrlParam": 0.3333282470703125,
+              "leftToCtrlParam": 0.3333282470703125,
+              "rightToCtrlParam": 0.3333282470703125
+            },
+            {
+              "t": 1,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.6666717529296875,
+              "rightFromCtrlParam": 0.6666717529296875,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 1,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 1354.8125,
+              "y": 5804.828125,
+              "onCurve": true
+            },
+            {
+              "x": 910.140625,
+              "y": 4169.421875,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0,
+            "toThickness": 1,
+            "thicknessPath": 0
+          }
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "shaders": [],
+      "joints": [
+        {
+          "x": 919.828125,
+          "y": 4152.5,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        },
+        {
+          "x": 3539.0625,
+          "y": 3868.359375,
+          "strokes": [
+            {
+              "strokeIndex": 1,
+              "vertex": 0
+            },
+            {
+              "strokeIndex": 0,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 3541.234375,
+          "y": 3868.125,
+          "strokes": [
+            {
+              "strokeIndex": 1,
+              "vertex": 1
+            }
+          ]
+        }
+      ],
+      "thicknessPaths": [
+        {
+          "minThickness": 23,
+          "maxThickness": 23,
+          "keys": [
+            {
+              "t": 0,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.3333282470703125,
+              "rightFromCtrlParam": 0.3333282470703125,
+              "leftToCtrlParam": 0.3333282470703125,
+              "rightToCtrlParam": 0.3333282470703125
+            },
+            {
+              "t": 1,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 0,
+              "rightToCtrlThickness": 0,
+              "leftFromCtrlParam": 0.6663970947265625,
+              "rightFromCtrlParam": 0.6663970947265625,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            }
+          ]
+        },
+        {
+          "minThickness": 23,
+          "maxThickness": 23,
+          "keys": [
+            {
+              "t": 0,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 0,
+              "rightFromCtrlThickness": 0,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0,
+              "rightFromCtrlParam": 0,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            },
+            {
+              "t": 1,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.6666717529296875,
+              "rightFromCtrlParam": 0.6666717529296875,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 0,
+          "toJoint": 1,
+          "path": [
+            {
+              "x": 919.828125,
+              "y": 4152.5,
+              "onCurve": true
+            },
+            {
+              "x": 3539.0625,
+              "y": 3868.359375,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0,
+            "toThickness": 1,
+            "thicknessPath": 0
+          }
+        },
+        {
+          "fromJoint": 1,
+          "toJoint": 2,
+          "path": [
+            {
+              "x": 3539.0625,
+              "y": 3868.359375,
+              "onCurve": true
+            },
+            {
+              "x": 3541.234375,
+              "y": 3868.125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0,
+            "toThickness": 1,
+            "thicknessPath": 1
+          }
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "shaders": [],
+      "joints": [
+        {
+          "x": 1368.109375,
+          "y": 5801.203125,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 1
+            }
+          ]
+        },
+        {
+          "x": 3554.53125,
+          "y": 3864.5,
+          "strokes": [
+            {
+              "strokeIndex": 0,
+              "vertex": 0
+            }
+          ]
+        }
+      ],
+      "thicknessPaths": [
+        {
+          "minThickness": 23,
+          "maxThickness": 23,
+          "keys": [
+            {
+              "t": 0,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.3333282470703125,
+              "rightFromCtrlParam": 0.3333282470703125,
+              "leftToCtrlParam": 0.3333282470703125,
+              "rightToCtrlParam": 0.3333282470703125
+            },
+            {
+              "t": 1,
+              "leftThickness": 23,
+              "rightThickness": 23,
+              "leftFromCtrlThickness": 23,
+              "rightFromCtrlThickness": 23,
+              "leftToCtrlThickness": 23,
+              "rightToCtrlThickness": 23,
+              "leftFromCtrlParam": 0.6666717529296875,
+              "rightFromCtrlParam": 0.6666717529296875,
+              "leftToCtrlParam": 0,
+              "rightToCtrlParam": 0
+            }
+          ]
+        }
+      ],
+      "strokes": [
+        {
+          "fromJoint": 1,
+          "toJoint": 0,
+          "path": [
+            {
+              "x": 3554.53125,
+              "y": 3864.5,
+              "onCurve": true
+            },
+            {
+              "x": 1368.109375,
+              "y": 5801.203125,
+              "onCurve": true
+            }
+          ],
+          "numBeziers": 1,
+          "closed": false,
+          "pencilColorId": "0c0b25adddd01181",
+          "thickness": {
+            "minThickness": 23,
+            "maxThickness": 23,
+            "fromThickness": 0,
+            "toThickness": 1,
+            "thicknessPath": 0
+          }
+        }
+      ]
+    }
+  ],
+  "drawing": {
+    "drawingId": "14341",
+    "elementId": 17,
+    "projectId": "0ccf216156b0421d",
+    "isValid": true
+  },
+  "art": 2
+}

@@ -7,6 +7,7 @@ include(specialFolders.userScripts + '/KeyframeGenerator.js');
 this.__proto__.G.KeyframeGeneratorKit = KeyframeGeneratorKit;
 
 function activateApplyZoomTool() {
+  MessageLog.trace('[ApplyZoomTool.ts] ' + 'test');
   try {
     MessageLog.trace('ApplyZoomTool action triggered');
     Tools.setCurrentTool('com.toonboom.applyZoomTool');
@@ -55,7 +56,6 @@ function registerApplyZoomTool() {
 
     onMouseDown(ctx: any): boolean {
       try {
-        // Use click position as rectangle center — always visible and consistent.
         ctx._rectCenter = ctx.currentPoint;
         return true;
       } catch (e) {
@@ -84,6 +84,12 @@ function registerApplyZoomTool() {
         var isActive = fieldDist > 2;
         var color = isActive ? this.COLORS.rectActive : this.COLORS.rect;
 
+        // Store drag in screen pixels (scale-independent).
+        // Screen Y is inverted (down = positive) but field Y goes up,
+        // so we negate screenDY so dragging up on screen → positive field Y.
+        ctx._dragX = cm.screenX - cs.screenX;
+        ctx._dragY = cs.screenY - cm.screenY;
+
         var rect = new G.Shapes.Rectangle({ start: start, end: end, color: color });
         ctx.overlay = { paths: [{ path: rect.toPath(), color: rect.color }] };
       } catch (e) {
@@ -98,6 +104,13 @@ function registerApplyZoomTool() {
     onMouseUp(ctx: any): boolean {
       if (!ctx._rectCenter) return true;
 
+      // Guard against click-without-drag (onMouseMove never fired)
+      if (typeof ctx._dragX === 'undefined' || typeof ctx._dragY === 'undefined') {
+        ctx._rectCenter = null;
+        ctx.overlay = {};
+        return true;
+      }
+
       try {
         var camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
         if (!camPeg) {
@@ -107,14 +120,49 @@ function registerApplyZoomTool() {
           var sel = new G.oSelection();
           var startFrame = sel.startFrame;
           var endFrame = sel.endFrame;
-          var xy = new G.Vec2(ctx._rectCenter.x, ctx._rectCenter.y).multiply(3);
+
+          // Direction: from camera toward the click point (the rectangle
+          // is centered on the click, so that's where the zoom should go).
+          // Magnitude: screen-pixel drag distance (scale-independent).
+          // The two are combined so drag size controls intensity while
+          // the click position controls direction.
+          var baseX = pos.getXVal(startFrame);
+          var baseY = pos.getYVal(startFrame);
+          var dirX = ctx._rectCenter.x - baseX;
+          var dirY = ctx._rectCenter.y - baseY;
+          var dirLen = Math.sqrt(dirX * dirX + dirY * dirY);
+          var dragLen = Math.sqrt(ctx._dragX * ctx._dragX + ctx._dragY * ctx._dragY);
+
+          var sensitivity = 0.03;
+          var scale = dragLen * sensitivity;
+          var xy: G.Vec2;
+          if (dirLen > 0.001) {
+            xy = new G.Vec2((dirX / dirLen) * scale, (dirY / dirLen) * scale);
+          } else {
+            xy = new G.Vec2(0, 0);
+          }
 
           MessageLog.trace(
-            'ApplyZoomTool: zoom toward (' + xy.x.toFixed(1) + ', ' + xy.y.toFixed(1) + ')',
+            '[ApplyZoomTool] clickDir=(' +
+              dirX.toFixed(1) +
+              ', ' +
+              dirY.toFixed(1) +
+              ') | dragPx=' +
+              dragLen.toFixed(1) +
+              ' | scale=' +
+              scale.toFixed(3) +
+              ' | xy=(' +
+              xy.x.toFixed(2) +
+              ', ' +
+              xy.y.toFixed(2) +
+              ')',
           );
 
           scene.beginUndoRedoAccum('Apply Zoom');
+
+          startFrame = G.FrameSnapping.getNearestBoundaryFrame(startFrame) - 4;
           G.KeyframeGeneratorKit.generateZoom(pos, startFrame, endFrame, xy);
+          G.TimelineKit.setCurrentFrame(startFrame);
           scene.endUndoRedoAccum();
         }
       } catch (e) {
@@ -125,6 +173,8 @@ function registerApplyZoomTool() {
       G.TimelineKit.setCurrentFrame(new G.oSelection().startFrame);
 
       ctx._rectCenter = null;
+      ctx._dragX = undefined;
+      ctx._dragY = undefined;
       ctx.overlay = {};
 
       return true;
@@ -132,6 +182,8 @@ function registerApplyZoomTool() {
 
     onResetTool(ctx: any): void {
       ctx._rectCenter = null;
+      ctx._dragX = undefined;
+      ctx._dragY = undefined;
       ctx.overlay = {};
     }
   }
@@ -145,10 +197,6 @@ function registerApplyZoomTool() {
     shortcut: 'Ctrl+Alt+R',
     category: 'custom',
   });
-
-  // updateToolbars();
-
-  // MessageLog.trace('ApplyZoomTool evaluateAndRun triggered');
 }
 
 function evaluateAndRunApplyZoomTool() {

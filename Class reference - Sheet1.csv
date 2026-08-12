@@ -1,0 +1,169 @@
+FALSE,CCELIO,The CELIO JavaScript global object. Provide information about image file
+FALSE,,
+FALSE,CGlobalObject,
+FALSE,Cabout,The about JavaScript global object. Provides information about the main application and the platform on which the script is running
+FALSE,CAction,The Action JavaScript global object. Trigger action associated to menu or tool bar items
+FALSE,CBackdrop,"The Backdrop JavaScript global object. Get, set and add backdrops"
+FALSE,Ccolumn,The column JavaScript global object. Retrieve add or remove values from columns in your scene
+FALSE,CcolumnMarkers,The JavaScript class for using XSheet column markers. Obtain it by calling columnMarkers from the column global object
+FALSE,CcompositionOrder,The compositionOrder JavaScript global object. Extract the Timeline view's composition order
+FALSE,CcopyPaste,The copyPaste JavaScript global object. Copy paste to/from templates
+FALSE,CDrawing,The Drawing JavaScript global object. Iterate and manipulate the drawings of an element node
+FALSE,CDrawingTools,The DrawingTools JavaScript global object. Get information about the currently selected drawing
+FALSE,Celement,"The element JavaScript global object. Add, remove, modify or get information about element nodes in the scene"
+FALSE,Cexporter,The exporter JavaScript global object. Provides access to the project export directory
+FALSE,CFileDialog,The FileDialog JavaScript global object. A simplified version of the Qt file dialogs
+FALSE,CfileMapper,The fileMapper JavaScript global object. Map paths from one format to another
+FALSE,Cframe,The frame JavaScript global object. Get the current frame or number of frames. Add or remove frames in your scene. Manipulate the timeline marker
+FALSE,Cfunc,The func JavaScript global object. Retrieve and modify values of function curves
+FALSE,CInput,The Input JavaScript global object. A simplified version of the Qt input dialogs
+FALSE,CKeyModifiers,The KeyModifiers JavaScript global object. Query key modifiers
+FALSE,Clibrary,"The library JavaScript global object. Select templates, and generate thumbnails or movies for them"
+FALSE,CMessageBox,The MessageBox JavaScript class. A simplified version of the MessageBox Qt dialog
+FALSE,CMessageLog,The MessageLog JavaScript global object. Allows the user to print messages to the message log window
+FALSE,CMovieImport,The MovieImport JavaScript global object. Import a QuickTime movie in the current scene
+FALSE,Cnode,The node JavaScript global object
+FALSE,CPaletteManager,The PaletteManager JavaScript global object. Used to get information about the Colour view current selection
+FALSE,CPaletteObjectManager,The PaletteObjectManager JavaScript global object. Provides access to palette list (PaletteList) and palette (Palette) objects
+FALSE,CPenstyleManager,The PenstyleManager JavaScript global object. Query/modify the current penstyle and list of penstyles
+FALSE,Cpreferences,The preferences JavaScript global object. Set or retrieve user preferences saved in the user local data
+FALSE,Crender,The render JavaScript global object. Render the scene or a part of the scene
+FALSE,Cscene,"The scene JavaScript global object. Retrieve and set global scene attributes, like the aspect ratio of the cells in the scene grid"
+FALSE,CSceneOffline,The SceneOffline JavaScript global object. Provides utilities for offline scene updates
+FALSE,Cselection,The selection JavaScript global object. Retrieve information about the nodes or columns that are selected
+FALSE,Csound,The sound JavaScript global object. Access the scene soundtrack in part or in whole. The scripting environment can receive notifications when scene frame is ready. See the TB_ExportFLV.js script for an example
+FALSE,CSyncLayer,The Synclayer JavaScript global object. Provides utilities for sync and unsync drawing layers
+FALSE,CSystem,The System JavaScript global object. Call system specific command directly
+FALSE,CTimeline,The Timeline JavaScript global object. Used to get informations about layers and frames from the Timeline view
+FALSE,CTimelineMarker,The TimelineMarker JavaScript global object. Remove or edit timeline markers
+FALSE,CToolProperties,The ToolProperties JavaScript global object. Controls the Tool Properties
+FALSE,CUiloader,The UiLoader JavaScript global object allows the user to load pre-defined Qt forms that define Qt widgets (generally built within Qt Designer)
+FALSE,Cview,The view JavaScript global object. Provides information about the contents of selected View windows
+FALSE,Cwaypoint,The waypoint JavaScript global object
+FALSE,Cxsheet,"The xsheet JavaScript global object. Enables manipulation of the XSheet view from scripting. For example, allows a script to auto-advance the XSheet cell independently of the current timeline selection"
+FALSE,,
+FALSE,CLabeled,
+FALSE,CComboBox,The ComboBox JavaScript class. A simplified version of the ComboBox Qt widget
+FALSE,CDateEdit,The DateEdit JavaScript class. A simplified version of the DateEdit Qt widget
+FALSE,CLineEdit,The LineEdit JavaScript class. A simplified version of the LineEdit Qt widget
+FALSE,CNumberEdit,The NumberEdit JavaScript class. A simplified version of the NumberEdit Qt widget
+FALSE,CSlider,The Slider JavaScript class. A simplified version of the Slider Qt widget
+FALSE,CSpinBox,The SpinBox JavaScript class. A simplified version of the SpinBox Qt widget
+FALSE,CTimeEdit,The TimeEdit JavaScript class. A simplified version of the TimeEdit Qt widget
+FALSE,,
+FALSE,CMO_SignalEmitter,
+FALSE,,
+FALSE,CWidgetBase,Base class of the script widget classes
+FALSE,CButtonWidget,The ButtonWidget JavaScript class. A button widget
+FALSE,CCheckboxWidget,The CheckboxWidget JavaScript class. A checkbox widget
+FALSE,CCustomWidget,"The CustomWidget JavaScript class. A widget for which the attribute, drag_manipulator, painter, picker and local_transformation components are specified at the widget creation"
+FALSE,CLabelWidget,The LabelWidget JavaScript class. A floating Label display widget
+FALSE,CLine2dDisplayWidget,The Line2dDisplayWidget JavaScript class. A 2 dimensional line linking 2 points
+FALSE,CPoint2dWidget,The Point2dWidget JavaScript class. A 2 dimensional point widget of various shape
+FALSE,CRotation3dWidget,The Rotation3dWidget JavaScript class. A rotatable spherical widget
+FALSE,CRotationXWidget,The RotationXWidget JavaScript class. A rotatable circle widget around the x axis
+FALSE,CRotationYWidget,The RotationYWidget JavaScript class. A rotatable circle widget around the y axis
+FALSE,CRotationZWidget,The RotationZWidget JavaScript class. A rotatable circle widget around the z axis
+FALSE,CSliderWidget,The SliderWidget JavaScript class. A vertical or horizontal slider
+FALSE,CTranslationXWidget,The TranslationXWidget JavaScript class. A translatable arrow in the x axis
+FALSE,CTranslationYWidget,The TranslationYWidget JavaScript class. A translatable arrow in the y axis
+FALSE,CTranslationZWidget,The TranslationZWidget JavaScript class. A translatable arrow in the z axis
+FALSE,CModel3d_ScriptGraphMap,
+FALSE,,
+FALSE,CQObject,
+FALSE,CAttribute,The JavaScript class encapsulating a node attribute. Obtain one from the node getAttr or getAttrList methods
+FALSE,CAttrState,The AttrState JavaScript class. Represents the state of an attribute associated to a given pose
+FALSE,,
+FALSE,CBaseColor,Base class for color and texture pots stored in palettes
+FALSE,CColor,The JavaScript class for manipulating colours. Can be created from a Palette object
+FALSE,CTexture,The JavaScript class for manipulating textures. Can be created from a Palette object
+FALSE,CCel,The Cel JavaScript class. Adds file storage capabilities to cels
+FALSE,CColorOverride,The JavaScript class for manipulating colour override nodes. Created from the node global object
+FALSE,CColorRGBA,The ColorRGBA JavaScript class. Represent an 8 bits per channel Red Green Blue Alpha colour
+FALSE,CColorType,The JavaScript class for defining the different color types. Obtain it from Constants
+FALSE,CCompositionItem,The JavaScript class for getting the composition information of a node. Obtain one from the compositionOrder global object
+FALSE,CConstants,The JavaScript class for getting the constant colour and palette data. Obtain it from PaletteObjectManager
+FALSE,CController,The Controller JavaScript object. This object is available in Master Controller callback functions
+FALSE,CCopyOptions,"The JavaScript class for getting or setting the model directory, the scan files and the default camera name flags when copying. Obtain from the copyPaste global object"
+FALSE,CDateEditEnum,"The DateEditEnum JavaScript global object. Specifies the type of display order of day, month, year"
+FALSE,CDir,"The Dir JavaScript class. Interface to operating system Dir operations, e.g. mkdir, rmdir, rename, etc"
+FALSE,CDirSpec,The DirSpec JavaScript global object. Enum for directory operations
+FALSE,CDragContext,The JavaScript class for converting position from one coordinate system to another. Obtain it as a parameter to the WidgetBase drag signals
+FALSE,CDragObject,The JavaScript class representing a dragged object. Obtain from the copyPaste global object copy method
+FALSE,CDrawingToolParams,"The DrawingToolParams JavaScript class. Set or unset the ""apply on all drawings"" setting of the DrawingTools methods"
+FALSE,CFile,"The File JavaScript class. Open, close, read, write, get information about files"
+FALSE,CFileAccess,The FileAccess JavaScript global object. Enum to define file operation
+FALSE,CFileIOType,The IO JavaScript global object. Enumerates the different types of stream behaviour the ImageFile can take
+FALSE,CFileWrapper,The PermanentFile and TemporaryFile JavaScript classes. Used to represent an actual image file on disk
+FALSE,CLayoutExport,"The LayoutExport JavaScript class. Pop up a dialog, render layout and manage the export progress bar"
+FALSE,CLayoutExportParams,The LayoutExportParams JavaScript class. Use a set parameters for the LayoutExport dialog
+FALSE,CMatrix4x4,The Matrix4x4 JavaScript class. Defines a four by four matrix container
+FALSE,CModel3d,The Model3d JavaScript class
+FALSE,CNodeState,The NodeState JavaScript class. Represents the state of a node for a given pose
+FALSE,CPalette,The JavaScript class providing information about a specific palette
+FALSE,CPaletteList,"The JavaScript class providing information about a palette list. Obtain from PaletteObjectManager methods like getPaletteListByElementId, getScenePaletteList or getPaletteListById"
+FALSE,CPaletteListType,The JavaScript class for getting the palette list type. Obtain it from Constants
+FALSE,CPaletteLocation,The JavaScript class for defining the standard palette locations. Obtain it from Constants
+FALSE,CPaletteLocator,This class is used to retrieve location of palette and texture files
+FALSE,CPasteOptions,"The JavaScript class for getting or setting the model directory, the scan files and the default camera name flags when pasting. Obtain from the copyPaste global object"
+FALSE,CPoint2d,The Point2d JavaScript class. Defines a two dimensional point
+FALSE,CPoint3d,The Point3d JavaScript class. Defines a three dimensional point
+FALSE,CProcess2,The Process2 JavaScript class. Used to launch an external process
+FALSE,CProcessManager,The ProcessManager class. Singleton used to monitor and control detached child processes
+FALSE,CQuaternion,The Quaternion Javascript class. Defines a 4 dimensional value
+FALSE,CRemoteCmd,The RemoteCmd JavaScript class. Send one sided commands to a remote host
+FALSE,CRigState,The RigState JavaScript class. Represents the state of a rig for a given pose
+FALSE,CSceneChangeNotifier,The SceneChangeNotifier JavaScript class. Execute client code upon scene change events
+FALSE,CSCR_NetworkSessionSocketMgrWrapper,"The SessionSocketMgr JavaScript class, creates and keeps sockets bounded throughout a session"
+FALSE,CSCR_ProcessManagerWrapper,"The SCR_ProcessManagerWrapper JavaScript class. Singleton interface used to monitor, create and control detached child processes by name"
+FALSE,CSessionChangeNotifier,The SessionChangeNotifier JavaScript class. Execute client code upon session change events
+FALSE,CSessionSocketManager,
+FALSE,CSubnodeData,The SubnodeData Javascript class
+FALSE,CVector2d,The Vector2d JavaScript class. Defines a two dimensional vector
+FALSE,CVector3d,The Vector3d JavaScript class. Defines a three dimensional vector
+FALSE,CWidgetBase,Base class of the script widget classes
+FALSE,CWriteNode,The WriteNode JavaScript object. Provide information about rendered images and the movie to generate
+FALSE,,
+FALSE,CQScriptable,
+FALSE,CAttrState,The AttrState JavaScript class. Represents the state of an attribute associated to a given pose
+FALSE,CButtonWidget,The ButtonWidget JavaScript class. A button widget
+FALSE,CCheckboxWidget,The CheckboxWidget JavaScript class. A checkbox widget
+FALSE,CController,The Controller JavaScript object. This object is available in Master Controller callback functions
+FALSE,CCustomWidget,"The CustomWidget JavaScript class. A widget for which the attribute, drag_manipulator, painter, picker and local_transformation components are specified at the widget creation"
+FALSE,CDir,"The Dir JavaScript class. Interface to operating system Dir operations, e.g. mkdir, rmdir, rename, etc"
+FALSE,CFile,"The File JavaScript class. Open, close, read, write, get information about files"
+FALSE,CLabelWidget,The LabelWidget JavaScript class. A floating Label display widget
+FALSE,CLine2dDisplayWidget,The Line2dDisplayWidget JavaScript class. A 2 dimensional line linking 2 points
+FALSE,CNodeState,The NodeState JavaScript class. Represents the state of a node for a given pose
+FALSE,CPalette,The JavaScript class providing information about a specific palette
+FALSE,CPaletteList,"The JavaScript class providing information about a palette list. Obtain from PaletteObjectManager methods like getPaletteListByElementId, getScenePaletteList or getPaletteListById"
+FALSE,CPoint2dWidget,The Point2dWidget JavaScript class. A 2 dimensional point widget of various shape
+FALSE,CRigState,The RigState JavaScript class. Represents the state of a rig for a given pose
+FALSE,CRotation3dWidget,The Rotation3dWidget JavaScript class. A rotatable spherical widget
+FALSE,CRotationXWidget,The RotationXWidget JavaScript class. A rotatable circle widget around the x axis
+FALSE,CRotationYWidget,The RotationYWidget JavaScript class. A rotatable circle widget around the y axis
+FALSE,CRotationZWidget,The RotationZWidget JavaScript class. A rotatable circle widget around the z axis
+FALSE,CSceneChangeNotifier,The SceneChangeNotifier JavaScript class. Execute client code upon scene change events
+FALSE,CSessionChangeNotifier,The SessionChangeNotifier JavaScript class. Execute client code upon session change events
+FALSE,CSliderWidget,The SliderWidget JavaScript class. A vertical or horizontal slider
+FALSE,CTranslationXWidget,The TranslationXWidget JavaScript class. A translatable arrow in the x axis
+FALSE,CTranslationYWidget,The TranslationYWidget JavaScript class. A translatable arrow in the y axis
+FALSE,CTranslationZWidget,The TranslationZWidget JavaScript class. A translatable arrow in the z axis
+FALSE,,
+FALSE,CSCR_AbstractInterface,
+FALSE,Cdeformation,The deformation JavaScript global object. Provide deformation node parent matrix transformations
+FALSE,CWebCCExporter,The WebCCExporter JavaScript global object. Generate movies encoded in H.264
+FALSE,,
+FALSE,CSCRIPT_QSWidget,
+FALSE,CButton,The Button JavaScript class. A simplified Button Qt widget
+FALSE,CCheckBox,The CheckBox JavaScript class. A simplified version of the CheckBox Qt widget
+FALSE,CDialog,The Dialog JavaScript class. A simplified version of the Qt dialog
+FALSE,CGroupBox,The GroupBox JavaScript class. A simplified version of the GroupBox Qt widget
+FALSE,CLabel,The Label JavaScript class. A simplified version of the Label Qt widget
+FALSE,CRadioButton,The RadioButton JavaScript class. A simplified version of the RadioButton Qt widget
+FALSE,CTextEdit,The TextEdit JavaScript class. A simplified version of the TextEdit Qt widget
+FALSE,CspecialFolders,The specialFolders JavaScript global object. Provide the path to application specific paths
+FALSE,,
+FALSE,CUI_DialogController,
+FALSE,CExportVideoDlg,The ExportVideoDlg JavaScript class. A dialog that can be used before an export to query the user about various settings
+FALSE,CDrawingTools::vectorize,

@@ -75,7 +75,7 @@ namespace KeyframeGeneratorKit {
 
   /** Hardcoded Z curve for zoom — 8 key values distributed across the frame range. */
 
-  var FIRST_HALF_VALUES = [-0.0, -0.96, -1.247, -4.935];
+  var FIRST_HALF_VALUES = [-0.0, -0.2, -1.247, -4.935];
   var SECOND_HALF_VALUES = [3.354, 0.946, 0.189, 0.0];
 
   //todo: Adjust the values for smoothness
@@ -128,18 +128,23 @@ namespace KeyframeGeneratorKit {
       var z = ZOOM_Z_VALUES[i];
 
       // Interpolate XY toward target only during the first half,
-      // or keep existing values
+      // or keep existing values.
+      // Target XY is treated as an OFFSET from the camera's current
+      // position (not an absolute destination), so the camera moves by
+      // targetXY during zoom-in and returns to its original spot after.
       var x: number;
       var y: number;
       if (targetXY) {
         var firstHalfCount = FIRST_HALF_VALUES.length;
+        var baseX = column.getXVal(startFrame);
+        var baseY = column.getYVal(startFrame);
         if (i < firstHalfCount) {
           var progress = i / (firstHalfCount - 1);
-          x = targetXY.x * progress;
-          y = targetXY.y * progress;
+          x = baseX + targetXY.x * progress;
+          y = baseY + targetXY.y * progress;
         } else {
-          x = 0;
-          y = 0;
+          x = baseX;
+          y = baseY;
         }
       } else {
         x = column.getXVal(frame);
@@ -147,17 +152,7 @@ namespace KeyframeGeneratorKit {
       }
 
       MessageLog.trace(
-        '[generateZoom] frame ' +
-          frame +
-          ' | i=' +
-          i +
-          ' | z=' +
-          z +
-          ' | x=' +
-          x +
-          ' | y=' +
-          y +
-          (targetXY ? ' | progress=' + progress.toFixed(3) : ' (no xy)'),
+        `[generateZoom] frame ${frame} | z=${z} | x=${x}, y=${y}${targetXY ? ` | progress=${progress.toFixed(3)}` : ' (no xy)'}`,
       );
 
       column.setPosition(frame, new Vec3(x, y, z), 0, 0, 0);
@@ -179,7 +174,7 @@ function testGenerateZoom() {
 
   MessageLog.trace('[KeyframeGenerator.ts] ' + 'start');
   scene.beginUndoRedoAccum('Apply Zoom');
-  KeyframeGeneratorKit.generateZoom(pos, sel.startFrame, sel.startFrame + 7, new Vec2(0, 5));
+  KeyframeGeneratorKit.generateZoom(pos, sel.startFrame, sel.startFrame + 7, new Vec2(0, 0));
   scene.endUndoRedoAccum();
   MessageLog.trace('[KeyframeGenerator.ts] ' + 'end');
 }

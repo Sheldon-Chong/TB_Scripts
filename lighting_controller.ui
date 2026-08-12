@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>299</width>
+    <height>266</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>261</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>261</width>
+     <height>200</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>5</number>
+    </property>
+    <property name="bottomMargin">
+     <number>5</number>
+    </property>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="checkBox_5">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Shadow</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <item>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Glow</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider_7">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_2"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <item>
+       <widget class="QCheckBox" name="checkBox_6">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Rimlight</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider_8">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_3"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_10">
+      <item>
+       <widget class="QCheckBox" name="checkBox_8">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Outline</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider_10">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_4"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_9">
+      <item>
+       <widget class="QCheckBox" name="checkBox_7">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Mood</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider_9">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBox_5"/>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

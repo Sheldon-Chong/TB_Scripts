@@ -60,14 +60,6 @@ function activateApplyShakeTool() {
   }
 }
 
-function activateApplyZoomTool() {
-  try {
-    MessageLog.trace('Apply Zoom action triggered');
-  } catch (e) {
-    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
-  }
-}
-
 const MEASURE_LINE_TOOL_ID = 'com.toonboom.cameraSwipeTool';
 
 function registerCameraSwipeTool() {
@@ -279,6 +271,7 @@ function registerCameraSwipeTool() {
 
             var msg = `Swipe: ${Math.round(dist)}px @ ${angleDeg}\u00B0  |  mag: ${magnitude.toFixed(2)}`;
             MessageLog.trace(`CameraSwipeTool: ${msg}`);
+            G.TimelineKit.setCurrentFrame(startFrame);
             this.showMeasureToast(msg, 1500);
           }
         }
