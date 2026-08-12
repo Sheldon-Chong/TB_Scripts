@@ -10,6 +10,24 @@ function registerAllTools() {
   registerApplyZoomTool();
   registerPositionDebugTool();
   registerAction({
+    name: 'Previous Boundary Marker',
+    icon: 'arrow_left.png',
+    callback: function () {
+      G.FrameSnapping.gotoPreviousBoundaryMarker();
+    },
+    shortcut: 'Ctrl+Alt+Left',
+    category: 'custom',
+  });
+  registerAction({
+    name: 'Next Boundary Marker',
+    icon: 'arrow_right.png',
+    callback: function () {
+      G.FrameSnapping.gotoNextBoundaryMarker();
+    },
+    shortcut: 'Ctrl+Alt+Right',
+    category: 'custom',
+  });
+  registerAction({
     name: 'Apply Tool',
     icon: 'earth.png',
     callback: function () {

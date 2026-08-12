@@ -271,7 +271,7 @@ function registerCameraSwipeTool() {
 
             var msg = `Swipe: ${Math.round(dist)}px @ ${angleDeg}\u00B0  |  mag: ${magnitude.toFixed(2)}`;
             MessageLog.trace(`CameraSwipeTool: ${msg}`);
-            G.TimelineKit.setCurrentFrame(startFrame);
+            G.TimelineKit.setCurrentFrame(startFrame - 4);
             this.showMeasureToast(msg, 1500);
           }
         }
