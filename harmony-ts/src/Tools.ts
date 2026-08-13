@@ -8,10 +8,10 @@ function registerAllTools() {
   registerCameraSwipeTool();
   registerApplyShakeTool();
   registerApplyZoomTool();
-  registerPositionDebugTool();
+  // registerPositionDebugTool();
   registerAction({
     name: 'Previous Boundary Marker',
-    icon: 'arrow_left.png',
+    icon: `${specialFolders.userScripts}\\script-icons\\previous_boundary.png`,
     callback: function () {
       G.FrameSnapping.gotoPreviousBoundaryMarker();
     },
@@ -20,7 +20,7 @@ function registerAllTools() {
   });
   registerAction({
     name: 'Next Boundary Marker',
-    icon: 'arrow_right.png',
+    icon: `${specialFolders.userScripts}\\script-icons\\next_boundary.png`,
     callback: function () {
       G.FrameSnapping.gotoNextBoundaryMarker();
     },

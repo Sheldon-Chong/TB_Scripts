@@ -367,7 +367,7 @@ function registerCameraSwipeTool() {
 
   registerAction({
     name: 'Camera Swipe Tool',
-    icon: 'earth.png',
+    icon: `${specialFolders.userScripts}\\script-icons\\apply_swipe_tool.png`,
     callback: activateCameraSwipeTool,
     shortcut: 'Ctrl+Alt+M',
     category: 'custom',

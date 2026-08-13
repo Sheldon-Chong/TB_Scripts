@@ -75,13 +75,6 @@ namespace KeyframeGeneratorKit {
 
   /** Hardcoded Z curve for zoom — 8 key values distributed across the frame range. */
 
-  var FIRST_HALF_VALUES = [-0.0, -0.2, -1.247, -4.935];
-  var SECOND_HALF_VALUES = [3.354, 0.946, 0.189, 0.0];
-
-  //todo: Adjust the values for smoothness
-
-  var ZOOM_Z_VALUES = FIRST_HALF_VALUES.concat(SECOND_HALF_VALUES);
-
   /**
    * Generate a camera zoom on a path column using a hardcoded Z curve.
    *
@@ -97,7 +90,15 @@ namespace KeyframeGeneratorKit {
     startFrame: number,
     endFrame: number,
     xy?: vectors.Vector2Input,
+    zoomOut: boolean = false,
   ) {
+    var FIRST_HALF_VALUES = zoomOut ? [0.0, 0.2, 1.247, 4.935] : [-0.0, -0.2, -1.247, -4.935];
+    var SECOND_HALF_VALUES = zoomOut ? [-3.354, -0.946, -0.189, -0.0] : [3.354, 0.946, 0.189, 0.0];
+
+    //todo: Adjust the values for smoothness
+
+    var ZOOM_Z_VALUES = FIRST_HALF_VALUES.concat(SECOND_HALF_VALUES);
+
     MessageLog.trace(
       '[generateZoom] has xy: ' + (xy ? 'yes' : 'no') + ' (type: ' + typeof xy + ')',
     );

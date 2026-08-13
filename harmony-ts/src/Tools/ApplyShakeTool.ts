@@ -187,7 +187,8 @@ function registerApplyShakeTool() {
 
   registerAction({
     name: 'Apply Shake Tool',
-    icon: 'earth.png',
+    icon: `${specialFolders.userScripts}\\script-icons\\apply_shake_tool.png`,
+
     callback: activateApplyShakeTool,
     shortcut: 'Ctrl+Alt+R',
     category: 'custom',
