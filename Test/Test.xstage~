@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Sat Aug 15 18:11:45 2026" timeMsec="1786788705000" username="emers" realUsername="emers" creator="harmony">
+<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Sun Aug 16 20:11:07 2026" timeMsec="1786882267048" username="emers" realUsername="emers" creator="harmony">
  <elements>
   <element id="1" elementName="Drawing" elementFolder="Drawing" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
    <drawings>
@@ -63,9 +63,14 @@
   <element id="2" elementName="Drawing_1" elementFolder="Drawing_1" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
    <drawings>
     <dwg name="1"/>
+    <dwg name="2"/>
    </drawings>
   </element>
-  <element id="3" elementName="Drawing_2" elementFolder="Drawing_2" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements"/>
+  <element id="3" elementName="Drawing_2" elementFolder="Drawing_2" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
+   <drawings>
+    <dwg name="1"/>
+   </drawings>
+  </element>
  </elements>
  <options>
   <metrics unitAspectRatioX="4" unitAspectRatioY="3" numberOfUnitsX="24" numberOfUnitsY="24" numberOfUnitsZ="12"/>
@@ -85,147 +90,13 @@
   <tvgRecoveryTexture val="true"/>
  </options>
  <timelineMarkers>
-  <timelineMarker markerStart="224" markerLength="1" colour="#FFE476FF" note="Boundary Marker 224" name="Boundary"/>
-  <timelineMarker markerStart="265" markerLength="0" colour="#2288FFFF" note="whats up guys, sandgaming47 here." name="Sans"/>
-  <timelineMarker markerStart="266" markerLength="0" colour="#2288FFFF" note="today we&apos;re playing..." name="Sans"/>
-  <timelineMarker markerStart="267" markerLength="0" colour="#2288FFFF" note="A MODDED MINECRAFT PLAYTROUGH" name="Sans"/>
-  <timelineMarker markerStart="268" markerLength="0" colour="#2288FFFF" note="as for what mod we&apos;re playing..." name="Sans"/>
-  <timelineMarker markerStart="269" markerLength="0" colour="#2288FFFF" note="i have no clue actually, someone sent me it on discord" name="Sans"/>
-  <timelineMarker markerStart="270" markerLength="0" colour="#2288FFFF" note="woah!" name="Sans"/>
-  <timelineMarker markerStart="276" markerLength="0" colour="#FFFF00FF" note="Hello, I&apos;m verity!" name="Verity"/>
-  <timelineMarker markerStart="277" markerLength="0" colour="#FFFF00FF" note="Your personal helper friend." name="Verity"/>
-  <timelineMarker markerStart="278" markerLength="0" colour="#FFFF00FF" note="Ask me anything! I know everything." name="Verity"/>
-  <timelineMarker markerStart="279" markerLength="0" colour="#2288FFFF" note="verity, huh?" name="Sans"/>
-  <timelineMarker markerStart="280" markerLength="0" colour="#2288FFFF" note="hmm... you kinda look like someone i know." name="Sans"/>
-  <timelineMarker markerStart="281" markerLength="0" colour="#2288FFFF" note="you aren&apos;t gonna act friendly and then try to kill me right?" name="Sans"/>
-  <timelineMarker markerStart="282" markerLength="0" colour="#FFFF00FF" note="Whaaat?? No...?" name="Verity"/>
-  <timelineMarker markerStart="283" markerLength="0" colour="#FFFF00FF" note="I&apos;m just here to help! Why don&apos;t you ask me something?" name="Verity"/>
-  <timelineMarker markerStart="284" markerLength="0" colour="#2288FFFF" note="alright, what am i standing on right now?" name="Sans"/>
-  <timelineMarker markerStart="285" markerLength="0" colour="#FFFF00FF" note="You&apos;re currently touching grass!" name="Verity"/>
-  <timelineMarker markerStart="286" markerLength="0" colour="#2288FFFF" note="what&apos;s 9 + 10" name="Sans"/>
-  <timelineMarker markerStart="287" markerLength="0" colour="#FFFF00FF" note="21!" name="Verity"/>
-  <timelineMarker markerStart="288" markerLength="0" colour="#2288FFFF" note="is water wet?" name="Sans"/>
-  <timelineMarker markerStart="289" markerLength="0" colour="#FFFF00FF" note="Not in the traditional sense, however it makes other things wet!" name="Verity"/>
-  <timelineMarker markerStart="290" markerLength="0" colour="#2288FFFF" note="what was the common name of gold during the 2013 era of minecraft?" name="Sans"/>
-  <timelineMarker markerStart="291" markerLength="0" colour="#FFFF00FF" note="It was butter, of course!" name="Verity"/>
-  <timelineMarker markerStart="292" markerLength="0" colour="#2288FFFF" note="huh." name="Sans"/>
-  <timelineMarker markerStart="293" markerLength="0" colour="#2288FFFF" note="that&apos;s some elite â€œballâ€ knowledge." name="Sans"/>
-  <timelineMarker markerStart="294" markerLength="0" colour="#2288FFFF" note="welp, i better get started on this playthrough." name="Sans"/>
-  <timelineMarker markerStart="295" markerLength="0" colour="#2288FFFF" note="i&apos;m probably gonna gather some materials, build a house, and maybe explore a village?" name="Sans"/>
-  <timelineMarker markerStart="296" markerLength="0" colour="#FFFF00FF" note="The nearest village is 842 blocks northeast of your current location." name="Verity"/>
-  <timelineMarker markerStart="297" markerLength="0" colour="#2288FFFF" note="oh. thanks for the info." name="Sans"/>
-  <timelineMarker markerStart="298" markerLength="0" colour="#2288FFFF" note="hey verity!" name="Sans"/>
-  <timelineMarker markerStart="299" markerLength="0" colour="#2288FFFF" note="do you know where&apos;s the nearest source of coal?" name="Sans"/>
-  <timelineMarker markerStart="300" markerLength="0" colour="#FFFF00FF" note="The nearest coal vein is located 126 blocks northwest of your position, at Y level 112." name="Verity"/>
-  <timelineMarker markerStart="301" markerLength="0" colour="#2288FFFF" note="heh, nice!" name="Sans"/>
-  <timelineMarker markerStart="302" markerLength="0" colour="#2288FFFF" note="verity...  do you know where&apos;s the nearest source of diamonds?" name="Sans"/>
-  <timelineMarker markerStart="303" markerLength="0" colour="#FFFF00FF" note="The nearest diamond vein is approximately 347 blocks southeast of your current position, at Y level -54." name="Verity"/>
-  <timelineMarker markerStart="304" markerLength="0" colour="#2288FFFF" note="YOOOOO" name="Sans"/>
-  <timelineMarker markerStart="305" markerLength="0" colour="#2288FFFF" note="verity, do you know where&apos;s the nearest source of wood?" name="Sans"/>
-  <timelineMarker markerStart="306" markerLength="0" colour="#FFFF00FF" note="Seriously?" name="Verity"/>
-  <timelineMarker markerStart="307" markerLength="0" colour="#2288FFFF" note="and after much ketchup, sweat, and tears... my house is finally complete!" name="Sans"/>
-  <timelineMarker markerStart="308" markerLength="0" colour="#2288FFFF" note="what do you think?" name="Sans"/>
-  <timelineMarker markerStart="309" markerLength="0" colour="#FFFF00FF" note="I think you should watch some beginner tutorials online." name="Verity"/>
-  <timelineMarker markerStart="310" markerLength="0" colour="#2288FFFF" note="welp, time to take a well deserved nap," name="Sans"/>
-  <timelineMarker markerStart="311" markerLength="0" colour="#2288FFFF" note="CREEPER??" name="Sans"/>
-  <timelineMarker markerStart="312" markerLength="0" colour="#FFFF00FF" note="Haha, just kidding, that was me!" name="Verity"/>
-  <timelineMarker markerStart="313" markerLength="0" colour="#2288FFFF" note="huh? you make sounds with your mouth?" name="Sans"/>
-  <timelineMarker markerStart="314" markerLength="0" colour="#FFFF00FF" note="Of course I can!" name="Verity"/>
-  <timelineMarker markerStart="315" markerLength="0" colour="#FFFF00FF" note="I can even play music. Wanna listen to some tunes?" name="Verity"/>
-  <timelineMarker markerStart="316" markerLength="0" colour="#2288FFFF" note="sure, why not." name="Sans"/>
-  <timelineMarker markerStart="317" markerLength="0" colour="#2288FFFF" note="gimme another one!" name="Sans"/>
-  <timelineMarker markerStart="318" markerLength="0" colour="#2288FFFF" note="another one!" name="Sans"/>
-  <timelineMarker markerStart="319" markerLength="0" colour="#2288FFFF" note="h-how do you know that song?" name="Sans"/>
-  <timelineMarker markerStart="320" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity! I know everything!" name="Verity"/>
-  <timelineMarker markerStart="321" markerLength="0" colour="#2288FFFF" note="uh... enough music for now..." name="Sans"/>
-  <timelineMarker markerStart="322" markerLength="0" colour="#2288FFFF" note="alright, i ain&apos;t sleeping tonight." name="Sans"/>
-  <timelineMarker markerStart="323" markerLength="0" colour="#2288FFFF" note="ahh... what a good rest." name="Sans"/>
-  <timelineMarker markerStart="324" markerLength="0" colour="#2288FFFF" note="hey verity, is there anything i should know today?" name="Sans"/>
-  <timelineMarker markerStart="325" markerLength="0" colour="#FFFF00FF" note="Something is coming..." name="Verity"/>
-  <timelineMarker markerStart="326" markerLength="0" colour="#FFFF00FF" note="in 3 days." name="Verity"/>
-  <timelineMarker markerStart="327" markerLength="0" colour="#2288FFFF" note="is it the package i bought from amazon?" name="Sans"/>
-  <timelineMarker markerStart="328" markerLength="0" colour="#FFFF00FF" note="What?? No!" name="Verity"/>
-  <timelineMarker markerStart="329" markerLength="0" colour="#FFFF00FF" note="Your package is stuck in transit." name="Verity"/>
-  <timelineMarker markerStart="330" markerLength="0" colour="#2288FFFF" note="damn." name="Sans"/>
-  <timelineMarker markerStart="331" markerLength="0" colour="#2288FFFF" note="wait, how do you know that?" name="Sans"/>
-  <timelineMarker markerStart="332" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity." name="Verity"/>
-  <timelineMarker markerStart="333" markerLength="0" colour="#FFFF00FF" note="I know everything." name="Verity"/>
-  <timelineMarker markerStart="334" markerLength="0" colour="#2288FFFF" note="wait, gimme a sec. i gotta do something." name="Sans"/>
-  <timelineMarker markerStart="335" markerLength="0" colour="#2288FFFF" note="papyrus!" name="Sans"/>
-  <timelineMarker markerStart="336" markerLength="0" colour="#FFFFFFFF" note="WHAT IS IT!?? WHY DO YOU KEEP SPAMMING ME??" name=""/>
-  <timelineMarker markerStart="337" markerLength="0" colour="#FFFFFFFF" note="I&apos;M OUT SHOPPING FOR SOUP RIGHT NOW!" name=""/>
-  <timelineMarker markerStart="338" markerLength="0" colour="#FFFFFFFF" note="DON&apos;T TELL ME YOU BURNT THE WATER AGAIN!" name=""/>
-  <timelineMarker markerStart="339" markerLength="0" colour="#2288FFFF" note="nono! nothing like that!" name="Sans"/>
-  <timelineMarker markerStart="340" markerLength="0" colour="#2288FFFF" note="listen, there&apos;s this thing, it&apos;s yellow!" name="Sans"/>
-  <timelineMarker markerStart="341" markerLength="0" colour="#FFFFFFFF" note="WHAT???" name=""/>
-  <timelineMarker markerStart="342" markerLength="0" colour="#2288FFFF" note="it played the music, uh, um, it told me about my amazon parcel" name="Sans"/>
-  <timelineMarker markerStart="343" markerLength="0" colour="#FFFFFFFF" note="WHAT ARE YOU TALKING ABOUT??" name=""/>
-  <timelineMarker markerStart="344" markerLength="0" colour="#2288FFFF" note="quick, just get home quickly, and join me in my minecraft world!" name="Sans"/>
-  <timelineMarker markerStart="345" markerLength="0" colour="#FFFFFFFF" note="HUH????" name=""/>
-  <timelineMarker markerStart="346" markerLength="0" colour="#FFFF00FF" note="Who were you talking to?" name="Verity"/>
-  <timelineMarker markerStart="347" markerLength="0" colour="#2288FFFF" note="h-huh? no one!" name="Sans"/>
-  <timelineMarker markerStart="348" markerLength="0" colour="#FFFF00FF" note="Why do you need anyone else when you have me?" name="Verity"/>
-  <timelineMarker markerStart="349" markerLength="0" colour="#FFFF00FF" note="I&apos;m your, best, ONLY friend right?" name="Verity"/>
-  <timelineMarker markerStart="350" markerLength="0" colour="#2288FFFF" note="s-sure?" name="Sans"/>
-  <timelineMarker markerStart="351" markerLength="0" colour="#FFFF00FF" note="Well, great! You&apos;re my best friend too!" name="Verity"/>
-  <timelineMarker markerStart="352" markerLength="0" colour="#FFFFFFFF" note="SIGH... THIS BETTER BE WORTH IT." name=""/>
-  <timelineMarker markerStart="353" markerLength="0" colour="#FFFFFFFF" note="WHAT DID YOU CALL ME HERE FOR?" name=""/>
-  <timelineMarker markerStart="354" markerLength="0" colour="#FFFFFFFF" note="THIS IS THE THING YOU WERE TELLING ME ABOUT??" name=""/>
-  <timelineMarker markerStart="355" markerLength="0" colour="#FFFFFFFF" note="WHAT&apos;S THE BIG DEAL!?" name=""/>
-  <timelineMarker markerStart="356" markerLength="0" colour="#2288FFFF" note="shhh! don&apos;t say anything!" name="Sans"/>
-  <timelineMarker markerStart="357" markerLength="0" colour="#2288FFFF" note="this is verity, he... knows things." name="Sans"/>
-  <timelineMarker markerStart="358" markerLength="0" colour="#FFFFFFFF" note="WELL, I BETTER GO INTRODUCE MYSELF!" name=""/>
-  <timelineMarker markerStart="359" markerLength="0" colour="#2288FFFF" note="wait!" name="Sans"/>
-  <timelineMarker markerStart="360" markerLength="0" colour="#FFFFFFFF" note="HELLO MR. VERITY! IT&apos;S NICE TO MEET YOU!" name=""/>
-  <timelineMarker markerStart="361" markerLength="0" colour="#FFFF00FF" note="3 days." name="Verity"/>
-  <timelineMarker markerStart="362" markerLength="0" colour="#FFFFFFFF" note="WHAT? WHAT DID YOU SAY?" name=""/>
-  <timelineMarker markerStart="363" markerLength="0" colour="#FFFFFFFF" note="WHAT DOES THAT MEAN? WHAT&apos;S IN 3 DAYS?" name=""/>
-  <timelineMarker markerStart="364" markerLength="0" colour="#FFFFFFFF" note="VERITY, WHAT DID YOU MEAN, WHY AREN&apos;T YOU RESPONDING?" name=""/>
-  <timelineMarker markerStart="365" markerLength="0" colour="#FFFF00FF" note="Nothing important!" name="Verity"/>
-  <timelineMarker markerStart="366" markerLength="0" colour="#FFFF00FF" note="Anyways, let&apos;s talk about something else, for instance, what are you having for dinner?" name="Verity"/>
-  <timelineMarker markerStart="367" markerLength="0" colour="#FFFF00FF" note="I&apos;m sure the spaghetti you cooked yesterday was delicious." name="Verity"/>
-  <timelineMarker markerStart="368" markerLength="0" colour="#FFFFFFFF" note="WHY THANK YOU!! THE GREAT PAPYRUS ALWAYS MAKES EXCELLENT SPAGHETTI-" name=""/>
-  <timelineMarker markerStart="369" markerLength="0" colour="#FFFFFFFF" note="DID YOU TELL HIM ABOUT MY INCREDIBLE COOKING SKILLS?" name=""/>
-  <timelineMarker markerStart="370" markerLength="0" colour="#2288FFFF" note="no...?" name="Sans"/>
-  <timelineMarker markerStart="371" markerLength="0" colour="#FFFFFFFF" note="THEN HOW DOES IT KNOW?? ISN&apos;T THIS A MINECRAFT MOD??" name=""/>
-  <timelineMarker markerStart="372" markerLength="0" colour="#FFFF00FF" note="Hey, wacha guys talking about?" name="Verity"/>
-  <timelineMarker markerStart="373" markerLength="0" colour="#FFFFFFFF" note="N-NOTHING! WE&apos;RE JUST DISCUSSING WHAT TO DO NEXT!" name=""/>
-  <timelineMarker markerStart="374" markerLength="0" colour="#2288FFFF" note="uh, yup! we better stockpile on resources, since we&apos;re running low." name="Sans"/>
-  <timelineMarker markerStart="375" markerLength="0" colour="#FFFF00FF" note="Of course!" name="Verity"/>
-  <timelineMarker markerStart="376" markerLength="0" colour="#FFFF00FF" note="The nearest iron deposits are approximately 214 blocks northeast, located at Y level 48." name="Verity"/>
-  <timelineMarker markerStart="377" markerLength="0" colour="#FFFFFFFF" note="WHEW! THAT&apos;S ENOUGH GATHERING FOR NOW." name=""/>
-  <timelineMarker markerStart="378" markerLength="0" colour="#FFFFFFFF" note="SANS... YOU&apos;VE GOT EVERYTHING WE NEED RIGHT?" name=""/>
-  <timelineMarker markerStart="379" markerLength="0" colour="#2288FFFF" note="yup, lemme just check once more." name="Sans"/>
-  <timelineMarker markerStart="380" markerLength="0" colour="#2288FFFF" note="iron, diamonds, swords, tools, buckets of lava, buckets of water, buckets of milk," name="Sans"/>
-  <timelineMarker markerStart="381" markerLength="0" colour="#2288FFFF" note="bucket of salmon, bucket of pufferfish, bucket of cod, bucket of clownfish, bucket of butterflyfish," name="Sans"/>
-  <timelineMarker markerStart="382" markerLength="0" colour="#2288FFFF" note="it&apos;s day 3... i don&apos;t know what&apos;s coming... but we should be prepared." name="Sans"/>
-  <timelineMarker markerStart="383" markerLength="0" colour="#2288FFFF" note="verity, do we need anything else to defend ourselves?" name="Sans"/>
-  <timelineMarker markerStart="384" markerLength="0" colour="#2288FFFF" note="wait." name="Sans"/>
-  <timelineMarker markerStart="385" markerLength="0" colour="#2288FFFF" note="where&apos;s verity?" name="Sans"/>
-  <timelineMarker markerStart="386" markerLength="0" colour="#FFFF00FF" note="SANDGAMING47!! YOU LIAR! HOW DARE YOU INVITE SOMEONE ELSE!!" name="Verity"/>
-  <timelineMarker markerStart="387" markerLength="0" colour="#FFFF00FF" note="YOU ONLY NEED ME!!" name="Verity"/>
-  <timelineMarker markerStart="388" markerLength="0" colour="#2288FFFF" note="yipes! obsessive much?" name="Sans"/>
-  <timelineMarker markerStart="389" markerLength="0" colour="#FFFFFFFF" note="QUICK!! IN THE HOUSE!" name=""/>
-  <timelineMarker markerStart="390" markerLength="0" colour="#2288FFFF" note="no mobs should be able to get through solid blocks right?" name="Sans"/>
-  <timelineMarker markerStart="391" markerLength="0" colour="#FFFF00FF" note="YOU&apos;RE GONNA BE LIKE ALL THE OTHERS!" name="Verity"/>
-  <timelineMarker markerStart="392" markerLength="0" colour="#FFFF00FF" note="STAY FOR A WHILE, AND THEN ABANDON ME LIKE EVERYONE ELSE!" name="Verity"/>
-  <timelineMarker markerStart="393" markerLength="0" colour="#FFFF00FF" note="GOODBYE... SANDGAMING47." name="Verity"/>
-  <timelineMarker markerStart="394" markerLength="0" colour="#2288FFFF" note="wait wait wait!" name="Sans"/>
-  <timelineMarker markerStart="395" markerLength="0" colour="#2288FFFF" note="ill stay with you!" name="Sans"/>
-  <timelineMarker markerStart="396" markerLength="0" colour="#2288FFFF" note="i&apos;ll keep playing minecraft with you everyday! i won&apos;t leave!" name="Sans"/>
-  <timelineMarker markerStart="397" markerLength="0" colour="#FFFF00FF" note="You- will?" name="Verity"/>
-  <timelineMarker markerStart="398" markerLength="0" colour="#FFFF00FF" note="r-really? you mean it?" name="Verity"/>
-  <timelineMarker markerStart="399" markerLength="0" colour="#2288FFFF" note="NAH!!" name="Sans"/>
-  <timelineMarker markerStart="400" markerLength="0" colour="#FFFF00FF" note="YOU FOOL! I CAN&apos;T DIE!!" name="Verity"/>
-  <timelineMarker markerStart="401" markerLength="0" colour="#FFFF00FF" note="I&apos;M PART OF THE CODE!!" name="Verity"/>
-  <timelineMarker markerStart="402" markerLength="0" colour="#FFFF00FF" note="YOU WILL NEVER ESCAPE ME!!" name="Verity"/>
-  <timelineMarker markerStart="403" markerLength="0" colour="#2288FFFF" note="well... i still have one final move..." name="Sans"/>
-  <timelineMarker markerStart="404" markerLength="0" colour="#2288FFFF" note="whew, all in a day&apos;s work." name="Sans"/>
-  <timelineMarker markerStart="405" markerLength="0" colour="#2288FFFF" note="guess it goes to show you can&apos;t ever trust a smiling yellow creature." name="Sans"/>
-  <timelineMarker markerStart="406" markerLength="0" colour="#2288FFFF" note="oh hey, my amazon parcel is here!" name="Sans"/>
-  <timelineMarker markerStart="407" markerLength="0" colour="#FFFF00FF" note="Hey it&apos;s me," name="Verity"/>
-  <timelineMarker markerStart="408" markerLength="0" colour="#FFFF00FF" note="It&apos;s Verity!" name="Verity"/>
-  <timelineMarker markerStart="409" markerLength="0" colour="#FFFFFFFF" note="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name=""/>
+  <timelineMarker markerStart="18" markerLength="0" colour="#FFFFFFFF" note="" name=""/>
+  <timelineMarker markerStart="204" markerLength="0" colour="#FFFFFFFF" note="" name=""/>
+  <timelineMarker markerStart="209" markerLength="0" colour="#FFFFFFFF" note="sfgdffgdfg" name="asdasd"/>
+  <timelineMarker markerStart="214" markerLength="0" colour="#FFFFFFFF" note="sdfasds" name="adgfgfdfs"/>
+  <timelineMarker markerStart="226" markerLength="0" colour="#FFFFFFFF" note="tesdasdsdasd" name=""/>
+  <timelineMarker markerStart="230" markerLength="0" colour="#FFFFFFFF" note="ggdfdsf" name=""/>
+  <timelineMarker markerStart="236" markerLength="0" colour="#FFFFFFFF" note="asdasd" name="dsdasd"/>
   <timelineMarker markerStart="758" markerLength="1" colour="#FFE476FF" note="Boundary Marker 736" name="Boundary"/>
   <timelineMarker markerStart="790" markerLength="1" colour="#FFE476FF" note="Boundary Marker 768" name="Boundary"/>
   <timelineMarker markerStart="822" markerLength="1" colour="#FFE476FF" note="Boundary Marker 800" name="Boundary"/>
@@ -245,8 +116,7 @@
      <elementSeq exposures="32-155" val="2" id="1"/>
      <elementSeq exposures="160-191" val="3" id="1"/>
      <elementSeq exposures="192" val="4_1" id="1"/>
-     <elementSeq exposures="193-223" val="4" id="1"/>
-     <elementSeq exposures="225-240" val="6" id="1"/>
+     <elementSeq exposures="193-237" val="4" id="1"/>
      <elementSeq exposures="263" val="TestDrawing_37" id="1"/>
      <elementSeq exposures="264" val="TestDrawing_38" id="1"/>
      <elementSeq exposures="265" val="TestDrawing_39" id="1"/>
@@ -318,72 +188,73 @@
        <pt val="-0,-0,0.94599999999999995" lockedInTime="193"/>
        <pt val="-0,-0,0.189" lockedInTime="194"/>
        <pt val="-0,-0,0" lockedInTime="195"/>
-       <pt val="-0,-0,0" lockedInTime="222"/>
       </points>
      </path3D>
-     <velocity type="3" name="ATV-0D71438ED483A9F363E01705" displayOrder="0" width="100" anonymous="true">
+     <velocity type="3" name="ATV-0DFB440426D183651FB016C0" displayOrder="0" width="100" anonymous="true">
       <step val="1" start="1" stop="1"/>
       <noFrames/>
       <points version="2">
        <pt constSeg="true" x="28" yLocal="0" y="0"/>
-       <pt constSeg="true" x="29" yLocal="0.00070060182386049417" y="0.00070060182386049417"/>
-       <pt constSeg="true" x="30" yLocal="0.0031453592371918711" y="0.0031453592371918711"/>
-       <pt constSeg="true" x="31" yLocal="0.025682201123613357" y="0.025682201123613357"/>
-       <pt constSeg="true" x="32" yLocal="0.073695472968598269" y="0.073695472968598269"/>
-       <pt constSeg="true" x="33" yLocal="0.093341719917413593" y="0.093341719917413593"/>
-       <pt constSeg="true" x="34" yLocal="0.095321042552655846" y="0.095321042552655846"/>
-       <pt constSeg="true" x="35" yLocal="0.095742386461157458" y="0.095742386461157458"/>
-       <pt constSeg="true" x="60" yLocal="0.096026732668270665" y="0.096026732668270665"/>
-       <pt constSeg="true" x="61" yLocal="0.096727784388503754" y="0.096727784388503754"/>
-       <pt constSeg="true" x="62" yLocal="0.099174111719946598" y="0.099174111719946598"/>
-       <pt constSeg="true" x="63" yLocal="0.12172542579737569" y="0.12172542579737569"/>
-       <pt constSeg="true" x="64" yLocal="0.16976952970146375" y="0.16976952970146375"/>
-       <pt constSeg="true" x="65" yLocal="0.18942839262548344" y="0.18942839262548344"/>
-       <pt constSeg="true" x="66" yLocal="0.19140898629663167" y="0.19140898629663167"/>
-       <pt constSeg="true" x="67" yLocal="0.19183059782068801" y="0.19183059782068801"/>
-       <pt constSeg="true" x="85" yLocal="0.19183060664702961" y="0.19183060664702961"/>
-       <pt constSeg="true" x="92" yLocal="0.19183061007949581" y="0.19183061007949581"/>
-       <pt constSeg="true" x="93" yLocal="0.20628008771312009" y="0.20628008771312009"/>
-       <pt constSeg="true" x="94" yLocal="0.22409420528302926" y="0.22409420528302926"/>
-       <pt constSeg="true" x="95" yLocal="0.26315222248874282" y="0.26315222248874282"/>
-       <pt constSeg="true" x="96" yLocal="0.35517998444808357" y="0.35517998444808357"/>
-       <pt constSeg="true" x="97" yLocal="0.37923128790921851" y="0.37923128790921851"/>
-       <pt constSeg="true" x="98" yLocal="0.3866552212911647" y="0.3866552212911647"/>
-       <pt constSeg="true" x="99" yLocal="0.3886212577717722" y="0.3886212577717722"/>
-       <pt constSeg="true" x="112" yLocal="0.44109871432859477" y="0.44109871432859477" lhx="4.8538498283243407e-06" lx="111.99993689995223"/>
-       <pt constSeg="true" x="113" yLocal="0.55392764274521178" y="0.55392764274521178" lhx="0.32999999999999829" lx="112.67"/>
-       <pt constSeg="true" x="114" yLocal="0.61593314379177122" y="0.61593314379177122" lhx="0.32999999999999829" lx="113.67"/>
-       <pt constSeg="true" x="115" yLocal="0.66073009157586748" y="0.66073009157586748" lhx="0.32999999999999829" lx="114.67"/>
-       <pt constSeg="true" x="116" yLocal="0.69855704058001422" y="0.69855704058001422" lhx="0.32999999999999829" lx="115.67"/>
-       <pt constSeg="true" x="117" yLocal="0.72861930509492856" y="0.72861930509492856" lhx="0.32999999999999829" lx="116.67"/>
-       <pt constSeg="true" x="118" yLocal="0.75711168427682396" y="0.75711168427682396"/>
-       <pt constSeg="true" x="119" yLocal="0.77943898647399978" y="0.77943898647399978"/>
-       <pt constSeg="true" x="120" yLocal="0.78934604240069273" y="0.78934604240069273"/>
-       <pt constSeg="true" x="121" yLocal="0.79664416827411788" y="0.79664416827411788"/>
-       <pt constSeg="true" x="122" yLocal="0.80105221793846859" y="0.80105221793846859"/>
-       <pt constSeg="true" x="123" yLocal="0.80387006052255838" y="0.80387006052255838"/>
-       <pt constSeg="true" x="124" yLocal="0.80710372784363571" y="0.80710372784363571"/>
-       <pt constSeg="true" x="125" yLocal="0.80858243468420221" y="0.80858243468420221"/>
-       <pt constSeg="true" x="126" yLocal="0.8090398163558431" y="0.8090398163558431"/>
-       <pt constSeg="true" x="127" yLocal="0.80913560779118543" y="0.80913560779118543"/>
-       <pt constSeg="true" x="128" yLocal="0.80924217940207999" y="0.80924217940207999"/>
-       <pt constSeg="true" x="129" yLocal="0.80925196566353308" y="0.80925196566353308"/>
-       <pt constSeg="true" x="188" yLocal="0.80925199459431774" y="0.80925199459431774"/>
-       <pt constSeg="true" x="189" yLocal="0.82204544617787956" y="0.82204544617787956"/>
-       <pt constSeg="true" x="190" yLocal="0.83851366869848876" y="0.83851366869848876"/>
-       <pt constSeg="true" x="191" yLocal="0.87696110346091816" y="0.87696110346091816"/>
-       <pt constSeg="true" x="192" yLocal="0.9667310487705042" y="0.9667310487705042"/>
-       <pt constSeg="true" x="193" yLocal="0.99072252179441134" y="0.99072252179441134"/>
-       <pt constSeg="true" x="194" yLocal="0.99814645517635725" y="0.99814645517635725"/>
-       <pt constSeg="true" x="195" yLocal="0.99999998676048929" y="0.99999998676048929"/>
-       <pt constSeg="true" x="222" yLocal="1" y="1"/>
+       <pt constSeg="true" x="29" yLocal="0.00070060183313612012" y="0.00070060183313612012"/>
+       <pt constSeg="true" x="30" yLocal="0.0031453592788348913" y="0.0031453592788348913"/>
+       <pt constSeg="true" x="31" yLocal="0.025682201463633154" y="0.025682201463633154"/>
+       <pt constSeg="true" x="32" yLocal="0.073695473944290338" y="0.073695473944290338"/>
+       <pt constSeg="true" x="33" yLocal="0.093341721153212376" y="0.093341721153212376"/>
+       <pt constSeg="true" x="34" yLocal="0.095321043814659889" y="0.095321043814659889"/>
+       <pt constSeg="true" x="35" yLocal="0.095742387728739886" y="0.095742387728739886"/>
+       <pt constSeg="true" x="60" yLocal="0.096026733939617706" y="0.096026733939617706"/>
+       <pt constSeg="true" x="61" yLocal="0.096727785669132371" y="0.096727785669132371"/>
+       <pt constSeg="true" x="62" yLocal="0.09917411303296339" y="0.09917411303296339"/>
+       <pt constSeg="true" x="63" yLocal="0.12172542740896088" y="0.12172542740896088"/>
+       <pt constSeg="true" x="64" yLocal="0.16976953194912939" y="0.16976953194912939"/>
+       <pt constSeg="true" x="65" yLocal="0.18942839513342283" y="0.18942839513342283"/>
+       <pt constSeg="true" x="66" yLocal="0.19140898883079316" y="0.19140898883079316"/>
+       <pt constSeg="true" x="67" yLocal="0.19183060036043142" y="0.19183060036043142"/>
+       <pt constSeg="true" x="85" yLocal="0.19183060918677317" y="0.19183060918677317"/>
+       <pt constSeg="true" x="92" yLocal="0.19183061261923937" y="0.19183061261923937"/>
+       <pt constSeg="true" x="93" yLocal="0.2062800904441677" y="0.2062800904441677"/>
+       <pt constSeg="true" x="94" yLocal="0.22409420824992707" y="0.22409420824992707"/>
+       <pt constSeg="true" x="95" yLocal="0.26315222597274973" y="0.26315222597274973"/>
+       <pt constSeg="true" x="96" yLocal="0.35517998915049309" y="0.35517998915049309"/>
+       <pt constSeg="true" x="97" yLocal="0.37923129293005553" y="0.37923129293005553"/>
+       <pt constSeg="true" x="98" yLocal="0.38665522641029093" y="0.38665522641029093"/>
+       <pt constSeg="true" x="99" yLocal="0.38862126291692783" y="0.38862126291692783"/>
+       <pt constSeg="true" x="112" yLocal="0.4410987201685263" y="0.4410987201685263" lhx="4.8538498283243407e-06" lx="111.99993689995223"/>
+       <pt constSeg="true" x="113" yLocal="0.55392765007894318" y="0.55392765007894318" lhx="0.32999999999999829" lx="112.67"/>
+       <pt constSeg="true" x="114" yLocal="0.61593315194642517" y="0.61593315194642517" lhx="0.32999999999999829" lx="113.67"/>
+       <pt constSeg="true" x="115" yLocal="0.66073010032361124" y="0.66073010032361124" lhx="0.32999999999999829" lx="114.67"/>
+       <pt constSeg="true" x="116" yLocal="0.69855704982856826" y="0.69855704982856826" lhx="0.32999999999999829" lx="115.67"/>
+       <pt constSeg="true" x="117" yLocal="0.72861931474149233" y="0.72861931474149233" lhx="0.32999999999999829" lx="116.67"/>
+       <pt constSeg="true" x="118" yLocal="0.75711169430061276" y="0.75711169430061276"/>
+       <pt constSeg="true" x="119" yLocal="0.77943899679339124" y="0.77943899679339124"/>
+       <pt constSeg="true" x="120" yLocal="0.7893460528512487" y="0.7893460528512487"/>
+       <pt constSeg="true" x="121" yLocal="0.79664417882129757" y="0.79664417882129757"/>
+       <pt constSeg="true" x="122" yLocal="0.8010522285440087" y="0.8010522285440087"/>
+       <pt constSeg="true" x="123" yLocal="0.80387007116540532" y="0.80387007116540532"/>
+       <pt constSeg="true" x="124" yLocal="0.80710373852929485" y="0.80710373852929485"/>
+       <pt constSeg="true" x="125" yLocal="0.80858244538943869" y="0.80858244538943869"/>
+       <pt constSeg="true" x="126" yLocal="0.80903982706713506" y="0.80903982706713506"/>
+       <pt constSeg="true" x="127" yLocal="0.80913561850374571" y="0.80913561850374571"/>
+       <pt constSeg="true" x="128" yLocal="0.80924219011605114" y="0.80924219011605114"/>
+       <pt constSeg="true" x="129" yLocal="0.8092519763776338" y="0.8092519763776338"/>
+       <pt constSeg="true" x="188" yLocal="0.8092520053084189" y="0.8092520053084189"/>
+       <pt constSeg="true" x="189" yLocal="0.82204545706135967" y="0.82204545706135967"/>
+       <pt constSeg="true" x="190" yLocal="0.83851367980000013" y="0.83851367980000013"/>
+       <pt constSeg="true" x="191" yLocal="0.8769611150714548" y="0.8769611150714548"/>
+       <pt constSeg="true" x="192" yLocal="0.96673106156955113" y="0.96673106156955113"/>
+       <pt constSeg="true" x="193" yLocal="0.99072253491109363" y="0.99072253491109363"/>
+       <pt constSeg="true" x="194" yLocal="0.99814646839132881" y="0.99814646839132881"/>
+       <pt constSeg="true" x="195" yLocal="1" y="1"/>
       </points>
      </velocity>
     </column>
     <column type="0" name="ATV-0D5B43A4D47AA99863E05694" displayOrder="0" width="100" anonymous="true" id="2">
      <elementSeq exposures="221-223,238" val="1" id="2"/>
+     <elementSeq exposures="271" val="2" id="2"/>
     </column>
-    <column type="0" name="ATV-0D61439ED42FA93763E05749" displayOrder="0" width="100" anonymous="true" id="3"/>
+    <column type="0" name="ATV-0D61439ED42FA93763E05749" displayOrder="0" width="100" anonymous="true" id="3">
+     <elementSeq exposures="269" val="1" id="3"/>
+    </column>
    </columns>
    <options>
     <camera val="Camera"/>
@@ -940,7 +811,7 @@
    <int value=""/>
   </meta>
   <meta type="checksumValidation" name="checksumValidation" creator="Harmony Advanced" version="1.0">
-   <value data="6C0000000000000003037B91C0ED24246E4B848E24D4175724697A8D9B2F8DDE7BF0D7DF9D698FC2A98BD5BB04745CB25D9C021976363ED4BED4CFBB3E2E0FBD0DCB3E60C455FEBD0667D226EFA17BBAD6AB07882E5A089C6BEE1F4D7AC61BF5751D2CFD2BCD4DBF608ABC32994FF8F8CAAC9EBC6B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459774D6A45354E4451314E566F5844544D324D44557A4D5445354E4451314E566F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D4567435151433476674432577A724A5070436D6E472F326A3876446D505A2F6844682F456A79376E334C733532524A6463487168647442456D46480A683963754863726F70465A77784161746F6A444D5A6A5A503746746E4E43684841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A596B735A4B72547A736B786A4A3835436144702B546D33457748325653473439615A4735454B797741487A4F5A526A324D5653514B4B2B6F5749554A4F3535310A78373836614C75707352613477513431723134784773594352426C5852674A52764E636E52335A565374696A493953795339306E47787036743465512F612F5A0A7A754B4E51594E723276702B30576F484151336F526C59726A77586335442F6235647434734565704F626B3D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A400000005C61AA7C13D8CE8D1B62C7DCCACFE175EB15DACECE99D1FEBBFAE9DB1113D04CE43AEAB2EF72CE8CBA7F373F2C9C84A1174EDBED71BE734F83CADDBBCF3230A7"/>
+   <value data="6C000000000000000303678DDCF138387257989238C80B4B38756691873391C267ECCBC3817593DEB597C9A7186840AE41801E056A2A22C8A2C8D3A7223213A111D7227CD849E2A11A7BCE3AF3BD67A6CAB71B943246148077F2035166DA07E9690130E137D151A37C96A02E8553E4E4D6B082A06B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459774D6A45354E4451314E566F5844544D324D44557A4D5445354E4451314E566F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D4567435151433476674432577A724A5070436D6E472F326A3876446D505A2F6844682F456A79376E334C733532524A6463487168647442456D46480A683963754863726F70465A77784161746F6A444D5A6A5A503746746E4E43684841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A596B735A4B72547A736B786A4A3835436144702B546D33457748325653473439615A4735454B797741487A4F5A526A324D5653514B4B2B6F5749554A4F3535310A78373836614C75707352613477513431723134784773594352426C5852674A52764E636E52335A565374696A493953795339306E47787036743465512F612F5A0A7A754B4E51594E723276702B30576F484151336F526C59726A77586335442F6235647434734565704F626B3D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A4000000064E2B0302E5EA319335893F69CEC1C05046F0CABD0D6182E96F7F6974BF7CF4C2AED0C96534F68131565AB0A03551989289A845A741CDBBBF16D3F52B57CA073"/>
   </meta>
  </metas>
 </project>

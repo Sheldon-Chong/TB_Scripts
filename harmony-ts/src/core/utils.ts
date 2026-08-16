@@ -439,6 +439,7 @@ const Utils = {
   prompt,
   styledButton,
   readXmlFile,
+  getClipboardText,
 };
 
 function getHoverColor(color) {
@@ -545,6 +546,10 @@ function confirm(
 
   dialog.exec();
   return result;
+}
+
+function getClipboardText(): string {
+  return QApplication.clipboard().text();
 }
 
 /**

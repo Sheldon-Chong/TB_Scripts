@@ -16,6 +16,7 @@ include(specialFolders.userScripts + '/core/ColumnGroupings.js');
 include(specialFolders.userScripts + '/core/MetadataKit.js');
 include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
+include(specialFolders.userScripts + '/core/UI/widgets.js');
 
 // --- ES6+ Array method polyfills for QtScript's ES5 engine ---
 if (!Array.prototype.find) {
@@ -126,6 +127,7 @@ class HarmonyGlobals {
   columnGroupingColor = columnGroupingColor;
   columnGrouping = columnGrouping;
   PermanentFile = PermanentFile;
+  Widgets = Widgets;
 }
 
 var _ = new HarmonyGlobals();

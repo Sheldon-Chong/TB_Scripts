@@ -1,4 +1,35 @@
 namespace Widgets {
+  export function showToast(labelText: string, duration: number, anchorWindow?: any): void {
+    var toast = new QWidget();
+    toast.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.ToolTip);
+
+    var styleSheet =
+      'QWidget { background-color: rgba(30,30,30,0.85); color: #00ccff; ' +
+      'border-radius: 8px; padding: 8px 14px; ' +
+      'font-family: Arial; font-size: 11pt; font-weight: bold; }';
+    toast.setStyleSheet(styleSheet);
+
+    var layout = new QHBoxLayout(toast);
+    layout.addWidget(new QLabel(labelText), 0, 0);
+
+    toast.setAttribute(Qt.WA_DeleteOnClose);
+
+    var win = anchorWindow || QApplication.activeWindow();
+    if (win && win.geometry) {
+      var geom = win.geometry;
+      toast.move(geom.x() + 10, geom.y() + 10);
+    }
+
+    toast.show();
+
+    var timer = new QTimer();
+    timer.singleShot = true;
+    timer.timeout.connect(function () {
+      toast.close();
+    });
+    timer.start(duration || 1500);
+  }
+
   export function createComponent(def, parent) {
     // 1. Instantiate the widget/object
     var widget = new def.type(parent);
@@ -7,6 +38,19 @@ namespace Widgets {
     if (def.props) {
       for (var key in def.props) {
         widget[key] = def.props[key];
+      }
+    }
+
+    // 2b. Apply method calls (e.g. setSizePolicy) that can't be expressed
+    //     as plain property assignments.
+    if (def.calls) {
+      for (var c = 0; c < def.calls.length; c++) {
+        var call = def.calls[c];
+        try {
+          widget[call.name].apply(widget, call.args);
+        } catch (e) {
+          MessageLog.trace('[Widgets] call failed: ' + call.name + ' - ' + e.message);
+        }
       }
     }
 

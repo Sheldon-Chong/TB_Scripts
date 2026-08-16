@@ -232,6 +232,29 @@ declare class QLineEdit {
   constructor(...args: any[]);
   [key: string]: any;
 }
+declare class QTextEdit {
+  constructor(...args: any[]);
+  [key: string]: any;
+  static NoWrap: number;
+  static WidgetWidth: number;
+  static FixedPixelWidth: number;
+  static FixedColumnWidth: number;
+}
+declare class QTableWidget {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QTableWidgetItem {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class SceneChangeNotifier {
+  constructor(...args: any[]);
+  currentFrameChanged: any;
+  selectionChanged: any;
+  sceneMarkersChanged: any;
+  [key: string]: any;
+}
 declare class QDialog {
   constructor(...args: any[]);
   [key: string]: any;
@@ -280,6 +303,14 @@ declare class QCheckBox {
   constructor(...args: any[]);
   [key: string]: any;
 }
+declare class QTimer {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare var QApplication: {
+  activeWindow(): any;
+  [key: string]: any;
+};
 declare var Qt: {
   new (...args: any[]): any;
   (...args: any[]): any;
