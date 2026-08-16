@@ -228,6 +228,14 @@ declare class QLabel {
   constructor(...args: any[]);
   [key: string]: any;
 }
+declare class QLineEdit {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
+declare class QDialog {
+  constructor(...args: any[]);
+  [key: string]: any;
+}
 declare class QWidget {
   constructor(...args: any[]);
   [key: string]: any;
@@ -671,3 +679,12 @@ declare var func: {
     bias: number,
   ): void;
 };
+
+interface DrawingType {
+  text: string;
+  pixmapFile: string;
+  commandIcon: string;
+  flipIcon: string;
+  onionIcon: string;
+  timelineColor: string;
+}

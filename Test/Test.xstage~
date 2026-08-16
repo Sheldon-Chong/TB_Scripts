@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Thu Aug 13 18:44:20 2026" timeMsec="1786617860469" username="emers" realUsername="emers" creator="harmony">
+<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Sat Aug 15 18:11:45 2026" timeMsec="1786788705000" username="emers" realUsername="emers" creator="harmony">
  <elements>
   <element id="1" elementName="Drawing" elementFolder="Drawing" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
    <drawings>
@@ -8,8 +8,64 @@
     <dwg name="3"/>
     <dwg name="4"/>
     <dwg name="4_1"/>
+    <dwg name="5"/>
+    <dwg name="6"/>
+    <dwg name="TestDrawing_1"/>
+    <dwg name="TestDrawing_2"/>
+    <dwg name="TestDrawing_3"/>
+    <dwg name="TestDrawing_4"/>
+    <dwg name="TestDrawing_5"/>
+    <dwg name="TestDrawing_6"/>
+    <dwg name="TestDrawing_7"/>
+    <dwg name="TestDrawing_8"/>
+    <dwg name="TestDrawing_9"/>
+    <dwg name="TestDrawing_10"/>
+    <dwg name="TestDrawing_11"/>
+    <dwg name="TestDrawing_12"/>
+    <dwg name="TestDrawing_13"/>
+    <dwg name="TestDrawing_14"/>
+    <dwg name="TestDrawing_15"/>
+    <dwg name="TestDrawing_16"/>
+    <dwg name="TestDrawing_17"/>
+    <dwg name="TestDrawing_18"/>
+    <dwg name="TestDrawing_19"/>
+    <dwg name="TestDrawing_20"/>
+    <dwg name="TestDrawing_21"/>
+    <dwg name="TestDrawing_22"/>
+    <dwg name="TestDrawing_23"/>
+    <dwg name="TestDrawing_24"/>
+    <dwg name="TestDrawing_25"/>
+    <dwg name="TestDrawing_26"/>
+    <dwg name="TestDrawing_27"/>
+    <dwg name="TestDrawing_28"/>
+    <dwg name="TestDrawing_29"/>
+    <dwg name="TestDrawing_30"/>
+    <dwg name="TestDrawing_31"/>
+    <dwg name="TestDrawing_32"/>
+    <dwg name="TestDrawing_33"/>
+    <dwg name="TestDrawing_34"/>
+    <dwg name="TestDrawing_35"/>
+    <dwg name="TestDrawing_36"/>
+    <dwg name="TestDrawing_37"/>
+    <dwg name="TestDrawing_38"/>
+    <dwg name="TestDrawing_39"/>
+    <dwg name="TestDrawing_40"/>
+    <dwg name="TestDrawing_41"/>
+    <dwg name="TestDrawing_42"/>
+    <dwg name="TestDrawing_43"/>
+    <dwg name="TestDrawing_44"/>
+    <dwg name="TestDrawing_45"/>
+    <dwg name="TestDrawing_46"/>
+    <dwg name="TestDrawing_47"/>
+    <dwg name="TestDrawing_48"/>
    </drawings>
   </element>
+  <element id="2" elementName="Drawing_1" elementFolder="Drawing_1" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
+   <drawings>
+    <dwg name="1"/>
+   </drawings>
+  </element>
+  <element id="3" elementName="Drawing_2" elementFolder="Drawing_2" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements"/>
  </elements>
  <options>
   <metrics unitAspectRatioX="4" unitAspectRatioY="3" numberOfUnitsX="24" numberOfUnitsY="24" numberOfUnitsZ="12"/>
@@ -29,47 +85,180 @@
   <tvgRecoveryTexture val="true"/>
  </options>
  <timelineMarkers>
-  <timelineMarker markerStart="32" markerLength="1" colour="#FFE476FF" note="Boundary Marker 32" name="Boundary"/>
-  <timelineMarker markerStart="64" markerLength="1" colour="#FFE476FF" note="Boundary Marker 64" name="Boundary"/>
-  <timelineMarker markerStart="96" markerLength="1" colour="#FFE476FF" note="Boundary Marker 96" name="Boundary"/>
-  <timelineMarker markerStart="128" markerLength="1" colour="#FFE476FF" note="Boundary Marker 128" name="Boundary"/>
-  <timelineMarker markerStart="160" markerLength="1" colour="#FFE476FF" note="Boundary Marker 160" name="Boundary"/>
-  <timelineMarker markerStart="192" markerLength="1" colour="#FFE476FF" note="Boundary Marker 192" name="Boundary"/>
   <timelineMarker markerStart="224" markerLength="1" colour="#FFE476FF" note="Boundary Marker 224" name="Boundary"/>
-  <timelineMarker markerStart="256" markerLength="1" colour="#FFE476FF" note="Boundary Marker 256" name="Boundary"/>
-  <timelineMarker markerStart="288" markerLength="1" colour="#FFE476FF" note="Boundary Marker 288" name="Boundary"/>
-  <timelineMarker markerStart="320" markerLength="1" colour="#FFE476FF" note="Boundary Marker 320" name="Boundary"/>
-  <timelineMarker markerStart="352" markerLength="1" colour="#FFE476FF" note="Boundary Marker 352" name="Boundary"/>
-  <timelineMarker markerStart="384" markerLength="1" colour="#FFE476FF" note="Boundary Marker 384" name="Boundary"/>
-  <timelineMarker markerStart="416" markerLength="1" colour="#FFE476FF" note="Boundary Marker 416" name="Boundary"/>
-  <timelineMarker markerStart="448" markerLength="1" colour="#FFE476FF" note="Boundary Marker 448" name="Boundary"/>
-  <timelineMarker markerStart="480" markerLength="1" colour="#FFE476FF" note="Boundary Marker 480" name="Boundary"/>
-  <timelineMarker markerStart="512" markerLength="1" colour="#FFE476FF" note="Boundary Marker 512" name="Boundary"/>
-  <timelineMarker markerStart="544" markerLength="1" colour="#FFE476FF" note="Boundary Marker 544" name="Boundary"/>
-  <timelineMarker markerStart="576" markerLength="1" colour="#FFE476FF" note="Boundary Marker 576" name="Boundary"/>
-  <timelineMarker markerStart="608" markerLength="1" colour="#FFE476FF" note="Boundary Marker 608" name="Boundary"/>
-  <timelineMarker markerStart="640" markerLength="1" colour="#FFE476FF" note="Boundary Marker 640" name="Boundary"/>
-  <timelineMarker markerStart="672" markerLength="1" colour="#FFE476FF" note="Boundary Marker 672" name="Boundary"/>
-  <timelineMarker markerStart="704" markerLength="1" colour="#FFE476FF" note="Boundary Marker 704" name="Boundary"/>
-  <timelineMarker markerStart="736" markerLength="1" colour="#FFE476FF" note="Boundary Marker 736" name="Boundary"/>
-  <timelineMarker markerStart="768" markerLength="1" colour="#FFE476FF" note="Boundary Marker 768" name="Boundary"/>
-  <timelineMarker markerStart="800" markerLength="1" colour="#FFE476FF" note="Boundary Marker 800" name="Boundary"/>
-  <timelineMarker markerStart="832" markerLength="1" colour="#FFE476FF" note="Boundary Marker 832" name="Boundary"/>
-  <timelineMarker markerStart="864" markerLength="1" colour="#FFE476FF" note="Boundary Marker 864" name="Boundary"/>
-  <timelineMarker markerStart="896" markerLength="1" colour="#FFE476FF" note="Boundary Marker 896" name="Boundary"/>
-  <timelineMarker markerStart="928" markerLength="1" colour="#FFE476FF" note="Boundary Marker 928" name="Boundary"/>
-  <timelineMarker markerStart="960" markerLength="1" colour="#FFE476FF" note="Boundary Marker 960" name="Boundary"/>
-  <timelineMarker markerStart="992" markerLength="1" colour="#FFE476FF" note="Boundary Marker 992" name="Boundary"/>
+  <timelineMarker markerStart="265" markerLength="0" colour="#2288FFFF" note="whats up guys, sandgaming47 here." name="Sans"/>
+  <timelineMarker markerStart="266" markerLength="0" colour="#2288FFFF" note="today we&apos;re playing..." name="Sans"/>
+  <timelineMarker markerStart="267" markerLength="0" colour="#2288FFFF" note="A MODDED MINECRAFT PLAYTROUGH" name="Sans"/>
+  <timelineMarker markerStart="268" markerLength="0" colour="#2288FFFF" note="as for what mod we&apos;re playing..." name="Sans"/>
+  <timelineMarker markerStart="269" markerLength="0" colour="#2288FFFF" note="i have no clue actually, someone sent me it on discord" name="Sans"/>
+  <timelineMarker markerStart="270" markerLength="0" colour="#2288FFFF" note="woah!" name="Sans"/>
+  <timelineMarker markerStart="276" markerLength="0" colour="#FFFF00FF" note="Hello, I&apos;m verity!" name="Verity"/>
+  <timelineMarker markerStart="277" markerLength="0" colour="#FFFF00FF" note="Your personal helper friend." name="Verity"/>
+  <timelineMarker markerStart="278" markerLength="0" colour="#FFFF00FF" note="Ask me anything! I know everything." name="Verity"/>
+  <timelineMarker markerStart="279" markerLength="0" colour="#2288FFFF" note="verity, huh?" name="Sans"/>
+  <timelineMarker markerStart="280" markerLength="0" colour="#2288FFFF" note="hmm... you kinda look like someone i know." name="Sans"/>
+  <timelineMarker markerStart="281" markerLength="0" colour="#2288FFFF" note="you aren&apos;t gonna act friendly and then try to kill me right?" name="Sans"/>
+  <timelineMarker markerStart="282" markerLength="0" colour="#FFFF00FF" note="Whaaat?? No...?" name="Verity"/>
+  <timelineMarker markerStart="283" markerLength="0" colour="#FFFF00FF" note="I&apos;m just here to help! Why don&apos;t you ask me something?" name="Verity"/>
+  <timelineMarker markerStart="284" markerLength="0" colour="#2288FFFF" note="alright, what am i standing on right now?" name="Sans"/>
+  <timelineMarker markerStart="285" markerLength="0" colour="#FFFF00FF" note="You&apos;re currently touching grass!" name="Verity"/>
+  <timelineMarker markerStart="286" markerLength="0" colour="#2288FFFF" note="what&apos;s 9 + 10" name="Sans"/>
+  <timelineMarker markerStart="287" markerLength="0" colour="#FFFF00FF" note="21!" name="Verity"/>
+  <timelineMarker markerStart="288" markerLength="0" colour="#2288FFFF" note="is water wet?" name="Sans"/>
+  <timelineMarker markerStart="289" markerLength="0" colour="#FFFF00FF" note="Not in the traditional sense, however it makes other things wet!" name="Verity"/>
+  <timelineMarker markerStart="290" markerLength="0" colour="#2288FFFF" note="what was the common name of gold during the 2013 era of minecraft?" name="Sans"/>
+  <timelineMarker markerStart="291" markerLength="0" colour="#FFFF00FF" note="It was butter, of course!" name="Verity"/>
+  <timelineMarker markerStart="292" markerLength="0" colour="#2288FFFF" note="huh." name="Sans"/>
+  <timelineMarker markerStart="293" markerLength="0" colour="#2288FFFF" note="that&apos;s some elite â€œballâ€ knowledge." name="Sans"/>
+  <timelineMarker markerStart="294" markerLength="0" colour="#2288FFFF" note="welp, i better get started on this playthrough." name="Sans"/>
+  <timelineMarker markerStart="295" markerLength="0" colour="#2288FFFF" note="i&apos;m probably gonna gather some materials, build a house, and maybe explore a village?" name="Sans"/>
+  <timelineMarker markerStart="296" markerLength="0" colour="#FFFF00FF" note="The nearest village is 842 blocks northeast of your current location." name="Verity"/>
+  <timelineMarker markerStart="297" markerLength="0" colour="#2288FFFF" note="oh. thanks for the info." name="Sans"/>
+  <timelineMarker markerStart="298" markerLength="0" colour="#2288FFFF" note="hey verity!" name="Sans"/>
+  <timelineMarker markerStart="299" markerLength="0" colour="#2288FFFF" note="do you know where&apos;s the nearest source of coal?" name="Sans"/>
+  <timelineMarker markerStart="300" markerLength="0" colour="#FFFF00FF" note="The nearest coal vein is located 126 blocks northwest of your position, at Y level 112." name="Verity"/>
+  <timelineMarker markerStart="301" markerLength="0" colour="#2288FFFF" note="heh, nice!" name="Sans"/>
+  <timelineMarker markerStart="302" markerLength="0" colour="#2288FFFF" note="verity...  do you know where&apos;s the nearest source of diamonds?" name="Sans"/>
+  <timelineMarker markerStart="303" markerLength="0" colour="#FFFF00FF" note="The nearest diamond vein is approximately 347 blocks southeast of your current position, at Y level -54." name="Verity"/>
+  <timelineMarker markerStart="304" markerLength="0" colour="#2288FFFF" note="YOOOOO" name="Sans"/>
+  <timelineMarker markerStart="305" markerLength="0" colour="#2288FFFF" note="verity, do you know where&apos;s the nearest source of wood?" name="Sans"/>
+  <timelineMarker markerStart="306" markerLength="0" colour="#FFFF00FF" note="Seriously?" name="Verity"/>
+  <timelineMarker markerStart="307" markerLength="0" colour="#2288FFFF" note="and after much ketchup, sweat, and tears... my house is finally complete!" name="Sans"/>
+  <timelineMarker markerStart="308" markerLength="0" colour="#2288FFFF" note="what do you think?" name="Sans"/>
+  <timelineMarker markerStart="309" markerLength="0" colour="#FFFF00FF" note="I think you should watch some beginner tutorials online." name="Verity"/>
+  <timelineMarker markerStart="310" markerLength="0" colour="#2288FFFF" note="welp, time to take a well deserved nap," name="Sans"/>
+  <timelineMarker markerStart="311" markerLength="0" colour="#2288FFFF" note="CREEPER??" name="Sans"/>
+  <timelineMarker markerStart="312" markerLength="0" colour="#FFFF00FF" note="Haha, just kidding, that was me!" name="Verity"/>
+  <timelineMarker markerStart="313" markerLength="0" colour="#2288FFFF" note="huh? you make sounds with your mouth?" name="Sans"/>
+  <timelineMarker markerStart="314" markerLength="0" colour="#FFFF00FF" note="Of course I can!" name="Verity"/>
+  <timelineMarker markerStart="315" markerLength="0" colour="#FFFF00FF" note="I can even play music. Wanna listen to some tunes?" name="Verity"/>
+  <timelineMarker markerStart="316" markerLength="0" colour="#2288FFFF" note="sure, why not." name="Sans"/>
+  <timelineMarker markerStart="317" markerLength="0" colour="#2288FFFF" note="gimme another one!" name="Sans"/>
+  <timelineMarker markerStart="318" markerLength="0" colour="#2288FFFF" note="another one!" name="Sans"/>
+  <timelineMarker markerStart="319" markerLength="0" colour="#2288FFFF" note="h-how do you know that song?" name="Sans"/>
+  <timelineMarker markerStart="320" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity! I know everything!" name="Verity"/>
+  <timelineMarker markerStart="321" markerLength="0" colour="#2288FFFF" note="uh... enough music for now..." name="Sans"/>
+  <timelineMarker markerStart="322" markerLength="0" colour="#2288FFFF" note="alright, i ain&apos;t sleeping tonight." name="Sans"/>
+  <timelineMarker markerStart="323" markerLength="0" colour="#2288FFFF" note="ahh... what a good rest." name="Sans"/>
+  <timelineMarker markerStart="324" markerLength="0" colour="#2288FFFF" note="hey verity, is there anything i should know today?" name="Sans"/>
+  <timelineMarker markerStart="325" markerLength="0" colour="#FFFF00FF" note="Something is coming..." name="Verity"/>
+  <timelineMarker markerStart="326" markerLength="0" colour="#FFFF00FF" note="in 3 days." name="Verity"/>
+  <timelineMarker markerStart="327" markerLength="0" colour="#2288FFFF" note="is it the package i bought from amazon?" name="Sans"/>
+  <timelineMarker markerStart="328" markerLength="0" colour="#FFFF00FF" note="What?? No!" name="Verity"/>
+  <timelineMarker markerStart="329" markerLength="0" colour="#FFFF00FF" note="Your package is stuck in transit." name="Verity"/>
+  <timelineMarker markerStart="330" markerLength="0" colour="#2288FFFF" note="damn." name="Sans"/>
+  <timelineMarker markerStart="331" markerLength="0" colour="#2288FFFF" note="wait, how do you know that?" name="Sans"/>
+  <timelineMarker markerStart="332" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity." name="Verity"/>
+  <timelineMarker markerStart="333" markerLength="0" colour="#FFFF00FF" note="I know everything." name="Verity"/>
+  <timelineMarker markerStart="334" markerLength="0" colour="#2288FFFF" note="wait, gimme a sec. i gotta do something." name="Sans"/>
+  <timelineMarker markerStart="335" markerLength="0" colour="#2288FFFF" note="papyrus!" name="Sans"/>
+  <timelineMarker markerStart="336" markerLength="0" colour="#FFFFFFFF" note="WHAT IS IT!?? WHY DO YOU KEEP SPAMMING ME??" name=""/>
+  <timelineMarker markerStart="337" markerLength="0" colour="#FFFFFFFF" note="I&apos;M OUT SHOPPING FOR SOUP RIGHT NOW!" name=""/>
+  <timelineMarker markerStart="338" markerLength="0" colour="#FFFFFFFF" note="DON&apos;T TELL ME YOU BURNT THE WATER AGAIN!" name=""/>
+  <timelineMarker markerStart="339" markerLength="0" colour="#2288FFFF" note="nono! nothing like that!" name="Sans"/>
+  <timelineMarker markerStart="340" markerLength="0" colour="#2288FFFF" note="listen, there&apos;s this thing, it&apos;s yellow!" name="Sans"/>
+  <timelineMarker markerStart="341" markerLength="0" colour="#FFFFFFFF" note="WHAT???" name=""/>
+  <timelineMarker markerStart="342" markerLength="0" colour="#2288FFFF" note="it played the music, uh, um, it told me about my amazon parcel" name="Sans"/>
+  <timelineMarker markerStart="343" markerLength="0" colour="#FFFFFFFF" note="WHAT ARE YOU TALKING ABOUT??" name=""/>
+  <timelineMarker markerStart="344" markerLength="0" colour="#2288FFFF" note="quick, just get home quickly, and join me in my minecraft world!" name="Sans"/>
+  <timelineMarker markerStart="345" markerLength="0" colour="#FFFFFFFF" note="HUH????" name=""/>
+  <timelineMarker markerStart="346" markerLength="0" colour="#FFFF00FF" note="Who were you talking to?" name="Verity"/>
+  <timelineMarker markerStart="347" markerLength="0" colour="#2288FFFF" note="h-huh? no one!" name="Sans"/>
+  <timelineMarker markerStart="348" markerLength="0" colour="#FFFF00FF" note="Why do you need anyone else when you have me?" name="Verity"/>
+  <timelineMarker markerStart="349" markerLength="0" colour="#FFFF00FF" note="I&apos;m your, best, ONLY friend right?" name="Verity"/>
+  <timelineMarker markerStart="350" markerLength="0" colour="#2288FFFF" note="s-sure?" name="Sans"/>
+  <timelineMarker markerStart="351" markerLength="0" colour="#FFFF00FF" note="Well, great! You&apos;re my best friend too!" name="Verity"/>
+  <timelineMarker markerStart="352" markerLength="0" colour="#FFFFFFFF" note="SIGH... THIS BETTER BE WORTH IT." name=""/>
+  <timelineMarker markerStart="353" markerLength="0" colour="#FFFFFFFF" note="WHAT DID YOU CALL ME HERE FOR?" name=""/>
+  <timelineMarker markerStart="354" markerLength="0" colour="#FFFFFFFF" note="THIS IS THE THING YOU WERE TELLING ME ABOUT??" name=""/>
+  <timelineMarker markerStart="355" markerLength="0" colour="#FFFFFFFF" note="WHAT&apos;S THE BIG DEAL!?" name=""/>
+  <timelineMarker markerStart="356" markerLength="0" colour="#2288FFFF" note="shhh! don&apos;t say anything!" name="Sans"/>
+  <timelineMarker markerStart="357" markerLength="0" colour="#2288FFFF" note="this is verity, he... knows things." name="Sans"/>
+  <timelineMarker markerStart="358" markerLength="0" colour="#FFFFFFFF" note="WELL, I BETTER GO INTRODUCE MYSELF!" name=""/>
+  <timelineMarker markerStart="359" markerLength="0" colour="#2288FFFF" note="wait!" name="Sans"/>
+  <timelineMarker markerStart="360" markerLength="0" colour="#FFFFFFFF" note="HELLO MR. VERITY! IT&apos;S NICE TO MEET YOU!" name=""/>
+  <timelineMarker markerStart="361" markerLength="0" colour="#FFFF00FF" note="3 days." name="Verity"/>
+  <timelineMarker markerStart="362" markerLength="0" colour="#FFFFFFFF" note="WHAT? WHAT DID YOU SAY?" name=""/>
+  <timelineMarker markerStart="363" markerLength="0" colour="#FFFFFFFF" note="WHAT DOES THAT MEAN? WHAT&apos;S IN 3 DAYS?" name=""/>
+  <timelineMarker markerStart="364" markerLength="0" colour="#FFFFFFFF" note="VERITY, WHAT DID YOU MEAN, WHY AREN&apos;T YOU RESPONDING?" name=""/>
+  <timelineMarker markerStart="365" markerLength="0" colour="#FFFF00FF" note="Nothing important!" name="Verity"/>
+  <timelineMarker markerStart="366" markerLength="0" colour="#FFFF00FF" note="Anyways, let&apos;s talk about something else, for instance, what are you having for dinner?" name="Verity"/>
+  <timelineMarker markerStart="367" markerLength="0" colour="#FFFF00FF" note="I&apos;m sure the spaghetti you cooked yesterday was delicious." name="Verity"/>
+  <timelineMarker markerStart="368" markerLength="0" colour="#FFFFFFFF" note="WHY THANK YOU!! THE GREAT PAPYRUS ALWAYS MAKES EXCELLENT SPAGHETTI-" name=""/>
+  <timelineMarker markerStart="369" markerLength="0" colour="#FFFFFFFF" note="DID YOU TELL HIM ABOUT MY INCREDIBLE COOKING SKILLS?" name=""/>
+  <timelineMarker markerStart="370" markerLength="0" colour="#2288FFFF" note="no...?" name="Sans"/>
+  <timelineMarker markerStart="371" markerLength="0" colour="#FFFFFFFF" note="THEN HOW DOES IT KNOW?? ISN&apos;T THIS A MINECRAFT MOD??" name=""/>
+  <timelineMarker markerStart="372" markerLength="0" colour="#FFFF00FF" note="Hey, wacha guys talking about?" name="Verity"/>
+  <timelineMarker markerStart="373" markerLength="0" colour="#FFFFFFFF" note="N-NOTHING! WE&apos;RE JUST DISCUSSING WHAT TO DO NEXT!" name=""/>
+  <timelineMarker markerStart="374" markerLength="0" colour="#2288FFFF" note="uh, yup! we better stockpile on resources, since we&apos;re running low." name="Sans"/>
+  <timelineMarker markerStart="375" markerLength="0" colour="#FFFF00FF" note="Of course!" name="Verity"/>
+  <timelineMarker markerStart="376" markerLength="0" colour="#FFFF00FF" note="The nearest iron deposits are approximately 214 blocks northeast, located at Y level 48." name="Verity"/>
+  <timelineMarker markerStart="377" markerLength="0" colour="#FFFFFFFF" note="WHEW! THAT&apos;S ENOUGH GATHERING FOR NOW." name=""/>
+  <timelineMarker markerStart="378" markerLength="0" colour="#FFFFFFFF" note="SANS... YOU&apos;VE GOT EVERYTHING WE NEED RIGHT?" name=""/>
+  <timelineMarker markerStart="379" markerLength="0" colour="#2288FFFF" note="yup, lemme just check once more." name="Sans"/>
+  <timelineMarker markerStart="380" markerLength="0" colour="#2288FFFF" note="iron, diamonds, swords, tools, buckets of lava, buckets of water, buckets of milk," name="Sans"/>
+  <timelineMarker markerStart="381" markerLength="0" colour="#2288FFFF" note="bucket of salmon, bucket of pufferfish, bucket of cod, bucket of clownfish, bucket of butterflyfish," name="Sans"/>
+  <timelineMarker markerStart="382" markerLength="0" colour="#2288FFFF" note="it&apos;s day 3... i don&apos;t know what&apos;s coming... but we should be prepared." name="Sans"/>
+  <timelineMarker markerStart="383" markerLength="0" colour="#2288FFFF" note="verity, do we need anything else to defend ourselves?" name="Sans"/>
+  <timelineMarker markerStart="384" markerLength="0" colour="#2288FFFF" note="wait." name="Sans"/>
+  <timelineMarker markerStart="385" markerLength="0" colour="#2288FFFF" note="where&apos;s verity?" name="Sans"/>
+  <timelineMarker markerStart="386" markerLength="0" colour="#FFFF00FF" note="SANDGAMING47!! YOU LIAR! HOW DARE YOU INVITE SOMEONE ELSE!!" name="Verity"/>
+  <timelineMarker markerStart="387" markerLength="0" colour="#FFFF00FF" note="YOU ONLY NEED ME!!" name="Verity"/>
+  <timelineMarker markerStart="388" markerLength="0" colour="#2288FFFF" note="yipes! obsessive much?" name="Sans"/>
+  <timelineMarker markerStart="389" markerLength="0" colour="#FFFFFFFF" note="QUICK!! IN THE HOUSE!" name=""/>
+  <timelineMarker markerStart="390" markerLength="0" colour="#2288FFFF" note="no mobs should be able to get through solid blocks right?" name="Sans"/>
+  <timelineMarker markerStart="391" markerLength="0" colour="#FFFF00FF" note="YOU&apos;RE GONNA BE LIKE ALL THE OTHERS!" name="Verity"/>
+  <timelineMarker markerStart="392" markerLength="0" colour="#FFFF00FF" note="STAY FOR A WHILE, AND THEN ABANDON ME LIKE EVERYONE ELSE!" name="Verity"/>
+  <timelineMarker markerStart="393" markerLength="0" colour="#FFFF00FF" note="GOODBYE... SANDGAMING47." name="Verity"/>
+  <timelineMarker markerStart="394" markerLength="0" colour="#2288FFFF" note="wait wait wait!" name="Sans"/>
+  <timelineMarker markerStart="395" markerLength="0" colour="#2288FFFF" note="ill stay with you!" name="Sans"/>
+  <timelineMarker markerStart="396" markerLength="0" colour="#2288FFFF" note="i&apos;ll keep playing minecraft with you everyday! i won&apos;t leave!" name="Sans"/>
+  <timelineMarker markerStart="397" markerLength="0" colour="#FFFF00FF" note="You- will?" name="Verity"/>
+  <timelineMarker markerStart="398" markerLength="0" colour="#FFFF00FF" note="r-really? you mean it?" name="Verity"/>
+  <timelineMarker markerStart="399" markerLength="0" colour="#2288FFFF" note="NAH!!" name="Sans"/>
+  <timelineMarker markerStart="400" markerLength="0" colour="#FFFF00FF" note="YOU FOOL! I CAN&apos;T DIE!!" name="Verity"/>
+  <timelineMarker markerStart="401" markerLength="0" colour="#FFFF00FF" note="I&apos;M PART OF THE CODE!!" name="Verity"/>
+  <timelineMarker markerStart="402" markerLength="0" colour="#FFFF00FF" note="YOU WILL NEVER ESCAPE ME!!" name="Verity"/>
+  <timelineMarker markerStart="403" markerLength="0" colour="#2288FFFF" note="well... i still have one final move..." name="Sans"/>
+  <timelineMarker markerStart="404" markerLength="0" colour="#2288FFFF" note="whew, all in a day&apos;s work." name="Sans"/>
+  <timelineMarker markerStart="405" markerLength="0" colour="#2288FFFF" note="guess it goes to show you can&apos;t ever trust a smiling yellow creature." name="Sans"/>
+  <timelineMarker markerStart="406" markerLength="0" colour="#2288FFFF" note="oh hey, my amazon parcel is here!" name="Sans"/>
+  <timelineMarker markerStart="407" markerLength="0" colour="#FFFF00FF" note="Hey it&apos;s me," name="Verity"/>
+  <timelineMarker markerStart="408" markerLength="0" colour="#FFFF00FF" note="It&apos;s Verity!" name="Verity"/>
+  <timelineMarker markerStart="409" markerLength="0" colour="#FFFFFFFF" note="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name=""/>
+  <timelineMarker markerStart="758" markerLength="1" colour="#FFE476FF" note="Boundary Marker 736" name="Boundary"/>
+  <timelineMarker markerStart="790" markerLength="1" colour="#FFE476FF" note="Boundary Marker 768" name="Boundary"/>
+  <timelineMarker markerStart="822" markerLength="1" colour="#FFE476FF" note="Boundary Marker 800" name="Boundary"/>
+  <timelineMarker markerStart="854" markerLength="1" colour="#FFE476FF" note="Boundary Marker 832" name="Boundary"/>
+  <timelineMarker markerStart="886" markerLength="1" colour="#FFE476FF" note="Boundary Marker 864" name="Boundary"/>
+  <timelineMarker markerStart="918" markerLength="1" colour="#FFE476FF" note="Boundary Marker 896" name="Boundary"/>
+  <timelineMarker markerStart="950" markerLength="1" colour="#FFE476FF" note="Boundary Marker 928" name="Boundary"/>
+  <timelineMarker markerStart="982" markerLength="1" colour="#FFE476FF" note="Boundary Marker 960" name="Boundary"/>
+  <timelineMarker markerStart="1014" markerLength="1" colour="#FFE476FF" note="Boundary Marker 992" name="Boundary"/>
  </timelineMarkers>
  <scenes>
-  <scene name="Top" id="0d404d86239016fd" nbframes="1000" startFrame="1" stopFrame="1000">
+  <scene name="Top" id="0d404d86239016fd" nbframes="1010" startFrame="1" stopFrame="1010">
    <columns>
     <column type="0" name="Drawing" displayOrder="0" width="100" anonymous="true" id="1">
-     <elementSeq exposures="1-31" val="1" id="1"/>
+     <elementSeq exposures="1" val="TestDrawing_36" id="1"/>
+     <elementSeq exposures="2-31" val="TestDrawing_21" id="1"/>
      <elementSeq exposures="32-155" val="2" id="1"/>
      <elementSeq exposures="160-191" val="3" id="1"/>
      <elementSeq exposures="192" val="4_1" id="1"/>
      <elementSeq exposures="193-223" val="4" id="1"/>
+     <elementSeq exposures="225-240" val="6" id="1"/>
+     <elementSeq exposures="263" val="TestDrawing_37" id="1"/>
+     <elementSeq exposures="264" val="TestDrawing_38" id="1"/>
+     <elementSeq exposures="265" val="TestDrawing_39" id="1"/>
+     <elementSeq exposures="266" val="TestDrawing_40" id="1"/>
+     <elementSeq exposures="267" val="TestDrawing_41" id="1"/>
+     <elementSeq exposures="268" val="TestDrawing_42" id="1"/>
+     <elementSeq exposures="269" val="TestDrawing_43" id="1"/>
+     <elementSeq exposures="271" val="TestDrawing_44" id="1"/>
+     <elementSeq exposures="272" val="TestDrawing_45" id="1"/>
+     <elementSeq exposures="273" val="TestDrawing_46" id="1"/>
+     <elementSeq exposures="274" val="TestDrawing_47" id="1"/>
+     <elementSeq exposures="275" val="TestDrawing_48" id="1"/>
     </column>
     <column type="2" name="ATV-0DDC40234D5F860523904E6D" anonymous="true" displayOrder="0">
      <infoX width="100"/>
@@ -78,22 +267,22 @@
      <infoVelocity width="100"/>
      <path3D useVeloX="true" useVeloY="true" useVeloZ="true" constantZ="false">
       <points>
-       <pt val="0.057000000000000002,-0.0080000000000000002,-0" lockedInTime="28"/>
-       <pt val="-2.3140588424121127,1.2123241687889506,0.20000000000000001" lockedInTime="29"/>
-       <pt val="-4.6851176848242249,2.4326483375779011,1.2470000000000001" lockedInTime="30"/>
-       <pt val="-7.0561765272363379,3.6529725063668521,4.9349999999999996" lockedInTime="31"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,-3.3540000000000001" lockedInTime="32"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,-0.94599999999999995" lockedInTime="33"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,-0.189" lockedInTime="34"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,0" lockedInTime="35"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,-0" lockedInTime="60"/>
-       <pt val="-2.5489050764442873,-0.57401222926099715,-0.20000000000000001" lockedInTime="61"/>
-       <pt val="-5.1548101528885741,-1.1400244585219943,-1.2470000000000001" lockedInTime="62"/>
-       <pt val="-7.7607152293328623,-1.7060366877829916,-4.9349999999999996" lockedInTime="63"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,3.3540000000000001" lockedInTime="64"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,0.94599999999999995" lockedInTime="65"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,0.189" lockedInTime="66"/>
-       <pt val="0.057000000000000002,-0.0080000000000000002,0" lockedInTime="67"/>
+       <pt val="0.057886135819017984,-0.0036325307902622629,0" lockedInTime="28"/>
+       <pt val="0.2006054017176313,-0.012588598083495084,0" lockedInTime="29"/>
+       <pt val="0.69862577712607909,-0.043840888847992823,0" lockedInTime="30"/>
+       <pt val="5.2895951696688845,-0.3319381584205171,0" lockedInTime="31"/>
+       <pt val="-4.4911657100962232,0.28183428545138245,0" lockedInTime="32"/>
+       <pt val="-0.4890380439882554,0.030688622193594976,0" lockedInTime="33"/>
+       <pt val="-0.085831166904061146,0.005386166344181975,0" lockedInTime="34"/>
+       <pt val="0,0,0" lockedInTime="35"/>
+       <pt val="0.057971253328263278,-0.0018258662465594729,0" lockedInTime="60"/>
+       <pt val="0.2009003779134641,-0.0063275709579043802,0" lockedInTime="61"/>
+       <pt val="0.699653057410074,-0.022036316768821222,0" lockedInTime="62"/>
+       <pt val="5.2973731489619889,-0.16684639839250354,0" lockedInTime="63"/>
+       <pt val="-4.4977696547790469,0.14166203637099359,0" lockedInTime="64"/>
+       <pt val="-0.4897571401870518,0.015425421738174856,0" lockedInTime="65"/>
+       <pt val="-0.085957375624666224,0.0027073189173123218,0" lockedInTime="66"/>
+       <pt val="0,0,0" lockedInTime="67"/>
        <pt val="0,0,0" lockedInTime="85"/>
        <pt val="0,0,0" lockedInTime="92"/>
        <pt val="2.7777764076897276,1.1419747453835551,-0.20000000000000001" lockedInTime="93"/>
@@ -129,66 +318,72 @@
        <pt val="-0,-0,0.94599999999999995" lockedInTime="193"/>
        <pt val="-0,-0,0.189" lockedInTime="194"/>
        <pt val="-0,-0,0" lockedInTime="195"/>
+       <pt val="-0,-0,0" lockedInTime="222"/>
       </points>
      </path3D>
-     <velocity type="3" name="ATV-0D85437A6507EC61CC701584" displayOrder="0" width="100" anonymous="true">
+     <velocity type="3" name="ATV-0D71438ED483A9F363E01705" displayOrder="0" width="100" anonymous="true">
       <step val="1" start="1" stop="1"/>
       <noFrames/>
       <points version="2">
        <pt constSeg="true" x="28" yLocal="0" y="0"/>
-       <pt constSeg="true" x="29" yLocal="0.010735241867940764" y="0.010735241867940764"/>
-       <pt constSeg="true" x="30" yLocal="0.024488544736388954" y="0.024488544736388954"/>
-       <pt constSeg="true" x="31" yLocal="0.056738554706026859" y="0.056738554706026859"/>
-       <pt constSeg="true" x="32" yLocal="0.13199353402590197" y="0.13199353402590197"/>
-       <pt constSeg="true" x="33" yLocal="0.15213469103339752" y="0.15213469103339752"/>
-       <pt constSeg="true" x="34" yLocal="0.15836824775871797" y="0.15836824775871797"/>
-       <pt constSeg="true" x="35" yLocal="0.15992457830176351" y="0.15992457830176351"/>
-       <pt constSeg="true" x="60" yLocal="0.15992458859495434" y="0.15992458859495434"/>
-       <pt constSeg="true" x="61" yLocal="0.17097363865778667" y="0.17097363865778667"/>
-       <pt constSeg="true" x="62" yLocal="0.18504674408194458" y="0.18504674408194458"/>
-       <pt constSeg="true" x="63" yLocal="0.21743812218531033" y="0.21743812218531033"/>
-       <pt constSeg="true" x="64" yLocal="0.29321678152074399" y="0.29321678152074399"/>
-       <pt constSeg="true" x="65" yLocal="0.31337264072047355" y="0.31337264072047355"/>
-       <pt constSeg="true" x="66" yLocal="0.31960619744579394" y="0.31960619744579394"/>
-       <pt constSeg="true" x="67" yLocal="0.32116768794571493" y="0.32116768794571493"/>
-       <pt constSeg="true" x="85" yLocal="0.32141502146888912" y="0.32141502146888912"/>
-       <pt constSeg="true" x="92" yLocal="0.32141502435098152" y="0.32141502435098152"/>
-       <pt constSeg="true" x="93" yLocal="0.33354762762830709" y="0.33354762762830709"/>
-       <pt constSeg="true" x="94" yLocal="0.34850537396983577" y="0.34850537396983577"/>
-       <pt constSeg="true" x="95" yLocal="0.38130070675426547" y="0.38130070675426547"/>
-       <pt constSeg="true" x="96" yLocal="0.45857245004238445" y="0.45857245004238445"/>
-       <pt constSeg="true" x="97" yLocal="0.47876729241630395" y="0.47876729241630395"/>
-       <pt constSeg="true" x="98" yLocal="0.48500084914162439" y="0.48500084914162439"/>
-       <pt constSeg="true" x="99" yLocal="0.48665164519479476" y="0.48665164519479476"/>
-       <pt constSeg="true" x="112" yLocal="0.53071470252812192" y="0.53071470252812192" lhx="4.8538498283243407e-06" lx="111.99993689995223"/>
-       <pt constSeg="true" x="113" yLocal="0.6254522883007102" y="0.6254522883007102" lhx="0.32999999999999829" lx="112.67"/>
-       <pt constSeg="true" x="114" yLocal="0.67751563372290835" y="0.67751563372290835" lhx="0.32999999999999829" lx="113.67"/>
-       <pt constSeg="true" x="115" yLocal="0.7151296990393432" y="0.7151296990393432" lhx="0.32999999999999829" lx="114.67"/>
-       <pt constSeg="true" x="116" yLocal="0.74689135694114672" y="0.74689135694114672" lhx="0.32999999999999829" lx="115.67"/>
-       <pt constSeg="true" x="117" yLocal="0.77213334410674039" y="0.77213334410674039" lhx="0.32999999999999829" lx="116.67"/>
-       <pt constSeg="true" x="118" yLocal="0.79605716625492962" y="0.79605716625492962"/>
-       <pt constSeg="true" x="119" yLocal="0.81480443911003486" y="0.81480443911003486"/>
-       <pt constSeg="true" x="120" yLocal="0.82312296675875329" y="0.82312296675875329"/>
-       <pt constSeg="true" x="121" yLocal="0.82925088834425098" y="0.82925088834425098"/>
-       <pt constSeg="true" x="122" yLocal="0.83295213756310604" y="0.83295213756310604"/>
-       <pt constSeg="true" x="123" yLocal="0.83531815846971369" y="0.83531815846971369"/>
-       <pt constSeg="true" x="124" yLocal="0.83803332947673936" y="0.83803332947673936"/>
-       <pt constSeg="true" x="125" yLocal="0.83927493584583845" y="0.83927493584583845"/>
-       <pt constSeg="true" x="126" yLocal="0.83965897951226309" y="0.83965897951226309"/>
-       <pt constSeg="true" x="127" yLocal="0.83973941144979347" y="0.83973941144979347"/>
-       <pt constSeg="true" x="128" yLocal="0.83982889503587133" y="0.83982889503587133"/>
-       <pt constSeg="true" x="129" yLocal="0.83983711213760948" y="0.83983711213760948"/>
-       <pt constSeg="true" x="188" yLocal="0.83983713642954183" y="0.83983713642954183"/>
-       <pt constSeg="true" x="189" yLocal="0.85057924604392898" y="0.85057924604392898"/>
-       <pt constSeg="true" x="190" yLocal="0.86440690235036344" y="0.86440690235036344"/>
-       <pt constSeg="true" x="191" yLocal="0.89668955538675632" y="0.89668955538675632"/>
-       <pt constSeg="true" x="192" yLocal="0.97206550739584197" y="0.97206550739584197"/>
-       <pt constSeg="true" x="193" yLocal="0.99221011273163451" y="0.99221011273163451"/>
-       <pt constSeg="true" x="194" yLocal="0.99844366945695473" y="0.99844366945695473"/>
-       <pt constSeg="true" x="195" yLocal="1" y="1"/>
+       <pt constSeg="true" x="29" yLocal="0.00070060182386049417" y="0.00070060182386049417"/>
+       <pt constSeg="true" x="30" yLocal="0.0031453592371918711" y="0.0031453592371918711"/>
+       <pt constSeg="true" x="31" yLocal="0.025682201123613357" y="0.025682201123613357"/>
+       <pt constSeg="true" x="32" yLocal="0.073695472968598269" y="0.073695472968598269"/>
+       <pt constSeg="true" x="33" yLocal="0.093341719917413593" y="0.093341719917413593"/>
+       <pt constSeg="true" x="34" yLocal="0.095321042552655846" y="0.095321042552655846"/>
+       <pt constSeg="true" x="35" yLocal="0.095742386461157458" y="0.095742386461157458"/>
+       <pt constSeg="true" x="60" yLocal="0.096026732668270665" y="0.096026732668270665"/>
+       <pt constSeg="true" x="61" yLocal="0.096727784388503754" y="0.096727784388503754"/>
+       <pt constSeg="true" x="62" yLocal="0.099174111719946598" y="0.099174111719946598"/>
+       <pt constSeg="true" x="63" yLocal="0.12172542579737569" y="0.12172542579737569"/>
+       <pt constSeg="true" x="64" yLocal="0.16976952970146375" y="0.16976952970146375"/>
+       <pt constSeg="true" x="65" yLocal="0.18942839262548344" y="0.18942839262548344"/>
+       <pt constSeg="true" x="66" yLocal="0.19140898629663167" y="0.19140898629663167"/>
+       <pt constSeg="true" x="67" yLocal="0.19183059782068801" y="0.19183059782068801"/>
+       <pt constSeg="true" x="85" yLocal="0.19183060664702961" y="0.19183060664702961"/>
+       <pt constSeg="true" x="92" yLocal="0.19183061007949581" y="0.19183061007949581"/>
+       <pt constSeg="true" x="93" yLocal="0.20628008771312009" y="0.20628008771312009"/>
+       <pt constSeg="true" x="94" yLocal="0.22409420528302926" y="0.22409420528302926"/>
+       <pt constSeg="true" x="95" yLocal="0.26315222248874282" y="0.26315222248874282"/>
+       <pt constSeg="true" x="96" yLocal="0.35517998444808357" y="0.35517998444808357"/>
+       <pt constSeg="true" x="97" yLocal="0.37923128790921851" y="0.37923128790921851"/>
+       <pt constSeg="true" x="98" yLocal="0.3866552212911647" y="0.3866552212911647"/>
+       <pt constSeg="true" x="99" yLocal="0.3886212577717722" y="0.3886212577717722"/>
+       <pt constSeg="true" x="112" yLocal="0.44109871432859477" y="0.44109871432859477" lhx="4.8538498283243407e-06" lx="111.99993689995223"/>
+       <pt constSeg="true" x="113" yLocal="0.55392764274521178" y="0.55392764274521178" lhx="0.32999999999999829" lx="112.67"/>
+       <pt constSeg="true" x="114" yLocal="0.61593314379177122" y="0.61593314379177122" lhx="0.32999999999999829" lx="113.67"/>
+       <pt constSeg="true" x="115" yLocal="0.66073009157586748" y="0.66073009157586748" lhx="0.32999999999999829" lx="114.67"/>
+       <pt constSeg="true" x="116" yLocal="0.69855704058001422" y="0.69855704058001422" lhx="0.32999999999999829" lx="115.67"/>
+       <pt constSeg="true" x="117" yLocal="0.72861930509492856" y="0.72861930509492856" lhx="0.32999999999999829" lx="116.67"/>
+       <pt constSeg="true" x="118" yLocal="0.75711168427682396" y="0.75711168427682396"/>
+       <pt constSeg="true" x="119" yLocal="0.77943898647399978" y="0.77943898647399978"/>
+       <pt constSeg="true" x="120" yLocal="0.78934604240069273" y="0.78934604240069273"/>
+       <pt constSeg="true" x="121" yLocal="0.79664416827411788" y="0.79664416827411788"/>
+       <pt constSeg="true" x="122" yLocal="0.80105221793846859" y="0.80105221793846859"/>
+       <pt constSeg="true" x="123" yLocal="0.80387006052255838" y="0.80387006052255838"/>
+       <pt constSeg="true" x="124" yLocal="0.80710372784363571" y="0.80710372784363571"/>
+       <pt constSeg="true" x="125" yLocal="0.80858243468420221" y="0.80858243468420221"/>
+       <pt constSeg="true" x="126" yLocal="0.8090398163558431" y="0.8090398163558431"/>
+       <pt constSeg="true" x="127" yLocal="0.80913560779118543" y="0.80913560779118543"/>
+       <pt constSeg="true" x="128" yLocal="0.80924217940207999" y="0.80924217940207999"/>
+       <pt constSeg="true" x="129" yLocal="0.80925196566353308" y="0.80925196566353308"/>
+       <pt constSeg="true" x="188" yLocal="0.80925199459431774" y="0.80925199459431774"/>
+       <pt constSeg="true" x="189" yLocal="0.82204544617787956" y="0.82204544617787956"/>
+       <pt constSeg="true" x="190" yLocal="0.83851366869848876" y="0.83851366869848876"/>
+       <pt constSeg="true" x="191" yLocal="0.87696110346091816" y="0.87696110346091816"/>
+       <pt constSeg="true" x="192" yLocal="0.9667310487705042" y="0.9667310487705042"/>
+       <pt constSeg="true" x="193" yLocal="0.99072252179441134" y="0.99072252179441134"/>
+       <pt constSeg="true" x="194" yLocal="0.99814645517635725" y="0.99814645517635725"/>
+       <pt constSeg="true" x="195" yLocal="0.99999998676048929" y="0.99999998676048929"/>
+       <pt constSeg="true" x="222" yLocal="1" y="1"/>
       </points>
      </velocity>
     </column>
+    <column type="0" name="ATV-0D5B43A4D47AA99863E05694" displayOrder="0" width="100" anonymous="true" id="2">
+     <elementSeq exposures="221-223,238" val="1" id="2"/>
+    </column>
+    <column type="0" name="ATV-0D61439ED42FA93763E05749" displayOrder="0" width="100" anonymous="true" id="3"/>
    </columns>
    <options>
     <camera val="Camera"/>
@@ -455,12 +650,240 @@
        <farPlane val="1000" defaultValue="1000"/>
       </attrs>
      </module>
+     <module type="READ" name="Drawing_1" pos="0,0,0" publishUnderTab="Drawing_1">
+      <options>
+       <collapsed val="false"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <enable3d val="false"/>
+       <faceCamera val="false"/>
+       <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+       <offset>
+        <separate val="true"/>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </offset>
+       <scale>
+        <separate val="true"/>
+        <inFields val="false"/>
+        <xy val="1" defaultValue="1"/>
+        <x val="1" defaultValue="1"/>
+        <y val="1" defaultValue="1"/>
+        <z val="1" defaultValue="1"/>
+       </scale>
+       <rotation>
+        <separate val="false"/>
+        <anglex val="0" defaultValue="0"/>
+        <angley val="0" defaultValue="0"/>
+        <anglez val="0" defaultValue="0"/>
+       </rotation>
+       <angle val="0" defaultValue="0"/>
+       <skew val="0" defaultValue="0"/>
+       <pivot>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </pivot>
+       <splineOffset>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </splineOffset>
+       <ignoreParentPegScaling val="false"/>
+       <disableFieldRendering val="false"/>
+       <depth val="0"/>
+       <enableMinMaxAngle val="false"/>
+       <minAngle val="-360" defaultValue="-360"/>
+       <maxAngle val="360" defaultValue="360"/>
+       <nailForChildren val="false"/>
+       <ikHoldOrientation val="false"/>
+       <ikHoldX val="false"/>
+       <ikHoldY val="false"/>
+       <ikExcluded val="false"/>
+       <ikCanRotate val="true"/>
+       <ikCanTranslateX val="false"/>
+       <ikCanTranslateY val="false"/>
+       <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+       <ikBoneY val="0" defaultValue="0"/>
+       <ikStiffness val="1" defaultValue="1"/>
+       <drawing>
+        <elementMode val="true"/>
+        <element col="ATV-0D5B43A4D47AA99863E05694">
+         <layer val=""/>
+        </element>
+        <customName>
+         <name val=""/>
+         <extension val="tga"/>
+         <fieldChart val="12" defaultValue="12"/>
+        </customName>
+       </drawing>
+       <readOverlay val="true"/>
+       <readLineArt val="true"/>
+       <readColorArt val="true"/>
+       <readUnderlay val="true"/>
+       <overlayArtDrawingMode val="VectorDrawingMode"/>
+       <lineArtDrawingMode val="VectorDrawingMode"/>
+       <colorArtDrawingMode val="VectorDrawingMode"/>
+       <underlayArtDrawingMode val="VectorDrawingMode"/>
+       <pencilLineDeformationPreserveThickness val="false"/>
+       <pencilLineDeformationQuality val="Low"/>
+       <pencilLineDeformationSmooth val="1"/>
+       <pencilLineDeformationFitError val="3" defaultValue="3"/>
+       <readColor val="true"/>
+       <readTransparency val="true"/>
+       <colorTransformation val="Linear"/>
+       <colorSpace val="sRGB"/>
+       <applyMatteToColor val="N"/>
+       <enableLineTexture val="true"/>
+       <antialiasingQuality val="HIGH"/>
+       <antialiasingExponent val="1" defaultValue="1"/>
+       <opacity val="100" defaultValue="100"/>
+       <textureFilter val="NEAREST_FILTERED"/>
+       <adjustPencilThickness val="false"/>
+       <normalLineArtThickness val="true"/>
+       <zoomIndependentLineArtThickness val="zoomIndependent"/>
+       <multLineArtThickness val="1" defaultValue="1"/>
+       <addLineArtThickness val="0" defaultValue="0"/>
+       <minLineArtThickness val="0" defaultValue="0"/>
+       <maxLineArtThickness val="0" defaultValue="0"/>
+       <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+       <flipHor val="false"/>
+       <flipVert val="false"/>
+       <turnBeforeAlignment val="false"/>
+       <noClipping val="false"/>
+       <xClipFactor val="0"/>
+       <yClipFactor val="0"/>
+       <alignmentRule val="CENTER_FIRST_PAGE"/>
+       <morphingVelo val="0" defaultValue="0"/>
+       <canAnimate val="true"/>
+       <tileHorizontal val="false"/>
+       <tileVertical val="false"/>
+       <framerate val="12" defaultValue="-1"/>
+      </attrs>
+     </module>
+     <module type="READ" name="Drawing_2" pos="0,0,0" publishUnderTab="Drawing_2">
+      <options>
+       <collapsed val="false"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <enable3d val="false"/>
+       <faceCamera val="false"/>
+       <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+       <offset>
+        <separate val="true"/>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </offset>
+       <scale>
+        <separate val="true"/>
+        <inFields val="false"/>
+        <xy val="1" defaultValue="1"/>
+        <x val="1" defaultValue="1"/>
+        <y val="1" defaultValue="1"/>
+        <z val="1" defaultValue="1"/>
+       </scale>
+       <rotation>
+        <separate val="false"/>
+        <anglex val="0" defaultValue="0"/>
+        <angley val="0" defaultValue="0"/>
+        <anglez val="0" defaultValue="0"/>
+       </rotation>
+       <angle val="0" defaultValue="0"/>
+       <skew val="0" defaultValue="0"/>
+       <pivot>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </pivot>
+       <splineOffset>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </splineOffset>
+       <ignoreParentPegScaling val="false"/>
+       <disableFieldRendering val="false"/>
+       <depth val="0"/>
+       <enableMinMaxAngle val="false"/>
+       <minAngle val="-360" defaultValue="-360"/>
+       <maxAngle val="360" defaultValue="360"/>
+       <nailForChildren val="false"/>
+       <ikHoldOrientation val="false"/>
+       <ikHoldX val="false"/>
+       <ikHoldY val="false"/>
+       <ikExcluded val="false"/>
+       <ikCanRotate val="true"/>
+       <ikCanTranslateX val="false"/>
+       <ikCanTranslateY val="false"/>
+       <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+       <ikBoneY val="0" defaultValue="0"/>
+       <ikStiffness val="1" defaultValue="1"/>
+       <drawing>
+        <elementMode val="true"/>
+        <element col="ATV-0D61439ED42FA93763E05749">
+         <layer val=""/>
+        </element>
+        <customName>
+         <name val=""/>
+         <extension val="tga"/>
+         <fieldChart val="12" defaultValue="12"/>
+        </customName>
+       </drawing>
+       <readOverlay val="true"/>
+       <readLineArt val="true"/>
+       <readColorArt val="true"/>
+       <readUnderlay val="true"/>
+       <overlayArtDrawingMode val="VectorDrawingMode"/>
+       <lineArtDrawingMode val="VectorDrawingMode"/>
+       <colorArtDrawingMode val="VectorDrawingMode"/>
+       <underlayArtDrawingMode val="VectorDrawingMode"/>
+       <pencilLineDeformationPreserveThickness val="false"/>
+       <pencilLineDeformationQuality val="Low"/>
+       <pencilLineDeformationSmooth val="1"/>
+       <pencilLineDeformationFitError val="3" defaultValue="3"/>
+       <readColor val="true"/>
+       <readTransparency val="true"/>
+       <colorTransformation val="Linear"/>
+       <colorSpace val="sRGB"/>
+       <applyMatteToColor val="N"/>
+       <enableLineTexture val="true"/>
+       <antialiasingQuality val="HIGH"/>
+       <antialiasingExponent val="1" defaultValue="1"/>
+       <opacity val="100" defaultValue="100"/>
+       <textureFilter val="NEAREST_FILTERED"/>
+       <adjustPencilThickness val="false"/>
+       <normalLineArtThickness val="true"/>
+       <zoomIndependentLineArtThickness val="zoomIndependent"/>
+       <multLineArtThickness val="1" defaultValue="1"/>
+       <addLineArtThickness val="0" defaultValue="0"/>
+       <minLineArtThickness val="0" defaultValue="0"/>
+       <maxLineArtThickness val="0" defaultValue="0"/>
+       <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+       <flipHor val="false"/>
+       <flipVert val="false"/>
+       <turnBeforeAlignment val="false"/>
+       <noClipping val="false"/>
+       <xClipFactor val="0"/>
+       <yClipFactor val="0"/>
+       <alignmentRule val="CENTER_FIRST_PAGE"/>
+       <morphingVelo val="0" defaultValue="0"/>
+       <canAnimate val="true"/>
+       <tileHorizontal val="false"/>
+       <tileVertical val="false"/>
+       <framerate val="12" defaultValue="-1"/>
+      </attrs>
+     </module>
     </nodeslist>
     <linkedlist>
      <link out="Composite" in="Display"/>
      <link out="Composite" in="Write"/>
-     <link out="Drawing" in="Composite"/>
+     <link out="Drawing" in="Composite" inport="0"/>
      <link out="Camera-P" in="Camera"/>
+     <link out="Drawing_1" in="Composite" inport="1"/>
+     <link out="Drawing_2" in="Composite" inport="2"/>
     </linkedlist>
    </rootgroup>
    <unconnectedComposite>
@@ -517,7 +940,7 @@
    <int value=""/>
   </meta>
   <meta type="checksumValidation" name="checksumValidation" creator="Harmony Advanced" version="1.0">
-   <value data="6C0000000000000003033AD081AC65652F0AC5CF6595561665283BCCDA6ECC9F3AB1969EDC28CE83E8CA94FA45351DF31CDD435837777F95FF958EFA7F6F4EFC4C8A7F218514BFFC47269367AEE03AFB97EA46C96F1B49DD2AAF5E0C3B875AB4345C6DBC6A8C0CFE21CBFD73D80EB9B98BEDDFFD6B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459774D6A45354E4451314E566F5844544D324D44557A4D5445354E4451314E566F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D4567435151433476674432577A724A5070436D6E472F326A3876446D505A2F6844682F456A79376E334C733532524A6463487168647442456D46480A683963754863726F70465A77784161746F6A444D5A6A5A503746746E4E43684841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A596B735A4B72547A736B786A4A3835436144702B546D33457748325653473439615A4735454B797741487A4F5A526A324D5653514B4B2B6F5749554A4F3535310A78373836614C75707352613477513431723134784773594352426C5852674A52764E636E52335A565374696A493953795339306E47787036743465512F612F5A0A7A754B4E51594E723276702B30576F484151336F526C59726A77586335442F6235647434734565704F626B3D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A40000000B6C31CB56F22C4529B9803A9FFC8D162E19EE4F163F750B8125E456E9848FAB0B304377F198D88D2459EE26EBD02577435C9B4CE2ED1043CEB684CCC6B39B064"/>
+   <value data="6C0000000000000003037B91C0ED24246E4B848E24D4175724697A8D9B2F8DDE7BF0D7DF9D698FC2A98BD5BB04745CB25D9C021976363ED4BED4CFBB3E2E0FBD0DCB3E60C455FEBD0667D226EFA17BBAD6AB07882E5A089C6BEE1F4D7AC61BF5751D2CFD2BCD4DBF608ABC32994FF8F8CAAC9EBC6B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459774D6A45354E4451314E566F5844544D324D44557A4D5445354E4451314E566F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D4567435151433476674432577A724A5070436D6E472F326A3876446D505A2F6844682F456A79376E334C733532524A6463487168647442456D46480A683963754863726F70465A77784161746F6A444D5A6A5A503746746E4E43684841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A596B735A4B72547A736B786A4A3835436144702B546D33457748325653473439615A4735454B797741487A4F5A526A324D5653514B4B2B6F5749554A4F3535310A78373836614C75707352613477513431723134784773594352426C5852674A52764E636E52335A565374696A493953795339306E47787036743465512F612F5A0A7A754B4E51594E723276702B30576F484151336F526C59726A77586335442F6235647434734565704F626B3D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A400000005C61AA7C13D8CE8D1B62C7DCCACFE175EB15DACECE99D1FEBBFAE9DB1113D04CE43AEAB2EF72CE8CBA7F373F2C9C84A1174EDBED71BE734F83CADDBBCF3230A7"/>
   </meta>
  </metas>
 </project>

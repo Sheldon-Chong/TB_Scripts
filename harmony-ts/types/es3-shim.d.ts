@@ -12,6 +12,9 @@ interface Array<T> {
   [index: number]: T;
   push(...items: T[]): number;
   pop(): T | undefined;
+  find(predicate: (value: T, index: number, obj: T[]) => boolean, thisArg?: any): T | undefined;
+  findIndex(predicate: (value: T, index: number, obj: T[]) => boolean, thisArg?: any): number;
+  includes(searchElement: T, fromIndex?: number): boolean;
   // Add other methods as needed (e.g., shift, unshift, slice, etc.)
 }
 declare var Object: {

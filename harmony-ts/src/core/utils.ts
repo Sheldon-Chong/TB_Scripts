@@ -363,6 +363,58 @@ function styledButton(options: StyledButtonOptions) {
   return button;
 }
 
+function readXmlFile(xmlContent) {
+  // Generic XML string parser: returns a document object of nested element nodes.
+  var reader = new QXmlStreamReader(xmlContent);
+
+  function readElement() {
+    var node = {
+      tag: reader.name().toString(),
+      attributes: {},
+      children: [],
+      text: '',
+    };
+
+    var attrs = reader.attributes();
+    for (var i = 0; i < attrs.length(); i++) {
+      var attr = attrs.at(i);
+      node.attributes[attr.name().toString()] = attr.value().toString();
+    }
+
+    while (!reader.atEnd() && !reader.hasError()) {
+      var token = reader.readNext();
+
+      if (token === QXmlStreamReader.StartElement) {
+        node.children.push(readElement());
+      } else if (token === QXmlStreamReader.Characters) {
+        if (!reader.isWhitespace()) {
+          node.text += reader.text().toString();
+        }
+      } else if (token === QXmlStreamReader.EndElement) {
+        break;
+      }
+    }
+
+    return node;
+  }
+
+  var doc = { children: [] };
+
+  while (!reader.atEnd() && !reader.hasError()) {
+    var token = reader.readNext();
+
+    if (token === QXmlStreamReader.StartElement) {
+      doc.children.push(readElement());
+    }
+  }
+
+  if (reader.hasError()) {
+    return { error: 'XML Parsing Error: ' + reader.errorString(), children: [] };
+  }
+
+  return doc;
+}
+
 const Utils = {
   stringify,
   hasKeys,
@@ -386,6 +438,7 @@ const Utils = {
   confirm,
   prompt,
   styledButton,
+  readXmlFile,
 };
 
 function getHoverColor(color) {

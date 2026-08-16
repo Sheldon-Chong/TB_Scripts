@@ -17,6 +17,47 @@ include(specialFolders.userScripts + '/core/MetadataKit.js');
 include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
 
+// --- ES6+ Array method polyfills for QtScript's ES5 engine ---
+if (!Array.prototype.find) {
+  Array.prototype.find = function (predicate, thisArg) {
+    for (var i = 0; i < this.length; i++) {
+      var value = this[i];
+      if (predicate.call(thisArg, value, i, this)) {
+        return value;
+      }
+    }
+    return undefined;
+  };
+}
+
+if (!Array.prototype.findIndex) {
+  Array.prototype.findIndex = function (predicate, thisArg) {
+    for (var i = 0; i < this.length; i++) {
+      if (predicate.call(thisArg, this[i], i, this)) {
+        return i;
+      }
+    }
+    return -1;
+  };
+}
+
+if (!Array.prototype.includes) {
+  Array.prototype.includes = function (searchElement, fromIndex) {
+    var len = this.length;
+    var n = fromIndex ? Number(fromIndex) : 0;
+    if (n < 0) {
+      n = len + n;
+      if (n < 0) n = 0;
+    }
+    for (var i = n; i < len; i++) {
+      if (this[i] === searchElement) {
+        return true;
+      }
+    }
+    return false;
+  };
+}
+
 // function listAll() {
 //   var allNodesList = [];
 

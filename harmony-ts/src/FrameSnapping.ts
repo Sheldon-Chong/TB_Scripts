@@ -88,7 +88,7 @@ function testGoingToPreviousBoundaryMarker() {
   FrameSnapping.gotoPreviousBoundaryMarker();
 }
 
-function test9() {
+function populateFrameSnappingMarkers() {
   FrameSnapping.populateFrameSnappingMarkersAll();
   // const nearestBoundaryMarker = FrameSnapping.getNearestBoundaryFrame(
   //   G.TimelineKit.getSelection().startFrame,

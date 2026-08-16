@@ -711,6 +711,11 @@ class oDrawingNode extends oNodeLayer {
 
   scale = new oScale3D(this.nodePath);
 
+  /** The DRAWING.ELEMENT exposure column. Use setKeyFrame to set an exposure. */
+  get drawingElement(): oColumn {
+    return this.getColumn('DRAWING.ELEMENT');
+  }
+
   constructor(displayOrder: number, index: number, nodePath: string, name: string) {
     super(displayOrder, index, nodePath, name);
   }
@@ -725,6 +730,44 @@ class oDrawingNode extends oNodeLayer {
   //   MessageLog.trace("folder: " + folder);
   //   MessageLog.trace("folderName: " + folderName);
   // }
+
+  createDrawing(baseName: string): string | null {
+    const uniqueName = this.getUniqueDrawingName(baseName);
+    if (!uniqueName) {
+      return null;
+    }
+
+    const colName = node.linkedColumn(this.nodePath, 'DRAWING.ELEMENT');
+    if (!colName) {
+      MessageLog.trace(`[Layers.ts] No DRAWING.ELEMENT column found on ${this.nodePath}`);
+      return null;
+    }
+
+    const result = column.createDrawing(colName, uniqueName);
+    MessageLog.trace(`[Layers.ts] createDrawing('${uniqueName}') -> ${result}`);
+    return result ? uniqueName : null;
+  }
+
+  getUniqueDrawingName(baseName: string) {
+    // 1. Fetch the element ID linked to the node
+    var elementId = node.getElementId(this.nodePath);
+    if (elementId === -1) {
+      System.println('Node not found or invalid element ID.');
+      return null;
+    }
+
+    var counter = 1;
+    var uniqueName = baseName + '_' + counter;
+
+    // 2. Query the database using the documentation's isExists method
+    // Keep incrementing the counter as long as the drawing name already exists
+    while (Drawing.isExists(elementId, uniqueName)) {
+      counter++;
+      uniqueName = baseName + '_' + counter;
+    }
+
+    return uniqueName;
+  }
 
   toString() {
     return `DrawingLayer<${this.nodePath}>`;
@@ -943,17 +986,32 @@ class _LayerManager {
     }
   }
 
-  getSelectedNodes(): oNodeLayer[] {
+  getSelected(): oNodeLayer[] {
     const selectedNodePaths = selection.selectedNodes();
-    const selectedNodes = selectedNodePaths
+    const selected = selectedNodePaths
       .map((nodePath: string) => this.getNodeLayer(nodePath))
       .filter((layer): layer is oNodeLayer => layer !== null);
 
     // Sort by displayOrder property
-    selectedNodes.sort((a, b) => a.displayOrder - b.displayOrder);
-
-    return selectedNodes;
+    selected.sort((a, b) => a.displayOrder - b.displayOrder);
+    return selected;
   }
+
+  // getSelectedNodes(): oNodeLayer[] {
+  //   return;
+  //   // this.__proto__.selection = selection;
+  //   MessageLog.trace(`[Layers.ts] >>>>>`);
+  //   MessageLog.trace(`[Layers.ts] >>>>> ${selection}`);
+  //   const selectedNodePaths = selection.selectedNodes();
+  //   const selectedNodes = selectedNodePaths
+  //     .map((nodePath: string) => this.getNodeLayer(nodePath))
+  //     .filter((layer): layer is oNodeLayer => layer !== null);
+  //   // Sort by displayOrder property
+
+  //   selectedNodes.sort((a, b) => a.displayOrder - b.displayOrder);
+
+  //   return selectedNodes;
+  // }
 
   getNodeLayers(): oNodeLayer[] {
     return this.nodeLayers;

@@ -140,8 +140,7 @@ class oSelection {
         this.isRange = false;
       }
     }
-    this.selectedNodes =
-      selectedNodes !== undefined ? selectedNodes : Object._.LayerManager.getSelectedNodes();
+    this.selectedNodes = selectedNodes !== undefined ? selectedNodes : _.LayerManager.getSelected();
     this.length = this.endFrame - this.startFrame + 1;
   }
 
@@ -192,6 +191,10 @@ namespace TimelineKit {
     return frame.numberOf();
   }
 
+  export function getAllMarkers(): any[] {
+    return TimelineMarker.getAllMarkers();
+  }
+
   export function createMarker(
     frame: number,
     name: string = '',
@@ -211,6 +214,66 @@ namespace TimelineKit {
       return false;
     }
     return true;
+  }
+
+  export function moveMarker(marker: oTimelineMarker, newFrame: number): boolean {
+    try {
+      if (!TimelineMarker.deleteMarker(marker)) {
+        return false;
+      }
+
+      TimelineMarker.createMarker({
+        frame: newFrame,
+        length: marker.length,
+        color: marker.color,
+        name: marker.name,
+        notes: marker.notes,
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+
+  export function rippleShiftMarkers(
+    atFrame: number,
+    amount: number,
+    mode: 'add' | 'delete' = 'add',
+  ): boolean {
+    const delta = mode === 'delete' ? -Math.abs(amount) : Math.abs(amount);
+
+    try {
+      const markers = TimelineMarker.getAllMarkers();
+
+      // Delete every marker first so shifted markers never collide with
+      // markers that have not moved yet. Harmony refuses to create a marker
+      // that starts on a frame already occupied by another marker.
+      for (const marker of markers) {
+        if (!TimelineMarker.deleteMarker(marker)) {
+          return false;
+        }
+      }
+
+      // Reconstruct all markers at their new positions.
+      for (const marker of markers) {
+        const newFrame = marker.frame > atFrame ? marker.frame + delta : marker.frame;
+
+        TimelineMarker.createMarker({
+          frame: newFrame,
+          length: marker.length,
+          color: marker.color,
+          name: marker.name,
+          notes: marker.notes,
+        });
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   export function setCurrentFrame(frameNumber: number) {
@@ -398,6 +461,14 @@ namespace TimelineKit {
 
   export function setFrame(number: number) {
     frame.setCurrent(number);
+  }
+
+  export function getTimelineMarkersPresentAtFrame(frame: number): oTimelineMarker[] {
+    var markers = TimelineMarker.getAllMarkers();
+
+    return markers.filter(function (marker) {
+      return frame >= marker.frame && frame < marker.frame + Math.max(marker.length, 1);
+    });
   }
 
   export function getSceneMetadata(key, type) {
