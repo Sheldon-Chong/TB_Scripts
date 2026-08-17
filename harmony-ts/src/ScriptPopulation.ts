@@ -167,7 +167,7 @@ function testAddExposure() {
 
   scene.endUndoRedoAccum();
 }
-include(specialFolders.userScripts + '/core/UI/widgets.js');
+include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
 
 function testRequest() {
   if (typeof QNetworkAccessManager !== 'undefined') {
@@ -222,22 +222,6 @@ function runListener() {
         ? [{ name: 'setSizePolicy', args: [SizePolicy.Preferred, SizePolicy.Expanding] }]
         : undefined,
       children: [componentDef],
-    };
-  }
-
-  function button(settings: {
-    text: string;
-    objectName: string;
-    bgColor?: string;
-    borderColor?: string;
-  }) {
-    return {
-      type: QPushButton,
-      props: {
-        objectName: settings.objectName,
-        text: settings.text,
-        styleSheet: `QPushButton { font-size: 14pt; color: #ffffff; background-color: ${settings.bgColor || '#555555'}; border: 1px solid ${settings.borderColor || '#777777'}; border-radius: 8px; padding: 6px; }`,
-      },
     };
   }
 
@@ -320,8 +304,8 @@ function runListener() {
           spacing: 8,
         },
         children: [
-          button({ text: 'Reset', objectName: 'resetButton' }),
-          button({
+          WidgetKit.button({ text: 'Reset', objectName: 'resetButton' }),
+          WidgetKit.button({
             text: 'Apply',
             objectName: 'applyButton',
             bgColor: '#2e7d32',
@@ -332,7 +316,7 @@ function runListener() {
     ],
   };
 
-  const dialog = Widgets.createComponent(dialogDef, null) as QDialog;
+  const dialog = WidgetKit.createComponent(dialogDef, null) as QDialog;
   MessageLog.trace(`[ScriptPopulation.ts] ${QDialog.length}`);
 
   dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
@@ -341,11 +325,11 @@ function runListener() {
   // anchors to it instead of the dialog.
   const mainWindow = QApplication.activeWindow();
 
-  const nameLabel = Widgets.findWidgetByName(dialog, 'nameLabel') as QLabel;
-  const notesLabel = Widgets.findWidgetByName(dialog, 'notesRowLabel') as QTextEdit;
-  const applyButton = Widgets.findWidgetByName(dialog, 'applyButton') as QPushButton;
-  const resetButton = Widgets.findWidgetByName(dialog, 'resetButton') as QPushButton;
-  const indexLabel = Widgets.findWidgetByName(dialog, 'indexLabel') as QLabel;
+  const nameLabel = WidgetKit.findWidgetByName(dialog, 'nameLabel') as QLabel;
+  const notesLabel = WidgetKit.findWidgetByName(dialog, 'notesRowLabel') as QTextEdit;
+  const applyButton = WidgetKit.findWidgetByName(dialog, 'applyButton') as QPushButton;
+  const resetButton = WidgetKit.findWidgetByName(dialog, 'resetButton') as QPushButton;
+  const indexLabel = WidgetKit.findWidgetByName(dialog, 'indexLabel') as QLabel;
 
   function getCurrentMarker() {
     return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
@@ -425,7 +409,6 @@ function runListener() {
 }
 
 function showMarkerList() {
-  // Normalise a Harmony marker colour (#RRGGBB or #RRGGBBAA) to #RRGGBB.
   function colorToHex(color: any): string {
     if (typeof color === 'string') {
       if (color.charAt(0) === '#') {
@@ -446,145 +429,231 @@ function showMarkerList() {
   dialog.windowTitle = 'Timeline Markers';
   dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
   dialog.resize(560, 340);
-  dialog.styleSheet = 'QDialog { background-color: #2d2d2d; }';
+
+  dialog.styleSheet = `
+    QDialog { background-color: #2d2d2d; }
+    QTableWidget {
+      background-color: #1f1f1f;
+      gridline-color: #2d2d2d;
+      color: #ffffff;
+      border: none;
+      font-size: 11pt;
+    }
+    QHeaderView::section {
+      background-color: #2d2d2d;
+      color: #bbbbbb;
+      font-weight: bold;
+      border: none;
+      padding: 4px;
+    }
+    QTableWidget::item {
+      padding: 2px 4px;
+    }
+  `;
 
   const layout = new QVBoxLayout(dialog);
   layout.setContentsMargins(12, 12, 12, 12);
-  layout.spacing = 4;
+  layout.spacing = 8;
 
-  // Header row (Color | Name | Notes).
-  const header = new QWidget();
-  const headerLayout = new QHBoxLayout(header);
-  headerLayout.setContentsMargins(0, 0, 0, 0);
-  headerLayout.spacing = 6;
+  // QTableWidget Setup
+  const table = new QTableWidget();
+  table.columnCount = 3;
+  table.setHorizontalHeaderLabels(['Color', 'Name', 'Notes']);
+  table.selectionBehavior = QAbstractItemView.SelectRows;
+  table.selectionMode = QAbstractItemView.SingleSelection;
 
-  const colorHeader = new QLabel('Color');
-  colorHeader.minimumWidth = 56;
-  colorHeader.maximumWidth = 56;
-  colorHeader.styleSheet = 'color: #bbbbbb; font-weight: bold;';
+  // Configure Column Resizing
+  const header = table.horizontalHeader();
+  header.setSectionResizeMode(0, QHeaderView.Fixed);
+  header.setSectionResizeMode(1, QHeaderView.Interactive);
+  header.setSectionResizeMode(2, QHeaderView.Stretch);
+  table.setColumnWidth(0, 56);
+  table.setColumnWidth(1, 150);
 
-  const nameHeader = new QLabel('Name');
-  nameHeader.minimumWidth = 150;
-  nameHeader.maximumWidth = 150;
-  nameHeader.styleSheet = 'color: #bbbbbb; font-weight: bold;';
+  table.verticalHeader().setVisible(false);
+  layout.addWidget(table, 1, 0);
 
-  const notesHeader = new QLabel('Notes');
-  notesHeader.styleSheet = 'color: #bbbbbb; font-weight: bold;';
-
-  headerLayout.addWidget(colorHeader, 0, Qt.AlignmentFlag.AlignLeft);
-  headerLayout.addWidget(nameHeader, 0, Qt.AlignmentFlag.AlignLeft);
-  headerLayout.addWidget(notesHeader, 1, Qt.AlignmentFlag.AlignLeft);
-  layout.addWidget(header, 0, 0);
-
-  // Container that holds one row per marker.
-  const rowsContainer = new QWidget();
-  const rowsLayout = new QVBoxLayout(rowsContainer);
-  rowsLayout.setContentsMargins(0, 0, 0, 0);
-  rowsLayout.spacing = 0;
-
-  // Scroll area so long marker lists can be scrolled.
-  const scroll = new QScrollArea();
-  scroll.widgetResizable = true;
-  scroll.setWidget(rowsContainer);
-  scroll.styleSheet = 'QScrollArea { background-color: #1f1f1f; border: none; }';
-  layout.addWidget(scroll, 1, 0);
-
-  var rowWidgets: QWidget[] = [];
   var selfUpdating = false;
 
   function updateMarker(marker: oTimelineMarker) {
     selfUpdating = true;
     try {
+      scene.beginUndoRedoAccum('Update Marker');
       TimelineMarker.setMarker(marker);
+      scene.endUndoRedoAccum();
     } catch (e) {
       MessageLog.trace('[ScriptPopulation.ts] Error updating marker: ' + e.message);
     }
     selfUpdating = false;
   }
 
-  function addRow(marker: oTimelineMarker) {
-    const row = new QWidget();
-    const rowLayout = new QHBoxLayout(row);
-    rowLayout.setContentsMargins(0, 0, 0, 0);
-    rowLayout.spacing = 6;
+  // Handle in-place cell editing directly on the QTableWidget
+  table.itemChanged.connect(function (item: QTableWidgetItem) {
+    if (selfUpdating) return;
 
-    // Colour circle, pinned inside a fixed-width cell so the columns line up.
-    const swatch = new QLabel();
-    swatch.setFixedSize(18, 18);
-    swatch.styleSheet =
-      'background-color: ' +
-      colorToHex(marker.color) +
-      '; border-radius: 9px; border: 1px solid #888888;';
+    const row = item.row();
+    const markers = TimelineMarker.getAllMarkers();
+    const marker = markers[row];
+    if (!marker) return;
 
-    const swatchCell = new QWidget();
-    swatchCell.minimumWidth = 56;
-    swatchCell.maximumWidth = 56;
-    const swatchLayout = new QHBoxLayout(swatchCell);
-    swatchLayout.setContentsMargins(0, 0, 0, 0);
-    swatchLayout.addWidget(swatch, 0, Qt.AlignmentFlag.AlignLeft);
+    const col = item.column();
+    if (col === 1) {
+      // Name Column
+      if (marker.name !== item.text()) {
+        marker.name = item.text();
+        updateMarker(marker);
+      }
+    } else if (col === 2) {
+      // Notes Column
+      if (marker.notes !== item.text()) {
+        marker.notes = item.text();
+        updateMarker(marker);
+      }
+    }
+  });
 
-    // Name (single line).
-    const nameEdit = new QLineEdit();
-    nameEdit.text = marker.name || '';
-    nameEdit.minimumWidth = 150;
-    nameEdit.maximumWidth = 150;
-    nameEdit.styleSheet =
-      'font-size: 13pt; color: #ffffff; background-color: #1f1f1f; border: 1px solid #4a4a4a; border-radius: 4px; padding: 2px 6px;';
+  const deleteMarkersOfSelection = G.Utils.bind(function () {
+    const sel = new this.G.oSelection();
+    scene.beginUndoRedoAccum('delete markers');
+    for (var i = sel.startFrame; i < sel.endFrame + 1; i++) {
+      const marker = this.G.TimelineKit.getTimelineMarkersPresentAtFrame(i)[0];
+      if (marker) TimelineMarker.deleteMarker(marker);
+    }
+    scene.endUndoRedoAccum();
+  }, this);
 
-    // Notes (single line).
-    const notesEdit = new QLineEdit();
-    notesEdit.text = marker.notes || '';
-    notesEdit.styleSheet =
-      'font-size: 13pt; color: #ffffff; background-color: #1f1f1f; border: 1px solid #4a4a4a; border-radius: 4px; padding: 2px 6px;';
+  const deleteAllMarkers = G.Utils.bind(function () {
+    scene.beginUndoRedoAccum('delete all markers');
+    const allMarkers = this.G.TimelineKit.getAllMarkers();
+    for (var i = 0; i < allMarkers.length; i++) {
+      TimelineMarker.deleteMarker(allMarkers[i]);
+    }
+    scene.endUndoRedoAccum();
+  }, this);
 
-    // Commit edits back to the marker when the field is finished editing.
-    nameEdit.editingFinished.connect(function () {
-      marker.name = nameEdit.text;
-      updateMarker(marker);
+  try {
+    const operationsBar = WidgetKit.createComponent({
+      type: QWidget,
+      layout: QHBoxLayout,
+      layoutProps: { contentsMargins: [0, 0, 0, 0], spacing: 8 },
+      children: [
+        WidgetKit.button({
+          text: 'Delete Markers in Selection',
+          objectName: 'deleteButton',
+          onClick: deleteMarkersOfSelection,
+        }).create(),
+        WidgetKit.button({
+          text: 'Delete All Markers',
+          objectName: 'deleteButton',
+          onClick: deleteAllMarkers,
+        }).create(),
+      ],
     });
-    notesEdit.editingFinished.connect(function () {
-      marker.notes = notesEdit.text;
-      updateMarker(marker);
-    });
-
-    rowLayout.addWidget(swatchCell, 0, Qt.AlignmentFlag.AlignLeft);
-    rowLayout.addWidget(nameEdit, 0, Qt.AlignmentFlag.AlignLeft);
-    rowLayout.addWidget(notesEdit, 1, Qt.AlignmentFlag.AlignLeft);
-
-    rowsLayout.addWidget(row, 0, 0);
-    rowWidgets.push(row);
+    layout.addWidget(operationsBar, 0, Qt.AlignmentFlag.AlignRight);
+  } catch (error) {
+    MessageLog.trace(
+      `[ScriptPopulation.ts] ${error.message} ${error.fileName} ${error.lineNumber}`,
+    );
   }
 
+  // FAST: Updates only row background colors without rebuilding rows
+  function highlightCurrentFrame() {
+    if (selfUpdating) return;
+
+    const currentFrame = frame.current();
+    const activeRowBrush = new QBrush(new QColor('#3a3a3a'));
+    const defaultRowBrush = new QBrush(new QColor('#1f1f1f'));
+
+    const markers = TimelineMarker.getAllMarkers();
+    if (markers.length !== table.rowCount) return;
+
+    table.updatesEnabled = false;
+    for (var i = 0; i < markers.length; i++) {
+      const isActiveFrame = markers[i].frame === currentFrame;
+      const brush = isActiveFrame ? activeRowBrush : defaultRowBrush;
+
+      const nameItem = table.item(i, 1);
+      const notesItem = table.item(i, 2);
+
+      if (nameItem) nameItem.setBackground(brush);
+      if (notesItem) notesItem.setBackground(brush);
+    }
+    table.updatesEnabled = true;
+  }
+
+  // SLOW: Rebuilds structural elements (only called when scene markers actually change)
   function refresh() {
     if (selfUpdating) return;
 
-    // Remove the previous rows (hide + delete via the WA_DeleteOnClose path).
-    for (var r = 0; r < rowWidgets.length; r++) {
-      rowWidgets[r].setAttribute(Qt.WA_DeleteOnClose);
-      rowWidgets[r].close();
-    }
-    rowWidgets = [];
+    table.updatesEnabled = false;
+    table.rowCount = 0;
+
+    const currentFrame = frame.current();
+    const activeRowColor = new QColor('#3a3a3a');
+    const activeRowBrush = new QBrush(activeRowColor);
 
     const markers = TimelineMarker.getAllMarkers();
+    table.rowCount = markers.length;
+
     for (var i = 0; i < markers.length; i++) {
-      addRow(markers[i]);
+      const marker = markers[i];
+      const isActiveFrame = marker.frame === currentFrame;
+
+      // Swatch / Color Column (Read-Only)
+      const colorItem = new QTableWidgetItem();
+      colorItem.setBackground(new QBrush(new QColor(colorToHex(marker.color))));
+      colorItem.setFlags(colorItem.flags() & ~Qt.ItemIsEditable);
+      table.setItem(i, 0, colorItem);
+
+      // Name Column (Editable)
+      const nameItem = new QTableWidgetItem(marker.name || '');
+      if (isActiveFrame) nameItem.setBackground(activeRowBrush);
+      table.setItem(i, 1, nameItem);
+
+      // Notes Column (Editable)
+      const notesItem = new QTableWidgetItem(marker.notes || '');
+      if (isActiveFrame) notesItem.setBackground(activeRowBrush);
+      table.setItem(i, 2, notesItem);
     }
+    table.updatesEnabled = true;
   }
+
+  table.cellDoubleClicked.connect(
+    G.Utils.bind(function (row: number, column: number) {
+      const markers = TimelineMarker.getAllMarkers();
+      const marker = markers[row];
+
+      if (!marker) return;
+
+      if (column === 0) {
+        if (marker.frame !== undefined) {
+          MessageLog.trace(`[ScriptPopulation.ts] ${'click'}`);
+          this.G.TimelineKit.setCurrentFrame(marker.frame);
+        }
+      } else if (column === 1) {
+        MessageLog.trace('Clicked marker name: ' + marker.name);
+      }
+    }, this),
+  );
 
   refresh();
 
-  // Re-populate whenever timeline scene markers are added/deleted/changed.
   const notifier = new SceneChangeNotifier(dialog);
+
+  // Rebuild rows only on structural changes (add, remove, edit markers)
   notifier.sceneMarkersChanged.connect(refresh);
+
+  // Fast path: Only repaint background colors when scrubbing frames
+  notifier.currentFrameChanged.connect(highlightCurrentFrame);
 
   dialog.closeEvent = function (event: any) {
     notifier.sceneMarkersChanged.disconnect(refresh);
+    notifier.currentFrameChanged.disconnect(highlightCurrentFrame);
     event.accept();
   };
 
   dialog.show();
 }
-
 function deleteMarkers() {
   const sel = new G.oSelection();
   scene.beginUndoRedoAccum('delete markers');

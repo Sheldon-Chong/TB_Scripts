@@ -1,4 +1,40 @@
-namespace Widgets {
+include(specialFolders.userScripts + '/core/UI/Components.js');
+
+namespace WidgetKit {
+  export interface Constructor<T> {
+    new (...args: any[]): T;
+  }
+
+  export interface ComponentCall {
+    name: string;
+    args: any[];
+  }
+
+  export interface ComponentDefBase<T = any> {
+    type: Constructor<T>;
+    ctorArgs?: any[];
+    props?: Partial<T>;
+    calls?: ComponentCall[];
+    setup?: (widget: T) => void;
+    layout?: any;
+    layoutProps?: {
+      contentsMargins?: number[];
+      spacing?: number;
+    };
+    stretch?: number;
+    children?: Array<ComponentDefBase | QWidget>;
+  }
+
+  export interface ComponentDef<T = any> extends ComponentDefBase<T> {
+    create(parent?: any): T;
+  }
+
+  export function defineComponent<T>(def: ComponentDefBase<T>): ComponentDef<T> {
+    const component = def as ComponentDef<T>;
+    component.create = (p?: any) => createComponent(def, p);
+    return component;
+  }
+
   export function showToast(labelText: string, duration: number, anchorWindow?: any): void {
     var toast = new QWidget();
     toast.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.ToolTip);
@@ -30,9 +66,31 @@ namespace Widgets {
     timer.start(duration || 1500);
   }
 
-  export function createComponent(def, parent) {
+  export function constructWidget<T>(type: Constructor<T>, args: any[]): T {
+    switch (args.length) {
+      case 0:
+        return new type();
+      case 1:
+        return new type(args[0]);
+      case 2:
+        return new type(args[0], args[1]);
+      case 3:
+        return new type(args[0], args[1], args[2]);
+      default:
+        return new type(args[0], args[1], args[2], args[3]);
+    }
+  }
+
+  export function createComponent<T>(def: ComponentDefBase<T>, parent?: any): T {
     // 1. Instantiate the widget/object
-    var widget = new def.type(parent);
+    let widget: any;
+    if (def.ctorArgs && def.ctorArgs.length > 0) {
+      widget = constructWidget(def.type, def.ctorArgs);
+    } else if (parent) {
+      widget = new def.type(parent);
+    } else {
+      widget = new def.type();
+    }
 
     // 2. Assign primitive properties (e.g., text, objectName, enabled)
     if (def.props) {
@@ -41,6 +99,13 @@ namespace Widgets {
       }
     }
 
+    // 2a. Apply dynamic Qt properties (e.g., setProperty('class', 'value'))
+    if ((def as any).customProps) {
+      var customProps = (def as any).customProps;
+      for (var propKey in customProps) {
+        widget.setProperty(propKey, customProps[propKey]);
+      }
+    }
     // 2b. Apply method calls (e.g. setSizePolicy) that can't be expressed
     //     as plain property assignments.
     if (def.calls) {
@@ -72,14 +137,23 @@ namespace Widgets {
       }
 
       for (var i = 0; i < def.children.length; i++) {
-        var childDef = def.children[i];
-        var childWidget = createComponent(childDef, widget);
-        var stretch = childDef.stretch !== undefined ? childDef.stretch : 0;
-        layout.addWidget(childWidget, stretch, 0);
+        var child = def.children[i];
+        if (child && typeof (child as any).type === 'function') {
+          var childDef = child as ComponentDefBase;
+          var childWidget = createComponent(childDef, widget);
+          var stretch = childDef.stretch !== undefined ? childDef.stretch : 0;
+          layout.addWidget(childWidget, stretch, 0);
+        } else {
+          layout.addWidget(child as any, 0, 0);
+        }
       }
     }
 
-    return widget;
+    if (def.setup) {
+      def.setup(widget);
+    }
+
+    return widget as T;
   }
 
   export function findWidgetByName(parent: any, name: string): any {

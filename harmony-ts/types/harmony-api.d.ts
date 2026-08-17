@@ -224,25 +224,66 @@ declare var Vector2d: {
   new (x: number, y: number): Point2d;
 };
 
-declare class QLabel {
-  constructor(...args: any[]);
+interface QSignal {
+  connect(fn: (...args: any[]) => any): void;
+  disconnect(fn: (...args: any[]) => any): void;
   [key: string]: any;
 }
-declare class QLineEdit {
+
+declare class QWidget {
   constructor(...args: any[]);
+  objectName: string;
+  enabled: boolean;
+  visible: boolean;
+  minimumWidth: number;
+  maximumWidth: number;
+  minimumHeight: number;
+  maximumHeight: number;
+  styleSheet: string;
+  windowTitle: string;
+  modal: boolean;
+  layout: any;
+  geometry: any;
+  children(): QWidget[];
+  setStyleSheet(styleSheet: string): void;
+  setFixedSize(width: number, height: number): void;
+  setMinimumSize(width: number, height: number): void;
+  setMaximumSize(width: number, height: number): void;
+  setSizePolicy(horizontal: number, vertical: number): void;
+  setWindowFlags(flags: number): void;
+  setWindowTitle(title: string): void;
+  setAttribute(attribute: number, on?: boolean): void;
+  resize(width: number, height: number): void;
+  move(x: number, y: number): void;
+  show(): void;
+  hide(): void;
+  close(): void;
   [key: string]: any;
 }
-declare class QTextEdit {
+
+declare class QLabel extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
+  text: string;
+  wordWrap: boolean;
+  textFormat: number;
+  alignment: number;
+}
+declare class QLineEdit extends QWidget {
+  constructor(...args: any[]);
+  text: string;
+  editingFinished: QSignal;
+}
+declare class QTextEdit extends QWidget {
+  constructor(...args: any[]);
+  plainText: string;
+  lineWrapMode: number;
   static NoWrap: number;
   static WidgetWidth: number;
   static FixedPixelWidth: number;
   static FixedColumnWidth: number;
 }
-declare class QTableWidget {
+declare class QTableWidget extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
 }
 declare class QTableWidgetItem {
   constructor(...args: any[]);
@@ -250,70 +291,81 @@ declare class QTableWidgetItem {
 }
 declare class SceneChangeNotifier {
   constructor(...args: any[]);
-  currentFrameChanged: any;
-  selectionChanged: any;
-  sceneMarkersChanged: any;
+  currentFrameChanged: QSignal;
+  selectionChanged: QSignal;
+  sceneMarkersChanged: QSignal;
   [key: string]: any;
 }
-declare class QDialog {
+declare class QDialog extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
 }
-declare class QWidget {
+declare class QSlider extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
 }
-declare class QSlider {
+declare class QSpinBox extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
 }
-declare class QSpinBox {
+declare class QGroupBox extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
 }
-declare class QGroupBox {
+declare class QPushButton extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
+  text: string;
+  clicked: QSignal;
 }
-declare class QVBoxLayout {
+declare class QListWidget extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
 }
-declare class QHBoxLayout {
+declare class QScrollArea extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
+  widgetResizable: boolean;
+  setWidget(widget: QWidget): void;
 }
-declare class QPushButton {
+declare class QCheckBox extends QWidget {
   constructor(...args: any[]);
-  [key: string]: any;
-}
-declare class QListWidget {
-  constructor(...args: any[]);
-  [key: string]: any;
-}
-declare class QScrollArea {
-  constructor(...args: any[]);
-  [key: string]: any;
-}
-declare class QListWidgetItem {
-  constructor(...args: any[]);
-  [key: string]: any;
-}
-declare class QCheckBox {
-  constructor(...args: any[]);
-  [key: string]: any;
 }
 declare class QTimer {
   constructor(...args: any[]);
+  singleShot: boolean;
+  timeout: QSignal;
+  start(msec: number): void;
   [key: string]: any;
 }
+declare class QLayout {
+  spacing: number;
+  setContentsMargins(left: number, top: number, right: number, bottom: number): void;
+  addWidget(widget: QWidget, stretch?: number, alignment?: number): void;
+  [key: string]: any;
+}
+declare class QVBoxLayout extends QLayout {
+  constructor(parent?: QWidget);
+}
+declare class QHBoxLayout extends QLayout {
+  constructor(parent?: QWidget);
+}
 declare var QApplication: {
-  activeWindow(): any;
+  activeWindow(): QWidget;
   [key: string]: any;
 };
 declare var Qt: {
   new (...args: any[]): any;
   (...args: any[]): any;
+  WindowStaysOnTopHint: number;
+  FramelessWindowHint: number;
+  ToolTip: number;
+  Dialog: number;
+  LeftButton: number;
+  WA_DeleteOnClose: number;
+  PlainText: number;
+  AlignmentFlag: {
+    AlignLeft: number;
+    AlignRight: number;
+    AlignCenter: number;
+    AlignTop: number;
+    AlignBottom: number;
+    AlignVCenter: number;
+    [key: string]: any;
+  };
   [key: string]: any;
 };
 
