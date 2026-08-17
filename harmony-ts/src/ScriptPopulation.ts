@@ -451,6 +451,22 @@ function showMarkerList() {
     }
   `;
 
+  function getSelectedRowIndices(): number[] {
+    const selectedItems = table.selectedItems();
+    const rowSet: { [key: number]: boolean } = {};
+
+    for (var i = 0; i < selectedItems.length; i++) {
+      rowSet[selectedItems[i].row()] = true;
+    }
+
+    // Convert object keys back to sorted numbers
+    const rows: number[] = [];
+    for (var r in rowSet) {
+      rows.push(Number(r));
+    }
+    return rows;
+  }
+
   const layout = new QVBoxLayout(dialog);
   layout.setContentsMargins(12, 12, 12, 12);
   layout.spacing = 8;
@@ -459,8 +475,11 @@ function showMarkerList() {
   const table = new QTableWidget();
   table.columnCount = 3;
   table.setHorizontalHeaderLabels(['Color', 'Name', 'Notes']);
+  // table.selectionBehavior = QAbstractItemView.SelectRows;
+  // table.selectionMode = QAbstractItemView.SingleSelection;
+
+  table.selectionMode = QAbstractItemView.ExtendedSelection;
   table.selectionBehavior = QAbstractItemView.SelectRows;
-  table.selectionMode = QAbstractItemView.SingleSelection;
 
   // Configure Column Resizing
   const header = table.horizontalHeader();
@@ -531,6 +550,12 @@ function showMarkerList() {
     scene.endUndoRedoAccum();
   }, this);
 
+  const importScript = G.Utils.bind(function () {
+    scene.beginUndoRedoAccum('import script');
+    MessageLog.trace(`[ScriptPopulation.ts] ${'import script'}`);
+    scene.endUndoRedoAccum();
+  }, this);
+
   try {
     const operationsBar = WidgetKit.createComponent({
       type: QWidget,
@@ -547,6 +572,11 @@ function showMarkerList() {
           objectName: 'deleteButton',
           onClick: deleteAllMarkers,
         }).create(),
+        WidgetKit.button({
+          text: 'Import Script',
+          objectName: 'importButton',
+          onClick: importScript,
+        }).create(),
       ],
     });
     layout.addWidget(operationsBar, 0, Qt.AlignmentFlag.AlignRight);
@@ -558,28 +588,86 @@ function showMarkerList() {
 
   // FAST: Updates only row background colors without rebuilding rows
   function highlightCurrentFrame() {
-    if (selfUpdating) return;
+    try {
+      if (selfUpdating) return;
 
-    const currentFrame = frame.current();
-    const activeRowBrush = new QBrush(new QColor('#3a3a3a'));
-    const defaultRowBrush = new QBrush(new QColor('#1f1f1f'));
+      const currentFrame = frame.current();
+      const activeRowBrush = new QBrush(new QColor('#3a3a3a'));
+      const defaultRowBrush = new QBrush(new QColor('#1f1f1f'));
 
-    const markers = TimelineMarker.getAllMarkers();
-    if (markers.length !== table.rowCount) return;
+      const markers = TimelineMarker.getAllMarkers();
+      if (markers.length !== table.rowCount) return;
 
-    table.updatesEnabled = false;
-    for (var i = 0; i < markers.length; i++) {
-      const isActiveFrame = markers[i].frame === currentFrame;
-      const brush = isActiveFrame ? activeRowBrush : defaultRowBrush;
+      table.updatesEnabled = false;
+      for (var i = 0; i < markers.length; i++) {
+        const isActiveFrame = markers[i].frame === currentFrame;
+        const brush = isActiveFrame ? activeRowBrush : defaultRowBrush;
 
-      const nameItem = table.item(i, 1);
-      const notesItem = table.item(i, 2);
+        const nameItem = table.item(i, 1);
+        const notesItem = table.item(i, 2);
 
-      if (nameItem) nameItem.setBackground(brush);
-      if (notesItem) notesItem.setBackground(brush);
+        if (nameItem) nameItem.setBackground(brush);
+        if (notesItem) notesItem.setBackground(brush);
+      }
+      table.updatesEnabled = true;
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error highlighting current frame: ${error.message} ${error.fileName} ${error.lineNumber}`,
+      );
     }
-    table.updatesEnabled = true;
   }
+
+  table.contextMenuPolicy = Qt.CustomContextMenu;
+
+  // 2. Connect to the customContextMenuRequested signal
+  table.customContextMenuRequested.connect(function (pos: QPoint) {
+    const G = this.G as HarmonyGlobals;
+    // Map coordinates to find which row was right-clicked
+    const item = table.itemAt(pos);
+    if (!item) return; // Right-clicked on empty table area
+
+    const row = item.row();
+    const markers = TimelineMarker.getAllMarkers();
+    const marker = markers[row];
+    if (!marker) return;
+
+    // Create the QMenu container
+    const menu = new QMenu(dialog);
+
+    // Define Menu Actions
+    const jumpAction = menu.addAction('Jump to Marker Frame');
+    const deleteAction = menu.addAction('Delete Marker');
+
+    // Map global position for spawning the menu
+    const globalPos = table.viewport().mapToGlobal(pos);
+    const selectedAction = menu.exec(globalPos);
+
+    // Handle selected menu action
+    if (selectedAction === jumpAction) {
+      if (marker.frame !== undefined) {
+        G.TimelineKit.setCurrentFrame(marker.frame);
+      }
+    } else if (selectedAction === deleteAction) {
+      const selectedRows = getSelectedRowIndices();
+      const markers = TimelineMarker.getAllMarkers();
+
+      scene.beginUndoRedoAccum('Delete Selected Markers');
+      for (var i = 0; i < selectedRows.length; i++) {
+        try {
+          const r = selectedRows[i];
+          if (markers[r]) {
+            TimelineMarker.deleteMarker(markers[r]);
+          }
+        } catch (error) {
+          MessageLog.trace(
+            `[ScriptPopulation.ts] Error deleting marker at row ${selectedRows[i]}: ${error.message}`,
+          );
+        }
+      }
+      scene.endUndoRedoAccum();
+      refresh();
+    }
+  });
 
   // SLOW: Rebuilds structural elements (only called when scene markers actually change)
   function refresh() {
@@ -626,8 +714,8 @@ function showMarkerList() {
       if (!marker) return;
 
       if (column === 0) {
+        MessageLog.trace(`[ScriptPopulation.ts] ${'click'}`);
         if (marker.frame !== undefined) {
-          MessageLog.trace(`[ScriptPopulation.ts] ${'click'}`);
           this.G.TimelineKit.setCurrentFrame(marker.frame);
         }
       } else if (column === 1) {
@@ -656,8 +744,8 @@ function showMarkerList() {
 }
 function deleteMarkers() {
   const sel = new G.oSelection();
-  scene.beginUndoRedoAccum('delete markers');
 
+  scene.beginUndoRedoAccum('delete markers');
   for (var i = sel.startFrame; i < sel.startFrame + sel.endFrame; i++) {
     const marker = G.TimelineKit.getTimelineMarkersPresentAtFrame(i)[0];
     if (marker) {
