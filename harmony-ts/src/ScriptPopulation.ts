@@ -104,8 +104,6 @@ namespace ScriptPopulation {
     Action.perform('onActionAddExposure()', 'timelineView');
     frame.setCurrent(sel.startFrame + 1);
 
-    const drawingLayer = G.LayerManager.getNodeLayer('Top/Drawing') as oDrawingNode;
-
     scene.endUndoRedoAccum();
   }
 
@@ -118,9 +116,6 @@ namespace ScriptPopulation {
     G.TimelineKit.rippleShiftMarkers(frame.current(), 1, 'delete');
     Action.perform('selectAll()', 'timelineView');
     Action.perform('onActionRemoveExposure()', 'timelineView');
-    frame.setCurrent(sel.startFrame + 1);
-
-    const drawingLayer = G.LayerManager.getNodeLayer('Top/Drawing') as oDrawingNode;
 
     scene.endUndoRedoAccum();
   }
@@ -388,45 +383,28 @@ function showMarkerList() {
     }
   });
 
-  const deleteMarkersOfSelection = G.Utils.bind(function () {
-    const sel = new this.G.oSelection();
-    scene.beginUndoRedoAccum('delete markers');
+  this.__proto__.ScriptPopulation = ScriptPopulation;
+
+  const deleteMarkersOfSelection = G.Utils.bindAction(() => {
+    const sel = new G.oSelection();
     for (var i = sel.startFrame; i < sel.endFrame + 1; i++) {
-      const marker = this.G.TimelineKit.getTimelineMarkersPresentAtFrame(i)[0];
+      const marker = G.TimelineKit.getTimelineMarkersPresentAtFrame(i)[0];
       if (marker) TimelineMarker.deleteMarker(marker);
     }
-    scene.endUndoRedoAccum();
   }, this);
 
-  const deleteAllMarkers = G.Utils.bind(function () {
-    scene.beginUndoRedoAccum('delete all markers');
-    const allMarkers = this.G.TimelineKit.getAllMarkers();
+  const deleteAllMarkers = G.Utils.bindAction(() => {
+    const allMarkers = G.TimelineKit.getAllMarkers();
     for (var i = 0; i < allMarkers.length; i++) {
       TimelineMarker.deleteMarker(allMarkers[i]);
     }
-    scene.endUndoRedoAccum();
   }, this);
 
-  const importScript = G.Utils.bind(function () {
-    scene.beginUndoRedoAccum('import script');
-
-    const G = this.G as HarmonyGlobals;
-    const ScriptPopulation = this.ScriptPopulation as typeof ScriptPopulation;
-    try {
-      const output = G.Utils.prompt('test');
-      // MessageLog.trace(`[ScriptPopulation.ts] ${output}`);
-      ScriptPopulation.populateScript(output);
-      // MessageLog.trace(`[ScriptPopulation.ts] ${'import script'}`);
-    } catch (error) {
-      MessageLog.trace(
-        `[ScriptPopulation.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`,
-      );
-    }
-    scene.endUndoRedoAccum();
+  const importScript = G.Utils.bindAction(() => {
+    ScriptPopulation.populateScript(G.Utils.prompt('test'));
   }, this);
 
-  const compileScript = G.Utils.bind(function () {
-    const G = this.G as HarmonyGlobals;
+  const compileScript = G.Utils.bindAction(function () {
     const markers = G.TimelineKit.getAllMarkers();
     const compiledScript = markers
       .filter((marker) => marker.name && marker.notes)
@@ -447,27 +425,18 @@ function showMarkerList() {
       'QToolButton { font-size: 12pt; color: #ffffff; background-color: #555555; border: 1px solid #777777; border-radius: 8px; padding: 6px; }';
     optionsButton.popupMode = QToolButton.InstantPopup;
 
-    // Create the menu that will be attached to the button.
-    const optionsMenu = new QMenu(optionsButton);
-    optionsMenu.styleSheet =
-      'QMenu { background-color: #2d2d2d; color: #ffffff; border: 1px solid #555555; } ' +
-      'QMenu::item { padding: 4px 16px; font-size: 12pt; } ' +
-      'QMenu::item:selected { background-color: #4a6b8a; }';
-
-    // Add actions (menu items) and connect them to their handlers.
-    const deleteSelectionAction = optionsMenu.addAction('Delete Markers in Selection');
-    deleteSelectionAction.triggered.connect(deleteMarkersOfSelection);
-
-    const deleteAllAction = optionsMenu.addAction('Delete All Markers');
-    deleteAllAction.triggered.connect(deleteAllMarkers);
-
-    optionsMenu.addSeparator();
-
-    const importScriptAction = optionsMenu.addAction('Import Script');
-    importScriptAction.triggered.connect(importScript);
-
-    const compileScriptAction = optionsMenu.addAction('Compile Script');
-    compileScriptAction.triggered.connect(compileScript);
+    // Build the menu from a list of sections; each section is a list of
+    // [label, callback] pairs and is separated by a menu separator.
+    const optionsMenu = WidgetKit.optionsMenu(optionsButton, [
+      [
+        ['Delete Markers in Selection', deleteMarkersOfSelection],
+        ['Delete All Markers', deleteAllMarkers],
+      ],
+      [
+        ['Import Script', importScript],
+        ['Compile Script', compileScript],
+      ],
+    ]);
 
     // Attach the menu to the button.
     optionsButton.setMenu(optionsMenu);

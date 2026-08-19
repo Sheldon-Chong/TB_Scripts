@@ -235,8 +235,10 @@ namespace TimelineKit {
       return false;
     }
   }
-
-
+  export function test() {
+    MessageLog.trace(`[TimelineKit.ts] ${'test'}`);
+    MessageLog.trace(`[TimelineKit.ts] ${'test'}`);
+  }
 
   export function rippleShiftMarkers(
     atFrame: number,
@@ -248,17 +250,29 @@ namespace TimelineKit {
     try {
       const markers = TimelineMarker.getAllMarkers();
 
+      // In delete mode, any marker occupying `atFrame` is removed entirely and
+      // not reconstructed after the ripple.
+      const markersToReconstruct = markers.filter((marker) => {
+        if (mode !== 'delete') {
+          return true;
+        }
+        const markerEnd = marker.frame + Math.max(marker.length, 1);
+        const occupiesFrame = atFrame >= marker.frame && atFrame < markerEnd;
+        return !occupiesFrame;
+      });
+
       // Delete every marker first so shifted markers never collide with
       // markers that have not moved yet. Harmony refuses to create a marker
       // that starts on a frame already occupied by another marker.
       for (const marker of markers) {
-        if (!TimelineMarker.deleteMarker(marker)) {
-          return false;
-        }
+        TimelineMarker.deleteMarker(marker);
       }
+      MessageLog.trace(
+        `[TimelineKit.ts] ${markersToReconstruct.length} markers to reconstruct after ripple shift.`,
+      );
 
-      // Reconstruct all markers at their new positions.
-      for (const marker of markers) {
+      // Reconstruct the remaining markers at their new positions.
+      for (const marker of markersToReconstruct) {
         const newFrame = marker.frame > atFrame ? marker.frame + delta : marker.frame;
 
         TimelineMarker.createMarker({
@@ -272,6 +286,7 @@ namespace TimelineKit {
 
       return true;
     } catch (e) {
+      MessageLog.trace(`[TimelineKit.ts] ${e.message}`);
       return false;
     }
   }

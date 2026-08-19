@@ -167,4 +167,33 @@ namespace WidgetKit {
     }
     return null;
   }
+
+  export type MenuActionDef = [name: string, onTrigger: (...args: any[]) => any];
+  export type MenuSection = MenuActionDef[];
+
+  /**
+   * Builds a QMenu from a list of sections. Each section is a list of
+   * [label, callback] pairs; a separator is inserted between sections.
+   */
+  export function optionsMenu(parent?: any, sections?: MenuSection[]): any {
+    const menu = parent ? new QMenu(parent) : new QMenu();
+    menu.styleSheet =
+      'QMenu { background-color: #2d2d2d; color: #ffffff; border: 1px solid #555555; } ' +
+      'QMenu::item { padding: 4px 16px; font-size: 12pt; } ' +
+      'QMenu::item:selected { background-color: #4a6b8a; }';
+
+    const list = sections || [];
+    for (let s = 0; s < list.length; s++) {
+      if (s > 0) {
+        menu.addSeparator();
+      }
+      const section = list[s];
+      for (let i = 0; i < section.length; i++) {
+        const pair = section[i];
+        const action = menu.addAction(pair[0]);
+        action.triggered.connect(pair[1]);
+      }
+    }
+    return menu;
+  }
 }

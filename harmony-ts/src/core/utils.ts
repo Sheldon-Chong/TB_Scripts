@@ -176,7 +176,19 @@ function bind(fn, context) {
     return fn.apply(context, arguments);
   };
 }
-
+function bindAction(fn: Function, args: any[], actionName?: string) {
+  return function () {
+    scene.beginUndoRedoAccum(actionName ?? fn.name ?? 'Unnamed Action');
+    try {
+      return fn.apply(null, args);
+    } catch (error) {
+      MessageLog.trace(`❗ ERROR AT ${error.fileName}:${error.lineNumber} - ${error.message}`);
+      return null;
+    } finally {
+      scene.endUndoRedoAccum();
+    }
+  };
+}
 function getValueByPath(obj, path) {
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
@@ -429,6 +441,7 @@ const Utils = {
   forEachLeafValue,
   getValueByPath,
   bind,
+  bindAction,
   deepClone,
   getMethods,
   toast,
