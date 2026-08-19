@@ -579,8 +579,9 @@ function prompt(message: string, title?: string, defaultText?: string): string |
   mainLayout.addWidget(label, 0, Qt.AlignmentFlag.AlignLeft);
 
   // --- text input ---
-  var input = new QLineEdit();
-  input.text = defaultText || '';
+
+  var input = new QTextEdit();
+  input.plainText = defaultText || '';
   input.styleSheet =
     'QLineEdit { background-color: #3d3d3d; color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 6px; font-size: 12pt; }';
   mainLayout.addWidget(input, 0, 0);
@@ -610,7 +611,7 @@ function prompt(message: string, title?: string, defaultText?: string): string |
       color: '#4CAF50',
       label: 'OK',
       onClick: function () {
-        result = input.text;
+        result = input.plainText;
         dialog.accept();
       },
     }),

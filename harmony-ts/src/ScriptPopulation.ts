@@ -8,165 +8,167 @@ interface dialogLine {
 // Type union for parsed items
 type ParsedItem = dialogLine | string;
 
-function parseDialog(line: string): dialogLine | null {
-  const regex = /^(.+?)\s*::\s*(.+)$/;
-  const match = line.match(regex);
-
-  if (match) {
-    return {
-      profile: match[1].trim(),
-      dialogue: match[2].trim(),
-    };
-  }
-  return null;
-}
-
-/**
- * Groups raw lines into a structured array of:
- * - `dialogLine` objects
- * - `string[]` arrays representing contiguous blocks of non-dialogue text/notes
- */
 interface ParsedScriptResult {
   grouped: Array<dialogLine | string[]>;
   dialogueOnly: dialogLine[];
   nonDialogueOnly: string[][];
 }
 
-function groupScriptLines(lines: string[]): ParsedScriptResult {
-  const grouped: Array<dialogLine | string[]> = [];
-  const dialogueOnly: dialogLine[] = [];
-  const nonDialogueOnly: string[][] = [];
+namespace ScriptPopulation {
+  function parseDialog(line: string): dialogLine | null {
+    const regex = /^(.+?)\s*::\s*(.+)$/;
+    const match = line.match(regex);
 
-  let nonDialogueBuffer: string[] = [];
-
-  const flushBuffer = () => {
-    if (nonDialogueBuffer.length > 0) {
-      grouped.push(nonDialogueBuffer);
-      nonDialogueOnly.push(nonDialogueBuffer); // Reference to the same group array
-      nonDialogueBuffer = [];
+    if (match) {
+      return {
+        profile: match[1].trim(),
+        dialogue: match[2].trim(),
+      };
     }
-  };
+    return null;
+  }
 
-  for (const line of lines) {
-    const dialog = parseDialog(line);
+  function groupScriptLines(lines: string[]): ParsedScriptResult {
+    const grouped: Array<dialogLine | string[]> = [];
+    const dialogueOnly: dialogLine[] = [];
+    const nonDialogueOnly: string[][] = [];
 
-    if (dialog) {
-      flushBuffer();
-      grouped.push(dialog);
-      dialogueOnly.push(dialog);
-    } else {
-      nonDialogueBuffer.push(line);
+    let nonDialogueBuffer: string[] = [];
+
+    const flushBuffer = () => {
+      if (nonDialogueBuffer.length > 0) {
+        grouped.push(nonDialogueBuffer);
+        nonDialogueOnly.push(nonDialogueBuffer); // Reference to the same group array
+        nonDialogueBuffer = [];
+      }
+    };
+
+    for (const line of lines) {
+      const dialog = parseDialog(line);
+
+      if (dialog) {
+        flushBuffer();
+        grouped.push(dialog);
+        dialogueOnly.push(dialog);
+      } else {
+        nonDialogueBuffer.push(line);
+      }
     }
+
+    // Push any remaining non-dialogue lines at the end of the file
+    flushBuffer();
+
+    return {
+      grouped,
+      dialogueOnly,
+      nonDialogueOnly,
+    };
   }
 
-  // Push any remaining non-dialogue lines at the end of the file
-  flushBuffer();
+  const drawingTypesFile =
+    'C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Advanced\\full-2500-pref\\drawingTypes.d\\drawingTypes.xml';
 
-  return {
-    grouped,
-    dialogueOnly,
-    nonDialogueOnly,
-  };
-}
+  function readDrawingTypes(): DrawingType[] | undefined {
+    var xmlText = G.FileUtils.readFrom(drawingTypesFile);
 
-// const profiles = {
-//   "Sans":
-// }
+    if (!xmlText) {
+      MessageLog.trace('[ScriptPopulation.ts] File could not be read or is empty.');
+      return;
+    }
 
-const drawingTypesFile =
-  'C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Advanced\\full-2500-pref\\drawingTypes.d\\drawingTypes.xml';
+    var doc = G.Utils.readXmlFile(xmlText);
 
-function readDrawingTypes(): DrawingType[] | undefined {
-  var xmlText = G.FileUtils.readFrom(drawingTypesFile);
+    if (doc.error) {
+      MessageLog.trace('[ScriptPopulation.ts] ' + doc.error);
+      return;
+    }
 
-  if (!xmlText) {
-    MessageLog.trace('[ScriptPopulation.ts] File could not be read or is empty.');
-    return;
+    var drawingTypesNode = doc.children[0];
+    var drawingTypeNodes = drawingTypesNode ? drawingTypesNode.children : [];
+
+    var items = [];
+    for (var i = 0; i < drawingTypeNodes.length; i++) {
+      items.push(drawingTypeNodes[i].attributes);
+    }
+    return items;
   }
 
-  var doc = G.Utils.readXmlFile(xmlText);
+  export function addExposure() {
+    var marker = TimelineMarker.getAllMarkers()[0];
 
-  if (doc.error) {
-    MessageLog.trace('[ScriptPopulation.ts] ' + doc.error);
-    return;
-  }
+    scene.beginUndoRedoAccum('add exposure');
 
-  var drawingTypesNode = doc.children[0];
-  var drawingTypeNodes = drawingTypesNode ? drawingTypesNode.children : [];
-
-  var items = [];
-  for (var i = 0; i < drawingTypeNodes.length; i++) {
-    items.push(drawingTypeNodes[i].attributes);
-  }
-  return items;
-}
-
-function readXMLTest() {
-  const items = readDrawingTypes();
-  MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(items, null, 2)}`);
-}
-
-function populateScript() {
-  const rawText = G.FileUtils.readFrom('D:\\YT projects\\Coding\\ToonBoom\\Test\\script_test.txt');
-
-  const profiles = readDrawingTypes();
-
-  function getProfile(profileName: string): DrawingType | undefined {
-    return profiles?.find((profile) => profile.text === profileName);
-  }
-
-  if (!rawText) {
-    MessageLog.trace('[ScriptPopulation.ts] File could not be read or is empty.');
-    return;
-  }
-
-  const lines = rawText.split(/\r?\n/);
-  const scriptStructure = groupScriptLines(lines);
-
-  MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(scriptStructure, null, 2)}`);
-  MessageLog.trace(`[ScriptPopulation.ts] ${scriptStructure.grouped.length}`);
-  MessageLog.trace(`[ScriptPopulation.ts] ${scriptStructure.dialogueOnly.length}`);
-  MessageLog.trace(`[ScriptPopulation.ts] ${scriptStructure.nonDialogueOnly.length}`);
-
-  scene.beginUndoRedoAccum('marker');
-  try {
     const sel = new G.oSelection();
-    for (var i = sel.startFrame; i < sel.startFrame + scriptStructure.dialogueOnly.length; i++) {
-      const profile = getProfile(scriptStructure.dialogueOnly[i - sel.startFrame].profile);
-      G.TimelineKit.createMarker(
-        i,
-        profile ? profile.text : '',
-        profile ? profile.timelineColor.slice(0, 7) : '#ffffff',
-        `${scriptStructure.dialogueOnly[i - sel.startFrame].dialogue}`,
-        0,
+    G.TimelineKit.rippleShiftMarkers(frame.current(), 1, 'add');
+    Action.perform('selectAll()', 'timelineView');
+    Action.perform('onActionAddExposure()', 'timelineView');
+    frame.setCurrent(sel.startFrame + 1);
+
+    const drawingLayer = G.LayerManager.getNodeLayer('Top/Drawing') as oDrawingNode;
+
+    scene.endUndoRedoAccum();
+  }
+
+  export function removeExposure() {
+    var marker = TimelineMarker.getAllMarkers()[0];
+
+    scene.beginUndoRedoAccum('remove exposure');
+
+    const sel = new G.oSelection();
+    G.TimelineKit.rippleShiftMarkers(frame.current(), 1, 'delete');
+    Action.perform('selectAll()', 'timelineView');
+    Action.perform('onActionRemoveExposure()', 'timelineView');
+    frame.setCurrent(sel.startFrame + 1);
+
+    const drawingLayer = G.LayerManager.getNodeLayer('Top/Drawing') as oDrawingNode;
+
+    scene.endUndoRedoAccum();
+  }
+
+  export function populateScript(text: string) {
+    const rawText = text;
+
+    const profiles = readDrawingTypes();
+
+    function getProfile(profileName: string): DrawingType | undefined {
+      return profiles?.find((profile) => profile.text === profileName);
+    }
+
+    if (!rawText) {
+      MessageLog.trace('[ScriptPopulation.ts] File could not be read or is empty.');
+      return;
+    }
+
+    const lines = rawText.split(/\r?\n/);
+    const scriptStructure = groupScriptLines(lines);
+
+    MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(scriptStructure, null, 2)}`);
+    MessageLog.trace(`[ScriptPopulation.ts] ${scriptStructure.grouped.length}`);
+    MessageLog.trace(`[ScriptPopulation.ts] ${scriptStructure.dialogueOnly.length}`);
+    MessageLog.trace(`[ScriptPopulation.ts] ${scriptStructure.nonDialogueOnly.length}`);
+
+    scene.beginUndoRedoAccum('marker');
+    try {
+      const sel = new G.oSelection();
+      for (var i = sel.startFrame; i < sel.startFrame + scriptStructure.dialogueOnly.length; i++) {
+        const profile = getProfile(scriptStructure.dialogueOnly[i - sel.startFrame].profile);
+        G.TimelineKit.createMarker(
+          i,
+          profile ? profile.text : '',
+          profile ? profile.timelineColor.slice(0, 7) : '#ffffff',
+          `${scriptStructure.dialogueOnly[i - sel.startFrame].dialogue}`,
+          0,
+        );
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error creating markers: ${error.message} ${error.fileName} ${error.lineNumber}`,
       );
     }
-  } catch (error) {
-    MessageLog.trace(
-      `[ScriptPopulation.ts] Error creating markers: ${error.message} ${error.fileName} ${error.lineNumber}`,
-    );
+    scene.endUndoRedoAccum();
   }
-  scene.endUndoRedoAccum();
 }
 
-function testAddExposure() {
-  var marker = TimelineMarker.getAllMarkers()[0];
-
-  scene.beginUndoRedoAccum('add exposure');
-
-  const sel = new G.oSelection();
-  G.TimelineKit.rippleShiftMarkers(frame.current(), 1, 'add');
-  Action.perform('selectAll()', 'timelineView');
-  2;
-  Action.perform('onActionAddExposure()', 'timelineView');
-  frame.setCurrent(sel.startFrame + 1);
-
-  const drawingLayer = G.LayerManager.getNodeLayer('Top/Drawing') as oDrawingNode;
-  const id = drawingLayer.createDrawing('TestDrawing');
-  drawingLayer.drawingElement.setKeyFrame(sel.startFrame + 1, id);
-
-  scene.endUndoRedoAccum();
-}
 include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
 
 function testRequest() {
@@ -186,226 +188,9 @@ function testRequest() {
 }
 
 function runListener() {
-  const SizePolicy = {
-    Fixed: 0,
-    Minimum: 1,
-    Maximum: 4,
-    MinimumExpanding: 3,
-    Preferred: 5,
-    Expanding: 7,
-    Ignored: 13,
-  };
-
-  function newRow(settings: { objectName: string; component: any; stretch?: number }) {
-    const expand = (settings.stretch || 0) > 0;
-
-    // When the row expands vertically, make the component fill it too.
-    const componentDef = settings.component;
-    if (expand) {
-      componentDef.calls = (componentDef.calls || []).concat([
-        { name: 'setSizePolicy', args: [SizePolicy.Expanding, SizePolicy.Expanding] },
-      ]);
-    }
-
-    return {
-      type: QWidget,
-      props: {
-        objectName: settings.objectName,
-        styleSheet: 'background-color: transparent; border: none;',
-      },
-      layout: QHBoxLayout,
-      layoutProps: {
-        contentsMargins: [0, 0, 0, 0],
-      },
-      stretch: settings.stretch !== undefined ? settings.stretch : 0,
-      calls: expand
-        ? [{ name: 'setSizePolicy', args: [SizePolicy.Preferred, SizePolicy.Expanding] }]
-        : undefined,
-      children: [componentDef],
-    };
-  }
-
-  // Build the dialog with the createComponent helper
-  const dialogDef = {
-    type: QDialog,
-    props: {
-      windowTitle: 'Frame Listener',
-      minimumWidth: 340,
-      minimumHeight: 200,
-      modal: false,
-      styleSheet:
-        'QDialog { background-color: #2d2d2d; border: 1px solid #555; border-radius: 6px; }',
-    },
-    layout: QVBoxLayout,
-    layoutProps: {
-      contentsMargins: [15, 20, 15, 20],
-      spacing: 6,
-    },
-    children: [
-      newRow({
-        objectName: 'nameRow',
-        component: {
-          type: QLineEdit,
-          props: {
-            objectName: 'nameLabel',
-            text: '',
-            wordWrap: true,
-            textFormat: Qt.PlainText,
-            styleSheet:
-              'font-size: 14pt; color: #e0e0e0; background-color: #1e2a38; border: 1px solid #4a6b8a; border-radius: 8px; padding: 4px;',
-            maximumHeight: 40,
-          },
-        },
-      }),
-      newRow({
-        objectName: 'notesRow',
-        stretch: 1,
-        component: {
-          type: QTextEdit,
-          props: {
-            objectName: 'notesRowLabel',
-            plainText: 'Notes',
-            lineWrapMode: QTextEdit.WidgetWidth,
-            alignment: Qt.AlignmentFlag.AlignLeft,
-            styleSheet:
-              'font-size: 18pt; color: #ffffff; background-color: #1f1f1f; border: 1px solid #4a4a4a; border-radius: 8px; padding: 8px; margin: 0px;',
-          },
-        },
-      }),
-      // {
-      //   objectName: 'indexLabelRow',
-      //   type: QHBoxLayout,
-      //   layoutProps: {
-      //     contentsMargins: [0, 0, 0, 0],
-      //   }
-      //   children: []
-      // }
-      // {
-      //   type: QLabel,
-      //   props: {
-      //     objectName: 'indexLabel',
-      //     text: 'test',
-      //     wordWrap: true,
-      //     maximumHeight: 40,
-      //     textFormat: Qt.PlainText,
-      //     styleSheet:
-      //       'font-size: 14pt; color: #ffffff; background-color: #2a1e1e; border: 1px solid #6b4a4a; border-radius: 8px; padding: 4px;',
-      //   },
-      // },
-      {
-        type: QWidget,
-        props: {
-          objectName: 'buttonRow',
-          styleSheet: 'background-color: transparent; border: none;',
-        },
-        layout: QHBoxLayout,
-        layoutProps: {
-          contentsMargins: [0, 0, 0, 0],
-          spacing: 8,
-        },
-        children: [
-          WidgetKit.button({ text: 'Reset', objectName: 'resetButton' }),
-          WidgetKit.button({
-            text: 'Apply',
-            objectName: 'applyButton',
-            bgColor: '#2e7d32',
-            borderColor: '#4caf50',
-          }),
-        ],
-      },
-    ],
-  };
-
-  const dialog = WidgetKit.createComponent(dialogDef, null) as QDialog;
-  MessageLog.trace(`[ScriptPopulation.ts] ${QDialog.length}`);
-
-  dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
-
-  // Capture the Toon Boom main window before the dialog opens so the toast
-  // anchors to it instead of the dialog.
-  const mainWindow = QApplication.activeWindow();
-
-  const nameLabel = WidgetKit.findWidgetByName(dialog, 'nameLabel') as QLabel;
-  const notesLabel = WidgetKit.findWidgetByName(dialog, 'notesRowLabel') as QTextEdit;
-  const applyButton = WidgetKit.findWidgetByName(dialog, 'applyButton') as QPushButton;
-  const resetButton = WidgetKit.findWidgetByName(dialog, 'resetButton') as QPushButton;
-  const indexLabel = WidgetKit.findWidgetByName(dialog, 'indexLabel') as QLabel;
-
-  function getCurrentMarker() {
-    return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
-  }
-
-  function applyToMarker() {
-    const markerName = nameLabel.text;
-    const markerNotes = notesLabel.plainText;
-    const currentFrame = frame.current();
-
-    scene.beginUndoRedoAccum('Apply marker settings');
-    try {
-      const marker = getCurrentMarker();
-      if (marker) {
-        marker.name = markerName;
-        marker.notes = markerNotes;
-        TimelineMarker.setMarker(marker);
-      } else {
-        G.TimelineKit.createMarker(currentFrame, markerName, '#ffffff', markerNotes, 0);
-      }
-    } catch (e) {
-      MessageLog.trace(`[ScriptPopulation.ts] Error applying marker: ${e.message}`);
-    }
-    try {
-      this.G.Widgets.showToast(`Applied ${markerName}: ${markerNotes}`, 1500, mainWindow);
-    } catch (e) {
-      MessageLog.trace(`[ScriptPopulation.ts] Error showing toast: ${e.message}`);
-    }
-    scene.endUndoRedoAccum();
-  }
-
-  // Reset both fields back to the current marker's values.
-  function resetFields() {
-    const marker = getCurrentMarker();
-    nameLabel.text = marker ? marker.name : '';
-    notesLabel.plainText = marker ? marker.notes : '';
-  }
-
-  resetButton.clicked.connect(resetFields);
-  applyButton.clicked.connect(G.Utils.bind(applyToMarker, this));
-
-  // Register frame-change listeners (Labeler.ts pattern)
-  const frameNotifier = new (SceneChangeNotifier as any)(dialog);
-  this.G = G;
-
-  this.profiles = readDrawingTypes();
-
-  const frameChangedHandler = G.Utils.bind(function () {
-    MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(this.profiles, null, 2)}`);
-    try {
-      const marker = this.G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
-      if (marker) {
-        nameLabel.text = marker.name;
-        notesLabel.plainText = marker.notes;
-      } else {
-        nameLabel.text = '';
-        notesLabel.plainText = '';
-      }
-    } catch (error) {
-      MessageLog.trace(
-        `[ScriptPopulation.ts] ${frame.current()} | Error retrieving marker information. ${error.message}`,
-      );
-    }
-  }, this);
-
-  frameNotifier.currentFrameChanged.connect(frameChangedHandler);
-  frameNotifier.selectionChanged.connect(frameChangedHandler);
-
-  // De-register listeners when the dialog closes (Labeler.ts pattern)
-  dialog.closeEvent = function (event: any) {
-    frameNotifier.currentFrameChanged.disconnect(frameChangedHandler);
-    frameNotifier.selectionChanged.disconnect(frameChangedHandler);
-    event.accept();
-  };
-
-  dialog.show();
+  // Kept as a button entry point; the listener UI now lives in the "Listener"
+  // tab of the Timeline Markers dialog (showMarkerList).
+  showMarkerList();
 }
 
 function showMarkerList() {
@@ -432,6 +217,23 @@ function showMarkerList() {
 
   dialog.styleSheet = `
     QDialog { background-color: #2d2d2d; }
+    QTabWidget::pane {
+      border: 1px solid #555555;
+      border-radius: 4px;
+    }
+    QTabBar::tab {
+      background-color: #2d2d2d;
+      color: #bbbbbb;
+      padding: 6px 16px;
+      border: 1px solid #555555;
+      border-bottom: none;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+    QTabBar::tab:selected {
+      background-color: #1f1f1f;
+      color: #ffffff;
+    }
     QTableWidget {
       background-color: #1f1f1f;
       gridline-color: #2d2d2d;
@@ -468,8 +270,19 @@ function showMarkerList() {
   }
 
   const layout = new QVBoxLayout(dialog);
-  layout.setContentsMargins(12, 12, 12, 12);
-  layout.spacing = 8;
+  layout.setContentsMargins(0, 0, 0, 0);
+  layout.spacing = 0;
+
+  // Tab menu: each tab is one "menu" (tool page). Add more tabs here later.
+  const tabs = new QTabWidget();
+  layout.addWidget(tabs, 1, 0);
+
+  // "Markers" tab holds the marker list, its filters, and the operations bar.
+  const markersTab = new QWidget();
+  const markersTabLayout = new QVBoxLayout(markersTab);
+  markersTabLayout.setContentsMargins(12, 12, 12, 12);
+  markersTabLayout.spacing = 8;
+  tabs.addTab(markersTab, 'Markers');
 
   // QTableWidget Setup
   const table = new QTableWidget();
@@ -490,7 +303,51 @@ function showMarkerList() {
   table.setColumnWidth(1, 150);
 
   table.verticalHeader().setVisible(false);
-  layout.addWidget(table, 1, 0);
+  markersTabLayout.addWidget(table, 1, 0);
+
+  // --- Column-specific filters ---
+  const filterBar = new QWidget();
+  filterBar.styleSheet = 'background-color: transparent; border: none;';
+  const filterLayout = new QHBoxLayout(filterBar);
+  filterLayout.setContentsMargins(0, 0, 0, 0);
+  filterLayout.spacing = 8;
+
+  const nameFilter = new QLineEdit();
+  nameFilter.placeholderText = 'Filter Name...';
+  nameFilter.styleSheet =
+    'font-size: 11pt; color: #e0e0e0; background-color: #1f1f1f; border: 1px solid #4a4a4a; border-radius: 6px; padding: 4px;';
+
+  const notesFilter = new QLineEdit();
+  notesFilter.placeholderText = 'Filter Notes...';
+  notesFilter.styleSheet = nameFilter.styleSheet;
+
+  filterLayout.addWidget(nameFilter, 1, 0);
+  filterLayout.addWidget(notesFilter, 1, 0);
+  markersTabLayout.addWidget(filterBar, 0, 0);
+
+  function matchesFilter(value: string, query: string): boolean {
+    if (!query) return true;
+    return value.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+  }
+
+  // Hides rows that don't match the active filters (AND semantics across columns).
+  function applyFilters() {
+    const nameQuery = nameFilter.text;
+    const notesQuery = notesFilter.text;
+    const markers = TimelineMarker.getAllMarkers();
+
+    table.updatesEnabled = false;
+    for (var i = 0; i < markers.length; i++) {
+      const marker = markers[i];
+      const nameMatch = matchesFilter(marker.name || '', nameQuery);
+      const notesMatch = matchesFilter(marker.notes || '', notesQuery);
+      table.setRowHidden(i, !(nameMatch && notesMatch));
+    }
+    table.updatesEnabled = true;
+  }
+
+  nameFilter.textChanged.connect(applyFilters);
+  notesFilter.textChanged.connect(applyFilters);
 
   var selfUpdating = false;
 
@@ -552,38 +409,262 @@ function showMarkerList() {
 
   const importScript = G.Utils.bind(function () {
     scene.beginUndoRedoAccum('import script');
-    MessageLog.trace(`[ScriptPopulation.ts] ${'import script'}`);
+
+    const G = this.G as HarmonyGlobals;
+    const ScriptPopulation = this.ScriptPopulation as typeof ScriptPopulation;
+    try {
+      const output = G.Utils.prompt('test');
+      // MessageLog.trace(`[ScriptPopulation.ts] ${output}`);
+      ScriptPopulation.populateScript(output);
+      // MessageLog.trace(`[ScriptPopulation.ts] ${'import script'}`);
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`,
+      );
+    }
     scene.endUndoRedoAccum();
   }, this);
 
+  const compileScript = G.Utils.bind(function () {
+    const G = this.G as HarmonyGlobals;
+    const markers = G.TimelineKit.getAllMarkers();
+    const compiledScript = markers
+      .filter((marker) => marker.name && marker.notes)
+      .map((marker) => `${marker.name}:: ${marker.notes}`)
+      .join('\n');
+    G.Utils.prompt('Compiled Script', 'Compiled Script', compiledScript);
+    MessageLog.trace(`[ScriptPopulation.ts] compile script: ${compiledScript}`);
+  }, this);
+
   try {
+    // Build the "Options" menu button (the C++ QPushButton::setMenu pattern).
+    // Harmony exposes menu support on QToolButton, so we use InstantPopup to
+    // get the same "click the button to open a menu" behavior.
+    const optionsButton = new QToolButton(dialog);
+    optionsButton.text = '☰';
+    optionsButton.objectName = 'optionsButton';
+    optionsButton.styleSheet =
+      'QToolButton { font-size: 12pt; color: #ffffff; background-color: #555555; border: 1px solid #777777; border-radius: 8px; padding: 6px; }';
+    optionsButton.popupMode = QToolButton.InstantPopup;
+
+    // Create the menu that will be attached to the button.
+    const optionsMenu = new QMenu(optionsButton);
+    optionsMenu.styleSheet =
+      'QMenu { background-color: #2d2d2d; color: #ffffff; border: 1px solid #555555; } ' +
+      'QMenu::item { padding: 4px 16px; font-size: 12pt; } ' +
+      'QMenu::item:selected { background-color: #4a6b8a; }';
+
+    // Add actions (menu items) and connect them to their handlers.
+    const deleteSelectionAction = optionsMenu.addAction('Delete Markers in Selection');
+    deleteSelectionAction.triggered.connect(deleteMarkersOfSelection);
+
+    const deleteAllAction = optionsMenu.addAction('Delete All Markers');
+    deleteAllAction.triggered.connect(deleteAllMarkers);
+
+    optionsMenu.addSeparator();
+
+    const importScriptAction = optionsMenu.addAction('Import Script');
+    importScriptAction.triggered.connect(importScript);
+
+    const compileScriptAction = optionsMenu.addAction('Compile Script');
+    compileScriptAction.triggered.connect(compileScript);
+
+    // Attach the menu to the button.
+    optionsButton.setMenu(optionsMenu);
+
+    // "Add exposure" and "Remove exposure" stay as standalone buttons.
     const operationsBar = WidgetKit.createComponent({
       type: QWidget,
       layout: QHBoxLayout,
       layoutProps: { contentsMargins: [0, 0, 0, 0], spacing: 8 },
       children: [
+        optionsButton,
         WidgetKit.button({
-          text: 'Delete Markers in Selection',
-          objectName: 'deleteButton',
-          onClick: deleteMarkersOfSelection,
+          text: 'Add exposure',
+          objectName: 'addExposureButton',
+          onClick: ScriptPopulation.addExposure,
         }).create(),
         WidgetKit.button({
-          text: 'Delete All Markers',
-          objectName: 'deleteButton',
-          onClick: deleteAllMarkers,
-        }).create(),
-        WidgetKit.button({
-          text: 'Import Script',
-          objectName: 'importButton',
-          onClick: importScript,
+          text: 'Remove exposure',
+          objectName: 'removeExposureButton',
+          onClick: ScriptPopulation.removeExposure,
         }).create(),
       ],
     });
-    layout.addWidget(operationsBar, 0, Qt.AlignmentFlag.AlignRight);
+    markersTabLayout.addWidget(operationsBar, 0, Qt.AlignmentFlag.AlignRight);
   } catch (error) {
     MessageLog.trace(
       `[ScriptPopulation.ts] ${error.message} ${error.fileName} ${error.lineNumber}`,
     );
+  }
+
+  // --- "Listener" tab: name / notes editor (moved from runListener) ---
+  const SizePolicy = {
+    Fixed: 0,
+    Minimum: 1,
+    Maximum: 4,
+    MinimumExpanding: 3,
+    Preferred: 5,
+    Expanding: 7,
+    Ignored: 13,
+  };
+
+  function newRow(settings: { objectName: string; component: any; stretch?: number }) {
+    const expand = (settings.stretch || 0) > 0;
+
+    // When the row expands vertically, make the component fill it too.
+    const componentDef = settings.component;
+    if (expand) {
+      componentDef.calls = (componentDef.calls || []).concat([
+        { name: 'setSizePolicy', args: [SizePolicy.Expanding, SizePolicy.Expanding] },
+      ]);
+    }
+
+    return {
+      type: QWidget,
+      props: {
+        objectName: settings.objectName,
+        styleSheet: 'background-color: transparent; border: none;',
+      },
+      layout: QHBoxLayout,
+      layoutProps: {
+        contentsMargins: [0, 0, 0, 0],
+      },
+      stretch: settings.stretch !== undefined ? settings.stretch : 0,
+      calls: expand
+        ? [{ name: 'setSizePolicy', args: [SizePolicy.Preferred, SizePolicy.Expanding] }]
+        : undefined,
+      children: [componentDef],
+    };
+  }
+
+  const listenerTab = WidgetKit.createComponent({
+    type: QWidget,
+    props: {
+      styleSheet: 'background-color: #2d2d2d;',
+    },
+    layout: QVBoxLayout,
+    layoutProps: {
+      contentsMargins: [15, 20, 15, 20],
+      spacing: 6,
+    },
+    children: [
+      newRow({
+        objectName: 'nameRow',
+        component: {
+          type: QLineEdit,
+          props: {
+            objectName: 'nameLabel',
+            text: '',
+            wordWrap: true,
+            textFormat: Qt.PlainText,
+            styleSheet:
+              'font-size: 14pt; color: #e0e0e0; background-color: #1e2a38; border: 1px solid #4a6b8a; border-radius: 8px; padding: 4px;',
+            maximumHeight: 40,
+          },
+        },
+      }),
+      newRow({
+        objectName: 'notesRow',
+        stretch: 1,
+        component: {
+          type: QTextEdit,
+          props: {
+            objectName: 'notesRowLabel',
+            plainText: 'Notes',
+            lineWrapMode: QTextEdit.WidgetWidth,
+            alignment: Qt.AlignmentFlag.AlignLeft,
+            styleSheet:
+              'font-size: 18pt; color: #ffffff; background-color: #1f1f1f; border: 1px solid #4a4a4a; border-radius: 8px; padding: 8px; margin: 0px;',
+          },
+        },
+      }),
+      {
+        type: QWidget,
+        props: {
+          objectName: 'buttonRow',
+          styleSheet: 'background-color: transparent; border: none;',
+        },
+        layout: QHBoxLayout,
+        layoutProps: {
+          contentsMargins: [0, 0, 0, 0],
+          spacing: 8,
+        },
+        children: [
+          WidgetKit.button({ text: 'Reset', objectName: 'resetButton' }),
+          WidgetKit.button({
+            text: 'Apply',
+            objectName: 'applyButton',
+            bgColor: '#2e7d32',
+            borderColor: '#4caf50',
+          }),
+        ],
+      },
+    ],
+  }) as QWidget;
+  tabs.addTab(listenerTab, 'Listener');
+
+  const nameLabel = WidgetKit.findWidgetByName(listenerTab, 'nameLabel') as QLineEdit;
+  const notesLabel = WidgetKit.findWidgetByName(listenerTab, 'notesRowLabel') as QTextEdit;
+  const applyButton = WidgetKit.findWidgetByName(listenerTab, 'applyButton') as QPushButton;
+  const resetButton = WidgetKit.findWidgetByName(listenerTab, 'resetButton') as QPushButton;
+
+  function getCurrentMarker() {
+    return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
+  }
+
+  function applyToMarker() {
+    const markerName = nameLabel.text;
+    const markerNotes = notesLabel.plainText;
+    const currentFrame = frame.current();
+
+    scene.beginUndoRedoAccum('Apply marker settings');
+    try {
+      const marker = getCurrentMarker();
+      if (marker) {
+        marker.name = markerName;
+        marker.notes = markerNotes;
+        TimelineMarker.setMarker(marker);
+      } else {
+        G.TimelineKit.createMarker(currentFrame, markerName, '#ffffff', markerNotes, 0);
+      }
+    } catch (e) {
+      MessageLog.trace(`[ScriptPopulation.ts] Error applying marker: ${e.message}`);
+    }
+    try {
+      this.G.Widgets.showToast(`Applied ${markerName}: ${markerNotes}`, 1500, dialog);
+    } catch (e) {
+      MessageLog.trace(`[ScriptPopulation.ts] Error showing toast: ${e.message}`);
+    }
+    scene.endUndoRedoAccum();
+  }
+
+  // Reset both fields back to the current marker's values.
+  function resetFields() {
+    const marker = getCurrentMarker();
+    nameLabel.text = marker ? marker.name : '';
+    notesLabel.plainText = marker ? marker.notes : '';
+  }
+
+  resetButton.clicked.connect(resetFields);
+  applyButton.clicked.connect(G.Utils.bind(applyToMarker, this));
+
+  // Updates the listener tab fields; shared by the single frame listener below.
+  function updateListenerFields() {
+    try {
+      const marker = getCurrentMarker();
+      if (marker) {
+        nameLabel.text = marker.name;
+        notesLabel.plainText = marker.notes;
+      } else {
+        nameLabel.text = '';
+        notesLabel.plainText = '';
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] ${frame.current()} | Error retrieving marker information. ${error.message}`,
+      );
+    }
   }
 
   // FAST: Updates only row background colors without rebuilding rows
@@ -704,6 +785,7 @@ function showMarkerList() {
       table.setItem(i, 2, notesItem);
     }
     table.updatesEnabled = true;
+    applyFilters();
   }
 
   table.cellDoubleClicked.connect(
@@ -726,17 +808,27 @@ function showMarkerList() {
 
   refresh();
 
+  // Single SceneChangeNotifier for the whole dialog, with a single frame-change
+  // listener that updates both the table highlight and the listener tab fields.
   const notifier = new SceneChangeNotifier(dialog);
 
   // Rebuild rows only on structural changes (add, remove, edit markers)
   notifier.sceneMarkersChanged.connect(refresh);
 
-  // Fast path: Only repaint background colors when scrubbing frames
-  notifier.currentFrameChanged.connect(highlightCurrentFrame);
+  // The one and only frame-change listener.
+  function onFrameChanged() {
+    highlightCurrentFrame();
+    updateListenerFields();
+  }
+  notifier.currentFrameChanged.connect(onFrameChanged);
+
+  // Selection changes refresh the listener fields too (not a frame listener).
+  notifier.selectionChanged.connect(updateListenerFields);
 
   dialog.closeEvent = function (event: any) {
     notifier.sceneMarkersChanged.disconnect(refresh);
-    notifier.currentFrameChanged.disconnect(highlightCurrentFrame);
+    notifier.currentFrameChanged.disconnect(onFrameChanged);
+    notifier.selectionChanged.disconnect(updateListenerFields);
     event.accept();
   };
 

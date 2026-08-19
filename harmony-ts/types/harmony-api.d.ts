@@ -313,6 +313,33 @@ declare class QPushButton extends QWidget {
   text: string;
   clicked: QSignal;
 }
+declare class QToolButton extends QWidget {
+  constructor(...args: any[]);
+  text: string;
+  toolTip: string;
+  popupMode: number;
+  menu: QMenu;
+  setPopupMode(mode: number): void;
+  setMenu(menu: QMenu): void;
+  static InstantPopup: number;
+  static DelayedPopup: number;
+  static MenuButtonPopup: number;
+}
+declare class QMenu extends QWidget {
+  constructor(...args: any[]);
+  addAction(text: string): QAction;
+  addMenu(title: string): QMenu;
+  addSeparator(): QAction;
+  exec(pos?: any): QAction;
+}
+declare class QAction {
+  constructor(...args: any[]);
+  text: string;
+  triggered: QSignal;
+  checkable: boolean;
+  checked: boolean;
+  [key: string]: any;
+}
 declare class QListWidget extends QWidget {
   constructor(...args: any[]);
 }
@@ -323,6 +350,15 @@ declare class QScrollArea extends QWidget {
 }
 declare class QCheckBox extends QWidget {
   constructor(...args: any[]);
+}
+declare class QTabWidget extends QWidget {
+  constructor(...args: any[]);
+  addTab(widget: QWidget, label: string): number;
+  setTabPosition(position: number): void;
+  static North: number;
+  static South: number;
+  static West: number;
+  static East: number;
 }
 declare class QTimer {
   constructor(...args: any[]);

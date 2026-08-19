@@ -38,5 +38,16 @@
 			"MessageLog.trace(`[$TM_FILENAME] ${JSON.stringify($1, null, 2)}`)"
 		],
 		"description": "Insert MessageLog.trace statement with current filename"
-	}
+	},
+"Try/Catch": {
+    "prefix": "trycatch",
+    "body": [
+        "try {",
+        "\t$1",
+        "} catch (error) {",
+        "MessageLog.trace(`[$TM_FILENAME] ${error} | ${error.fileName} | ${error.lineNumber}`)",
+        "}"
+    ],
+    "description": "Log output to console"
+}
 }
