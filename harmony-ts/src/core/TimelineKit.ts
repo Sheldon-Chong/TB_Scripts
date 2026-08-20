@@ -140,7 +140,7 @@ class oSelection {
         this.isRange = false;
       }
     }
-    this.selectedNodes = selectedNodes !== undefined ? selectedNodes : _.LayerManager.getSelected();
+    this.selectedNodes = selectedNodes !== undefined ? selectedNodes : G.LayerManager.getSelected();
     this.length = this.endFrame - this.startFrame + 1;
   }
 
@@ -235,11 +235,6 @@ namespace TimelineKit {
       return false;
     }
   }
-  export function test() {
-    MessageLog.trace(`[TimelineKit.ts] ${'test'}`);
-    MessageLog.trace(`[TimelineKit.ts] ${'test'}`);
-  }
-
   export function rippleShiftMarkers(
     atFrame: number,
     amount: number,

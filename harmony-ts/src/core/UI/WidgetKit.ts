@@ -196,4 +196,33 @@ namespace WidgetKit {
     }
     return menu;
   }
+
+  export function uiBtn(options: StyledButtonOptions) {
+    var label = options.label;
+    var onClick = options.onClick;
+    var width = options.width !== undefined ? options.width : 100;
+    var height = options.height !== undefined ? options.height : 30;
+    var color = options.color !== undefined ? options.color : '#4CAF50';
+
+    var button = new QPushButton(label);
+    button.setFixedSize(width, height);
+    button.setStyleSheet(
+      'QPushButton {' +
+        'background-color: ' +
+        color +
+        ';' +
+        'color: white;' +
+        'border: none;' +
+        'border-radius: 4px;' +
+        'padding: 6px 12px;' +
+        'font-size: 14px;' +
+        '}' +
+        'QPushButton:hover {' +
+        'background-color: ' +
+        getHoverColor(color) +
+        '}',
+    );
+    button['clicked()'].connect(onClick);
+    return button;
+  }
 }

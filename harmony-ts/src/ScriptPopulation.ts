@@ -1,22 +1,223 @@
 include('globals.js');
 
-interface dialogLine {
+interface DiffResult {
+  lineIndex: number;
+  lineText: string;
+  isDialogue: boolean;
+  /**
+   * 'matched': Line matches an expected dialogue object in order
+   * 'unexpected': Extra line in editor or does not match expected list (Highlight Red)
+   * 'non-dialogue': Action text / non-dialogue line
+   */
+  status: 'matched' | 'unexpected' | 'non-dialogue';
+  dialogueObj?: dialogueLine;
+}
+
+interface dialogueLine {
   profile: string;
   dialogue: string;
 }
 
 // Type union for parsed items
-type ParsedItem = dialogLine | string;
+type ParsedItem = dialogueLine | string;
 
 interface ParsedScriptResult {
-  grouped: Array<dialogLine | string[]>;
-  dialogueOnly: dialogLine[];
+  grouped: Array<dialogueLine | string[]>;
+  dialogueOnly: dialogueLine[];
   nonDialogueOnly: string[][];
 }
 
 namespace ScriptPopulation {
-  function parseDialog(line: string): dialogLine | null {
-    const regex = /^(.+?)\s*::\s*(.+)$/;
+  export function insertDialogPrompt(settings: {
+    message?: string;
+    title?: string;
+    defaultProfile?: string;
+    defaultDialogue?: string;
+  }): string | null {
+    var dialog = new QDialog();
+    dialog.windowTitle = settings.title || 'Input';
+    dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
+    dialog.minimumWidth = 340;
+    dialog.modal = true;
+
+    var mainLayout = new QVBoxLayout(dialog);
+    mainLayout.setContentsMargins(24, 20, 24, 20);
+    mainLayout.spacing = 18;
+
+    // --- message label ---
+    var label = new QLabel(settings.message ?? 'Enter text:');
+    label.wordWrap = true;
+    label.textFormat = Qt.PlainText;
+    label.styleSheet = 'font-size: 12pt; color: #e0e0e0;';
+    mainLayout.addWidget(label, 0, Qt.AlignmentFlag.AlignLeft);
+
+    var profileInput = new QLineEdit();
+    profileInput.placeholderText = 'Profile';
+    profileInput.text = settings.defaultProfile || '';
+    profileInput.styleSheet =
+      'QLineEdit { background-color: #3d3d3d; color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 6px; font-size: 12pt; }';
+    mainLayout.addWidget(profileInput, 0, 0);
+
+    var input = new QTextEdit();
+    input.plainText = settings.defaultDialogue || '';
+    input.styleSheet =
+      'QLineEdit { background-color: #3d3d3d; color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 6px; font-size: 12pt; }';
+    mainLayout.addWidget(input, 0, 0);
+
+    var result: string | null = null;
+
+    // --- button row (Cancel left, OK right) ---
+    var buttonLayout = new QHBoxLayout();
+
+    buttonLayout.addWidget(
+      G.Widgets.button({
+        text: 'Cancel',
+        objectName: 'cancelButton',
+        color: '#555555',
+        onClick: function () {
+          result = null;
+          dialog.reject();
+        },
+      }),
+      0,
+      0,
+    );
+    buttonLayout.addStretch(1);
+
+    buttonLayout.addWidget(
+      G.Widgets.button({
+        text: 'OK',
+        objectName: 'okButton',
+        onClick: function () {
+          MessageLog.trace(`[ScriptPopulation.ts] ${'button'}`);
+        },
+      }),
+      0,
+      0,
+    );
+
+    mainLayout.addLayout(buttonLayout, 0);
+    dialog.layout = mainLayout;
+
+    // Style the dialog background
+    dialog.styleSheet =
+      'QDialog { background-color: #2d2d2d; border: 1px solid #555; border-radius: 6px; }';
+
+    dialog.exec();
+    return result;
+  }
+
+  function normalizeStr(str: string): string {
+    return (str || '').trim().replace(/\s+/g, ' ');
+  }
+
+  export function isDialogueEqual(a: dialogueLine, b: dialogueLine): boolean {
+    return (
+      normalizeStr(a.profile) === normalizeStr(b.profile) &&
+      normalizeStr(a.dialogue) === normalizeStr(b.dialogue)
+    );
+  }
+
+  // (Keep the rest of diffScriptAgainstExpected using this updated isDialogueEqual)
+
+  /**
+   * Computes sequence diff using Longest Common Subsequence (LCS).
+   * Maps live editor lines against an expected dialogue array.
+   */
+  export function diffScriptAgainstExpected(
+    editorLines: string[],
+    expectedDialogue: dialogueLine[],
+  ): DiffResult[] {
+    // 1. Extract only valid dialogue entries from current editor lines with line tracking
+    var editorDialogues: { lineIndex: number; lineText: string; parsed: dialogueLine }[] = [];
+
+    for (var i = 0; i < editorLines.length; i++) {
+      var parsed = parseDialog(editorLines[i]);
+      if (parsed) {
+        editorDialogues.push({
+          lineIndex: i,
+          lineText: editorLines[i],
+          parsed: parsed,
+        });
+      }
+    }
+
+    var N = editorDialogues.length;
+    var M = expectedDialogue.length;
+
+    // 2. Build LCS Matrix (Replaced .fill() with ES5 nested loop)
+    var dp: number[][] = [];
+    for (var i = 0; i <= N; i++) {
+      dp[i] = [];
+      for (var j = 0; j <= M; j++) {
+        dp[i][j] = 0;
+      }
+    }
+
+    for (var i = 1; i <= N; i++) {
+      for (var j = 1; j <= M; j++) {
+        if (isDialogueEqual(editorDialogues[i - 1].parsed, expectedDialogue[j - 1])) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+
+    // 3. Backtrack through matrix (Replaced .fill(false) with standard array populate)
+    var matchedEditorIndices: boolean[] = [];
+    for (var k = 0; k < N; k++) {
+      matchedEditorIndices.push(false);
+    }
+
+    var i = N;
+    var j = M;
+
+    while (i > 0 && j > 0) {
+      if (isDialogueEqual(editorDialogues[i - 1].parsed, expectedDialogue[j - 1])) {
+        matchedEditorIndices[i - 1] = true;
+        i--;
+        j--;
+      } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+        i--;
+      } else {
+        j--;
+      }
+    }
+
+    // 4. Map back to total full line results for editor highlighting
+    var results: DiffResult[] = [];
+    var dialogueCounter = 0;
+
+    for (var lineIdx = 0; lineIdx < editorLines.length; lineIdx++) {
+      var currentLineText = editorLines[lineIdx];
+      var parsed = parseDialog(currentLineText);
+
+      if (parsed) {
+        var isMatched = matchedEditorIndices[dialogueCounter];
+        results.push({
+          lineIndex: lineIdx,
+          lineText: currentLineText,
+          isDialogue: true,
+          status: isMatched ? 'matched' : 'unexpected',
+          dialogueObj: parsed,
+        });
+        dialogueCounter++;
+      } else {
+        results.push({
+          lineIndex: lineIdx,
+          lineText: currentLineText,
+          isDialogue: false,
+          status: 'non-dialogue',
+        });
+      }
+    }
+
+    return results;
+  }
+
+  const regex = /^(.+?)\s*::\s*(.+)$/;
+  export function parseDialog(line: string): dialogueLine | null {
     const match = line.match(regex);
 
     if (match) {
@@ -28,9 +229,9 @@ namespace ScriptPopulation {
     return null;
   }
 
-  function groupScriptLines(lines: string[]): ParsedScriptResult {
-    const grouped: Array<dialogLine | string[]> = [];
-    const dialogueOnly: dialogLine[] = [];
+  const grouped: Array<dialogueLine | string[]> = [];
+  export function groupScriptLines(lines: string[]): ParsedScriptResult {
+    const dialogueOnly: dialogueLine[] = [];
     const nonDialogueOnly: string[][] = [];
 
     let nonDialogueBuffer: string[] = [];
@@ -68,9 +269,9 @@ namespace ScriptPopulation {
   const drawingTypesFile =
     'C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Advanced\\full-2500-pref\\drawingTypes.d\\drawingTypes.xml';
 
-  function readDrawingTypes(): DrawingType[] | undefined {
-    var xmlText = G.FileUtils.readFrom(drawingTypesFile);
+  var xmlText = G.FileUtils.readFrom(drawingTypesFile);
 
+  function readDrawingTypes(): DrawingType[] | undefined {
     if (!xmlText) {
       MessageLog.trace('[ScriptPopulation.ts] File could not be read or is empty.');
       return;
@@ -93,16 +294,20 @@ namespace ScriptPopulation {
     return items;
   }
 
-  export function addExposure() {
+  export function addExposure(frameNumber?: number) {
     var marker = TimelineMarker.getAllMarkers()[0];
 
     scene.beginUndoRedoAccum('add exposure');
 
     const sel = new G.oSelection();
-    G.TimelineKit.rippleShiftMarkers(frame.current(), 1, 'add');
+    G.TimelineKit.rippleShiftMarkers(
+      frameNumber !== undefined ? frameNumber : frame.current(),
+      1,
+      'add',
+    );
     Action.perform('selectAll()', 'timelineView');
     Action.perform('onActionAddExposure()', 'timelineView');
-    frame.setCurrent(sel.startFrame + 1);
+    frame.setCurrent(frameNumber !== undefined ? frameNumber : sel.startFrame + 1);
 
     scene.endUndoRedoAccum();
   }
@@ -385,6 +590,8 @@ function showMarkerList() {
 
   this.__proto__.ScriptPopulation = ScriptPopulation;
 
+  /* Script Population Actions */
+
   const deleteMarkersOfSelection = G.Utils.bindAction(() => {
     const sel = new G.oSelection();
     for (var i = sel.startFrame; i < sel.endFrame + 1; i++) {
@@ -414,23 +621,21 @@ function showMarkerList() {
     MessageLog.trace(`[ScriptPopulation.ts] compile script: ${compiledScript}`);
   }, this);
 
+  /* Script Population Menu */
+
   try {
-    // Build the "Options" menu button (the C++ QPushButton::setMenu pattern).
-    // Harmony exposes menu support on QToolButton, so we use InstantPopup to
-    // get the same "click the button to open a menu" behavior.
     const optionsButton = new QToolButton(dialog);
     optionsButton.text = '☰';
     optionsButton.objectName = 'optionsButton';
     optionsButton.styleSheet =
       'QToolButton { font-size: 12pt; color: #ffffff; background-color: #555555; border: 1px solid #777777; border-radius: 8px; padding: 6px; }';
     optionsButton.popupMode = QToolButton.InstantPopup;
-
-    // Build the menu from a list of sections; each section is a list of
-    // [label, callback] pairs and is separated by a menu separator.
     const optionsMenu = WidgetKit.optionsMenu(optionsButton, [
       [
         ['Delete Markers in Selection', deleteMarkersOfSelection],
         ['Delete All Markers', deleteAllMarkers],
+        ['Cut section', () => {}],
+        ['Paste paste', () => {}],
       ],
       [
         ['Import Script', importScript],
@@ -457,6 +662,18 @@ function showMarkerList() {
           text: 'Remove exposure',
           objectName: 'removeExposureButton',
           onClick: ScriptPopulation.removeExposure,
+        }).create(),
+        WidgetKit.button({
+          text: 'Insert Dialog',
+          objectName: 'insertDialogButton',
+          onClick: G.Utils.bindAction(
+            function () {
+              ScriptPopulation.insertDialogPrompt({});
+              // G.Utils.prompt('Insert Dialog', 'Insert Dialog', 'Character:: Dialogue');
+              // G.TimelineKit.createMarker(frame.current(), );
+            },
+            [G, ScriptPopulation],
+          ),
         }).create(),
       ],
     });
@@ -507,6 +724,339 @@ function showMarkerList() {
     };
   }
 
+  const ScriptTab = WidgetKit.createComponent({
+    type: QWidget,
+    props: {
+      styleSheet: 'background-color: #2d2d2d;',
+    },
+    layout: QVBoxLayout,
+    layoutProps: {
+      contentsMargins: [15, 20, 15, 20],
+    },
+    children: [
+      newRow({
+        objectName: 'scriptRow',
+        stretch: 1,
+        component: {
+          type: QTextEdit,
+          props: {
+            objectName: 'scriptTextEdit',
+            plainText: 'testing',
+            lineWrapMode: QTextEdit.WidgetWidth,
+            alignment: Qt.AlignmentFlag.AlignLeft,
+            styleSheet:
+              'font-size: 14pt; color: #ffffff; background-color: #1f1f1f; border: 1px solid #4a4a4a; border-radius: 8px; padding: 8px; margin: 0px;',
+          },
+        },
+      }),
+    ],
+  }) as QWidget;
+
+  var textEditComponent = WidgetKit.findWidgetByName(ScriptTab, 'scriptTextEdit') as QTextEdit;
+
+  // Function to process regex matching and formatting
+
+  // ------------------------------
+  // --- Debounce Utility for QtScript ---
+  // ==========================================
+  // 1. DEBOUNCED HIGHLIGHT TIMER ("Typing Stopped")
+  // ==========================================
+  var highlightTimer = new QTimer();
+  highlightTimer.singleShot = true;
+
+  highlightTimer.timeout.connect(function () {
+    applyScriptHighlights();
+  });
+
+  // Trigger highlight processing only when user STOPS typing for 350ms
+  textEditComponent.textChanged.connect(function () {
+    highlightTimer.start(350);
+  });
+  // REMOVED: textEditComponent.textChanged.connect(applyScriptHighlights); <-- THIS WAS CAUSING THE LAG
+
+  // Local Cache
+  var cachedMarkers: any[] = [];
+
+  function refreshMarkerCache() {
+    cachedMarkers = G.TimelineKit.getAllMarkers();
+  }
+
+  function applyScriptHighlights() {
+    textEditComponent.blockSignals(true);
+
+    refreshMarkerCache(); // Fetch from Harmony C++ once per pause
+
+    var existingDialogueList = cachedMarkers.map(function (marker) {
+      return {
+        profile: marker.name,
+        dialogue: marker.notes,
+      };
+    });
+
+    var text = textEditComponent.plainText;
+    var lines = text.split(/\r?\n/);
+
+    // Run LCS Diff
+    var diffs = ScriptPopulation.diffScriptAgainstExpected(lines, existingDialogueList);
+
+    var cursor = textEditComponent.textCursor();
+    var savedPos = cursor.position();
+
+    var validFormat = new QTextCharFormat();
+    validFormat.setBackground(new QColor('yellow'));
+    validFormat.setForeground(new QColor('black'));
+
+    var redErrorFormat = new QTextCharFormat();
+    redErrorFormat.setBackground(new QColor('#8b0000'));
+    redErrorFormat.setForeground(new QColor('#ffffff'));
+
+    var clearFormat = new QTextCharFormat();
+    clearFormat.setBackground(new QColor('transparent'));
+    clearFormat.setForeground(new QColor('#ffffff'));
+
+    var doc = textEditComponent.document;
+    for (var k = 0; k < diffs.length; k++) {
+      var item = diffs[k];
+      var block = doc.findBlockByNumber(item.lineIndex);
+
+      if (block.isValid()) {
+        var blockStart = block.position();
+        var prefixLength = item.lineText.indexOf('::');
+
+        cursor.setPosition(blockStart);
+        cursor.setPosition(blockStart + block.length() - 1, QTextCursor.KeepAnchor);
+
+        if (item.isDialogue && prefixLength !== -1) {
+          cursor.mergeCharFormat(clearFormat);
+          cursor.setPosition(blockStart);
+          cursor.setPosition(blockStart + prefixLength, QTextCursor.KeepAnchor);
+          cursor.mergeCharFormat(item.status === 'unexpected' ? redErrorFormat : validFormat);
+        } else {
+          cursor.mergeCharFormat(clearFormat);
+        }
+      }
+    }
+
+    // Restore cursor position
+    cursor.clearSelection();
+    cursor.setPosition(savedPos);
+    textEditComponent.setTextCursor(cursor);
+
+    textEditComponent.blockSignals(false);
+  }
+
+  // ==========================================
+  // 2. OPTIMIZED CURSOR / PANEL HOVER
+  // ==========================================
+  var activeMatchedMarker: any = null;
+  var cachedFontMetrics = new QFontMetrics(textEditComponent.font);
+
+  var floatingPanel = new QWidget(textEditComponent);
+  var panelLayout = new QHBoxLayout(floatingPanel);
+  panelLayout.setContentsMargins(0, 0, 0, 0);
+  panelLayout.setSpacing(4);
+  floatingPanel.hide();
+
+  function createPanelButton(text: string, onClick: () => void): QPushButton {
+    var btn = new QPushButton(floatingPanel);
+    btn.text = text;
+    btn.setFixedSize(20, 20);
+    btn.setStyleSheet(
+      'background-color: #007acc; color: white; border: none; border-radius: 3px; font-size: 10pt; padding: 0px;',
+    );
+    btn.clicked.connect(onClick);
+    panelLayout.addWidget(btn, 0, 0);
+    return btn;
+  }
+
+  createPanelButton('▶', function () {
+    if (activeMatchedMarker && activeMatchedMarker.frame !== undefined) {
+      frame.setCurrent(activeMatchedMarker.frame);
+    }
+  });
+  createPanelButton('★', function () {
+    MessageLog.trace('Button 2');
+  });
+  createPanelButton('⚙', function () {
+    MessageLog.trace('Button 3');
+  });
+
+  // Set fixed size ONCE during setup to avoid adjustSize() layout thrashing on cursor move
+  floatingPanel.setFixedSize(68, 20);
+
+  function togglePanel(visible: boolean, x?: number, y?: number) {
+    if (visible && x !== undefined && y !== undefined) {
+      floatingPanel.move(x, y);
+      floatingPanel.show();
+      floatingPanel.raise();
+    } else {
+      floatingPanel.hide();
+    }
+  }
+
+  // ==========================================
+  // 3. INSERT TOOLBAR FOR UNMATCHED (RED) DIALOGUE
+  // ==========================================
+  var activeRedDialogue: dialogueLine | null = null;
+  var activeRedDialogueLineIndex: number = -1;
+
+  var insertPanel = new QWidget(textEditComponent);
+  var insertPanelLayout = new QHBoxLayout(insertPanel);
+  insertPanelLayout.setContentsMargins(0, 0, 0, 0);
+  insertPanelLayout.setSpacing(4);
+  insertPanel.hide();
+
+  var insertButton = new QPushButton(insertPanel);
+  insertButton.text = 'Insert';
+  insertButton.setFixedSize(56, 20);
+  insertButton.setStyleSheet(
+    'background-color: #8b0000; color: white; border: none; border-radius: 3px; font-size: 10pt; padding: 0px;',
+  );
+  insertPanelLayout.addWidget(insertButton, 0, 0);
+  insertPanel.setFixedSize(56, 20);
+
+  function toggleInsertPanel(visible: boolean, x?: number, y?: number) {
+    if (visible && x !== undefined && y !== undefined) {
+      insertPanel.move(x, y);
+      insertPanel.show();
+      insertPanel.raise();
+    } else {
+      insertPanel.hide();
+    }
+  }
+
+  // Finds the frame of the marker for the closest dialogue line that appears
+  // before the given script line. Returns null when none is found.
+  function findPreviousDialogueMarkerFrame(lineIndex: number): number | null {
+    const text = textEditComponent.plainText;
+    const lines = text.split(/\r?\n/);
+
+    for (var i = lineIndex - 1; i >= 0; i--) {
+      const parsed = ScriptPopulation.parseDialog(lines[i]);
+      if (!parsed) continue;
+
+      for (var j = cachedMarkers.length - 1; j >= 0; j--) {
+        const marker = cachedMarkers[j];
+        if (
+          ScriptPopulation.isDialogueEqual(parsed, {
+            profile: marker.name,
+            dialogue: marker.notes || '',
+          })
+        ) {
+          return marker.frame;
+        }
+      }
+    }
+    return null;
+  }
+
+  // Adds an exposure right after the previous dialogue marker, then creates a
+  // marker for the red (unmatched) dialogue in the freed slot.
+  function insertDialogueMarker() {
+    if (!activeRedDialogue) return;
+    try {
+      const prevMarkerFrame = findPreviousDialogueMarkerFrame(activeRedDialogueLineIndex);
+      const insertionFrame = prevMarkerFrame !== null ? prevMarkerFrame + 1 : frame.current();
+
+      MessageLog.trace(
+        `[ScriptPopulation.ts] active red dialogue ${JSON.stringify(activeRedDialogue, null, 2)} at line ${activeRedDialogueLineIndex}`,
+      );
+      ScriptPopulation.addExposure(insertionFrame);
+      TimelineMarker.createMarker({
+        frame: insertionFrame,
+        color: '#ffffff',
+        name: activeRedDialogue.profile,
+        notes: activeRedDialogue.dialogue,
+        length: 0,
+      });
+
+      refreshMarkerCache();
+      applyScriptHighlights();
+      refresh();
+    } catch (e) {
+      MessageLog.trace(`[ScriptPopulation.ts] Error inserting dialogue marker: ${e.message}`);
+    }
+  }
+
+  insertButton.clicked.connect(insertDialogueMarker);
+
+  function checkCursorInHighlight() {
+    var cursor = textEditComponent.textCursor();
+    var charIndex = cursor.position();
+    var currentBlock = cursor.block();
+    var lineText = currentBlock.text();
+    var prefixLength = lineText.indexOf('::');
+
+    var isInHighlight = false;
+    var isInRed = false;
+    activeMatchedMarker = null;
+    activeRedDialogue = null;
+    activeRedDialogueLineIndex = -1;
+
+    if (prefixLength !== -1) {
+      var blockStart = currentBlock.position();
+      var prefixEnd = blockStart + prefixLength;
+
+      if (charIndex >= blockStart && charIndex <= prefixEnd) {
+        var parsedLine = ScriptPopulation.parseDialog(lineText);
+
+        if (parsedLine) {
+          // Read from cachedMarkers array, NEVER call G.TimelineKit here!
+          var match = cachedMarkers.find(function (m) {
+            if (!m.name || m.name.trim() !== parsedLine.profile.trim()) {
+              return false;
+            }
+            return (
+              (m.notes || '').trim().replace(/\s+/g, ' ') ===
+              parsedLine.dialogue.trim().replace(/\s+/g, ' ')
+            );
+          });
+
+          var cursorRect = textEditComponent.cursorRect(cursor);
+          var textAscent = cachedFontMetrics.ascent();
+          var textVisualCenterY = cursorRect.top() + Math.floor(textAscent / 2);
+          var panelY = textVisualCenterY - 10;
+
+          if (match) {
+            isInHighlight = true;
+            activeMatchedMarker = match;
+
+            var panelX = cursorRect.left() - 75; // Account for full panel width (68px + margin)
+            if (panelX < 2) panelX = 2;
+
+            togglePanel(true, panelX, panelY);
+          } else {
+            // Red text: no matching marker found. Show the insert toolbar.
+            isInRed = true;
+            activeRedDialogue = parsedLine;
+            activeRedDialogueLineIndex = currentBlock.blockNumber();
+
+            var insertPanelX = cursorRect.left() - 60; // Account for insert panel width (56px + margin)
+            if (insertPanelX < 2) insertPanelX = 2;
+
+            toggleInsertPanel(true, insertPanelX, panelY);
+          }
+        }
+      }
+    }
+
+    if (!isInHighlight) {
+      togglePanel(false);
+    }
+    if (!isInRed) {
+      toggleInsertPanel(false);
+    }
+  }
+
+  textEditComponent.cursorPositionChanged.connect(checkCursorInHighlight);
+
+  // Initial Pass
+  refreshMarkerCache();
+  applyScriptHighlights();
+  tabs.addTab(ScriptTab, 'Script');
+
+  // ---------------------
+
   const listenerTab = WidgetKit.createComponent({
     type: QWidget,
     props: {
@@ -519,8 +1069,8 @@ function showMarkerList() {
     },
     children: [
       newRow({
-        objectName: 'nameRow',
         component: {
+          objectName: 'nameRow',
           type: QLineEdit,
           props: {
             objectName: 'nameLabel',
@@ -784,10 +1334,48 @@ function showMarkerList() {
   // Rebuild rows only on structural changes (add, remove, edit markers)
   notifier.sceneMarkersChanged.connect(refresh);
 
+  // Scrolls the script editor to the dialogue line matching the current marker,
+  // if one exists.
+  function scrollToCurrentMarkerDialogue() {
+    try {
+      const marker = getCurrentMarker();
+      if (!marker || !marker.name) return;
+
+      const text = textEditComponent.plainText;
+      const lines = text.split(/\r?\n/);
+
+      for (var i = 0; i < lines.length; i++) {
+        const parsed = ScriptPopulation.parseDialog(lines[i]);
+        if (!parsed) continue;
+
+        if (
+          ScriptPopulation.isDialogueEqual(parsed, {
+            profile: marker.name,
+            dialogue: marker.notes || '',
+          })
+        ) {
+          const block = textEditComponent.document.findBlockByNumber(i);
+          if (block.isValid()) {
+            const cursor = textEditComponent.textCursor();
+            cursor.setPosition(block.position());
+            textEditComponent.setTextCursor(cursor);
+            textEditComponent.ensureCursorVisible();
+          }
+          return;
+        }
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error scrolling to marker dialogue: ${error.message}`,
+      );
+    }
+  }
+
   // The one and only frame-change listener.
   function onFrameChanged() {
     highlightCurrentFrame();
     updateListenerFields();
+    scrollToCurrentMarkerDialogue();
   }
   notifier.currentFrameChanged.connect(onFrameChanged);
 
