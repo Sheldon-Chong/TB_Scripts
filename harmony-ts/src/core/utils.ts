@@ -453,6 +453,7 @@ const Utils = {
   styledButton,
   readXmlFile,
   getClipboardText,
+  setClipboardText,
 };
 
 function getHoverColor(color) {
@@ -563,6 +564,10 @@ function confirm(
 
 function getClipboardText(): string {
   return QApplication.clipboard().text();
+}
+
+function setClipboardText(text: string): void {
+  QApplication.clipboard().setText(text);
 }
 
 /**

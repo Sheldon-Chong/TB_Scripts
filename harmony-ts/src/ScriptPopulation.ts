@@ -329,6 +329,39 @@ namespace ScriptPopulation {
   }
 
   /**
+   * Return the marker at or immediately to the left of `targetFrame`.
+   * If a marker sits exactly at `targetFrame`, it is returned; otherwise the
+   * marker with the greatest frame less than `targetFrame`. Returns null when
+   * no marker exists at or before the target frame.
+   */
+  export function getClosestLeftMarker(
+    targetFrame: number,
+    markers?: oTimelineMarker[],
+  ): oTimelineMarker | null {
+    const all: oTimelineMarker[] = markers || G.TimelineKit.getAllMarkers();
+    let closest: oTimelineMarker | null = null;
+    for (let i = 0; i < all.length; i++) {
+      const marker = all[i];
+      if (marker.frame <= targetFrame && (!closest || marker.frame > closest.frame)) {
+        closest = marker;
+      }
+    }
+    return closest;
+  }
+
+  function getCutSectionFromClipboard(): CutSection | undefined {
+    try {
+      const text = G.Utils.getClipboardText();
+      if (!text) return undefined;
+      const parsed = JSON.parse(text);
+      if (!parsed || !parsed.drawingLayers) return undefined;
+      return parsed as CutSection;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  /**
    * Cut the current selection: capture its drawing exposures and markers, then
    * delete the markers in the range, ripple-shift the remaining markers left,
    * and remove one exposure per frame in the selection.
@@ -349,12 +382,14 @@ namespace ScriptPopulation {
 
     const markers = G.TimelineKit.getMarkersFromRange(start, end);
 
-    G.Metadata.setJson('cutSection', {
-      drawingLayers: drawingLayers,
-      markers: markers,
-      startFrame: start,
-      endFrame: end,
-    });
+    G.Utils.setClipboardText(
+      JSON.stringify({
+        drawingLayers: drawingLayers,
+        markers: markers,
+        startFrame: start,
+        endFrame: end,
+      }),
+    );
 
     scene.beginUndoRedoAccum('cut section');
     try {
@@ -386,9 +421,9 @@ namespace ScriptPopulation {
    * make room before the stored drawings and markers are written back.
    */
   export function pasteSection(): void {
-    const section = G.Metadata.getJson<CutSection>('cutSection');
-    if (!section || !section.drawingLayers) {
-      MessageLog.trace('[ScriptPopulation.ts] No cut section found to paste.');
+    const section = getCutSectionFromClipboard();
+    if (!section) {
+      MessageLog.trace('[ScriptPopulation.ts] No cut section found on the clipboard to paste.');
       return;
     }
 
@@ -447,6 +482,111 @@ namespace ScriptPopulation {
       );
     }
 
+    scene.endUndoRedoAccum();
+  }
+
+  /**
+   * Paste only the markers from a cut section held on the clipboard, starting
+   * at the current selection's start frame. Drawing exposures are left alone.
+   */
+  export function pasteMarkersOnly(): void {
+    const section = getCutSectionFromClipboard();
+    if (!section) {
+      MessageLog.trace('[ScriptPopulation.ts] No cut section found on the clipboard to paste.');
+      return;
+    }
+
+    const sel = new G.oSelection();
+    const targetStart = sel.startFrame;
+    const frameOffset = targetStart - section.startFrame;
+
+    scene.beginUndoRedoAccum('paste markers');
+
+    try {
+      const markers = section.markers || [];
+      for (let m = 0; m < markers.length; m++) {
+        const marker = markers[m];
+        TimelineMarker.createMarker({
+          frame: marker.frame + frameOffset,
+          length: marker.length !== undefined ? marker.length : 0,
+          color: marker.color || '#ffffff',
+          name: marker.name || '',
+          notes: marker.notes || '',
+        });
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error pasting markers: ${error.message} ${error.fileName} ${error.lineNumber}`,
+      );
+    }
+
+    scene.endUndoRedoAccum();
+  }
+
+  /**
+   * Move every marker to `frame * 32`, stretching the spacing between markers
+   * out to the fixed 32-frame boundary.
+   *
+   * Markers are deleted first and then recreated at their new frames, so moves
+   * never collide with markers that have not been moved yet. Target frames are
+   * de-duplicated to avoid overlapping markers at the same frame.
+   */
+  export function extendToBoundary(): void {
+    const markers = G.TimelineKit.getAllMarkers();
+
+    const rebuilt: Array<{
+      frame: number;
+      length: number;
+      color: string;
+      name: string;
+      notes: string;
+    }> = [];
+    for (let i = 0; i < markers.length; i++) {
+      const marker = markers[i];
+      rebuilt.push({
+        frame: marker.frame * 32,
+        length: marker.length !== undefined ? marker.length : 0,
+        color: marker.color || '#ffffff',
+        name: marker.name || '',
+        notes: marker.notes || '',
+      });
+    }
+
+    // Recreate in frame order for a deterministic timeline layout.
+    rebuilt.sort(function (a, b) {
+      return a.frame - b.frame;
+    });
+
+    scene.beginUndoRedoAccum('extend to boundary');
+    try {
+      // Delete everything first so recreated markers never overlap an old one.
+      for (let i = 0; i < markers.length; i++) {
+        TimelineMarker.deleteMarker(markers[i]);
+      }
+
+      const usedFrames: { [frame: number]: boolean } = {};
+      for (let i = 0; i < rebuilt.length; i++) {
+        const m = rebuilt[i];
+        if (usedFrames[m.frame]) {
+          MessageLog.trace(
+            `[ScriptPopulation.ts] Skipping marker "${m.name}" — frame ${m.frame} is already occupied.`,
+          );
+          continue;
+        }
+        usedFrames[m.frame] = true;
+        TimelineMarker.createMarker({
+          frame: m.frame,
+          length: m.length,
+          color: m.color,
+          name: m.name,
+          notes: m.notes,
+        });
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error extending to boundary: ${error.message} ${error.fileName} ${error.lineNumber}`,
+      );
+    }
     scene.endUndoRedoAccum();
   }
 
@@ -717,11 +857,13 @@ function showMarkerList() {
         ['Delete All Markers', deleteAllMarkers],
         ['Cut section', () => ScriptPopulation.cutSection()],
         ['Paste Section', () => ScriptPopulation.pasteSection()],
+        ['Paste Markers Only', () => ScriptPopulation.pasteMarkersOnly()],
       ],
       [
         ['Import Script', importScript],
         ['Compile Script', compileScript],
       ],
+      [['Extend To Boundary', () => ScriptPopulation.extendToBoundary()]],
     ]);
 
     // Attach the menu to the button.
@@ -1158,6 +1300,13 @@ function showMarkerList() {
 
   // ---------------------
 
+  // Toggle for "closest left" mode: when enabled, the listener edits/reads the
+  // marker nearest to the left of the playhead instead of requiring an exact
+  // marker at the current frame.
+  const closestLeftCheckbox = new QCheckBox('Closest Left');
+  closestLeftCheckbox.objectName = 'closestLeftCheckbox';
+  closestLeftCheckbox.styleSheet = 'color: #e0e0e0; font-size: 11pt;';
+
   const listenerTab = WidgetKit.createComponent({
     type: QWidget,
     props: {
@@ -1211,6 +1360,7 @@ function showMarkerList() {
           spacing: 8,
         },
         children: [
+          closestLeftCheckbox,
           WidgetKit.button({ text: 'Reset', objectName: 'resetButton' }),
           WidgetKit.button({
             text: 'Apply',
@@ -1233,59 +1383,108 @@ function showMarkerList() {
     return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
   }
 
+  var closestLeftMode = false;
+
+  // Applies faded styling to the listener fields when showing a closest-left
+  // (non-exact) marker.
+  function applyListenerFaded(faded: boolean) {
+    const nameNormal =
+      'font-size: 14pt; color: #e0e0e0; background-color: #1e2a38; border: 1px solid #4a6b8a; border-radius: 8px; padding: 4px;';
+    const nameFaded =
+      'font-size: 14pt; color: #7a8a9a; background-color: #1a222c; border: 1px solid #3a4a5a; border-radius: 8px; padding: 4px;';
+    const notesNormal =
+      'font-size: 18pt; color: #ffffff; background-color: #1f1f1f; border: 1px solid #4a4a4a; border-radius: 8px; padding: 8px; margin: 0px;';
+    const notesFaded =
+      'font-size: 18pt; color: #9a9a9a; background-color: #181818; border: 1px solid #3a3a3a; border-radius: 8px; padding: 8px; margin: 0px;';
+
+    nameLabel.styleSheet = faded ? nameFaded : nameNormal;
+    notesLabel.styleSheet = faded ? notesFaded : notesNormal;
+  }
+
+  closestLeftCheckbox.toggled.connect(function (checked: boolean) {
+    closestLeftMode = checked;
+    updateListenerFields();
+  });
+
   function applyToMarker() {
     const markerName = nameLabel.text;
     const markerNotes = notesLabel.plainText;
     const currentFrame = frame.current();
 
     scene.beginUndoRedoAccum('Apply marker settings');
+    let applied = false;
     try {
-      const marker = getCurrentMarker();
+      const marker = closestLeftMode
+        ? ScriptPopulation.getClosestLeftMarker(currentFrame)
+        : getCurrentMarker();
+
       if (marker) {
         marker.name = markerName;
         marker.notes = markerNotes;
         TimelineMarker.setMarker(marker);
-      } else {
+        applied = true;
+      } else if (!closestLeftMode) {
         G.TimelineKit.createMarker(currentFrame, markerName, '#ffffff', markerNotes, 0);
+        applied = true;
       }
     } catch (e) {
       MessageLog.trace(`[ScriptPopulation.ts] Error applying marker: ${e.message}`);
     }
     try {
-      this.G.Widgets.showToast(`Applied ${markerName}: ${markerNotes}`, 1500, dialog);
+      this.G.Widgets.showToast(
+        applied ? `Applied ${markerName}: ${markerNotes}` : 'No marker to edit',
+        1500,
+        dialog,
+      );
     } catch (e) {
       MessageLog.trace(`[ScriptPopulation.ts] Error showing toast: ${e.message}`);
     }
     scene.endUndoRedoAccum();
   }
 
-  // Reset both fields back to the current marker's values.
+  // Reset the fields back to the active (or closest-left) marker's values.
   function resetFields() {
-    const marker = getCurrentMarker();
-    nameLabel.text = marker ? marker.name : '';
-    notesLabel.plainText = marker ? marker.notes : '';
+    updateListenerFields();
   }
 
   resetButton.clicked.connect(resetFields);
   applyButton.clicked.connect(G.Utils.bind(applyToMarker, this));
 
-  // Updates the listener tab fields; shared by the single frame listener below.
+  // Updates the listener tab fields; shared by the frame listener below.
   function updateListenerFields() {
     try {
-      const marker = getCurrentMarker();
-      if (marker) {
-        nameLabel.text = marker.name;
-        notesLabel.plainText = marker.notes;
-      } else {
-        nameLabel.text = '';
-        notesLabel.plainText = '';
+      const currentFrame = frame.current();
+      const currentMarker = getCurrentMarker();
+
+      if (currentMarker) {
+        applyListenerFaded(false);
+        nameLabel.text = currentMarker.name;
+        notesLabel.plainText = currentMarker.notes;
+        return;
       }
+
+      if (closestLeftMode) {
+        const closest = ScriptPopulation.getClosestLeftMarker(currentFrame);
+        if (closest) {
+          applyListenerFaded(true);
+          nameLabel.text = closest.name;
+          notesLabel.plainText = closest.notes;
+          return;
+        }
+      }
+
+      applyListenerFaded(false);
+      nameLabel.text = '';
+      notesLabel.plainText = '';
     } catch (error) {
       MessageLog.trace(
         `[ScriptPopulation.ts] ${frame.current()} | Error retrieving marker information. ${error.message}`,
       );
     }
   }
+
+  // Initial sync of the listener fields.
+  updateListenerFields();
 
   // FAST: Updates only row background colors without rebuilding rows
   function highlightCurrentFrame() {
@@ -1294,15 +1493,27 @@ function showMarkerList() {
 
       const currentFrame = frame.current();
       const activeRowBrush = new QBrush(new QColor('#3a3a3a'));
+      const closestLeftBrush = new QBrush(new QColor('#2e3b4e'));
       const defaultRowBrush = new QBrush(new QColor('#1f1f1f'));
 
       const markers = TimelineMarker.getAllMarkers();
       if (markers.length !== table.rowCount) return;
 
+      // Highlight the closest-left marker's row (in a different color) when the
+      // playhead is no longer exactly on a marker.
+      const closestLeft = ScriptPopulation.getClosestLeftMarker(currentFrame, markers);
+      const closestLeftFrame =
+        closestLeft && closestLeft.frame !== currentFrame ? closestLeft.frame : -1;
+
       table.updatesEnabled = false;
       for (var i = 0; i < markers.length; i++) {
         const isActiveFrame = markers[i].frame === currentFrame;
-        const brush = isActiveFrame ? activeRowBrush : defaultRowBrush;
+        const isClosestLeft = markers[i].frame === closestLeftFrame;
+        const brush = isActiveFrame
+          ? activeRowBrush
+          : isClosestLeft
+            ? closestLeftBrush
+            : defaultRowBrush;
 
         const nameItem = table.item(i, 1);
         const notesItem = table.item(i, 2);
@@ -1406,6 +1617,7 @@ function showMarkerList() {
     }
     table.updatesEnabled = true;
     applyFilters();
+    highlightCurrentFrame();
   }
 
   table.cellDoubleClicked.connect(
