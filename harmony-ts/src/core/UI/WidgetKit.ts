@@ -168,6 +168,226 @@ namespace WidgetKit {
     return null;
   }
 
+  export interface BuildTreeOptions {
+    /** Widget type used for plain-object nodes that need a container. Defaults to QWidget. */
+    containerType?: Constructor<any>;
+    /** Layout type used for each generated container. Defaults to QVBoxLayout. */
+    layoutType?: Constructor<QLayout>;
+    /** Default stretch applied to child widgets added to a layout. Defaults to 0. */
+    stretch?: number;
+    /** Layout settings applied to every generated container layout. */
+    layoutProps?: {
+      contentsMargins?: number[];
+      spacing?: number;
+    };
+    /** Default widget properties applied to every generated container. */
+    props?: { [key: string]: any };
+  }
+
+  /**
+   * Builds a nested widget structure into real parent/child relationships.
+   *
+   * Each value in the tree can be one of:
+   *  - a widget instance (e.g. `new G.Widgets.Button({ ... })`) — added to the
+   *    nearest container's layout;
+   *  - a WidgetKit component definition (has `.type` and `.create`) — instantiated
+   *    and added the same way;
+   *  - a plain object — turned into a new container widget whose own entries are
+   *    recursively added as its children.
+   *
+   * A plain object may also carry reserved keys that configure its container
+   * instead of naming a child:
+   *  - `layout`: a layout constructor (e.g. `QHBoxLayout`) for that container;
+   *  - `layoutProps`: `{ contentsMargins?: number[], spacing?: number }`;
+   *  - `container`: a widget constructor for that container (default `QWidget`);
+   *  - `props`: `{ [key: string]: any }` — widget properties (e.g. `styleSheet`)
+   *    assigned to that container after it is created;
+   *  - `spacer`: a number — inserts a stretchable spacer into that container's
+   *    layout at that position (e.g. between two buttons).
+   *
+   * Leaf widget instances are shared: the exact objects you put in the tree are
+   * the ones laid out, so `tree.body.ok` still points at the real widget after
+   * the build for wiring signals / intellisense.
+   *
+   * Returns the root widget. If `parent` is provided it is used as the root
+   * container (getting a fresh layout) instead of creating one.
+   *
+   * @example
+   *   const tree = {
+   *     header: new G.Widgets.Label({ text: 'Title' }),
+   *     body: {
+   *       name: new G.Widgets.LineEdit({ placeholderText: 'Name' }),
+   *       ok: new G.Widgets.Button({ text: 'OK' }),
+   *     },
+   *   };
+   *   const ui = WidgetKit.buildTree(tree);
+   *   tree.body.ok.clicked.connect(() => MessageLog.trace('clicked'));
+   *   ui.show();
+   */
+  export function buildTree(tree: any, parent?: QWidget, options?: BuildTreeOptions): any {
+    var opts = options || {};
+    var defaults = {
+      containerType: opts.containerType || QWidget,
+      layoutType: opts.layoutType || QVBoxLayout,
+      layoutProps: opts.layoutProps,
+      props: opts.props,
+      stretch: opts.stretch !== undefined ? opts.stretch : 0,
+    };
+
+    function isComponentDef(v: any): boolean {
+      return !!v && typeof v.create === 'function' && typeof v.type === 'function';
+    }
+
+    function isWidget(v: any): boolean {
+      return !!v && typeof v.children === 'function';
+    }
+
+    function applyLayoutProps(layout: any, layoutProps: any): void {
+      if (!layout || !layoutProps) return;
+      if (layoutProps.contentsMargins) {
+        var m = layoutProps.contentsMargins;
+        layout.setContentsMargins(m[0], m[1], m[2], m[3]);
+      }
+      if (layoutProps.spacing !== undefined) {
+        layout.spacing = layoutProps.spacing;
+      }
+    }
+
+    // Assigns plain widget properties (e.g. styleSheet) onto a container.
+    function applyProps(widget: any, props: any): void {
+      if (!widget || !props) return;
+      for (var key in props) {
+        if (Object.prototype.hasOwnProperty.call(props, key)) {
+          widget[key] = props[key];
+        }
+      }
+    }
+
+    // Reads per-node overrides, falling back to inherited values.
+    function resolveConfig(node: any, inherited: any): any {
+      var cfg: any = {
+        containerType: inherited.containerType,
+        layoutType: inherited.layoutType,
+        layoutProps: inherited.layoutProps,
+        props: inherited.props,
+        stretch: inherited.stretch,
+      };
+      if (node && typeof node === 'object') {
+        if (typeof node.container === 'function') cfg.containerType = node.container;
+        if (typeof node.layout === 'function') cfg.layoutType = node.layout;
+        if (node.layoutProps && typeof node.layoutProps === 'object') {
+          cfg.layoutProps = node.layoutProps;
+        }
+        if (node.props && typeof node.props === 'object') {
+          cfg.props = node.props;
+        }
+      }
+      return cfg;
+    }
+
+    // Handles a single key in a plain-object node: reserved keys configure the
+    // container; everything else is built as a child.
+    function processEntry(
+      container: QWidget,
+      layout: any,
+      key: string,
+      value: any,
+      cfg: any,
+    ): void {
+      if (key === 'container' || key === 'layout') {
+        if (typeof value === 'function') return;
+      } else if (key === 'layoutProps') {
+        if (value && typeof value === 'object' && !isWidget(value) && !isComponentDef(value)) {
+          return;
+        }
+      } else if (key === 'props') {
+        if (value && typeof value === 'object' && !isWidget(value) && !isComponentDef(value)) {
+          return;
+        }
+      } else if (key === 'spacer') {
+        if (typeof value === 'number') {
+          if (layout && typeof layout.addStretch === 'function') {
+            layout.addStretch(value);
+          }
+          return;
+        }
+      }
+      buildInto(container, layout, value, cfg);
+    }
+
+    // Adds a single tree node into an existing container widget + layout.
+    function buildInto(container: QWidget, layout: any, node: any, inherited: any): any {
+      if (isComponentDef(node)) {
+        var def = node as ComponentDefBase;
+        var widget = createComponent(def, container);
+        if (layout) {
+          var stretch = def.stretch !== undefined ? def.stretch : inherited.stretch;
+          layout.addWidget(widget, stretch, 0);
+        }
+        return widget;
+      }
+
+      if (isWidget(node)) {
+        if (layout) {
+          layout.addWidget(node, inherited.stretch, 0);
+        }
+        return node;
+      }
+
+      if (node && typeof node === 'object') {
+        var cfg = resolveConfig(node, inherited);
+        var childContainer: any = constructWidget(cfg.containerType, [container]);
+        applyProps(childContainer, cfg.props);
+        var childLayout: any = cfg.layoutType ? new cfg.layoutType(childContainer) : null;
+        applyLayoutProps(childLayout, cfg.layoutProps);
+
+        for (var key in node) {
+          if (Object.prototype.hasOwnProperty.call(node, key)) {
+            processEntry(childContainer, childLayout, key, node[key], cfg);
+          }
+        }
+
+        if (layout) {
+          layout.addWidget(childContainer, inherited.stretch, 0);
+        }
+        return childContainer;
+      }
+
+      return null;
+    }
+
+    // Root is a single widget or component definition.
+    if (isComponentDef(tree) || isWidget(tree)) {
+      if (parent) {
+        var rootLayout: any = defaults.layoutType ? new defaults.layoutType(parent) : null;
+        applyLayoutProps(rootLayout, defaults.layoutProps);
+        return buildInto(parent, rootLayout, tree, defaults);
+      }
+      if (isComponentDef(tree)) {
+        return createComponent(tree as ComponentDefBase);
+      }
+      return tree;
+    }
+
+    // Root is a plain object (the common case).
+    if (tree && typeof tree === 'object') {
+      var rootCfg = resolveConfig(tree, defaults);
+      var root: any = parent || constructWidget(rootCfg.containerType, []);
+      applyProps(root, rootCfg.props);
+      var rootLayout: any = rootCfg.layoutType ? new rootCfg.layoutType(root) : null;
+      applyLayoutProps(rootLayout, rootCfg.layoutProps);
+
+      for (var key in tree) {
+        if (Object.prototype.hasOwnProperty.call(tree, key)) {
+          processEntry(root, rootLayout, key, tree[key], rootCfg);
+        }
+      }
+      return root;
+    }
+
+    return parent || null;
+  }
+
   export type MenuActionDef = [name: string, onTrigger: (...args: any[]) => any];
   export type MenuSection = MenuActionDef[];
 

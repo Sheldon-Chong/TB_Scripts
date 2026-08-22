@@ -27,6 +27,19 @@ interface ParsedScriptResult {
   nonDialogueOnly: string[][];
 }
 
+interface CutSection {
+  drawingLayers: { [nodePath: string]: string[] };
+  markers: Array<{
+    frame: number;
+    length: number;
+    color: string;
+    notes: string;
+    name: string;
+  }>;
+  startFrame: number;
+  endFrame: number;
+}
+
 namespace ScriptPopulation {
   export function insertDialogPrompt(settings: {
     message?: string;
@@ -34,74 +47,54 @@ namespace ScriptPopulation {
     defaultProfile?: string;
     defaultDialogue?: string;
   }): string | null {
+    var result: string | null = null;
+
     var dialog = new QDialog();
     dialog.windowTitle = settings.title || 'Input';
     dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
     dialog.minimumWidth = 340;
     dialog.modal = true;
-
-    var mainLayout = new QVBoxLayout(dialog);
-    mainLayout.setContentsMargins(24, 20, 24, 20);
-    mainLayout.spacing = 18;
-
-    // --- message label ---
-    var label = new QLabel(settings.message ?? 'Enter text:');
-    label.wordWrap = true;
-    label.textFormat = Qt.PlainText;
-    label.styleSheet = 'font-size: 12pt; color: #e0e0e0;';
-    mainLayout.addWidget(label, 0, Qt.AlignmentFlag.AlignLeft);
-
-    var profileInput = new QLineEdit();
-    profileInput.placeholderText = 'Profile';
-    profileInput.text = settings.defaultProfile || '';
-    profileInput.styleSheet =
-      'QLineEdit { background-color: #3d3d3d; color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 6px; font-size: 12pt; }';
-    mainLayout.addWidget(profileInput, 0, 0);
-
-    var input = new QTextEdit();
-    input.plainText = settings.defaultDialogue || '';
-    input.styleSheet =
-      'QLineEdit { background-color: #3d3d3d; color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 6px; font-size: 12pt; }';
-    mainLayout.addWidget(input, 0, 0);
-
-    var result: string | null = null;
-
-    // --- button row (Cancel left, OK right) ---
-    var buttonLayout = new QHBoxLayout();
-
-    buttonLayout.addWidget(
-      G.Widgets.button({
-        text: 'Cancel',
-        objectName: 'cancelButton',
-        color: '#555555',
-        onClick: function () {
-          result = null;
-          dialog.reject();
-        },
-      }),
-      0,
-      0,
-    );
-    buttonLayout.addStretch(1);
-
-    buttonLayout.addWidget(
-      G.Widgets.button({
-        text: 'OK',
-        objectName: 'okButton',
-        onClick: function () {
-          MessageLog.trace(`[ScriptPopulation.ts] ${'button'}`);
-        },
-      }),
-      0,
-      0,
-    );
-
-    mainLayout.addLayout(buttonLayout, 0);
-    dialog.layout = mainLayout;
-
-    // Style the dialog background
     dialog.styleSheet =
       'QDialog { background-color: #2d2d2d; border: 1px solid #555; border-radius: 6px; }';
+
+    const ui = {
+      label: new G.Widgets.Label({
+        text: settings.message ?? 'Enter text:',
+      }),
+      profileInput: new G.Widgets.LineEdit({
+        placeholderText: 'Profile',
+        text: settings.defaultProfile || '',
+      }),
+      input: new G.Widgets.TextEdit({
+        text: settings.defaultDialogue || '',
+      }),
+      buttons: {
+        layout: QHBoxLayout,
+        props: { styleSheet: 'background-color: #2d2d2d; border: none;' },
+        layoutProps: { contentsMargins: [0, 0, 0, 0], spacing: 8 },
+        cancel: new G.Widgets.Button({
+          text: 'Cancel',
+          objectName: 'cancelButton',
+          onClick: function () {
+            result = null;
+            dialog.reject();
+          },
+        }),
+        spacer: 1,
+        ok: new G.Widgets.Button({
+          text: 'OK',
+          objectName: 'okButton',
+          onClick: function () {
+            MessageLog.trace(`[ScriptPopulation.ts] ${'button'}`);
+          },
+        }),
+      },
+    };
+
+    G.Widgets.buildTree(ui, dialog, {
+      layoutType: QVBoxLayout,
+      layoutProps: { contentsMargins: [24, 20, 24, 20], spacing: 18 },
+    });
 
     dialog.exec();
     return result;
@@ -325,6 +318,64 @@ namespace ScriptPopulation {
     scene.endUndoRedoAccum();
   }
 
+  /**
+   * Paste a previously cut section, starting at the current selection's start
+   * frame. Drawing exposures and markers are shifted so their relative
+   * positions within the cut section are preserved.
+   */
+  export function pasteSection(): void {
+    const section = G.Metadata.getJson<CutSection>('cutSection');
+    if (!section || !section.drawingLayers) {
+      MessageLog.trace('[ScriptPopulation.ts] No cut section found to paste.');
+      return;
+    }
+
+    const sel = new G.oSelection();
+    const targetStart = sel.startFrame;
+    const frameOffset = targetStart - section.startFrame;
+
+    scene.beginUndoRedoAccum('paste section');
+
+    try {
+      // 1. Paste drawing exposures.
+      const nodePaths = Object.keys(section.drawingLayers);
+      for (let i = 0; i < nodePaths.length; i++) {
+        const nodePath = nodePaths[i];
+        const frames = section.drawingLayers[nodePath];
+        if (!frames) continue;
+
+        const layer = G.LayerManager.getNodeLayer(nodePath);
+        if (!layer || !(layer instanceof G.oDrawingLayer)) {
+          MessageLog.trace(`[ScriptPopulation.ts] Skipping non-drawing layer: ${nodePath}`);
+          continue;
+        }
+
+        for (let f = 0; f < frames.length; f++) {
+          layer.drawingElement.setKeyFrame(targetStart + f, frames[f] || '');
+        }
+      }
+
+      // 2. Paste markers.
+      const markers = section.markers || [];
+      for (let m = 0; m < markers.length; m++) {
+        const marker = markers[m];
+        TimelineMarker.createMarker({
+          frame: marker.frame + frameOffset,
+          length: marker.length !== undefined ? marker.length : 0,
+          color: marker.color || '#ffffff',
+          name: marker.name || '',
+          notes: marker.notes || '',
+        });
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error pasting section: ${error.message} ${error.fileName} ${error.lineNumber}`,
+      );
+    }
+
+    scene.endUndoRedoAccum();
+  }
+
   export function populateScript(text: string) {
     const rawText = text;
 
@@ -410,48 +461,9 @@ function showMarkerList() {
     return '#888888';
   }
 
-  const dialog = new QDialog();
-  dialog.windowTitle = 'Timeline Markers';
-  dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
-  dialog.resize(560, 340);
-
-  dialog.styleSheet = `
-    QDialog { background-color: #2d2d2d; }
-    QTabWidget::pane {
-      border: 1px solid #555555;
-      border-radius: 4px;
-    }
-    QTabBar::tab {
-      background-color: #2d2d2d;
-      color: #bbbbbb;
-      padding: 6px 16px;
-      border: 1px solid #555555;
-      border-bottom: none;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-    }
-    QTabBar::tab:selected {
-      background-color: #1f1f1f;
-      color: #ffffff;
-    }
-    QTableWidget {
-      background-color: #1f1f1f;
-      gridline-color: #2d2d2d;
-      color: #ffffff;
-      border: none;
-      font-size: 11pt;
-    }
-    QHeaderView::section {
-      background-color: #2d2d2d;
-      color: #bbbbbb;
-      font-weight: bold;
-      border: none;
-      padding: 4px;
-    }
-    QTableWidget::item {
-      padding: 2px 4px;
-    }
-  `;
+  const dialog = new G.Widgets.Dialog({
+    title: 'Timeline Markers',
+  });
 
   function getSelectedRowIndices(): number[] {
     const selectedItems = table.selectedItems();
@@ -624,18 +636,42 @@ function showMarkerList() {
   /* Script Population Menu */
 
   try {
-    const optionsButton = new QToolButton(dialog);
-    optionsButton.text = '☰';
-    optionsButton.objectName = 'optionsButton';
-    optionsButton.styleSheet =
-      'QToolButton { font-size: 12pt; color: #ffffff; background-color: #555555; border: 1px solid #777777; border-radius: 8px; padding: 6px; }';
-    optionsButton.popupMode = QToolButton.InstantPopup;
+    const optionsButton = new G.Widgets.UI_QToolButton(dialog);
     const optionsMenu = WidgetKit.optionsMenu(optionsButton, [
       [
         ['Delete Markers in Selection', deleteMarkersOfSelection],
         ['Delete All Markers', deleteAllMarkers],
-        ['Cut section', () => {}],
-        ['Paste paste', () => {}],
+        [
+          'Cut section',
+          G.Utils.bindAction(() => {
+            MessageLog.trace(`[ScriptPopulation.ts] ${G.LayerManager.getNodeLayers().length}`);
+            const sel = new G.oSelection();
+            const drawingLayers = {};
+            for (const layer of G.LayerManager.getNodeLayers()) {
+              if (layer instanceof G.oDrawingLayer) {
+                const keyframes = layer.drawingElement.getKeyframeRange(
+                  sel.startFrame,
+                  sel.endFrame,
+                );
+                drawingLayers[layer.nodePath] = keyframes;
+                MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(keyframes, null, 2)}`);
+              }
+            }
+
+            const cutSection = {
+              drawingLayers: drawingLayers,
+              markers: G.TimelineKit.getMarkersFromRange(sel.startFrame, sel.endFrame),
+              startFrame: sel.startFrame,
+              endFrame: sel.endFrame,
+            };
+
+            G.Metadata.setJson('cutSection', cutSection);
+            MessageLog.trace(
+              `[ScriptPopulation.ts] ${JSON.stringify(G.Metadata.getJson('cutSection'), null, 2)}`,
+            );
+          }, this),
+        ],
+        ['Paste Section', () => ScriptPopulation.pasteSection()],
       ],
       [
         ['Import Script', importScript],
@@ -669,8 +705,6 @@ function showMarkerList() {
           onClick: G.Utils.bindAction(
             function () {
               ScriptPopulation.insertDialogPrompt({});
-              // G.Utils.prompt('Insert Dialog', 'Insert Dialog', 'Character:: Dialogue');
-              // G.TimelineKit.createMarker(frame.current(), );
             },
             [G, ScriptPopulation],
           ),

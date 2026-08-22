@@ -105,6 +105,17 @@ namespace MetadataKit {
     });
   }
 
+  /**
+   * Store an arbitrary JavaScript object as a JSON string.
+   *
+   * Harmony metadata only stores strings, so the object is serialized with
+   * JSON.stringify() and saved with type "string". Use getJson() to read
+   * it back.
+   */
+  export function setJson(key: string, value: unknown): void {
+    set(key, JSON.stringify(value));
+  }
+
   export function removeAll(): void {
     const all = scene.metadatas();
 
@@ -180,5 +191,20 @@ namespace MetadataKit {
     const meta = get(name);
     if (!meta) return defaultValue;
     return parseValue(meta);
+  }
+
+  /**
+   * Read a metadata value that was stored with setJson() and parse it back
+   * into an object. Returns undefined if the key doesn't exist or the stored
+   * value isn't valid JSON.
+   */
+  export function getJson<T = unknown>(key: string): T | undefined {
+    const raw = getValue(key);
+    if (typeof raw !== 'string') return undefined;
+    try {
+      return JSON.parse(raw) as T;
+    } catch (e) {
+      return undefined;
+    }
   }
 }

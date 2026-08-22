@@ -128,6 +128,7 @@ class HarmonyGlobals {
   columnGrouping = columnGrouping;
   PermanentFile = PermanentFile;
   Widgets = WidgetKit;
+  Metadata = MetadataKit;
 }
 
 var _ = new HarmonyGlobals();

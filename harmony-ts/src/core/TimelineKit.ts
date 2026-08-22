@@ -191,6 +191,14 @@ namespace TimelineKit {
     return frame.numberOf();
   }
 
+  export function getMarkersFromRange(startFrame: number, endFrame: number): any[] {
+    const allMarkers = TimelineMarker.getAllMarkers();
+    const markersInRange = allMarkers.filter(
+      (marker) => marker.frame >= startFrame && marker.frame <= endFrame,
+    );
+    return markersInRange;
+  }
+
   export function getAllMarkers(): any[] {
     return TimelineMarker.getAllMarkers();
   }
