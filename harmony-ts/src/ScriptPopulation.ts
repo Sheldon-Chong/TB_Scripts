@@ -46,8 +46,9 @@ namespace ScriptPopulation {
     title?: string;
     defaultProfile?: string;
     defaultDialogue?: string;
-  }): string | null {
-    var result: string | null = null;
+    onOk?: (result: { profile: string; dialogue: string }) => void;
+  }): { profile: string; dialogue: string } | null {
+    var result = null;
 
     var dialog = new QDialog();
     dialog.windowTitle = settings.title || 'Input';
@@ -85,7 +86,14 @@ namespace ScriptPopulation {
           text: 'OK',
           objectName: 'okButton',
           onClick: function () {
-            MessageLog.trace(`[ScriptPopulation.ts] ${'button'}`);
+            result = {
+              profile: ui.profileInput.text.trim(),
+              dialogue: ui.input.plainText.trim(),
+            };
+            if (settings.onOk) {
+              settings.onOk(result);
+            }
+            dialog.accept();
           },
         }),
       },
@@ -288,19 +296,21 @@ namespace ScriptPopulation {
   }
 
   export function addExposure(frameNumber?: number) {
-    var marker = TimelineMarker.getAllMarkers()[0];
+    // QPushButton.clicked passes a `checked` boolean (false for a normal
+    // button), so validate the type instead of relying on nullish coalescing —
+    // `false` would otherwise be treated as frame 0.
+    const targetFrame = typeof frameNumber === 'number' ? frameNumber : frame.current();
+
+    MessageLog.trace(
+      `[ScriptPopulation.ts] addExposure frame=${targetFrame} current=${frame.current()}`,
+    );
 
     scene.beginUndoRedoAccum('add exposure');
 
-    const sel = new G.oSelection();
-    G.TimelineKit.rippleShiftMarkers(
-      frameNumber !== undefined ? frameNumber : frame.current(),
-      1,
-      'add',
-    );
+    G.TimelineKit.rippleShiftMarkers(targetFrame, 1, 'add');
     Action.perform('selectAll()', 'timelineView');
     Action.perform('onActionAddExposure()', 'timelineView');
-    frame.setCurrent(frameNumber !== undefined ? frameNumber : sel.startFrame + 1);
+    frame.setCurrent(targetFrame);
 
     scene.endUndoRedoAccum();
   }
@@ -717,35 +727,57 @@ function showMarkerList() {
     // Attach the menu to the button.
     optionsButton.setMenu(optionsMenu);
 
-    // "Add exposure" and "Remove exposure" stay as standalone buttons.
-    const operationsBar = WidgetKit.createComponent({
-      type: QWidget,
-      layout: QHBoxLayout,
-      layoutProps: { contentsMargins: [0, 0, 0, 0], spacing: 8 },
-      children: [
-        optionsButton,
-        WidgetKit.button({
+    // Build the operations bar (menu button + action buttons) with buildTree.
+    // Use a fresh QWidget as the root so buildTree doesn't replace markersTab's
+    // existing layout; we then add the finished bar to markersTabLayout.
+    const operationsBar = G.Widgets.buildTree(
+      {
+        optionsButton: optionsButton,
+        addExposureButton: new G.Widgets.Button({
           text: 'Add exposure',
           objectName: 'addExposureButton',
           onClick: ScriptPopulation.addExposure,
-        }).create(),
-        WidgetKit.button({
+        }),
+        removeExposureButton: new G.Widgets.Button({
           text: 'Remove exposure',
           objectName: 'removeExposureButton',
           onClick: ScriptPopulation.removeExposure,
-        }).create(),
-        WidgetKit.button({
+        }),
+        insertDialogButton: new G.Widgets.Button({
           text: 'Insert Dialog',
           objectName: 'insertDialogButton',
           onClick: G.Utils.bindAction(
             function () {
-              ScriptPopulation.insertDialogPrompt({});
+              const output = ScriptPopulation.insertDialogPrompt({
+                onOk: (result) => {
+                  if (result) {
+                    const sel = new G.oSelection();
+                    const frameNum = sel.startFrame;
+                    const profile = result.profile;
+                    const dialogue = result.dialogue;
+                    G.TimelineKit.rippleShiftMarkers(frameNum - 1, 1, 'add');
+                    Action.perform('selectAll()', 'timelineView');
+                    Action.perform('onActionAddExposure()', 'timelineView');
+                    G.TimelineKit.createMarker(frameNum, profile, '#ffffff', dialogue, 0);
+                    MessageLog.trace(
+                      `[ScriptPopulation.ts] Inserted dialog at frame ${frameNum}: ${profile}:: ${dialogue}`,
+                    );
+                  }
+                },
+              });
+              MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(output, null, 2)}`);
             },
             [G, ScriptPopulation],
           ),
-        }).create(),
-      ],
-    });
+        }),
+      },
+      new QWidget(),
+      {
+        layoutType: QHBoxLayout,
+        layoutProps: { contentsMargins: [0, 0, 0, 0], spacing: 8 },
+      },
+    );
+
     markersTabLayout.addWidget(operationsBar, 0, Qt.AlignmentFlag.AlignRight);
   } catch (error) {
     MessageLog.trace(

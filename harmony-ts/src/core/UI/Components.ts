@@ -62,6 +62,16 @@ namespace WidgetKit {
     }
   }
 
+  export class WidgetContainer extends QWidget {
+    constructor(settings: { layout?: QLayout; objectName?: string }) {
+      super();
+      this.objectName = settings.objectName || '';
+      if (settings.layout) {
+        this.layout = settings.layout;
+      }
+    }
+  }
+
   export class TextEdit extends QTextEdit {
     constructor(settings: { text?: string }) {
       super();
