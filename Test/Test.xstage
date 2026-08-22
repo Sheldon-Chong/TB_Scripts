@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Sat Aug 22 15:31:47 2026" timeMsec="1787383907440" username="emers" realUsername="emers" creator="harmony">
+<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Sat Aug 22 16:01:53 2026" timeMsec="1787385713769" username="emers" realUsername="emers" creator="harmony">
  <elements>
   <element id="1" elementName="Drawing" elementFolder="Drawing" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
    <drawings>
@@ -59,6 +59,11 @@
     <dwg name="TestDrawing_47"/>
     <dwg name="TestDrawing_48"/>
     <dwg name="TestDrawing_49"/>
+    <dwg name="TestDrawing_50"/>
+    <dwg name="TestDrawing_51"/>
+    <dwg name="TestDrawing_52"/>
+    <dwg name="TestDrawing_53"/>
+    <dwg name="TestDrawing_54"/>
    </drawings>
   </element>
   <element id="2" elementName="Drawing_1" elementFolder="Drawing_1" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
@@ -66,6 +71,7 @@
     <dwg name="1"/>
     <dwg name="2"/>
     <dwg name="3"/>
+    <dwg name="4"/>
    </drawings>
   </element>
   <element id="3" elementName="Drawing_2" elementFolder="Drawing_2" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
@@ -240,7 +246,12 @@
     <column type="0" name="Drawing" displayOrder="0" width="100" anonymous="true" id="1">
      <elementSeq exposures="1" val="TestDrawing_36" id="1"/>
      <elementSeq exposures="3-5" val="TestDrawing_21" id="1"/>
-     <elementSeq exposures="6-34" val="TestDrawing_49" id="1"/>
+     <elementSeq exposures="6-13,25-34" val="TestDrawing_49" id="1"/>
+     <elementSeq exposures="14" val="TestDrawing_50" id="1"/>
+     <elementSeq exposures="15" val="TestDrawing_51" id="1"/>
+     <elementSeq exposures="16" val="TestDrawing_53" id="1"/>
+     <elementSeq exposures="17" val="TestDrawing_52" id="1"/>
+     <elementSeq exposures="18" val="TestDrawing_54" id="1"/>
      <elementSeq exposures="35-160" val="2" id="1"/>
      <elementSeq exposures="165-196" val="3" id="1"/>
      <elementSeq exposures="197" val="4_1" id="1"/>
@@ -325,7 +336,7 @@
        <pt val="-0,-0,-0" lockedInTime="395"/>
       </points>
      </path3D>
-     <velocity type="3" name="ATV-0DFB450496E64050A4001703" displayOrder="0" width="100" anonymous="true">
+     <velocity type="3" name="ATV-0D9745689FBE3B86831014F9" displayOrder="0" width="100" anonymous="true">
       <step val="1" start="1" stop="1"/>
       <noFrames/>
       <points version="2">
@@ -392,6 +403,7 @@
     </column>
     <column type="0" name="ATV-0D5B43A4D47AA99863E05694" displayOrder="0" width="100" anonymous="true" id="2">
      <elementSeq exposures="1" val="3" id="2"/>
+     <elementSeq exposures="16" val="4" id="2"/>
      <elementSeq exposures="226-228,243" val="1" id="2"/>
      <elementSeq exposures="276" val="2" id="2"/>
     </column>
@@ -938,6 +950,9 @@
     <meta type="bool" name="registered action: com.toonboom.measureLineTool" creator="Harmony Advanced" version="1.0">
      <bool value="true"/>
     </meta>
+    <meta type="string" name="cutSection" creator="Harmony Advanced" version="1.0">
+     <string value="{&quot;drawingLayers&quot;:{&quot;Top/Drawing&quot;:[&quot;TestDrawing_50&quot;,&quot;TestDrawing_51&quot;,&quot;TestDrawing_53&quot;,&quot;TestDrawing_52&quot;,&quot;TestDrawing_54&quot;],&quot;Top/Drawing_1&quot;:[&quot;&quot;,&quot;&quot;,&quot;4&quot;,&quot;&quot;,&quot;&quot;],&quot;Top/Drawing_2&quot;:[&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;]},&quot;markers&quot;:[{&quot;frame&quot;:14,&quot;length&quot;:0,&quot;color&quot;:&quot;#2288ff&quot;,&quot;notes&quot;:&quot;hmm... you kinda look like someone i know.&quot;,&quot;name&quot;:&quot;Sans&quot;},{&quot;frame&quot;:15,&quot;length&quot;:0,&quot;color&quot;:&quot;#2288ff&quot;,&quot;notes&quot;:&quot;you aren&apos;t gonna act friendly and then try to kill me right?&quot;,&quot;name&quot;:&quot;Sans&quot;},{&quot;frame&quot;:16,&quot;length&quot;:0,&quot;color&quot;:&quot;#ffff00&quot;,&quot;notes&quot;:&quot;Whaaat?? No...?&quot;,&quot;name&quot;:&quot;Verity&quot;},{&quot;frame&quot;:17,&quot;length&quot;:0,&quot;color&quot;:&quot;#ffff00&quot;,&quot;notes&quot;:&quot;I&apos;m just here to help! Why don&apos;t you ask me something?&quot;,&quot;name&quot;:&quot;Verity&quot;},{&quot;frame&quot;:18,&quot;length&quot;:0,&quot;color&quot;:&quot;#2288ff&quot;,&quot;notes&quot;:&quot;alright, what am i standing on right now?&quot;,&quot;name&quot;:&quot;Sans&quot;}],&quot;startFrame&quot;:14,&quot;endFrame&quot;:18}"/>
+    </meta>
    </metas>
    <timelineOrderer/>
   </scene>
@@ -955,7 +970,7 @@
    <int value=""/>
   </meta>
   <meta type="checksumValidation" name="checksumValidation" creator="Harmony Advanced" version="1.0">
-   <value data="6C000000000000000303A44E1F32FBFBB1945B51FB0BC888FBB6A55244F05201A42F080042B6501D76540A64DBAB836D8243DDC6A9E9E10B610B1064E1F1D062D214E1BF1B8A2162D9B80DF9307EA4650974D857F185D743B431C092A519C42AAAC2F322F4129260BF5563ED46902727157341636B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A4000000034BDC5D5CF390AB823FF23D0D745E80733E33AA938D32433E952AB0E1E9781A950B1BB1F87F21079573AB3882467FBC9A5452288D8BD6267970752DB2D378FE1"/>
+   <value data="6C000000000000000303C02A7B569F9FD5F03F359F6FACEC9FD2C13620943665C04B6C6426D2347912306E00BFCFE709E627B9A2CD8D856F056F74008595B406B67085DB7FEE4506BDDC699D541AC0016D10BC3395E1B327D055A4F6C17DA04ECEA697469076F604DB31078922F44343711725076B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A40000000C8BE4E2E4633708AAC46D02877D01E8468F74072F3FEECA7DCC8C1878D22142A5E4AA7FCD5AF5D28AB8A4BBA94564E1386490F0088D04B45A9796FF5A1B7EC4A"/>
   </meta>
  </metas>
 </project>

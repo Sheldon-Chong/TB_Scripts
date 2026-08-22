@@ -319,9 +319,61 @@ namespace ScriptPopulation {
   }
 
   /**
+   * Cut the current selection: capture its drawing exposures and markers, then
+   * delete the markers in the range, ripple-shift the remaining markers left,
+   * and remove one exposure per frame in the selection.
+   */
+  export function cutSection(): void {
+    const sel = new G.oSelection();
+    const start = sel.startFrame;
+    const end = sel.endFrame;
+    const length = end - start + 1;
+
+    // 1. Capture the section.
+    const drawingLayers: { [nodePath: string]: string[] } = {};
+    for (const layer of G.LayerManager.getNodeLayers()) {
+      if (layer instanceof G.oDrawingLayer) {
+        drawingLayers[layer.nodePath] = layer.drawingElement.getKeyframeRange(start, end);
+      }
+    }
+
+    const markers = G.TimelineKit.getMarkersFromRange(start, end);
+
+    G.Metadata.setJson('cutSection', {
+      drawingLayers: drawingLayers,
+      markers: markers,
+      startFrame: start,
+      endFrame: end,
+    });
+
+    scene.beginUndoRedoAccum('cut section');
+    try {
+      // 2. Delete the markers inside the cut range.
+      for (let i = 0; i < markers.length; i++) {
+        TimelineMarker.deleteMarker(markers[i]);
+      }
+
+      // 3. Ripple-shift remaining markers left from the selection start.
+      G.TimelineKit.rippleShiftMarkers(start, length, 'delete');
+
+      // 4. Remove one exposure per frame in the selection.
+      frame.setCurrent(start);
+      for (let i = 0; i < length; i++) {
+        Action.perform('selectAll()', 'timelineView');
+        Action.perform('onActionRemoveExposure()', 'timelineView');
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error cutting section: ${error.message} ${error.fileName} ${error.lineNumber}`,
+      );
+    }
+    scene.endUndoRedoAccum();
+  }
+
+  /**
    * Paste a previously cut section, starting at the current selection's start
-   * frame. Drawing exposures and markers are shifted so their relative
-   * positions within the cut section are preserved.
+   * frame. Existing markers are ripple-shifted right and exposures are added to
+   * make room before the stored drawings and markers are written back.
    */
   export function pasteSection(): void {
     const section = G.Metadata.getJson<CutSection>('cutSection');
@@ -333,11 +385,22 @@ namespace ScriptPopulation {
     const sel = new G.oSelection();
     const targetStart = sel.startFrame;
     const frameOffset = targetStart - section.startFrame;
+    const length = section.endFrame - section.startFrame + 1;
 
     scene.beginUndoRedoAccum('paste section');
 
     try {
-      // 1. Paste drawing exposures.
+      // 1. Ripple-shift markers right to make room.
+      G.TimelineKit.rippleShiftMarkers(targetStart - 1, length, 'add');
+
+      // 2. Add one exposure per frame in the section.
+      frame.setCurrent(targetStart);
+      for (let i = 0; i < length; i++) {
+        Action.perform('selectAll()', 'timelineView');
+        Action.perform('onActionAddExposure()', 'timelineView');
+      }
+
+      // 3. Paste drawing exposures.
       const nodePaths = Object.keys(section.drawingLayers);
       for (let i = 0; i < nodePaths.length; i++) {
         const nodePath = nodePaths[i];
@@ -355,17 +418,18 @@ namespace ScriptPopulation {
         }
       }
 
-      // 2. Paste markers.
+      // 4. Paste markers.
       const markers = section.markers || [];
       for (let m = 0; m < markers.length; m++) {
         const marker = markers[m];
-        TimelineMarker.createMarker({
+        const output = TimelineMarker.createMarker({
           frame: marker.frame + frameOffset,
           length: marker.length !== undefined ? marker.length : 0,
           color: marker.color || '#ffffff',
           name: marker.name || '',
           notes: marker.notes || '',
         });
+        MessageLog.trace(`[ScriptPopulation.ts] output ${output}`);
       }
     } catch (error) {
       MessageLog.trace(
@@ -641,36 +705,7 @@ function showMarkerList() {
       [
         ['Delete Markers in Selection', deleteMarkersOfSelection],
         ['Delete All Markers', deleteAllMarkers],
-        [
-          'Cut section',
-          G.Utils.bindAction(() => {
-            MessageLog.trace(`[ScriptPopulation.ts] ${G.LayerManager.getNodeLayers().length}`);
-            const sel = new G.oSelection();
-            const drawingLayers = {};
-            for (const layer of G.LayerManager.getNodeLayers()) {
-              if (layer instanceof G.oDrawingLayer) {
-                const keyframes = layer.drawingElement.getKeyframeRange(
-                  sel.startFrame,
-                  sel.endFrame,
-                );
-                drawingLayers[layer.nodePath] = keyframes;
-                MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(keyframes, null, 2)}`);
-              }
-            }
-
-            const cutSection = {
-              drawingLayers: drawingLayers,
-              markers: G.TimelineKit.getMarkersFromRange(sel.startFrame, sel.endFrame),
-              startFrame: sel.startFrame,
-              endFrame: sel.endFrame,
-            };
-
-            G.Metadata.setJson('cutSection', cutSection);
-            MessageLog.trace(
-              `[ScriptPopulation.ts] ${JSON.stringify(G.Metadata.getJson('cutSection'), null, 2)}`,
-            );
-          }, this),
-        ],
+        ['Cut section', () => ScriptPopulation.cutSection()],
         ['Paste Section', () => ScriptPopulation.pasteSection()],
       ],
       [
