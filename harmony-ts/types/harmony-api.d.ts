@@ -66,6 +66,7 @@ interface oTimelineMarker {
 
 declare var specialFolders: {
   userScripts: string;
+  userConfig: string;
 };
 
 declare var TimelineMarker: {

@@ -68,6 +68,8 @@ function copypasteTest() {
 }
 
 function run10() {
+  MessageLog.trace(`[spoil.ts] ${specialFolders.userConfig}`);
+  return;
   const obj1 = {
     name: 'Object 1',
   };

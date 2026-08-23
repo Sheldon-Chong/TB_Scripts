@@ -217,8 +217,8 @@ namespace ScriptPopulation {
     return results;
   }
 
-  const regex = /^(.+?)\s*::\s*(.+)$/;
   export function parseDialog(line: string): dialogueLine | null {
+    const regex = /^(.+?)\s*::\s*(.+)$/;
     const match = line.match(regex);
 
     if (match) {
@@ -267,8 +267,9 @@ namespace ScriptPopulation {
     };
   }
 
-  const drawingTypesFile =
-    'C:\\Users\\emers\\AppData\\Roaming\\Toon Boom Animation\\Toon Boom Harmony Advanced\\full-2500-pref\\drawingTypes.d\\drawingTypes.xml';
+  const drawingTypesFile = `${specialFolders.userConfig}/drawingTypes.d/drawingTypes.xml`;
+
+  MessageLog.trace(`[ScriptPopulation.ts] DRAWING TYPES FILE:  ${drawingTypesFile}`);
 
   var xmlText = G.FileUtils.readFrom(drawingTypesFile);
 
@@ -295,35 +296,50 @@ namespace ScriptPopulation {
     return items;
   }
 
-  export function addExposure(frameNumber?: number) {
-    // QPushButton.clicked passes a `checked` boolean (false for a normal
-    // button), so validate the type instead of relying on nullish coalescing —
-    // `false` would otherwise be treated as frame 0.
-    const targetFrame = typeof frameNumber === 'number' ? frameNumber : frame.current();
+  export function addExposure(frameNumber?: number, count?: number) {
+    const sel = new G.oSelection();
+    const targetFrame = (typeof frameNumber === 'number' ? frameNumber : frame.current()) + 1;
+    const numberOfFrames = count !== null && count !== void 0 ? count : sel.length;
 
     MessageLog.trace(
-      `[ScriptPopulation.ts] addExposure frame=${targetFrame} current=${frame.current()}`,
+      `[ScriptPopulation.ts] addExposure frame=${targetFrame} current=${frame.current()} count=${numberOfFrames}`,
     );
-
     scene.beginUndoRedoAccum('add exposure');
 
-    G.TimelineKit.rippleShiftMarkers(targetFrame, 1, 'add');
     Action.perform('selectAll()', 'timelineView');
-    Action.perform('onActionAddExposure()', 'timelineView');
+    for (var f = targetFrame; f < targetFrame + numberOfFrames; f++) {
+      Action.perform('onActionAddExposure()', 'timelineView');
+      MessageLog.trace(`[ScriptPopulation.ts] ${f}`);
+    }
+
+    G.TimelineKit.rippleShiftMarkers(targetFrame - 1, numberOfFrames, 'add');
     frame.setCurrent(targetFrame);
+    Action.perform('deleteSelection()', 'timelineView');
+    MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
 
     scene.endUndoRedoAccum();
   }
 
-  export function removeExposure() {
-    var marker = TimelineMarker.getAllMarkers()[0];
+  export function removeExposure(frameNumber?: number, count?: number) {
+    const sel = new G.oSelection();
+    const targetFrame = typeof frameNumber === 'number' ? frameNumber : frame.current();
+    const numberOfFrames = count !== null && count !== void 0 ? count : sel.length;
+
+    MessageLog.trace(
+      `[ScriptPopulation.ts] removeExposure frame=${targetFrame} current=${frame.current()} count=${numberOfFrames}`,
+    );
 
     scene.beginUndoRedoAccum('remove exposure');
 
-    const sel = new G.oSelection();
-    G.TimelineKit.rippleShiftMarkers(frame.current(), 1, 'delete');
+    G.TimelineKit.rippleShiftMarkers(targetFrame, numberOfFrames, 'delete');
+
     Action.perform('selectAll()', 'timelineView');
-    Action.perform('onActionRemoveExposure()', 'timelineView');
+    for (var f = targetFrame; f < targetFrame + numberOfFrames; f++) {
+      Action.perform('onActionRemoveExposure()', 'timelineView');
+      MessageLog.trace(`[ScriptPopulation.ts] ${f}`);
+    }
+
+    frame.setCurrent(targetFrame);
 
     scene.endUndoRedoAccum();
   }
@@ -834,7 +850,13 @@ function showMarkerList() {
   }, this);
 
   const importScript = G.Utils.bindAction(() => {
-    ScriptPopulation.populateScript(G.Utils.prompt('test'));
+    const text = ScriptPopulation.insertDialogPrompt({
+      message: 'Paste script text here:',
+      title: 'Import Script',
+      defaultProfile: '',
+      defaultDialogue: '',
+    })?.dialogue;
+    ScriptPopulation.populateScript(text || '');
   }, this);
 
   const compileScript = G.Utils.bindAction(function () {
@@ -897,10 +919,9 @@ function showMarkerList() {
                     const frameNum = sel.startFrame;
                     const profile = result.profile;
                     const dialogue = result.dialogue;
-                    G.TimelineKit.rippleShiftMarkers(frameNum - 1, 1, 'add');
-                    Action.perform('selectAll()', 'timelineView');
-                    Action.perform('onActionAddExposure()', 'timelineView');
-                    G.TimelineKit.createMarker(frameNum, profile, '#ffffff', dialogue, 0);
+                    ScriptPopulation.addExposure();
+                    MessageLog.trace(`[ScriptPopulation.ts] ${'inserted'}`);
+                    G.TimelineKit.createMarker(frameNum + 1, profile, '#ffffff', dialogue, 0);
                     MessageLog.trace(
                       `[ScriptPopulation.ts] Inserted dialog at frame ${frameNum}: ${profile}:: ${dialogue}`,
                     );
@@ -1204,7 +1225,7 @@ function showMarkerList() {
       MessageLog.trace(
         `[ScriptPopulation.ts] active red dialogue ${JSON.stringify(activeRedDialogue, null, 2)} at line ${activeRedDialogueLineIndex}`,
       );
-      ScriptPopulation.addExposure(insertionFrame);
+      ScriptPopulation.addExposure(insertionFrame, 1);
       TimelineMarker.createMarker({
         frame: insertionFrame,
         color: '#ffffff',
@@ -1679,7 +1700,7 @@ function showMarkerList() {
       }
     } catch (error) {
       MessageLog.trace(
-        `[ScriptPopulation.ts] Error scrolling to marker dialogue: ${error.message}`,
+        `[ScriptPopulation.ts] Error scrolling to marker dialogue: ${error.message} ${error.fileName} ${error.lineNumber}`,
       );
     }
   }
