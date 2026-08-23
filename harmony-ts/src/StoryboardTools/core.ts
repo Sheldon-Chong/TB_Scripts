@@ -39,7 +39,7 @@ interface CutSection {
   endFrame: number;
 }
 
-namespace ScriptPopulation {
+namespace StoryboardTools {
   export function insertDialogPrompt(settings: {
     message?: string;
     title?: string;
