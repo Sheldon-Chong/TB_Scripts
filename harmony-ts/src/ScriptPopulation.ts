@@ -156,9 +156,14 @@ class TimelineMarkersDialog {
     return rows;
   }
 
-  getCurrentMarker(): oTimelineMarker | undefined {
+  // getCurrentMarker(): oTimelineMarker | undefined {
+  //   return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
+  // }
+
+  getCurrentMarker = G.Utils.bindAction(() => {
+    MessageLog.trace(`[ScriptPopulation.ts] ${TimelineMarker}`);
     return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
-  }
+  }, this);
 
   matchesFilter(value: string, query: string): boolean {
     if (!query) return true;
@@ -166,7 +171,7 @@ class TimelineMarkersDialog {
   }
 
   refreshMarkerCache() {
-    this.cachedMarkers = G.TimelineKit.getAllMarkers();
+    this.cachedMarkers = TimelineMarker.getAllMarkers();
   }
 
   updateMarker(marker: oTimelineMarker) {
@@ -1128,7 +1133,7 @@ class TimelineMarkersDialog {
       this.notesLabel.plainText = '';
     } catch (error) {
       MessageLog.trace(
-        `[ScriptPopulation.ts] ${frame.current()} | Error retrieving marker information. ${error.message}`,
+        `[ScriptPopulation.ts] ${frame.current()} | Error retrieving marker information. ${error.message} ${error.fileName} ${error.lineNumber}`,
       );
     }
   }

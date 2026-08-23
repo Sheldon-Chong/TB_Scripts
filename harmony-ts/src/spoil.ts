@@ -68,6 +68,7 @@ function copypasteTest() {
 }
 
 function run10() {
+  MessageLog.trace(`[spoil.ts] ${TimelineMarker}`);
   MessageLog.trace(`[spoil.ts] ${specialFolders.userConfig}`);
   return;
   const obj1 = {
