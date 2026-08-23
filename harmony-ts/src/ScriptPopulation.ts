@@ -3,6 +3,8 @@ include(specialFolders.userScripts + '/StoryboardTools/core.js');
 
 include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
 
+this.__proto__.StoryboardTools = StoryboardTools;
+
 function testRequest() {
   if (typeof QNetworkAccessManager !== 'undefined') {
     MessageLog.trace(`[ScriptPopulation.ts] undefined`);
@@ -15,6 +17,7 @@ function testRequest() {
     });
     mgr.get(req);
   } else {
+    MessageLog.trace(`[ScriptPopulation.ts] defined`);
     MessageLog.trace(`[ScriptPopulation.ts] defined`);
   }
 }
@@ -114,6 +117,7 @@ class TimelineMarkersDialog {
   show() {
     this.buildMarkersTab();
     this.buildScriptTab();
+    this.buildProfileEditorTab();
     this.buildListenerTab();
     this.refresh();
     this.wireNotifier();
@@ -190,6 +194,170 @@ class TimelineMarkersDialog {
       this.table.setRowHidden(i, !(nameMatch && notesMatch));
     }
     this.table.updatesEnabled = true;
+  }
+
+  buildProfileEditorTab() {
+    const drawingTypesFile = `${specialFolders.userConfig}/drawingTypes.d/drawingTypes.xml`;
+
+    function normalizeColor(value: string): string {
+      const trimmed = (value || '').trim();
+      const withoutHash = trimmed[0] === '#' ? trimmed.slice(1) : trimmed;
+      const clean = withoutHash.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
+      return clean ? '#' + clean.toUpperCase() : '#FFFFFF';
+    }
+
+    function readDrawingTypes(): Array<{ profile: string; color: string }> {
+      const xmlText = G.FileUtils.readFrom(drawingTypesFile);
+      if (!xmlText) return [];
+
+      const doc = G.Utils.readXmlFile(xmlText);
+      if (doc.error) {
+        MessageLog.trace('[ScriptPopulation.ts] ' + doc.error);
+        return [];
+      }
+
+      const root = doc.children[0];
+      const nodes = root ? root.children : [];
+      const items: Array<{ profile: string; color: string }> = [];
+
+      for (let i = 0; i < nodes.length; i++) {
+        const attrs = nodes[i].attributes || {};
+        const text = String(attrs.text || '').trim();
+        const timelineColor = String(attrs.timelineColor || '#FFFFFF');
+        const color = normalizeColor(timelineColor).replace(/^#/, '').slice(0, 6);
+
+        if (text) {
+          items.push({
+            profile: text,
+            color: '#' + color.toUpperCase(),
+          });
+        }
+      }
+
+      return items;
+    }
+
+    function createColorCell(initialColor: string) {
+      const cellWidget = new QWidget();
+      const layout = new QHBoxLayout(cellWidget);
+      layout.setContentsMargins(2, 2, 2, 2);
+      layout.spacing = 4;
+
+      const colorButton = new QPushButton(cellWidget);
+      colorButton.setFixedSize(24, 20);
+      colorButton.setStyleSheet(
+        'background-color: ' +
+          normalizeColor(initialColor) +
+          '; border: 1px solid #666; border-radius: 4px;',
+      );
+
+      const colorText = new QLineEdit(normalizeColor(initialColor), cellWidget);
+      colorText.maximumWidth = 90;
+      colorText.setStyleSheet(
+        'background-color: #1f1f1f; color: white; border: 1px solid #4a4a4a; border-radius: 4px; padding: 2px;',
+      );
+
+      colorButton.clicked.connect(() => {
+        const current = new QColor(normalizeColor(initialColor));
+        const chosen = QColorDialog.getColor(current, cellWidget);
+
+        if (!chosen.isValid()) return;
+
+        const hex = '#' + chosen.name().slice(1, 7).toUpperCase();
+        colorText.text = hex;
+        colorButton.setStyleSheet(
+          'background-color: ' +
+            normalizeColor(hex) +
+            '; border: 1px solid #666; border-radius: 4px;',
+        );
+      });
+
+      colorText.textChanged.connect((value: string) => {
+        const normalized = normalizeColor(value);
+        colorButton.setStyleSheet(
+          'background-color: ' + normalized + '; border: 1px solid #666; border-radius: 4px;',
+        );
+      });
+
+      layout.addWidget(colorButton, 0, 0);
+      layout.addWidget(colorText, 1, 0);
+
+      return {
+        widget: cellWidget,
+        text: colorText,
+      };
+    }
+
+    const profileTab = new QWidget();
+    const layout = new QVBoxLayout(profileTab);
+    layout.setContentsMargins(12, 12, 12, 12);
+    layout.spacing = 8;
+
+    const table = new QTableWidget();
+    table.columnCount = 2;
+    table.setHorizontalHeaderLabels(['Profile', 'Color']);
+    table.selectionMode = QAbstractItemView.SingleSelection;
+    table.selectionBehavior = QAbstractItemView.SelectRows;
+
+    const rowEditors: Array<{ profile: QLineEdit; color: QLineEdit }> = [];
+
+    const data = readDrawingTypes();
+    for (let i = 0; i < data.length; i++) {
+      const rowIndex = table.rowCount;
+      table.insertRow(rowIndex);
+
+      const profileField = new QLineEdit(data[i].profile);
+      profileField.setStyleSheet(
+        'background-color: #1f1f1f; color: white; border: 1px solid #4a4a4a; border-radius: 4px; padding: 4px;',
+      );
+      table.setCellWidget(rowIndex, 0, profileField);
+
+      const colorCell = createColorCell(data[i].color);
+      table.setCellWidget(rowIndex, 1, colorCell.widget);
+
+      rowEditors.push({
+        profile: profileField,
+        color: colorCell.text,
+      });
+    }
+
+    const saveButton = new QPushButton('Save');
+    saveButton.setStyleSheet(
+      'background-color: #2e7d32; color: white; border: none; border-radius: 6px; padding: 6px 12px;',
+    );
+
+    saveButton.clicked.connect(() => {
+      try {
+        const xmlRows = [];
+        for (let i = 0; i < rowEditors.length; i++) {
+          const profile = (rowEditors[i].profile.text || '').trim();
+          const color = normalizeColor(rowEditors[i].color.text || '#FFFFFF')
+            .replace(/^#/, '')
+            .slice(0, 6);
+
+          if (!profile) continue;
+
+          xmlRows.push(
+            `  <DrawingType text="${profile}" pixmapFile="retakeIBPixmap.svg" commandIcon="retakeIBButton.svg" flipIcon="retakeIBFlip.svg" onionIcon="retakeIBOnion.svg" timelineColor="#${color}FF" />`,
+          );
+        }
+
+        const xml = ['<DrawingTypes>', ...xmlRows, '</DrawingTypes>'].join('\n');
+        G.FileUtils.writeTo(drawingTypesFile, xml);
+        MessageLog.trace(
+          `[ScriptPopulation.ts] Saved ${xmlRows.length} drawing types to ${drawingTypesFile}`,
+        );
+      } catch (error) {
+        MessageLog.trace(
+          `[ScriptPopulation.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`,
+        );
+      }
+    });
+
+    layout.addWidget(table, 1, 0);
+    layout.addWidget(saveButton, 0, Qt.AlignmentFlag.AlignRight);
+    this.tabs.addTab(profileTab, 'Profile Editor');
+    return profileTab;
   }
 
   buildMarkersTab() {
@@ -337,23 +505,21 @@ class TimelineMarkersDialog {
             text: '<',
             objectName: 'removeExposureButton',
             width: 40,
-            onClick: () => {
-              scene.beginUndoRedoAccum('Ripple Shift Markers Left');
+            onClick: G.Utils.bindAction(() => {
               const sel = new G.oSelection();
 
               G.TimelineKit.rippleShiftMarkers(sel.startFrame, sel.length, 'delete');
-              scene.endUndoRedoAccum();
-            },
+            }),
           }),
           rippleShiftMarkersRightBtn: new G.Widgets.Button({
             text: '>',
             objectName: 'addExposureButton',
             width: 40,
-            onClick: () => {
+            onClick: G.Utils.bindAction(() => {
               scene.beginUndoRedoAccum('Ripple Shift Markers Right');
               G.TimelineKit.rippleShiftMarkers(frame.current() - 1, 1, 'add');
               scene.endUndoRedoAccum();
-            },
+            }),
           }),
 
           removeExposureButton: new G.Widgets.Button({

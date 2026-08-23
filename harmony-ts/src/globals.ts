@@ -154,12 +154,25 @@ if (Object.keys(this.__proto__).indexOf('G') === -1) {
   this.__proto__.Array = Array;
   this.__proto__.G = _;
 
+  this.__proto__.__spreadArray = function (to, from, pack) {
+    if (pack || arguments.length === 2) {
+      for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+          if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+          ar[i] = from[i];
+        }
+      }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+  };
+
   Object._ = _;
 
   this.__proto__.registeredTools = this.__proto__.registeredTools || {};
   this.__proto__.registeredActions = this.__proto__.registeredActions || {};
   this.__proto__.registeredToolbars = this.__proto__.registeredToolbars || {};
   this.__proto__.PermanentFile = PermanentFile;
+  this.__proto__.TimelineMarker = TimelineMarker;
 
   this.__proto__.oColumn = oColumn;
   this.__proto__.oPathColumn3D = oPathColumn3D;

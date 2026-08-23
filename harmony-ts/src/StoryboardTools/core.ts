@@ -307,58 +307,67 @@ namespace StoryboardTools {
   }
 
   export function addExposure(frameNumber?: number, count?: number) {
-    const sel = new G.oSelection();
-    const targetFrame = (typeof frameNumber === 'number' ? frameNumber : frame.current()) + 1;
-    const numberOfFrames = count !== null && count !== void 0 ? count : sel.length;
+    try {
+      const sel = new G.oSelection();
+      const targetFrame = (typeof frameNumber === 'number' ? frameNumber : frame.current()) + 1;
+      const numberOfFrames = count !== null && count !== void 0 ? count : sel.length;
 
-    MessageLog.trace(
-      `[ScriptPopulation.ts] addExposure frame=${targetFrame} current=${frame.current()} count=${numberOfFrames}`,
-    );
-    scene.beginUndoRedoAccum('add exposure');
-
-    Action.perform('selectAll()', 'timelineView');
-    for (var f = targetFrame; f < targetFrame + numberOfFrames; f++) {
-      Action.perform('onActionAddExposure()', 'timelineView');
-      MessageLog.trace(`[ScriptPopulation.ts] ${f}`);
-    }
-
-    G.TimelineKit.rippleShiftMarkers(targetFrame - 1, numberOfFrames, 'add');
-    frame.setCurrent(targetFrame);
-    Action.perform('deleteSelection()', 'timelineView');
-    MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
-
-    scene.endUndoRedoAccum();
-  }
-
-  export function removeExposure(frameNumber?: number, count?: number) {
-    const sel = new G.oSelection();
-    const targetFrame = typeof frameNumber === 'number' ? frameNumber : frame.current();
-    const numberOfFrames = count !== null && count !== void 0 ? count : sel.length;
-
-    frame.setCurrent(sel.startFrame);
-
-    MessageLog.trace(
-      `[ScriptPopulation.ts] removeExposure frame=${targetFrame} current=${frame.current()} count=${numberOfFrames}`,
-    );
-    MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
-
-    var removeTimer = new QTimer();
-    removeTimer.singleShot = true;
-    removeTimer.timeout.connect(function () {
-      MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
-      scene.beginUndoRedoAccum('remove exposure');
-
-      G.TimelineKit.rippleShiftMarkers(targetFrame, numberOfFrames, 'delete');
+      MessageLog.trace(
+        `[ScriptPopulation.ts] addExposure frame=${targetFrame} current=${frame.current()} count=${numberOfFrames}`,
+      );
+      scene.beginUndoRedoAccum('add exposure');
 
       Action.perform('selectAll()', 'timelineView');
       for (var f = targetFrame; f < targetFrame + numberOfFrames; f++) {
-        Action.perform('onActionRemoveExposure()', 'timelineView');
+        Action.perform('onActionAddExposure()', 'timelineView');
         MessageLog.trace(`[ScriptPopulation.ts] ${f}`);
       }
 
+      G.TimelineKit.rippleShiftMarkers(targetFrame - 1, numberOfFrames, 'add');
+      frame.setCurrent(targetFrame);
+      Action.perform('deleteSelection()', 'timelineView');
+      MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
+
       scene.endUndoRedoAccum();
-    });
-    removeTimer.start(150);
+    } catch (error) {
+      scene.endUndoRedoAccum();
+      MessageLog.trace(`[core.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
+    }
+  }
+
+  export function removeExposure(frameNumber?: number, count?: number) {
+    try {
+      const sel = new G.oSelection();
+      const targetFrame = typeof frameNumber === 'number' ? frameNumber : frame.current();
+      const numberOfFrames = count !== null && count !== void 0 ? count : sel.length;
+
+      frame.setCurrent(sel.startFrame);
+
+      MessageLog.trace(
+        `[ScriptPopulation.ts] removeExposure frame=${targetFrame} current=${frame.current()} count=${numberOfFrames}`,
+      );
+      MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
+
+      var removeTimer = new QTimer();
+      removeTimer.singleShot = true;
+      removeTimer.timeout.connect(function () {
+        MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
+        scene.beginUndoRedoAccum('remove exposure');
+
+        G.TimelineKit.rippleShiftMarkers(targetFrame, numberOfFrames, 'delete');
+
+        Action.perform('selectAll()', 'timelineView');
+        for (var f = targetFrame; f < targetFrame + numberOfFrames; f++) {
+          Action.perform('onActionRemoveExposure()', 'timelineView');
+          MessageLog.trace(`[ScriptPopulation.ts] ${f}`);
+        }
+
+        scene.endUndoRedoAccum();
+      });
+      removeTimer.start(150);
+    } catch (error) {
+      MessageLog.trace(`[core.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
+    }
   }
 
   /**

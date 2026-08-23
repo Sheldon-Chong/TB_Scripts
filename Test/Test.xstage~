@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Sun Aug 23 11:25:38 2026" timeMsec="1787455538392" username="emers" realUsername="emers" creator="harmony">
+<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Sun Aug 23 16:58:29 2026" timeMsec="1787475509410" username="emers" realUsername="emers" creator="harmony">
  <elements>
   <element id="1" elementName="Drawing" elementFolder="Drawing" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
    <drawings>
@@ -72,6 +72,7 @@
     <dwg name="2"/>
     <dwg name="3"/>
     <dwg name="4"/>
+    <dwg name="5"/>
    </drawings>
   </element>
   <element id="3" elementName="Drawing_2" elementFolder="Drawing_2" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
@@ -102,150 +103,150 @@
   <timelineMarker markerStart="11" markerLength="0" colour="#FFFFFFFF" note="s" name="Sans"/>
   <timelineMarker markerStart="12" markerLength="0" colour="#88FFFFFF" note="asd" name="Sans"/>
   <timelineMarker markerStart="18" markerLength="0" colour="#2288FFFF" note="sasd" name="Sans"/>
-  <timelineMarker markerStart="28" markerLength="0" colour="#FFFFFFFF" note="dsaf" name=""/>
-  <timelineMarker markerStart="30" markerLength="0" colour="#2288FFFF" note="whats up guys, sandgaming47 here." name="Sans"/>
-  <timelineMarker markerStart="31" markerLength="0" colour="#2288FFFF" note="today we&apos;re playing..." name="Sans"/>
-  <timelineMarker markerStart="32" markerLength="0" colour="#2288FFFF" note="A MODDED MINECRAFT PLAYTROUGH" name="Sans"/>
-  <timelineMarker markerStart="33" markerLength="0" colour="#2288FFFF" note="as for what mod we&apos;re playing..." name="Sans"/>
-  <timelineMarker markerStart="34" markerLength="0" colour="#2288FFFF" note="i have no clue actually, someone sent me it on discord" name="Sans"/>
-  <timelineMarker markerStart="35" markerLength="0" colour="#2288FFFF" note="woah!" name="Sans"/>
-  <timelineMarker markerStart="36" markerLength="0" colour="#FFFF00FF" note="Hello, I&apos;m verity!" name="Verity"/>
-  <timelineMarker markerStart="37" markerLength="0" colour="#2288FFFF" note="fwe" name="Sans"/>
-  <timelineMarker markerStart="38" markerLength="0" colour="#FFFF00FF" note="Your personal helper friend." name="Verity"/>
-  <timelineMarker markerStart="39" markerLength="0" colour="#FFFFFFFF" note="s" name="s"/>
-  <timelineMarker markerStart="40" markerLength="0" colour="#FFFF00FF" note="Ask me anything! I know everything." name="Verity"/>
-  <timelineMarker markerStart="41" markerLength="0" colour="#2288FFFF" note="verity, huh?" name="Sans"/>
-  <timelineMarker markerStart="42" markerLength="0" colour="#2288FFFF" note="hmm... you kinda look like someone i know." name="Sans"/>
-  <timelineMarker markerStart="43" markerLength="0" colour="#2288FFFF" note="you aren&apos;t gonna act friendly and then try to kill me right?" name="Sans"/>
-  <timelineMarker markerStart="44" markerLength="0" colour="#FFFF00FF" note="Whaaat?? No...?" name="Verity"/>
-  <timelineMarker markerStart="45" markerLength="0" colour="#FFFF00FF" note="I&apos;m just here to help! Why don&apos;t you ask me something?" name="Verity"/>
-  <timelineMarker markerStart="46" markerLength="0" colour="#2288FFFF" note="alright, what am i standing on right now?" name="Sans"/>
-  <timelineMarker markerStart="47" markerLength="0" colour="#FFFF00FF" note="You&apos;re currently touching grass!" name="Verity"/>
-  <timelineMarker markerStart="48" markerLength="0" colour="#2288FFFF" note="what&apos;s 9 + 10" name="Sans"/>
-  <timelineMarker markerStart="49" markerLength="0" colour="#FFFF00FF" note="21!" name="Verity"/>
-  <timelineMarker markerStart="50" markerLength="0" colour="#2288FFFF" note="is water wet?" name="Sans"/>
-  <timelineMarker markerStart="51" markerLength="0" colour="#FFFF00FF" note="Not in the traditional sense, however it makes other things wet!" name="Verity"/>
-  <timelineMarker markerStart="52" markerLength="0" colour="#2288FFFF" note="what was the common name of gold during the 2013 era of minecraft?" name="Sans"/>
-  <timelineMarker markerStart="53" markerLength="0" colour="#FFFF00FF" note="It was butter, of course!" name="Verity"/>
-  <timelineMarker markerStart="54" markerLength="0" colour="#2288FFFF" note="huh." name="Sans"/>
-  <timelineMarker markerStart="55" markerLength="0" colour="#2288FFFF" note="that&apos;s some elite “ball” knowledge." name="Sans"/>
-  <timelineMarker markerStart="56" markerLength="0" colour="#2288FFFF" note="welp, i better get started on this playthrough." name="Sans"/>
-  <timelineMarker markerStart="57" markerLength="0" colour="#2288FFFF" note="i&apos;m probably gonna gather some materials, build a house, and maybe explore a village?" name="Sans"/>
-  <timelineMarker markerStart="58" markerLength="0" colour="#FFFF00FF" note="The nearest village is 842 blocks northeast of your current location." name="Verity"/>
-  <timelineMarker markerStart="59" markerLength="0" colour="#2288FFFF" note="oh. thanks for the info." name="Sans"/>
-  <timelineMarker markerStart="60" markerLength="0" colour="#2288FFFF" note="hey verity!" name="Sans"/>
-  <timelineMarker markerStart="61" markerLength="0" colour="#2288FFFF" note="do you know where&apos;s the nearest source of coal?" name="Sans"/>
-  <timelineMarker markerStart="62" markerLength="0" colour="#FFFF00FF" note="The nearest coal vein is located 126 blocks northwest of your position, at Y level 112." name="Verity"/>
-  <timelineMarker markerStart="63" markerLength="0" colour="#2288FFFF" note="heh, nice!" name="Sans"/>
-  <timelineMarker markerStart="64" markerLength="0" colour="#2288FFFF" note="verity...  do you know where&apos;s the nearest source of diamonds?" name="Sans"/>
-  <timelineMarker markerStart="65" markerLength="0" colour="#FFFF00FF" note="The nearest diamond vein is approximately 347 blocks southeast of your current position, at Y level -54." name="Verity"/>
-  <timelineMarker markerStart="66" markerLength="0" colour="#2288FFFF" note="YOOOOO" name="Sans"/>
-  <timelineMarker markerStart="67" markerLength="0" colour="#2288FFFF" note="verity, do you know where&apos;s the nearest source of wood?" name="Sans"/>
-  <timelineMarker markerStart="68" markerLength="0" colour="#FFFF00FF" note="Seriously?" name="Verity"/>
-  <timelineMarker markerStart="69" markerLength="0" colour="#2288FFFF" note="and after much ketchup, sweat, and tears... my house is finally complete!" name="Sans"/>
-  <timelineMarker markerStart="70" markerLength="0" colour="#2288FFFF" note="what do you think?" name="Sans"/>
-  <timelineMarker markerStart="71" markerLength="0" colour="#FFFF00FF" note="I think you should watch some beginner tutorials online." name="Verity"/>
-  <timelineMarker markerStart="72" markerLength="0" colour="#2288FFFF" note="welp, time to take a well deserved nap," name="Sans"/>
-  <timelineMarker markerStart="73" markerLength="0" colour="#2288FFFF" note="CREEPER??" name="Sans"/>
-  <timelineMarker markerStart="74" markerLength="0" colour="#FFFF00FF" note="Haha, just kidding, that was me!" name="Verity"/>
-  <timelineMarker markerStart="75" markerLength="0" colour="#2288FFFF" note="huh? you make sounds with your mouth?" name="Sans"/>
-  <timelineMarker markerStart="76" markerLength="0" colour="#FFFF00FF" note="Of course I can!" name="Verity"/>
-  <timelineMarker markerStart="77" markerLength="0" colour="#FFFF00FF" note="I can even play music. Wanna listen to some tunes?" name="Verity"/>
-  <timelineMarker markerStart="78" markerLength="0" colour="#2288FFFF" note="sure, why not." name="Sans"/>
-  <timelineMarker markerStart="79" markerLength="0" colour="#2288FFFF" note="gimme another one!" name="Sans"/>
-  <timelineMarker markerStart="80" markerLength="0" colour="#2288FFFF" note="another one!" name="Sans"/>
-  <timelineMarker markerStart="81" markerLength="0" colour="#2288FFFF" note="h-how do you know that song?" name="Sans"/>
-  <timelineMarker markerStart="82" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity! I know everything!" name="Verity"/>
-  <timelineMarker markerStart="83" markerLength="0" colour="#2288FFFF" note="uh... enough music for now..." name="Sans"/>
-  <timelineMarker markerStart="84" markerLength="0" colour="#2288FFFF" note="alright, i ain&apos;t sleeping tonight." name="Sans"/>
-  <timelineMarker markerStart="85" markerLength="0" colour="#2288FFFF" note="ahh... what a good rest." name="Sans"/>
-  <timelineMarker markerStart="86" markerLength="0" colour="#2288FFFF" note="hey verity, is there anything i should know today?" name="Sans"/>
-  <timelineMarker markerStart="87" markerLength="0" colour="#FFFF00FF" note="Something is coming..." name="Verity"/>
-  <timelineMarker markerStart="88" markerLength="0" colour="#FFFF00FF" note="in 3 days." name="Verity"/>
-  <timelineMarker markerStart="89" markerLength="0" colour="#2288FFFF" note="is it the package i bought from amazon?" name="Sans"/>
-  <timelineMarker markerStart="90" markerLength="0" colour="#FFFF00FF" note="What?? No!" name="Verity"/>
-  <timelineMarker markerStart="91" markerLength="0" colour="#FFFF00FF" note="Your package is stuck in transit." name="Verity"/>
-  <timelineMarker markerStart="92" markerLength="0" colour="#2288FFFF" note="damn." name="Sans"/>
-  <timelineMarker markerStart="93" markerLength="0" colour="#2288FFFF" note="wait, how do you know that?" name="Sans"/>
-  <timelineMarker markerStart="94" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity." name="Verity"/>
-  <timelineMarker markerStart="95" markerLength="0" colour="#FFFF00FF" note="I know everything." name="Verity"/>
-  <timelineMarker markerStart="96" markerLength="0" colour="#2288FFFF" note="wait, gimme a sec. i gotta do something." name="Sans"/>
-  <timelineMarker markerStart="97" markerLength="0" colour="#2288FFFF" note="papyrus!" name="Sans"/>
-  <timelineMarker markerStart="98" markerLength="0" colour="#FFFFFFFF" note="WHAT IS IT!?? WHY DO YOU KEEP SPAMMING ME??" name=""/>
-  <timelineMarker markerStart="99" markerLength="0" colour="#FFFFFFFF" note="I&apos;M OUT SHOPPING FOR SOUP RIGHT NOW!" name=""/>
-  <timelineMarker markerStart="100" markerLength="0" colour="#FFFFFFFF" note="DON&apos;T TELL ME YOU BURNT THE WATER AGAIN!" name=""/>
-  <timelineMarker markerStart="101" markerLength="0" colour="#2288FFFF" note="nono! nothing like that!" name="Sans"/>
-  <timelineMarker markerStart="102" markerLength="0" colour="#2288FFFF" note="listen, there&apos;s this thing, it&apos;s yellow!" name="Sans"/>
-  <timelineMarker markerStart="103" markerLength="0" colour="#FFFFFFFF" note="WHAT???" name=""/>
-  <timelineMarker markerStart="104" markerLength="0" colour="#2288FFFF" note="it played the music, uh, um, it told me about my amazon parcel" name="Sans"/>
-  <timelineMarker markerStart="105" markerLength="0" colour="#FFFFFFFF" note="WHAT ARE YOU TALKING ABOUT??" name=""/>
-  <timelineMarker markerStart="106" markerLength="0" colour="#2288FFFF" note="quick, just get home quickly, and join me in my minecraft world!" name="Sans"/>
-  <timelineMarker markerStart="107" markerLength="0" colour="#FFFFFFFF" note="HUH????" name=""/>
-  <timelineMarker markerStart="108" markerLength="0" colour="#FFFF00FF" note="Who were you talking to?" name="Verity"/>
-  <timelineMarker markerStart="109" markerLength="0" colour="#2288FFFF" note="h-huh? no one!" name="Sans"/>
-  <timelineMarker markerStart="110" markerLength="0" colour="#FFFF00FF" note="Why do you need anyone else when you have me?" name="Verity"/>
-  <timelineMarker markerStart="111" markerLength="0" colour="#FFFF00FF" note="I&apos;m your, best, ONLY friend right?" name="Verity"/>
-  <timelineMarker markerStart="112" markerLength="0" colour="#2288FFFF" note="s-sure?" name="Sans"/>
-  <timelineMarker markerStart="113" markerLength="0" colour="#FFFF00FF" note="Well, great! You&apos;re my best friend too!" name="Verity"/>
-  <timelineMarker markerStart="114" markerLength="0" colour="#FFFFFFFF" note="SIGH... THIS BETTER BE WORTH IT." name=""/>
-  <timelineMarker markerStart="115" markerLength="0" colour="#FFFFFFFF" note="WHAT DID YOU CALL ME HERE FOR?" name=""/>
-  <timelineMarker markerStart="116" markerLength="0" colour="#FFFFFFFF" note="THIS IS THE THING YOU WERE TELLING ME ABOUT??" name=""/>
-  <timelineMarker markerStart="117" markerLength="0" colour="#FFFFFFFF" note="WHAT&apos;S THE BIG DEAL!?" name=""/>
-  <timelineMarker markerStart="118" markerLength="0" colour="#2288FFFF" note="shhh! don&apos;t say anything!" name="Sans"/>
-  <timelineMarker markerStart="119" markerLength="0" colour="#2288FFFF" note="this is verity, he... knows things." name="Sans"/>
-  <timelineMarker markerStart="120" markerLength="0" colour="#FFFFFFFF" note="WELL, I BETTER GO INTRODUCE MYSELF!" name=""/>
-  <timelineMarker markerStart="121" markerLength="0" colour="#2288FFFF" note="wait!" name="Sans"/>
-  <timelineMarker markerStart="122" markerLength="0" colour="#FFFFFFFF" note="HELLO MR. VERITY! IT&apos;S NICE TO MEET YOU!" name=""/>
-  <timelineMarker markerStart="123" markerLength="0" colour="#FFFF00FF" note="3 days." name="Verity"/>
-  <timelineMarker markerStart="124" markerLength="0" colour="#FFFFFFFF" note="WHAT? WHAT DID YOU SAY?" name=""/>
-  <timelineMarker markerStart="125" markerLength="0" colour="#FFFFFFFF" note="WHAT DOES THAT MEAN? WHAT&apos;S IN 3 DAYS?" name=""/>
-  <timelineMarker markerStart="126" markerLength="0" colour="#FFFFFFFF" note="VERITY, WHAT DID YOU MEAN, WHY AREN&apos;T YOU RESPONDING?" name=""/>
-  <timelineMarker markerStart="127" markerLength="0" colour="#FFFF00FF" note="Nothing important!" name="Verity"/>
-  <timelineMarker markerStart="128" markerLength="0" colour="#FFFF00FF" note="Anyways, let&apos;s talk about something else, for instance, what are you having for dinner?" name="Verity"/>
-  <timelineMarker markerStart="129" markerLength="0" colour="#FFFF00FF" note="I&apos;m sure the spaghetti you cooked yesterday was delicious." name="Verity"/>
-  <timelineMarker markerStart="130" markerLength="0" colour="#FFFFFFFF" note="WHY THANK YOU!! THE GREAT PAPYRUS ALWAYS MAKES EXCELLENT SPAGHETTI-" name=""/>
-  <timelineMarker markerStart="131" markerLength="0" colour="#FFFFFFFF" note="DID YOU TELL HIM ABOUT MY INCREDIBLE COOKING SKILLS?" name=""/>
-  <timelineMarker markerStart="132" markerLength="0" colour="#2288FFFF" note="no...?" name="Sans"/>
-  <timelineMarker markerStart="133" markerLength="0" colour="#FFFFFFFF" note="THEN HOW DOES IT KNOW?? ISN&apos;T THIS A MINECRAFT MOD??" name=""/>
-  <timelineMarker markerStart="134" markerLength="0" colour="#FFFF00FF" note="Hey, wacha guys talking about?" name="Verity"/>
-  <timelineMarker markerStart="135" markerLength="0" colour="#FFFFFFFF" note="N-NOTHING! WE&apos;RE JUST DISCUSSING WHAT TO DO NEXT!" name=""/>
-  <timelineMarker markerStart="136" markerLength="0" colour="#2288FFFF" note="uh, yup! we better stockpile on resources, since we&apos;re running low." name="Sans"/>
-  <timelineMarker markerStart="137" markerLength="0" colour="#FFFF00FF" note="Of course!" name="Verity"/>
-  <timelineMarker markerStart="138" markerLength="0" colour="#FFFF00FF" note="The nearest iron deposits are approximately 214 blocks northeast, located at Y level 48." name="Verity"/>
-  <timelineMarker markerStart="139" markerLength="0" colour="#FFFFFFFF" note="WHEW! THAT&apos;S ENOUGH GATHERING FOR NOW." name=""/>
-  <timelineMarker markerStart="140" markerLength="0" colour="#FFFFFFFF" note="SANS... YOU&apos;VE GOT EVERYTHING WE NEED RIGHT?" name=""/>
-  <timelineMarker markerStart="141" markerLength="0" colour="#2288FFFF" note="yup, lemme just check once more." name="Sans"/>
-  <timelineMarker markerStart="142" markerLength="0" colour="#2288FFFF" note="iron, diamonds, swords, tools, buckets of lava, buckets of water, buckets of milk," name="Sans"/>
-  <timelineMarker markerStart="143" markerLength="0" colour="#2288FFFF" note="bucket of salmon, bucket of pufferfish, bucket of cod, bucket of clownfish, bucket of butterflyfish," name="Sans"/>
-  <timelineMarker markerStart="144" markerLength="0" colour="#2288FFFF" note="it&apos;s day 3... i don&apos;t know what&apos;s coming... but we should be prepared." name="Sans"/>
-  <timelineMarker markerStart="145" markerLength="0" colour="#2288FFFF" note="verity, do we need anything else to defend ourselves?" name="Sans"/>
-  <timelineMarker markerStart="146" markerLength="0" colour="#2288FFFF" note="wait." name="Sans"/>
-  <timelineMarker markerStart="147" markerLength="0" colour="#2288FFFF" note="where&apos;s verity?" name="Sans"/>
-  <timelineMarker markerStart="148" markerLength="0" colour="#FFFF00FF" note="SANDGAMING47!! YOU LIAR! HOW DARE YOU INVITE SOMEONE ELSE!!" name="Verity"/>
-  <timelineMarker markerStart="149" markerLength="0" colour="#FFFF00FF" note="YOU ONLY NEED ME!!" name="Verity"/>
-  <timelineMarker markerStart="150" markerLength="0" colour="#2288FFFF" note="yipes! obsessive much?" name="Sans"/>
-  <timelineMarker markerStart="151" markerLength="0" colour="#FFFFFFFF" note="QUICK!! IN THE HOUSE!" name=""/>
-  <timelineMarker markerStart="152" markerLength="0" colour="#2288FFFF" note="no mobs should be able to get through solid blocks right?" name="Sans"/>
-  <timelineMarker markerStart="153" markerLength="0" colour="#FFFF00FF" note="YOU&apos;RE GONNA BE LIKE ALL THE OTHERS!" name="Verity"/>
-  <timelineMarker markerStart="154" markerLength="0" colour="#FFFF00FF" note="STAY FOR A WHILE, AND THEN ABANDON ME LIKE EVERYONE ELSE!" name="Verity"/>
-  <timelineMarker markerStart="155" markerLength="0" colour="#FFFF00FF" note="GOODBYE... SANDGAMING47." name="Verity"/>
-  <timelineMarker markerStart="156" markerLength="0" colour="#2288FFFF" note="wait wait wait!" name="Sans"/>
-  <timelineMarker markerStart="157" markerLength="0" colour="#2288FFFF" note="ill stay with you!" name="Sans"/>
-  <timelineMarker markerStart="158" markerLength="0" colour="#2288FFFF" note="i&apos;ll keep playing minecraft with you everyday! i won&apos;t leave!" name="Sans"/>
-  <timelineMarker markerStart="159" markerLength="0" colour="#FFFF00FF" note="You- will?" name="Verity"/>
-  <timelineMarker markerStart="160" markerLength="0" colour="#FFFF00FF" note="r-really? you mean it?" name="Verity"/>
-  <timelineMarker markerStart="161" markerLength="0" colour="#2288FFFF" note="NAH!!" name="Sans"/>
-  <timelineMarker markerStart="162" markerLength="0" colour="#FFFF00FF" note="YOU FOOL! I CAN&apos;T DIE!!" name="Verity"/>
-  <timelineMarker markerStart="163" markerLength="0" colour="#FFFF00FF" note="I&apos;M PART OF THE CODE!!" name="Verity"/>
-  <timelineMarker markerStart="164" markerLength="0" colour="#FFFF00FF" note="YOU WILL NEVER ESCAPE ME!!" name="Verity"/>
-  <timelineMarker markerStart="165" markerLength="0" colour="#2288FFFF" note="well... i still have one final move..." name="Sans"/>
-  <timelineMarker markerStart="166" markerLength="0" colour="#2288FFFF" note="whew, all in a day&apos;s work." name="Sans"/>
-  <timelineMarker markerStart="167" markerLength="0" colour="#2288FFFF" note="guess it goes to show you can&apos;t ever trust a smiling yellow creature." name="Sans"/>
-  <timelineMarker markerStart="168" markerLength="0" colour="#2288FFFF" note="oh hey, my amazon parcel is here!" name="Sans"/>
-  <timelineMarker markerStart="169" markerLength="0" colour="#FFFF00FF" note="Hey it&apos;s me," name="Verity"/>
-  <timelineMarker markerStart="170" markerLength="0" colour="#FFFF00FF" note="It&apos;s Verity!" name="Verity"/>
-  <timelineMarker markerStart="171" markerLength="0" colour="#FFFFFFFF" note="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name=""/>
-  <timelineMarker markerStart="177" markerLength="0" colour="#FFFFFFFF" note="" name="s"/>
+  <timelineMarker markerStart="35" markerLength="0" colour="#FFFFFFFF" note="dsaf" name=""/>
+  <timelineMarker markerStart="37" markerLength="0" colour="#2288FFFF" note="whats up guys, sandgaming47 here." name="Sans"/>
+  <timelineMarker markerStart="38" markerLength="0" colour="#2288FFFF" note="today we&apos;re playing..." name="Sans"/>
+  <timelineMarker markerStart="39" markerLength="0" colour="#2288FFFF" note="A MODDED MINECRAFT PLAYTROUGH" name="Sans"/>
+  <timelineMarker markerStart="40" markerLength="0" colour="#2288FFFF" note="as for what mod we&apos;re playing..." name="Sans"/>
+  <timelineMarker markerStart="41" markerLength="0" colour="#2288FFFF" note="i have no clue actually, someone sent me it on discord" name="Sans"/>
+  <timelineMarker markerStart="42" markerLength="0" colour="#2288FFFF" note="woah!" name="Sans"/>
+  <timelineMarker markerStart="43" markerLength="0" colour="#FFFF00FF" note="Hello, I&apos;m verity!" name="Verity"/>
+  <timelineMarker markerStart="44" markerLength="0" colour="#2288FFFF" note="fwe" name="Sans"/>
+  <timelineMarker markerStart="45" markerLength="0" colour="#FFFF00FF" note="Your personal helper friend." name="Verity"/>
+  <timelineMarker markerStart="46" markerLength="0" colour="#FFFFFFFF" note="s" name="s"/>
+  <timelineMarker markerStart="47" markerLength="0" colour="#FFFF00FF" note="Ask me anything! I know everything." name="Verity"/>
+  <timelineMarker markerStart="48" markerLength="0" colour="#2288FFFF" note="verity, huh?" name="Sans"/>
+  <timelineMarker markerStart="49" markerLength="0" colour="#2288FFFF" note="hmm... you kinda look like someone i know." name="Sans"/>
+  <timelineMarker markerStart="50" markerLength="0" colour="#2288FFFF" note="you aren&apos;t gonna act friendly and then try to kill me right?" name="Sans"/>
+  <timelineMarker markerStart="51" markerLength="0" colour="#FFFF00FF" note="Whaaat?? No...?" name="Verity"/>
+  <timelineMarker markerStart="52" markerLength="0" colour="#FFFF00FF" note="I&apos;m just here to help! Why don&apos;t you ask me something?" name="Verity"/>
+  <timelineMarker markerStart="53" markerLength="0" colour="#2288FFFF" note="alright, what am i standing on right now?" name="Sans"/>
+  <timelineMarker markerStart="54" markerLength="0" colour="#FFFF00FF" note="You&apos;re currently touching grass!" name="Verity"/>
+  <timelineMarker markerStart="55" markerLength="0" colour="#2288FFFF" note="what&apos;s 9 + 10" name="Sans"/>
+  <timelineMarker markerStart="56" markerLength="0" colour="#FFFF00FF" note="21!" name="Verity"/>
+  <timelineMarker markerStart="57" markerLength="0" colour="#2288FFFF" note="is water wet?" name="Sans"/>
+  <timelineMarker markerStart="58" markerLength="0" colour="#FFFF00FF" note="Not in the traditional sense, however it makes other things wet!" name="Verity"/>
+  <timelineMarker markerStart="59" markerLength="0" colour="#2288FFFF" note="what was the common name of gold during the 2013 era of minecraft?" name="Sans"/>
+  <timelineMarker markerStart="60" markerLength="0" colour="#FFFF00FF" note="It was butter, of course!" name="Verity"/>
+  <timelineMarker markerStart="61" markerLength="0" colour="#2288FFFF" note="huh." name="Sans"/>
+  <timelineMarker markerStart="62" markerLength="0" colour="#2288FFFF" note="that&apos;s some elite “ball” knowledge." name="Sans"/>
+  <timelineMarker markerStart="63" markerLength="0" colour="#2288FFFF" note="welp, i better get started on this playthrough." name="Sans"/>
+  <timelineMarker markerStart="64" markerLength="0" colour="#2288FFFF" note="i&apos;m probably gonna gather some materials, build a house, and maybe explore a village?" name="Sans"/>
+  <timelineMarker markerStart="65" markerLength="0" colour="#FFFF00FF" note="The nearest village is 842 blocks northeast of your current location." name="Verity"/>
+  <timelineMarker markerStart="66" markerLength="0" colour="#2288FFFF" note="oh. thanks for the info." name="Sans"/>
+  <timelineMarker markerStart="67" markerLength="0" colour="#2288FFFF" note="hey verity!" name="Sans"/>
+  <timelineMarker markerStart="68" markerLength="0" colour="#2288FFFF" note="do you know where&apos;s the nearest source of coal?" name="Sans"/>
+  <timelineMarker markerStart="69" markerLength="0" colour="#FFFF00FF" note="The nearest coal vein is located 126 blocks northwest of your position, at Y level 112." name="Verity"/>
+  <timelineMarker markerStart="70" markerLength="0" colour="#2288FFFF" note="heh, nice!" name="Sans"/>
+  <timelineMarker markerStart="71" markerLength="0" colour="#2288FFFF" note="verity...  do you know where&apos;s the nearest source of diamonds?" name="Sans"/>
+  <timelineMarker markerStart="72" markerLength="0" colour="#FFFF00FF" note="The nearest diamond vein is approximately 347 blocks southeast of your current position, at Y level -54." name="Verity"/>
+  <timelineMarker markerStart="73" markerLength="0" colour="#2288FFFF" note="YOOOOO" name="Sans"/>
+  <timelineMarker markerStart="74" markerLength="0" colour="#2288FFFF" note="verity, do you know where&apos;s the nearest source of wood?" name="Sans"/>
+  <timelineMarker markerStart="75" markerLength="0" colour="#FFFF00FF" note="Seriously?" name="Verity"/>
+  <timelineMarker markerStart="76" markerLength="0" colour="#2288FFFF" note="and after much ketchup, sweat, and tears... my house is finally complete!" name="Sans"/>
+  <timelineMarker markerStart="77" markerLength="0" colour="#2288FFFF" note="what do you think?" name="Sans"/>
+  <timelineMarker markerStart="78" markerLength="0" colour="#FFFF00FF" note="I think you should watch some beginner tutorials online." name="Verity"/>
+  <timelineMarker markerStart="79" markerLength="0" colour="#2288FFFF" note="welp, time to take a well deserved nap," name="Sans"/>
+  <timelineMarker markerStart="80" markerLength="0" colour="#2288FFFF" note="CREEPER??" name="Sans"/>
+  <timelineMarker markerStart="81" markerLength="0" colour="#FFFF00FF" note="Haha, just kidding, that was me!" name="Verity"/>
+  <timelineMarker markerStart="82" markerLength="0" colour="#2288FFFF" note="huh? you make sounds with your mouth?" name="Sans"/>
+  <timelineMarker markerStart="83" markerLength="0" colour="#FFFF00FF" note="Of course I can!" name="Verity"/>
+  <timelineMarker markerStart="84" markerLength="0" colour="#FFFF00FF" note="I can even play music. Wanna listen to some tunes?" name="Verity"/>
+  <timelineMarker markerStart="85" markerLength="0" colour="#2288FFFF" note="sure, why not." name="Sans"/>
+  <timelineMarker markerStart="86" markerLength="0" colour="#2288FFFF" note="gimme another one!" name="Sans"/>
+  <timelineMarker markerStart="87" markerLength="0" colour="#2288FFFF" note="another one!" name="Sans"/>
+  <timelineMarker markerStart="88" markerLength="0" colour="#2288FFFF" note="h-how do you know that song?" name="Sans"/>
+  <timelineMarker markerStart="89" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity! I know everything!" name="Verity"/>
+  <timelineMarker markerStart="90" markerLength="0" colour="#2288FFFF" note="uh... enough music for now..." name="Sans"/>
+  <timelineMarker markerStart="91" markerLength="0" colour="#2288FFFF" note="alright, i ain&apos;t sleeping tonight." name="Sans"/>
+  <timelineMarker markerStart="92" markerLength="0" colour="#2288FFFF" note="ahh... what a good rest." name="Sans"/>
+  <timelineMarker markerStart="93" markerLength="0" colour="#2288FFFF" note="hey verity, is there anything i should know today?" name="Sans"/>
+  <timelineMarker markerStart="94" markerLength="0" colour="#FFFF00FF" note="Something is coming..." name="Verity"/>
+  <timelineMarker markerStart="95" markerLength="0" colour="#FFFF00FF" note="in 3 days." name="Verity"/>
+  <timelineMarker markerStart="96" markerLength="0" colour="#2288FFFF" note="is it the package i bought from amazon?" name="Sans"/>
+  <timelineMarker markerStart="97" markerLength="0" colour="#FFFF00FF" note="What?? No!" name="Verity"/>
+  <timelineMarker markerStart="98" markerLength="0" colour="#FFFF00FF" note="Your package is stuck in transit." name="Verity"/>
+  <timelineMarker markerStart="99" markerLength="0" colour="#2288FFFF" note="damn." name="Sans"/>
+  <timelineMarker markerStart="100" markerLength="0" colour="#2288FFFF" note="wait, how do you know that?" name="Sans"/>
+  <timelineMarker markerStart="101" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity." name="Verity"/>
+  <timelineMarker markerStart="102" markerLength="0" colour="#FFFF00FF" note="I know everything." name="Verity"/>
+  <timelineMarker markerStart="103" markerLength="0" colour="#2288FFFF" note="wait, gimme a sec. i gotta do something." name="Sans"/>
+  <timelineMarker markerStart="104" markerLength="0" colour="#2288FFFF" note="papyrus!" name="Sans"/>
+  <timelineMarker markerStart="105" markerLength="0" colour="#FFFFFFFF" note="WHAT IS IT!?? WHY DO YOU KEEP SPAMMING ME??" name=""/>
+  <timelineMarker markerStart="106" markerLength="0" colour="#FFFFFFFF" note="I&apos;M OUT SHOPPING FOR SOUP RIGHT NOW!" name=""/>
+  <timelineMarker markerStart="107" markerLength="0" colour="#FFFFFFFF" note="DON&apos;T TELL ME YOU BURNT THE WATER AGAIN!" name=""/>
+  <timelineMarker markerStart="108" markerLength="0" colour="#2288FFFF" note="nono! nothing like that!" name="Sans"/>
+  <timelineMarker markerStart="109" markerLength="0" colour="#2288FFFF" note="listen, there&apos;s this thing, it&apos;s yellow!" name="Sans"/>
+  <timelineMarker markerStart="110" markerLength="0" colour="#FFFFFFFF" note="WHAT???" name=""/>
+  <timelineMarker markerStart="111" markerLength="0" colour="#2288FFFF" note="it played the music, uh, um, it told me about my amazon parcel" name="Sans"/>
+  <timelineMarker markerStart="112" markerLength="0" colour="#FFFFFFFF" note="WHAT ARE YOU TALKING ABOUT??" name=""/>
+  <timelineMarker markerStart="113" markerLength="0" colour="#2288FFFF" note="quick, just get home quickly, and join me in my minecraft world!" name="Sans"/>
+  <timelineMarker markerStart="114" markerLength="0" colour="#FFFFFFFF" note="HUH????" name=""/>
+  <timelineMarker markerStart="115" markerLength="0" colour="#FFFF00FF" note="Who were you talking to?" name="Verity"/>
+  <timelineMarker markerStart="116" markerLength="0" colour="#2288FFFF" note="h-huh? no one!" name="Sans"/>
+  <timelineMarker markerStart="117" markerLength="0" colour="#FFFF00FF" note="Why do you need anyone else when you have me?" name="Verity"/>
+  <timelineMarker markerStart="118" markerLength="0" colour="#FFFF00FF" note="I&apos;m your, best, ONLY friend right?" name="Verity"/>
+  <timelineMarker markerStart="119" markerLength="0" colour="#2288FFFF" note="s-sure?" name="Sans"/>
+  <timelineMarker markerStart="120" markerLength="0" colour="#FFFF00FF" note="Well, great! You&apos;re my best friend too!" name="Verity"/>
+  <timelineMarker markerStart="121" markerLength="0" colour="#FFFFFFFF" note="SIGH... THIS BETTER BE WORTH IT." name=""/>
+  <timelineMarker markerStart="122" markerLength="0" colour="#FFFFFFFF" note="WHAT DID YOU CALL ME HERE FOR?" name=""/>
+  <timelineMarker markerStart="123" markerLength="0" colour="#FFFFFFFF" note="THIS IS THE THING YOU WERE TELLING ME ABOUT??" name=""/>
+  <timelineMarker markerStart="124" markerLength="0" colour="#FFFFFFFF" note="WHAT&apos;S THE BIG DEAL!?" name=""/>
+  <timelineMarker markerStart="125" markerLength="0" colour="#2288FFFF" note="shhh! don&apos;t say anything!" name="Sans"/>
+  <timelineMarker markerStart="126" markerLength="0" colour="#2288FFFF" note="this is verity, he... knows things." name="Sans"/>
+  <timelineMarker markerStart="127" markerLength="0" colour="#FFFFFFFF" note="WELL, I BETTER GO INTRODUCE MYSELF!" name=""/>
+  <timelineMarker markerStart="128" markerLength="0" colour="#2288FFFF" note="wait!" name="Sans"/>
+  <timelineMarker markerStart="129" markerLength="0" colour="#FFFFFFFF" note="HELLO MR. VERITY! IT&apos;S NICE TO MEET YOU!" name=""/>
+  <timelineMarker markerStart="130" markerLength="0" colour="#FFFF00FF" note="3 days." name="Verity"/>
+  <timelineMarker markerStart="131" markerLength="0" colour="#FFFFFFFF" note="WHAT? WHAT DID YOU SAY?" name=""/>
+  <timelineMarker markerStart="132" markerLength="0" colour="#FFFFFFFF" note="WHAT DOES THAT MEAN? WHAT&apos;S IN 3 DAYS?" name=""/>
+  <timelineMarker markerStart="133" markerLength="0" colour="#FFFFFFFF" note="VERITY, WHAT DID YOU MEAN, WHY AREN&apos;T YOU RESPONDING?" name=""/>
+  <timelineMarker markerStart="134" markerLength="0" colour="#FFFF00FF" note="Nothing important!" name="Verity"/>
+  <timelineMarker markerStart="135" markerLength="0" colour="#FFFF00FF" note="Anyways, let&apos;s talk about something else, for instance, what are you having for dinner?" name="Verity"/>
+  <timelineMarker markerStart="136" markerLength="0" colour="#FFFF00FF" note="I&apos;m sure the spaghetti you cooked yesterday was delicious." name="Verity"/>
+  <timelineMarker markerStart="137" markerLength="0" colour="#FFFFFFFF" note="WHY THANK YOU!! THE GREAT PAPYRUS ALWAYS MAKES EXCELLENT SPAGHETTI-" name=""/>
+  <timelineMarker markerStart="138" markerLength="0" colour="#FFFFFFFF" note="DID YOU TELL HIM ABOUT MY INCREDIBLE COOKING SKILLS?" name=""/>
+  <timelineMarker markerStart="139" markerLength="0" colour="#2288FFFF" note="no...?" name="Sans"/>
+  <timelineMarker markerStart="140" markerLength="0" colour="#FFFFFFFF" note="THEN HOW DOES IT KNOW?? ISN&apos;T THIS A MINECRAFT MOD??" name=""/>
+  <timelineMarker markerStart="141" markerLength="0" colour="#FFFF00FF" note="Hey, wacha guys talking about?" name="Verity"/>
+  <timelineMarker markerStart="142" markerLength="0" colour="#FFFFFFFF" note="N-NOTHING! WE&apos;RE JUST DISCUSSING WHAT TO DO NEXT!" name=""/>
+  <timelineMarker markerStart="143" markerLength="0" colour="#2288FFFF" note="uh, yup! we better stockpile on resources, since we&apos;re running low." name="Sans"/>
+  <timelineMarker markerStart="144" markerLength="0" colour="#FFFF00FF" note="Of course!" name="Verity"/>
+  <timelineMarker markerStart="145" markerLength="0" colour="#FFFF00FF" note="The nearest iron deposits are approximately 214 blocks northeast, located at Y level 48." name="Verity"/>
+  <timelineMarker markerStart="146" markerLength="0" colour="#FFFFFFFF" note="WHEW! THAT&apos;S ENOUGH GATHERING FOR NOW." name=""/>
+  <timelineMarker markerStart="147" markerLength="0" colour="#FFFFFFFF" note="SANS... YOU&apos;VE GOT EVERYTHING WE NEED RIGHT?" name=""/>
+  <timelineMarker markerStart="148" markerLength="0" colour="#2288FFFF" note="yup, lemme just check once more." name="Sans"/>
+  <timelineMarker markerStart="149" markerLength="0" colour="#2288FFFF" note="iron, diamonds, swords, tools, buckets of lava, buckets of water, buckets of milk," name="Sans"/>
+  <timelineMarker markerStart="150" markerLength="0" colour="#2288FFFF" note="bucket of salmon, bucket of pufferfish, bucket of cod, bucket of clownfish, bucket of butterflyfish," name="Sans"/>
+  <timelineMarker markerStart="151" markerLength="0" colour="#2288FFFF" note="it&apos;s day 3... i don&apos;t know what&apos;s coming... but we should be prepared." name="Sans"/>
+  <timelineMarker markerStart="152" markerLength="0" colour="#2288FFFF" note="verity, do we need anything else to defend ourselves?" name="Sans"/>
+  <timelineMarker markerStart="153" markerLength="0" colour="#2288FFFF" note="wait." name="Sans"/>
+  <timelineMarker markerStart="154" markerLength="0" colour="#2288FFFF" note="where&apos;s verity?" name="Sans"/>
+  <timelineMarker markerStart="155" markerLength="0" colour="#FFFF00FF" note="SANDGAMING47!! YOU LIAR! HOW DARE YOU INVITE SOMEONE ELSE!!" name="Verity"/>
+  <timelineMarker markerStart="156" markerLength="0" colour="#FFFF00FF" note="YOU ONLY NEED ME!!" name="Verity"/>
+  <timelineMarker markerStart="157" markerLength="0" colour="#2288FFFF" note="yipes! obsessive much?" name="Sans"/>
+  <timelineMarker markerStart="158" markerLength="0" colour="#FFFFFFFF" note="QUICK!! IN THE HOUSE!" name=""/>
+  <timelineMarker markerStart="159" markerLength="0" colour="#2288FFFF" note="no mobs should be able to get through solid blocks right?" name="Sans"/>
+  <timelineMarker markerStart="160" markerLength="0" colour="#FFFF00FF" note="YOU&apos;RE GONNA BE LIKE ALL THE OTHERS!" name="Verity"/>
+  <timelineMarker markerStart="161" markerLength="0" colour="#FFFF00FF" note="STAY FOR A WHILE, AND THEN ABANDON ME LIKE EVERYONE ELSE!" name="Verity"/>
+  <timelineMarker markerStart="162" markerLength="0" colour="#FFFF00FF" note="GOODBYE... SANDGAMING47." name="Verity"/>
+  <timelineMarker markerStart="163" markerLength="0" colour="#2288FFFF" note="wait wait wait!" name="Sans"/>
+  <timelineMarker markerStart="164" markerLength="0" colour="#2288FFFF" note="ill stay with you!" name="Sans"/>
+  <timelineMarker markerStart="165" markerLength="0" colour="#2288FFFF" note="i&apos;ll keep playing minecraft with you everyday! i won&apos;t leave!" name="Sans"/>
+  <timelineMarker markerStart="166" markerLength="0" colour="#FFFF00FF" note="You- will?" name="Verity"/>
+  <timelineMarker markerStart="167" markerLength="0" colour="#FFFF00FF" note="r-really? you mean it?" name="Verity"/>
+  <timelineMarker markerStart="168" markerLength="0" colour="#2288FFFF" note="NAH!!" name="Sans"/>
+  <timelineMarker markerStart="169" markerLength="0" colour="#FFFF00FF" note="YOU FOOL! I CAN&apos;T DIE!!" name="Verity"/>
+  <timelineMarker markerStart="170" markerLength="0" colour="#FFFF00FF" note="I&apos;M PART OF THE CODE!!" name="Verity"/>
+  <timelineMarker markerStart="171" markerLength="0" colour="#FFFF00FF" note="YOU WILL NEVER ESCAPE ME!!" name="Verity"/>
+  <timelineMarker markerStart="172" markerLength="0" colour="#2288FFFF" note="well... i still have one final move..." name="Sans"/>
+  <timelineMarker markerStart="173" markerLength="0" colour="#2288FFFF" note="whew, all in a day&apos;s work." name="Sans"/>
+  <timelineMarker markerStart="174" markerLength="0" colour="#2288FFFF" note="guess it goes to show you can&apos;t ever trust a smiling yellow creature." name="Sans"/>
+  <timelineMarker markerStart="175" markerLength="0" colour="#2288FFFF" note="oh hey, my amazon parcel is here!" name="Sans"/>
+  <timelineMarker markerStart="176" markerLength="0" colour="#FFFF00FF" note="Hey it&apos;s me," name="Verity"/>
+  <timelineMarker markerStart="177" markerLength="0" colour="#FFFF00FF" note="It&apos;s Verity!" name="Verity"/>
+  <timelineMarker markerStart="178" markerLength="0" colour="#FFFFFFFF" note="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name=""/>
+  <timelineMarker markerStart="184" markerLength="0" colour="#FFFFFFFF" note="" name="s"/>
  </timelineMarkers>
  <scenes>
   <scene name="Top" id="0d404d86239016fd" nbframes="1010" startFrame="1" stopFrame="1010">
@@ -341,7 +342,7 @@
        <pt val="-0,-0,-0" lockedInTime="408"/>
       </points>
      </path3D>
-     <velocity type="3" name="ATV-0D3B45C4CA7E600EDDD016A5" displayOrder="0" width="100" anonymous="true">
+     <velocity type="3" name="ATV-0DF64509E25965CDC9801561" displayOrder="0" width="100" anonymous="true">
       <step val="1" start="1" stop="1"/>
       <noFrames/>
       <points version="2">
@@ -408,6 +409,7 @@
     </column>
     <column type="0" name="ATV-0D5B43A4D47AA99863E05694" displayOrder="0" width="100" anonymous="true" id="2">
      <elementSeq exposures="15" val="4" id="2"/>
+     <elementSeq exposures="26" val="5" id="2"/>
      <elementSeq exposures="239-241,256" val="1" id="2"/>
      <elementSeq exposures="289" val="2" id="2"/>
     </column>
@@ -480,119 +482,6 @@
        <compositePartitioning val="NoCompositePartitioning"/>
        <zPartitionRange val="1" defaultValue="1"/>
        <cleanUpPartitionFolders val="true"/>
-      </attrs>
-     </module>
-     <module type="READ" name="Drawing" pos="-65,-50,0" publishUnderTab="Drawing">
-      <options>
-       <collapsed val="false"/>
-       <version val="1"/>
-      </options>
-      <attrs>
-       <enable3d val="false"/>
-       <faceCamera val="false"/>
-       <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
-       <offset>
-        <separate val="true"/>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </offset>
-       <scale>
-        <separate val="true"/>
-        <inFields val="false"/>
-        <xy val="1" defaultValue="1"/>
-        <x val="1" defaultValue="1"/>
-        <y val="1" defaultValue="1"/>
-        <z val="1" defaultValue="1"/>
-       </scale>
-       <rotation>
-        <separate val="false"/>
-        <anglex val="0" defaultValue="0"/>
-        <angley val="0" defaultValue="0"/>
-        <anglez val="0" defaultValue="0"/>
-       </rotation>
-       <angle val="0" defaultValue="0"/>
-       <skew val="0" defaultValue="0"/>
-       <pivot>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </pivot>
-       <splineOffset>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </splineOffset>
-       <ignoreParentPegScaling val="false"/>
-       <disableFieldRendering val="false"/>
-       <depth val="0"/>
-       <enableMinMaxAngle val="false"/>
-       <minAngle val="-360" defaultValue="-360"/>
-       <maxAngle val="360" defaultValue="360"/>
-       <nailForChildren val="false"/>
-       <ikHoldOrientation val="false"/>
-       <ikHoldX val="false"/>
-       <ikHoldY val="false"/>
-       <ikExcluded val="false"/>
-       <ikCanRotate val="true"/>
-       <ikCanTranslateX val="false"/>
-       <ikCanTranslateY val="false"/>
-       <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
-       <ikBoneY val="0" defaultValue="0"/>
-       <ikStiffness val="1" defaultValue="1"/>
-       <drawing>
-        <elementMode val="true"/>
-        <element col="Drawing">
-         <layer val=""/>
-        </element>
-        <customName>
-         <name val=""/>
-         <extension val="tga"/>
-         <fieldChart val="12" defaultValue="12"/>
-        </customName>
-       </drawing>
-       <readOverlay val="true"/>
-       <readLineArt val="true"/>
-       <readColorArt val="true"/>
-       <readUnderlay val="true"/>
-       <overlayArtDrawingMode val="VectorDrawingMode"/>
-       <lineArtDrawingMode val="VectorDrawingMode"/>
-       <colorArtDrawingMode val="VectorDrawingMode"/>
-       <underlayArtDrawingMode val="VectorDrawingMode"/>
-       <pencilLineDeformationPreserveThickness val="false"/>
-       <pencilLineDeformationQuality val="Low"/>
-       <pencilLineDeformationSmooth val="1"/>
-       <pencilLineDeformationFitError val="3" defaultValue="3"/>
-       <readColor val="true"/>
-       <readTransparency val="true"/>
-       <colorTransformation val="Linear"/>
-       <colorSpace val="sRGB"/>
-       <applyMatteToColor val="N"/>
-       <enableLineTexture val="true"/>
-       <antialiasingQuality val="HIGH"/>
-       <antialiasingExponent val="1" defaultValue="1"/>
-       <opacity val="100" defaultValue="100"/>
-       <textureFilter val="NEAREST_FILTERED"/>
-       <adjustPencilThickness val="false"/>
-       <normalLineArtThickness val="true"/>
-       <zoomIndependentLineArtThickness val="zoomIndependent"/>
-       <multLineArtThickness val="1" defaultValue="1"/>
-       <addLineArtThickness val="0" defaultValue="0"/>
-       <minLineArtThickness val="0" defaultValue="0"/>
-       <maxLineArtThickness val="0" defaultValue="0"/>
-       <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
-       <flipHor val="false"/>
-       <flipVert val="false"/>
-       <turnBeforeAlignment val="false"/>
-       <noClipping val="false"/>
-       <xClipFactor val="0"/>
-       <yClipFactor val="0"/>
-       <alignmentRule val="CENTER_FIRST_PAGE"/>
-       <morphingVelo val="0" defaultValue="0"/>
-       <canAnimate val="true"/>
-       <tileHorizontal val="false"/>
-       <tileVertical val="false"/>
-       <framerate val="-1" defaultValue="-1"/>
       </attrs>
      </module>
      <module type="PEG" name="Camera-P" pos="0,0,0" publishUnderTab="Camera-P">
@@ -680,240 +569,407 @@
        <farPlane val="1000" defaultValue="1000"/>
       </attrs>
      </module>
-     <module type="READ" name="Drawing_1" pos="0,0,0" publishUnderTab="Drawing_1">
-      <options>
-       <collapsed val="true"/>
-       <version val="1"/>
-      </options>
-      <attrs>
-       <enable3d val="false"/>
-       <faceCamera val="false"/>
-       <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
-       <offset>
-        <separate val="true"/>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </offset>
-       <scale>
-        <separate val="true"/>
-        <inFields val="false"/>
-        <xy val="1" defaultValue="1"/>
-        <x val="1" defaultValue="1"/>
-        <y val="1" defaultValue="1"/>
-        <z val="1" defaultValue="1"/>
-       </scale>
-       <rotation>
-        <separate val="false"/>
-        <anglex val="0" defaultValue="0"/>
-        <angley val="0" defaultValue="0"/>
-        <anglez val="0" defaultValue="0"/>
-       </rotation>
-       <angle val="0" defaultValue="0"/>
-       <skew val="0" defaultValue="0"/>
-       <pivot>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </pivot>
-       <splineOffset>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </splineOffset>
-       <ignoreParentPegScaling val="false"/>
-       <disableFieldRendering val="false"/>
-       <depth val="0"/>
-       <enableMinMaxAngle val="false"/>
-       <minAngle val="-360" defaultValue="-360"/>
-       <maxAngle val="360" defaultValue="360"/>
-       <nailForChildren val="false"/>
-       <ikHoldOrientation val="false"/>
-       <ikHoldX val="false"/>
-       <ikHoldY val="false"/>
-       <ikExcluded val="false"/>
-       <ikCanRotate val="true"/>
-       <ikCanTranslateX val="false"/>
-       <ikCanTranslateY val="false"/>
-       <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
-       <ikBoneY val="0" defaultValue="0"/>
-       <ikStiffness val="1" defaultValue="1"/>
-       <drawing>
-        <elementMode val="true"/>
-        <element col="ATV-0D5B43A4D47AA99863E05694">
-         <layer val=""/>
-        </element>
-        <customName>
-         <name val=""/>
-         <extension val="tga"/>
-         <fieldChart val="12" defaultValue="12"/>
-        </customName>
-       </drawing>
-       <readOverlay val="true"/>
-       <readLineArt val="true"/>
-       <readColorArt val="true"/>
-       <readUnderlay val="true"/>
-       <overlayArtDrawingMode val="VectorDrawingMode"/>
-       <lineArtDrawingMode val="VectorDrawingMode"/>
-       <colorArtDrawingMode val="VectorDrawingMode"/>
-       <underlayArtDrawingMode val="VectorDrawingMode"/>
-       <pencilLineDeformationPreserveThickness val="false"/>
-       <pencilLineDeformationQuality val="Low"/>
-       <pencilLineDeformationSmooth val="1"/>
-       <pencilLineDeformationFitError val="3" defaultValue="3"/>
-       <readColor val="true"/>
-       <readTransparency val="true"/>
-       <colorTransformation val="Linear"/>
-       <colorSpace val="sRGB"/>
-       <applyMatteToColor val="N"/>
-       <enableLineTexture val="true"/>
-       <antialiasingQuality val="HIGH"/>
-       <antialiasingExponent val="1" defaultValue="1"/>
-       <opacity val="100" defaultValue="100"/>
-       <textureFilter val="NEAREST_FILTERED"/>
-       <adjustPencilThickness val="false"/>
-       <normalLineArtThickness val="true"/>
-       <zoomIndependentLineArtThickness val="zoomIndependent"/>
-       <multLineArtThickness val="1" defaultValue="1"/>
-       <addLineArtThickness val="0" defaultValue="0"/>
-       <minLineArtThickness val="0" defaultValue="0"/>
-       <maxLineArtThickness val="0" defaultValue="0"/>
-       <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
-       <flipHor val="false"/>
-       <flipVert val="false"/>
-       <turnBeforeAlignment val="false"/>
-       <noClipping val="false"/>
-       <xClipFactor val="0"/>
-       <yClipFactor val="0"/>
-       <alignmentRule val="CENTER_FIRST_PAGE"/>
-       <morphingVelo val="0" defaultValue="0"/>
-       <canAnimate val="true"/>
-       <tileHorizontal val="false"/>
-       <tileVertical val="false"/>
-       <framerate val="12" defaultValue="-1"/>
-      </attrs>
-     </module>
-     <module type="READ" name="Drawing_2" pos="0,0,0" publishUnderTab="Drawing_2">
+     <group name="Drawing_2-G" pos="0,0,0">
       <options>
        <collapsed val="false"/>
-       <version val="1"/>
+       <subnodeCollapsed val="false"/>
+       <showsPublished val="true"/>
       </options>
-      <attrs>
-       <enable3d val="false"/>
-       <faceCamera val="false"/>
-       <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
-       <offset>
-        <separate val="true"/>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </offset>
-       <scale>
-        <separate val="true"/>
-        <inFields val="false"/>
-        <xy val="1" defaultValue="1"/>
-        <x val="1" defaultValue="1"/>
-        <y val="1" defaultValue="1"/>
-        <z val="1" defaultValue="1"/>
-       </scale>
-       <rotation>
-        <separate val="false"/>
-        <anglex val="0" defaultValue="0"/>
-        <angley val="0" defaultValue="0"/>
-        <anglez val="0" defaultValue="0"/>
-       </rotation>
-       <angle val="0" defaultValue="0"/>
-       <skew val="0" defaultValue="0"/>
-       <pivot>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </pivot>
-       <splineOffset>
-        <x val="0" defaultValue="0"/>
-        <y val="0" defaultValue="0"/>
-        <z val="0" defaultValue="0"/>
-       </splineOffset>
-       <ignoreParentPegScaling val="false"/>
-       <disableFieldRendering val="false"/>
-       <depth val="0"/>
-       <enableMinMaxAngle val="false"/>
-       <minAngle val="-360" defaultValue="-360"/>
-       <maxAngle val="360" defaultValue="360"/>
-       <nailForChildren val="false"/>
-       <ikHoldOrientation val="false"/>
-       <ikHoldX val="false"/>
-       <ikHoldY val="false"/>
-       <ikExcluded val="false"/>
-       <ikCanRotate val="true"/>
-       <ikCanTranslateX val="false"/>
-       <ikCanTranslateY val="false"/>
-       <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
-       <ikBoneY val="0" defaultValue="0"/>
-       <ikStiffness val="1" defaultValue="1"/>
-       <drawing>
-        <elementMode val="true"/>
-        <element col="ATV-0D61439ED42FA93763E05749">
-         <layer val=""/>
-        </element>
-        <customName>
-         <name val=""/>
-         <extension val="tga"/>
-         <fieldChart val="12" defaultValue="12"/>
-        </customName>
-       </drawing>
-       <readOverlay val="true"/>
-       <readLineArt val="true"/>
-       <readColorArt val="true"/>
-       <readUnderlay val="true"/>
-       <overlayArtDrawingMode val="VectorDrawingMode"/>
-       <lineArtDrawingMode val="VectorDrawingMode"/>
-       <colorArtDrawingMode val="VectorDrawingMode"/>
-       <underlayArtDrawingMode val="VectorDrawingMode"/>
-       <pencilLineDeformationPreserveThickness val="false"/>
-       <pencilLineDeformationQuality val="Low"/>
-       <pencilLineDeformationSmooth val="1"/>
-       <pencilLineDeformationFitError val="3" defaultValue="3"/>
-       <readColor val="true"/>
-       <readTransparency val="true"/>
-       <colorTransformation val="Linear"/>
-       <colorSpace val="sRGB"/>
-       <applyMatteToColor val="N"/>
-       <enableLineTexture val="true"/>
-       <antialiasingQuality val="HIGH"/>
-       <antialiasingExponent val="1" defaultValue="1"/>
-       <opacity val="100" defaultValue="100"/>
-       <textureFilter val="NEAREST_FILTERED"/>
-       <adjustPencilThickness val="false"/>
-       <normalLineArtThickness val="true"/>
-       <zoomIndependentLineArtThickness val="zoomIndependent"/>
-       <multLineArtThickness val="1" defaultValue="1"/>
-       <addLineArtThickness val="0" defaultValue="0"/>
-       <minLineArtThickness val="0" defaultValue="0"/>
-       <maxLineArtThickness val="0" defaultValue="0"/>
-       <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
-       <flipHor val="false"/>
-       <flipVert val="false"/>
-       <turnBeforeAlignment val="false"/>
-       <noClipping val="false"/>
-       <xClipFactor val="0"/>
-       <yClipFactor val="0"/>
-       <alignmentRule val="CENTER_FIRST_PAGE"/>
-       <morphingVelo val="0" defaultValue="0"/>
-       <canAnimate val="true"/>
-       <tileHorizontal val="false"/>
-       <tileVertical val="false"/>
-       <framerate val="12" defaultValue="-1"/>
-      </attrs>
-     </module>
+      <attrs/>
+      <nodeslist>
+       <module type="MULTIPORT_IN" name="Input" pos="0,-125,0">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <ports>
+         <port type="PEG" idx="0"/>
+        </ports>
+       </module>
+       <module type="MULTIPORT_OUT" name="Output" pos="0,100,0">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <ports>
+         <port type="IMAGE" idx="0"/>
+        </ports>
+       </module>
+       <module type="READ" name="Drawing_2" pos="0,0,0" publishUnderTab="Drawing_2">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <enable3d val="false"/>
+         <faceCamera val="false"/>
+         <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+         <offset>
+          <separate val="true"/>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </offset>
+         <scale>
+          <separate val="true"/>
+          <inFields val="false"/>
+          <xy val="1" defaultValue="1"/>
+          <x val="1" defaultValue="1"/>
+          <y val="1" defaultValue="1"/>
+          <z val="1" defaultValue="1"/>
+         </scale>
+         <rotation>
+          <separate val="false"/>
+          <anglex val="0" defaultValue="0"/>
+          <angley val="0" defaultValue="0"/>
+          <anglez val="0" defaultValue="0"/>
+         </rotation>
+         <angle val="0" defaultValue="0"/>
+         <skew val="0" defaultValue="0"/>
+         <pivot>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </pivot>
+         <splineOffset>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </splineOffset>
+         <ignoreParentPegScaling val="false"/>
+         <disableFieldRendering val="false"/>
+         <depth val="0"/>
+         <enableMinMaxAngle val="false"/>
+         <minAngle val="-360" defaultValue="-360"/>
+         <maxAngle val="360" defaultValue="360"/>
+         <nailForChildren val="false"/>
+         <ikHoldOrientation val="false"/>
+         <ikHoldX val="false"/>
+         <ikHoldY val="false"/>
+         <ikExcluded val="false"/>
+         <ikCanRotate val="true"/>
+         <ikCanTranslateX val="false"/>
+         <ikCanTranslateY val="false"/>
+         <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+         <ikBoneY val="0" defaultValue="0"/>
+         <ikStiffness val="1" defaultValue="1"/>
+         <drawing>
+          <elementMode val="true"/>
+          <element col="ATV-0D61439ED42FA93763E05749">
+           <layer val=""/>
+          </element>
+          <customName>
+           <name val=""/>
+           <extension val="tga"/>
+           <fieldChart val="12" defaultValue="12"/>
+          </customName>
+         </drawing>
+         <readOverlay val="true"/>
+         <readLineArt val="true"/>
+         <readColorArt val="true"/>
+         <readUnderlay val="true"/>
+         <overlayArtDrawingMode val="VectorDrawingMode"/>
+         <lineArtDrawingMode val="VectorDrawingMode"/>
+         <colorArtDrawingMode val="VectorDrawingMode"/>
+         <underlayArtDrawingMode val="VectorDrawingMode"/>
+         <pencilLineDeformationPreserveThickness val="false"/>
+         <pencilLineDeformationQuality val="Low"/>
+         <pencilLineDeformationSmooth val="1"/>
+         <pencilLineDeformationFitError val="3" defaultValue="3"/>
+         <readColor val="true"/>
+         <readTransparency val="true"/>
+         <colorTransformation val="Linear"/>
+         <colorSpace val="sRGB"/>
+         <applyMatteToColor val="N"/>
+         <enableLineTexture val="true"/>
+         <antialiasingQuality val="HIGH"/>
+         <antialiasingExponent val="1" defaultValue="1"/>
+         <opacity val="100" defaultValue="100"/>
+         <textureFilter val="NEAREST_FILTERED"/>
+         <adjustPencilThickness val="false"/>
+         <normalLineArtThickness val="true"/>
+         <zoomIndependentLineArtThickness val="zoomIndependent"/>
+         <multLineArtThickness val="1" defaultValue="1"/>
+         <addLineArtThickness val="0" defaultValue="0"/>
+         <minLineArtThickness val="0" defaultValue="0"/>
+         <maxLineArtThickness val="0" defaultValue="0"/>
+         <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+         <flipHor val="false"/>
+         <flipVert val="false"/>
+         <turnBeforeAlignment val="false"/>
+         <noClipping val="false"/>
+         <xClipFactor val="0"/>
+         <yClipFactor val="0"/>
+         <alignmentRule val="CENTER_FIRST_PAGE"/>
+         <morphingVelo val="0" defaultValue="0"/>
+         <canAnimate val="true"/>
+         <tileHorizontal val="false"/>
+         <tileVertical val="false"/>
+         <framerate val="12" defaultValue="-1"/>
+        </attrs>
+       </module>
+       <module type="READ" name="Drawing_1" pos="0,0,0" publishUnderTab="Drawing_1">
+        <options>
+         <collapsed val="true"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <enable3d val="false"/>
+         <faceCamera val="false"/>
+         <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+         <offset>
+          <separate val="true"/>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </offset>
+         <scale>
+          <separate val="true"/>
+          <inFields val="false"/>
+          <xy val="1" defaultValue="1"/>
+          <x val="1" defaultValue="1"/>
+          <y val="1" defaultValue="1"/>
+          <z val="1" defaultValue="1"/>
+         </scale>
+         <rotation>
+          <separate val="false"/>
+          <anglex val="0" defaultValue="0"/>
+          <angley val="0" defaultValue="0"/>
+          <anglez val="0" defaultValue="0"/>
+         </rotation>
+         <angle val="0" defaultValue="0"/>
+         <skew val="0" defaultValue="0"/>
+         <pivot>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </pivot>
+         <splineOffset>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </splineOffset>
+         <ignoreParentPegScaling val="false"/>
+         <disableFieldRendering val="false"/>
+         <depth val="0"/>
+         <enableMinMaxAngle val="false"/>
+         <minAngle val="-360" defaultValue="-360"/>
+         <maxAngle val="360" defaultValue="360"/>
+         <nailForChildren val="false"/>
+         <ikHoldOrientation val="false"/>
+         <ikHoldX val="false"/>
+         <ikHoldY val="false"/>
+         <ikExcluded val="false"/>
+         <ikCanRotate val="true"/>
+         <ikCanTranslateX val="false"/>
+         <ikCanTranslateY val="false"/>
+         <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+         <ikBoneY val="0" defaultValue="0"/>
+         <ikStiffness val="1" defaultValue="1"/>
+         <drawing>
+          <elementMode val="true"/>
+          <element col="ATV-0D5B43A4D47AA99863E05694">
+           <layer val=""/>
+          </element>
+          <customName>
+           <name val=""/>
+           <extension val="tga"/>
+           <fieldChart val="12" defaultValue="12"/>
+          </customName>
+         </drawing>
+         <readOverlay val="true"/>
+         <readLineArt val="true"/>
+         <readColorArt val="true"/>
+         <readUnderlay val="true"/>
+         <overlayArtDrawingMode val="VectorDrawingMode"/>
+         <lineArtDrawingMode val="VectorDrawingMode"/>
+         <colorArtDrawingMode val="VectorDrawingMode"/>
+         <underlayArtDrawingMode val="VectorDrawingMode"/>
+         <pencilLineDeformationPreserveThickness val="false"/>
+         <pencilLineDeformationQuality val="Low"/>
+         <pencilLineDeformationSmooth val="1"/>
+         <pencilLineDeformationFitError val="3" defaultValue="3"/>
+         <readColor val="true"/>
+         <readTransparency val="true"/>
+         <colorTransformation val="Linear"/>
+         <colorSpace val="sRGB"/>
+         <applyMatteToColor val="N"/>
+         <enableLineTexture val="true"/>
+         <antialiasingQuality val="HIGH"/>
+         <antialiasingExponent val="1" defaultValue="1"/>
+         <opacity val="100" defaultValue="100"/>
+         <textureFilter val="NEAREST_FILTERED"/>
+         <adjustPencilThickness val="false"/>
+         <normalLineArtThickness val="true"/>
+         <zoomIndependentLineArtThickness val="zoomIndependent"/>
+         <multLineArtThickness val="1" defaultValue="1"/>
+         <addLineArtThickness val="0" defaultValue="0"/>
+         <minLineArtThickness val="0" defaultValue="0"/>
+         <maxLineArtThickness val="0" defaultValue="0"/>
+         <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+         <flipHor val="false"/>
+         <flipVert val="false"/>
+         <turnBeforeAlignment val="false"/>
+         <noClipping val="false"/>
+         <xClipFactor val="0"/>
+         <yClipFactor val="0"/>
+         <alignmentRule val="CENTER_FIRST_PAGE"/>
+         <morphingVelo val="0" defaultValue="0"/>
+         <canAnimate val="true"/>
+         <tileHorizontal val="false"/>
+         <tileVertical val="false"/>
+         <framerate val="12" defaultValue="-1"/>
+        </attrs>
+       </module>
+       <module type="READ" name="Drawing" pos="-65,-50,0" publishUnderTab="Drawing">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <enable3d val="false"/>
+         <faceCamera val="false"/>
+         <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+         <offset>
+          <separate val="true"/>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </offset>
+         <scale>
+          <separate val="true"/>
+          <inFields val="false"/>
+          <xy val="1" defaultValue="1"/>
+          <x val="1" defaultValue="1"/>
+          <y val="1" defaultValue="1"/>
+          <z val="1" defaultValue="1"/>
+         </scale>
+         <rotation>
+          <separate val="false"/>
+          <anglex val="0" defaultValue="0"/>
+          <angley val="0" defaultValue="0"/>
+          <anglez val="0" defaultValue="0"/>
+         </rotation>
+         <angle val="0" defaultValue="0"/>
+         <skew val="0" defaultValue="0"/>
+         <pivot>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </pivot>
+         <splineOffset>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </splineOffset>
+         <ignoreParentPegScaling val="false"/>
+         <disableFieldRendering val="false"/>
+         <depth val="0"/>
+         <enableMinMaxAngle val="false"/>
+         <minAngle val="-360" defaultValue="-360"/>
+         <maxAngle val="360" defaultValue="360"/>
+         <nailForChildren val="false"/>
+         <ikHoldOrientation val="false"/>
+         <ikHoldX val="false"/>
+         <ikHoldY val="false"/>
+         <ikExcluded val="false"/>
+         <ikCanRotate val="true"/>
+         <ikCanTranslateX val="false"/>
+         <ikCanTranslateY val="false"/>
+         <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+         <ikBoneY val="0" defaultValue="0"/>
+         <ikStiffness val="1" defaultValue="1"/>
+         <drawing>
+          <elementMode val="true"/>
+          <element col="Drawing">
+           <layer val=""/>
+          </element>
+          <customName>
+           <name val=""/>
+           <extension val="tga"/>
+           <fieldChart val="12" defaultValue="12"/>
+          </customName>
+         </drawing>
+         <readOverlay val="true"/>
+         <readLineArt val="true"/>
+         <readColorArt val="true"/>
+         <readUnderlay val="true"/>
+         <overlayArtDrawingMode val="VectorDrawingMode"/>
+         <lineArtDrawingMode val="VectorDrawingMode"/>
+         <colorArtDrawingMode val="VectorDrawingMode"/>
+         <underlayArtDrawingMode val="VectorDrawingMode"/>
+         <pencilLineDeformationPreserveThickness val="false"/>
+         <pencilLineDeformationQuality val="Low"/>
+         <pencilLineDeformationSmooth val="1"/>
+         <pencilLineDeformationFitError val="3" defaultValue="3"/>
+         <readColor val="true"/>
+         <readTransparency val="true"/>
+         <colorTransformation val="Linear"/>
+         <colorSpace val="sRGB"/>
+         <applyMatteToColor val="N"/>
+         <enableLineTexture val="true"/>
+         <antialiasingQuality val="HIGH"/>
+         <antialiasingExponent val="1" defaultValue="1"/>
+         <opacity val="100" defaultValue="100"/>
+         <textureFilter val="NEAREST_FILTERED"/>
+         <adjustPencilThickness val="false"/>
+         <normalLineArtThickness val="true"/>
+         <zoomIndependentLineArtThickness val="zoomIndependent"/>
+         <multLineArtThickness val="1" defaultValue="1"/>
+         <addLineArtThickness val="0" defaultValue="0"/>
+         <minLineArtThickness val="0" defaultValue="0"/>
+         <maxLineArtThickness val="0" defaultValue="0"/>
+         <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+         <flipHor val="false"/>
+         <flipVert val="false"/>
+         <turnBeforeAlignment val="false"/>
+         <noClipping val="false"/>
+         <xClipFactor val="0"/>
+         <yClipFactor val="0"/>
+         <alignmentRule val="CENTER_FIRST_PAGE"/>
+         <morphingVelo val="0" defaultValue="0"/>
+         <canAnimate val="true"/>
+         <tileHorizontal val="false"/>
+         <tileVertical val="false"/>
+         <framerate val="-1" defaultValue="-1"/>
+        </attrs>
+       </module>
+       <module type="COMPOSITE" name="Composite" pos="0,0,0" publishUnderTab="Composite">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <compositeMode val="compositeBitmap"/>
+         <flattenOutput val="true"/>
+         <flattenVector val="false"/>
+         <composite2d val="false"/>
+         <composite3d val="false"/>
+         <outputZ val="LEFTMOST"/>
+         <outputZInputPort val="1"/>
+         <applyFocus val="true"/>
+         <multiplier val="1" defaultValue="1"/>
+         <tvgPalette val="compositedPalette"/>
+         <mergeVector val="false"/>
+        </attrs>
+       </module>
+      </nodeslist>
+      <linkedlist>
+       <link out="Input" in="Drawing_2" inport="0"/>
+       <link out="Input" in="Drawing_1" inport="0"/>
+       <link out="Input" in="Drawing" inport="0"/>
+       <link out="Drawing_2" in="Composite" inport="2"/>
+       <link out="Drawing_1" in="Composite" inport="1"/>
+       <link out="Drawing" in="Composite" inport="0"/>
+       <link out="Composite" in="Output"/>
+      </linkedlist>
+     </group>
     </nodeslist>
     <linkedlist>
      <link out="Composite" in="Display"/>
      <link out="Composite" in="Write"/>
-     <link out="Drawing" in="Composite" inport="0"/>
      <link out="Camera-P" in="Camera"/>
-     <link out="Drawing_1" in="Composite" inport="1"/>
-     <link out="Drawing_2" in="Composite" inport="2"/>
+     <link out="Drawing_2-G" in="Composite"/>
     </linkedlist>
    </rootgroup>
    <unconnectedComposite>
@@ -973,7 +1029,7 @@
    <int value=""/>
   </meta>
   <meta type="checksumValidation" name="checksumValidation" creator="Harmony Advanced" version="1.0">
-   <value data="6C0000000000000003030AE0B19C55551F3AF5FF55A5662655180BFCEA5EFCAF0A81A6AEEC18FEB3D8FAA4CA75052DC32CED736807474FA5CFA5BECA4F5F7ECC7CBA4F11B5248FCC7716A3579ED00ACBA7DA76F95F2B79ED1A9F6E3C0BB76A84046C5D8C5ABC3CCE11FBCD43E83E8989BBDDEFCD6B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A4000000060577DB657A25A42760DC9AC0F6C21E037B71F6B851F594CB1C2D9BE35B3F53BB1D78EB8231C350E1BAC052437200E0137F5D26A35786E4FD13F436269E094E4"/>
+   <value data="6C00000000000000030350BAEBC60F0F4560AFA50FFF3C7C0F4251A6B004A6F550DBFCF4B642A4E982A0FE902F5F779976B729325D1D15FF95FFE4901505249626E0154BEF7ED5962D4CF90DC48A5091FD802CA3057123B740C5346651ED30DE5E3607D600E666944BA19719B264D3D3E187B5976B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A40000000C932CB464E070650D7FF112AA79597157049BE8854E5B1431D5B477763EDD8CFEB584C350F824E8C3F9228348091825FF2479CDB7EEB1926B9A17E1417F7255E"/>
   </meta>
  </metas>
 </project>
