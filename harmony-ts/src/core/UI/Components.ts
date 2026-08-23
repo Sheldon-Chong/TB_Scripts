@@ -39,8 +39,10 @@ namespace WidgetKit {
       bgColor?: string;
       borderColor?: string;
       onClick?: () => void;
+      width?: number;
     }) {
       super(settings.text);
+      this.setFixedSize(settings.width || 120, 30);
       this.objectName = settings.objectName;
       this.styleSheet = `QPushButton { font-size: 12pt; color: #ffffff; background-color: ${settings.bgColor || '#555555'}; border: 1px solid ${settings.borderColor || '#777777'}; border-radius: 8px; padding: 6px; }`;
       this.clicked.connect(
@@ -140,6 +142,7 @@ namespace WidgetKit {
       this.styleSheet =
         'QToolButton { font-size: 12pt; color: #ffffff; background-color: #555555; border: 1px solid #777777; border-radius: 8px; padding: 6px; }';
       this.popupMode = QToolButton.InstantPopup;
+      this.setFixedSize(30, 30);
     }
   }
 }
