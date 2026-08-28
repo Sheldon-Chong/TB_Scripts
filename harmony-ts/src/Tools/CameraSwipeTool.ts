@@ -258,6 +258,7 @@ function registerCameraSwipeTool() {
             );
           } else {
             var pos = camPeg.position as oPathColumn3D;
+            MessageLog.trace(`[CameraSwipeTool.ts] >> ${pos} | ${typeof pos}`);
             var sel = new G.oSelection();
             var startFrame = sel.startFrame;
 

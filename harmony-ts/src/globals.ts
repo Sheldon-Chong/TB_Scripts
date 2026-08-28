@@ -166,13 +166,14 @@ if (Object.keys(this.__proto__).indexOf('G') === -1) {
     return to.concat(ar || Array.prototype.slice.call(from));
   };
 
-  Object._ = _;
+  // Object._ = _;
 
   this.__proto__.registeredTools = this.__proto__.registeredTools || {};
   this.__proto__.registeredActions = this.__proto__.registeredActions || {};
   this.__proto__.registeredToolbars = this.__proto__.registeredToolbars || {};
   this.__proto__.PermanentFile = PermanentFile;
-  this.__proto__.TimelineMarker = TimelineMarker;
+  this.__proto__.column = column;
+  // this.__proto__.TimelineMarker = TimelineMarker;
 
   this.__proto__.oColumn = oColumn;
   this.__proto__.oPathColumn3D = oPathColumn3D;

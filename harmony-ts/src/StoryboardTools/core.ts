@@ -364,7 +364,7 @@ namespace StoryboardTools {
 
         scene.endUndoRedoAccum();
       });
-      removeTimer.start(150);
+      removeTimer.start(2);
     } catch (error) {
       MessageLog.trace(`[core.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
     }

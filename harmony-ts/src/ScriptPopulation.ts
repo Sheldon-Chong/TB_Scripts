@@ -103,6 +103,15 @@ class TimelineMarkersDialog {
   boundOnFrameChanged: () => void;
   boundUpdateListenerFields: () => void;
 
+  MessageLog = MessageLog;
+  scene = scene;
+  TimelineMarker = TimelineMarker;
+  Array = Array;
+  JSON = JSON;
+  Object = Object;
+  Math = Math;
+  frame = frame;
+
   constructor() {
     this.dialog = new G.Widgets.Dialog({ title: 'Timeline Markers' });
 
@@ -112,6 +121,14 @@ class TimelineMarkersDialog {
 
     this.tabs = new QTabWidget();
     layout.addWidget(this.tabs, 1, 0);
+    this.getCurrentMarker = G.Utils.bindAction(
+      () => {
+        MessageLog.trace(`[ScriptPopulation.ts] ${TimelineMarker}`);
+        return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
+      },
+      this,
+      null,
+    );
   }
 
   show() {
@@ -156,14 +173,7 @@ class TimelineMarkersDialog {
     return rows;
   }
 
-  // getCurrentMarker(): oTimelineMarker | undefined {
-  //   return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
-  // }
-
-  getCurrentMarker = G.Utils.bindAction(() => {
-    MessageLog.trace(`[ScriptPopulation.ts] ${TimelineMarker}`);
-    return G.TimelineKit.getTimelineMarkersPresentAtFrame(frame.current())[0];
-  }, this);
+  getCurrentMarker = null;
 
   matchesFilter(value: string, query: string): boolean {
     if (!query) return true;
@@ -451,14 +461,14 @@ class TimelineMarkersDialog {
         const marker = G.TimelineKit.getTimelineMarkersPresentAtFrame(i)[0];
         if (marker) TimelineMarker.deleteMarker(marker);
       }
-    }, []);
+    }, this);
 
     const deleteAllMarkers = G.Utils.bindAction(() => {
       const allMarkers = G.TimelineKit.getAllMarkers();
       for (var i = 0; i < allMarkers.length; i++) {
         TimelineMarker.deleteMarker(allMarkers[i]);
       }
-    }, []);
+    }, this);
 
     const importScript = G.Utils.bindAction(() => {
       const text = StoryboardTools.insertDialogPrompt({
@@ -468,7 +478,7 @@ class TimelineMarkersDialog {
         defaultDialogue: '',
       })?.dialogue;
       StoryboardTools.populateScript(text || '');
-    }, []);
+    }, this);
 
     const compileScript = G.Utils.bindAction(function () {
       const markers = G.TimelineKit.getAllMarkers();
@@ -478,7 +488,7 @@ class TimelineMarkersDialog {
         .join('\n');
       G.Utils.prompt('Compiled Script', 'Compiled Script', compiledScript);
       MessageLog.trace(`[ScriptPopulation.ts] compile script: ${compiledScript}`);
-    }, []);
+    }, this);
 
     /* Script Population Menu */
 
@@ -514,7 +524,7 @@ class TimelineMarkersDialog {
               const sel = new G.oSelection();
 
               G.TimelineKit.rippleShiftMarkers(sel.startFrame, sel.length, 'delete');
-            }),
+            }, this),
           }),
           rippleShiftMarkersRightBtn: new G.Widgets.Button({
             text: '>',
@@ -524,44 +534,41 @@ class TimelineMarkersDialog {
               scene.beginUndoRedoAccum('Ripple Shift Markers Right');
               G.TimelineKit.rippleShiftMarkers(frame.current() - 1, 1, 'add');
               scene.endUndoRedoAccum();
-            }),
+            }, this),
           }),
 
           removeExposureButton: new G.Widgets.Button({
             text: '-',
             objectName: 'removeExposureButton',
-            onClick: StoryboardTools.removeExposure,
+            onClick: G.Utils.bindAction(StoryboardTools.removeExposure, this, 'Remove Exposure'),
           }),
           addExposureButton: new G.Widgets.Button({
             text: '+',
             objectName: 'addExposureButton',
-            onClick: StoryboardTools.addExposure,
+            onClick: G.Utils.bindAction(StoryboardTools.addExposure, this, 'Add Exposure'),
           }),
           insertDialogButton: new G.Widgets.Button({
             text: 'Insert Dialog',
             objectName: 'insertDialogButton',
-            onClick: G.Utils.bindAction(
-              function () {
-                const output = StoryboardTools.insertDialogPrompt({
-                  onOk: (result) => {
-                    if (result) {
-                      const sel = new G.oSelection();
-                      const frameNum = sel.startFrame;
-                      const profile = result.profile;
-                      const dialogue = result.dialogue;
-                      StoryboardTools.addExposure();
-                      MessageLog.trace(`[ScriptPopulation.ts] ${'inserted'}`);
-                      StoryboardTools.addDialogueMarker(result, frameNum + 1);
-                      MessageLog.trace(
-                        `[ScriptPopulation.ts] Inserted dialog at frame ${frameNum}: ${profile}:: ${dialogue}`,
-                      );
-                    }
-                  },
-                });
-                MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(output, null, 2)}`);
-              },
-              [G, StoryboardTools],
-            ),
+            onClick: G.Utils.bindAction(function () {
+              const output = StoryboardTools.insertDialogPrompt({
+                onOk: (result) => {
+                  if (result) {
+                    const sel = new G.oSelection();
+                    const frameNum = sel.startFrame;
+                    const profile = result.profile;
+                    const dialogue = result.dialogue;
+                    StoryboardTools.addExposure();
+                    MessageLog.trace(`[ScriptPopulation.ts] ${'inserted'}`);
+                    StoryboardTools.addDialogueMarker(result, frameNum + 1);
+                    MessageLog.trace(
+                      `[ScriptPopulation.ts] Inserted dialog at frame ${frameNum}: ${profile}:: ${dialogue}`,
+                    );
+                  }
+                },
+              });
+              MessageLog.trace(`[ScriptPopulation.ts] ${JSON.stringify(output, null, 2)}`);
+            }, this),
           }),
         },
         new QWidget(),
@@ -792,8 +799,40 @@ class TimelineMarkersDialog {
     var cursor = this.textEditComponent.textCursor();
     var savedPos = cursor.position();
 
+    const normalizeProfileColor = (value: string): string => {
+      const trimmed = (value || '').trim();
+      const withoutHash = trimmed.charAt(0) === '#' ? trimmed.slice(1) : trimmed;
+      const clean = withoutHash.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
+      return clean ? '#' + clean.toUpperCase() : '#FFFF66';
+    };
+
+    const profileColors: { [key: string]: string } = {};
+    try {
+      const drawingTypesFile = `${specialFolders.userConfig}/drawingTypes.d/drawingTypes.xml`;
+      const xmlText = G.FileUtils.readFrom(drawingTypesFile);
+      if (xmlText) {
+        const doc = G.Utils.readXmlFile(xmlText);
+        const docAny: any = doc;
+        if (!docAny.error && doc.children && doc.children.length > 0) {
+          const root = doc.children[0];
+          const nodes = root && root.children ? root.children : [];
+          for (let i = 0; i < nodes.length; i++) {
+            const attrs = nodes[i].attributes || {};
+            const profileName = String(attrs.text || '').trim();
+            if (!profileName) continue;
+            const timelineColor = String(attrs.timelineColor || '#FFFF66');
+            profileColors[profileName.toLowerCase()] = normalizeProfileColor(timelineColor);
+          }
+        }
+      }
+    } catch (error) {
+      MessageLog.trace(
+        `[ScriptPopulation.ts] Error loading drawingTypes.xml colors: ${error.message}`,
+      );
+    }
+
     var validFormat = new QTextCharFormat();
-    validFormat.setBackground(new QColor('yellow'));
+    validFormat.setBackground(new QColor('#FFFF66'));
     validFormat.setForeground(new QColor('black'));
 
     var redErrorFormat = new QTextCharFormat();
@@ -818,6 +857,18 @@ class TimelineMarkersDialog {
 
         if (item.isDialogue && prefixLength !== -1) {
           cursor.mergeCharFormat(clearFormat);
+
+          const parsedLine = StoryboardTools.parseDialog(item.lineText || '');
+          const profileKey = parsedLine
+            ? String(parsedLine.profile || '')
+                .trim()
+                .toLowerCase()
+            : '';
+          const resolvedColor =
+            (profileKey && profileColors[profileKey]) || profileColors['default'] || '#FFFF66';
+
+          validFormat.setBackground(new QColor(resolvedColor));
+
           cursor.setPosition(blockStart);
           cursor.setPosition(blockStart + prefixLength, QTextCursor.KeepAnchor);
           cursor.mergeCharFormat(item.status === 'unexpected' ? redErrorFormat : validFormat);
@@ -1229,40 +1280,44 @@ class TimelineMarkersDialog {
 
   // Scrolls the script editor to the dialogue line matching the current marker,
   // if one exists.
-  scrollToCurrentMarkerDialogue() {
-    try {
-      const marker = this.getCurrentMarker();
-      if (!marker || !marker.name) return;
+  scrollToCurrentMarkerDialogue = G.Utils.bindAction(
+    () => {
+      try {
+        const marker = this.getCurrentMarker();
+        if (!marker || !marker.name) return;
 
-      const text = this.textEditComponent.plainText;
-      const lines = text.split(/\r?\n/);
+        const text = this.textEditComponent.plainText;
+        const lines = text.split(/\r?\n/);
 
-      for (var i = 0; i < lines.length; i++) {
-        const parsed = StoryboardTools.parseDialog(lines[i]);
-        if (!parsed) continue;
+        for (var i = 0; i < lines.length; i++) {
+          const parsed = StoryboardTools.parseDialog(lines[i]);
+          if (!parsed) continue;
 
-        if (
-          StoryboardTools.isDialogueEqual(parsed, {
-            profile: marker.name,
-            dialogue: marker.notes || '',
-          })
-        ) {
-          const block = this.textEditComponent.document.findBlockByNumber(i);
-          if (block.isValid()) {
-            const cursor = this.textEditComponent.textCursor();
-            cursor.setPosition(block.position());
-            this.textEditComponent.setTextCursor(cursor);
-            this.textEditComponent.ensureCursorVisible();
+          if (
+            StoryboardTools.isDialogueEqual(parsed, {
+              profile: marker.name,
+              dialogue: marker.notes || '',
+            })
+          ) {
+            const block = this.textEditComponent.document.findBlockByNumber(i);
+            if (block.isValid()) {
+              const cursor = this.textEditComponent.textCursor();
+              cursor.setPosition(block.position());
+              this.textEditComponent.setTextCursor(cursor);
+              this.textEditComponent.ensureCursorVisible();
+            }
+            return;
           }
-          return;
         }
+      } catch (error) {
+        MessageLog.trace(
+          `[ScriptPopulation.ts] Error scrolling to marker dialogue: ${error.message} ${error.fileName} ${error.lineNumber}`,
+        );
       }
-    } catch (error) {
-      MessageLog.trace(
-        `[ScriptPopulation.ts] Error scrolling to marker dialogue: ${error.message} ${error.fileName} ${error.lineNumber}`,
-      );
-    }
-  }
+    },
+    this,
+    null,
+  );
 
   // Scrolls the marker table to the row for the current playhead marker,
   // falling back to the closest marker to the left when there is no exact match.
@@ -1343,5 +1398,22 @@ function deleteMarkers() {
       TimelineMarker.deleteMarker(marker);
     }
   }
+  scene.endUndoRedoAccum();
+}
+
+function populateMarkers() {
+  scene.beginUndoRedoAccum('populate markers');
+  for (var i = 0; i < 310; i++) {
+    const frameNum = i * 32;
+    const marker = {
+      frame: frameNum + 1,
+      color: '#FFFF66',
+      name: `Profile ${i + 1}`,
+      notes: `Dialogue line ${i + 1}`,
+    };
+    G.TimelineKit.createMarker(marker.frame, marker.name, marker.color, marker.notes);
+    // Do something with the created marker, e.g., add it to the timeline
+  }
+
   scene.endUndoRedoAccum();
 }

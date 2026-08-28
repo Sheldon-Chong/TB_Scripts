@@ -1,5 +1,7 @@
 include('globals.js');
 
+column = column;
+
 namespace KeyframeGeneratorKit {
   /**
    * Generate a decaying camera shake on a path column.
@@ -13,7 +15,7 @@ namespace KeyframeGeneratorKit {
    * @param decayExponent  How fast the shake fades (higher = faster decay).
    */
   export function generateShake(
-    column: oPathColumn3D,
+    col: oPathColumn3D,
     startFrame: number,
     endFrame: number,
     shakeAmount: vectors.Vector2Input,
@@ -21,18 +23,18 @@ namespace KeyframeGeneratorKit {
   ) {
     var amount = vectors.resolveVec2(shakeAmount);
 
-    MessageLog.trace(
-      'generateShake: ' +
-        column.toString() +
-        ', frames ' +
-        startFrame +
-        '-' +
-        endFrame +
-        ', shake ' +
-        JSON.stringify(amount) +
-        ', decay ' +
-        decayExponent,
-    );
+    // MessageLog.trace(
+    //   'generateShake: ' +
+    //     column.toString() +
+    //     ', frames ' +
+    //     startFrame +
+    //     '-' +
+    //     endFrame +
+    //     ', shake ' +
+    //     JSON.stringify(amount) +
+    //     ', decay ' +
+    //     decayExponent,
+    // );
 
     var totalFrames = endFrame - startFrame;
     var minStepRatio = 0.7;
@@ -69,7 +71,7 @@ namespace KeyframeGeneratorKit {
       // so pre-existing animation is preserved and the camera doesn't drift.
       // var baseX = column.getXVal(i);
       // var baseY = column.getYVal(i);
-      column.setPosition(i, new Vec3(current.x, current.y, 0), 0, 0, 0);
+      col.setPosition(i, new Vec3(current.x, current.y, 0), 0, 0, 0);
     }
   }
 

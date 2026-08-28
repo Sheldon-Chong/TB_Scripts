@@ -142,6 +142,7 @@ class oSelection {
     }
     this.selectedNodes = selectedNodes !== undefined ? selectedNodes : G.LayerManager.getSelected();
     this.length = this.endFrame - this.startFrame + 1;
+    
   }
 
   toString() {

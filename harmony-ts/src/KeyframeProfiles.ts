@@ -1,9 +1,11 @@
 include('globals.js');
+column = column;
+
 namespace CameraSwipe {
   G = _;
 
   export function smoothInPosition(
-    column: oPathColumn3D,
+    col: oPathColumn3D,
     startFrame: number,
     endFrame: number,
     startPos: Vec2,
@@ -19,7 +21,7 @@ namespace CameraSwipe {
 
       // Linear interpolation using Vec2 math
       const current = startPos.lerp(endPos, t);
-      column.setPosition(i, current.toVec3(), 0, 0, 0);
+      col.setPosition(i, current.toVec3(), 0, 0, 0);
     }
   }
 
@@ -27,7 +29,7 @@ namespace CameraSwipe {
    * Smooth-Out (Ease-Out): Starts fast and decelerates smoothly into the target position.
    */
   export function smoothOutPosition(
-    column: oPathColumn3D,
+    col: oPathColumn3D,
     startFrame: number,
     endFrame: number,
     startPos: Vec2,
@@ -43,12 +45,12 @@ namespace CameraSwipe {
 
       // Linear interpolation using Vec2 math
       const current = startPos.lerp(endPos, t);
-      column.setPosition(i, current.toVec3(), 0, 0, 0);
+      col.setPosition(i, current.toVec3(), 0, 0, 0);
     }
   }
 
   export function applyScalarCurveInDirection(
-    column: oPathColumn3D,
+    col: oPathColumn3D,
     startFrame: number,
     scalarValues: number[],
     direction: Vector2Input,
@@ -65,7 +67,7 @@ namespace CameraSwipe {
       // Position = origin + (directionUnitVector * scalarValue)
       const currentPos = originVec.add(dirVec.scale(scalarVal));
 
-      column.setPosition(frame, currentPos.toVec3(), 0, 0, 0);
+      col.setPosition(frame, currentPos.toVec3(), 0, 0, 0);
     }
   }
 
@@ -137,7 +139,7 @@ namespace CameraSwipe {
   }
 
   export function applyCameraSwipe(
-    column: oPathColumn3D,
+    col: oPathColumn3D,
     startFrame: number,
     directionVec: Vector2Input,
     extraFrames: number = 0, // Add frames to stretch the transition
@@ -159,10 +161,10 @@ namespace CameraSwipe {
     const dir = new G.Vec2(directionVec).normalized();
     const oppositeDirVec = dir.scale(-1);
 
-    applyScalarCurveInDirection(column, startFrame, easeOutCurve, dir, [0, 0]);
+    applyScalarCurveInDirection(col, startFrame, easeOutCurve, dir, [0, 0]);
 
     applyScalarCurveInDirection(
-      column,
+      col,
       startFrame + easeOutCurve.length,
       easeInCurve,
       oppositeDirVec,

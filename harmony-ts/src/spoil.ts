@@ -68,6 +68,13 @@ function copypasteTest() {
 }
 
 function run10() {
+  const injectedScope = { x: 10, y: 20 };
+  with (injectedScope) {
+    MessageLog.trace(`Injected x: ${x}, y: ${y}`); // Should log "Injected x: 10, y: 20"
+  }
+
+  return;
+
   MessageLog.trace(`[spoil.ts] ${TimelineMarker}`);
   MessageLog.trace(`[spoil.ts] ${specialFolders.userConfig}`);
   return;

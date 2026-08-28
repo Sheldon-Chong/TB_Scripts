@@ -176,16 +176,31 @@ function bind(fn, context) {
     return fn.apply(context, arguments);
   };
 }
-function bindAction(fn: Function, args: any[], actionName?: string) {
+
+function bindAction(fn: Function, context?: any, actionName?: string, callArgs?: any[]) {
   return function () {
-    scene.beginUndoRedoAccum(actionName ?? fn.name ?? 'Unnamed Action');
+    var boundContext = context || null;
+    var args: any[] = callArgs || [];
+
+    const shouldUseUndo = actionName !== null && actionName !== undefined && actionName !== '';
+
     try {
-      return fn.apply(null, args);
+      if (shouldUseUndo) {
+        scene.beginUndoRedoAccum(actionName ?? fn.name ?? 'Unnamed Action');
+      }
+      return fn.apply(boundContext, args);
     } catch (error) {
-      MessageLog.trace(`❗ ERROR AT ${error.fileName}:${error.lineNumber} - ${error.message}`);
+      try {
+        MessageLog.trace(`❗ ERROR AT ${error.fileName}:${error.lineNumber} - ${error.message}`);
+      } catch (e) {}
+      if (shouldUseUndo) {
+        scene.endUndoRedoAccum();
+      }
       return null;
     } finally {
-      scene.endUndoRedoAccum();
+      if (shouldUseUndo) {
+        scene.endUndoRedoAccum();
+      }
     }
   };
 }
