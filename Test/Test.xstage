@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.0.1 build 24106 2025-07-25 03:23:29" version="2501" build="24106" date="Mon Aug 24 09:17:19 2026" timeMsec="1787534239210" username="emers" realUsername="emers" creator="harmony">
+<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.2.0 build 24991 2026-03-25 08:42:03" version="2520" build="24991" date="Sat Sep 26 21:15:56 2026" timeMsec="1790428556915" username="emers" realUsername="emers" creator="harmony">
  <elements>
   <element id="1" elementName="Drawing" elementFolder="Drawing" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
    <drawings>
@@ -64,6 +64,7 @@
     <dwg name="TestDrawing_52"/>
     <dwg name="TestDrawing_53"/>
     <dwg name="TestDrawing_54"/>
+    <dwg name="7"/>
    </drawings>
   </element>
   <element id="2" elementName="Drawing_1" elementFolder="Drawing_1" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
@@ -262,6 +263,7 @@
      <elementSeq exposures="182-214" val="3" id="1"/>
      <elementSeq exposures="215" val="4_1" id="1"/>
      <elementSeq exposures="216-260" val="4" id="1"/>
+     <elementSeq exposures="267-277" val="7" id="1"/>
      <elementSeq exposures="286" val="TestDrawing_37" id="1"/>
      <elementSeq exposures="287" val="TestDrawing_38" id="1"/>
      <elementSeq exposures="288" val="TestDrawing_39" id="1"/>
@@ -342,7 +344,7 @@
        <pt val="-0,-0,-0" lockedInTime="413"/>
       </points>
      </path3D>
-     <velocity type="3" name="ATV-0D0146FE0478738486E01530" displayOrder="0" width="100" anonymous="true">
+     <velocity type="3" name="ATV-0D5E4EA1B4C35C3357C01681" displayOrder="0" width="100" anonymous="true">
       <step val="1" start="1" stop="1"/>
       <noFrames/>
       <points version="2">
@@ -415,6 +417,61 @@
     </column>
     <column type="0" name="ATV-0D61439ED42FA93763E05749" displayOrder="0" width="100" anonymous="true" id="3">
      <elementSeq exposures="292" val="1" id="3"/>
+    </column>
+    <column type="3" name="ATV-0D284ED7B4845C3457C01F7E" displayOrder="0" width="100" anonymous="false">
+     <step val="1" start="1" stop="1"/>
+     <points version="2">
+      <pt constSeg="true" x="41,57" yLocal="-0.033300000000000003" y="-0.033300000000000003"/>
+      <pt constSeg="true" x="38-39,42-43,54-55,58-59,189-196" yLocal="0" y="0"/>
+      <pt constSeg="true" x="40,56" yLocal="0.033300000000000003" y="0.033300000000000003"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D824E7DB47B5CB157C01F7F" displayOrder="0" width="100" anonymous="false">
+     <step val="1" start="1" stop="1"/>
+     <points version="2">
+      <pt constSeg="true" x="38,54" yLocal="-1.9167000000000001" y="-1.9167000000000001"/>
+      <pt constSeg="true" x="40,56" yLocal="-1.8722000000000001" y="-1.8722000000000001"/>
+      <pt constSeg="true" x="41,57" yLocal="-0.2722" y="-0.2722"/>
+      <pt constSeg="true" x="42-43,58-59,189,195-196" yLocal="0" y="0"/>
+      <pt constSeg="true" x="190" yLocal="0.083299999999999999" y="0.083299999999999999"/>
+      <pt constSeg="true" x="194" yLocal="0.1333" y="0.1333"/>
+      <pt constSeg="true" x="191" yLocal="0.48330000000000001" y="0.48330000000000001"/>
+      <pt constSeg="true" x="193" yLocal="0.5333" y="0.5333"/>
+      <pt constSeg="true" x="192" yLocal="2.5333000000000001" y="2.5333000000000001"/>
+      <pt constSeg="true" x="39,55" yLocal="3.5943999999999998" y="3.5943999999999998"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D594EA6B46B5C1B57C01F80" displayOrder="0" width="100" anonymous="false">
+     <step val="1" start="1" stop="1"/>
+     <points version="2">
+      <pt constSeg="true" x="38-43,54-59,189-196" yLocal="0" y="0"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0DFB4E04B4E75C8357C01F81" displayOrder="0" width="100" anonymous="false">
+     <step val="1" start="1" stop="1"/>
+     <points version="2">
+      <pt constSeg="true" x="39,55" yLocal="0.82699999999999996" y="0.82699999999999996"/>
+      <pt constSeg="true" x="192" yLocal="0.91279999999999994" y="0.91279999999999994"/>
+      <pt constSeg="true" x="193" yLocal="0.98929999999999996" y="0.98929999999999996"/>
+      <pt constSeg="true" x="194" yLocal="0.99560000000000004" y="0.99560000000000004"/>
+      <pt constSeg="true" x="42-43,58-59,189-191,195-196" yLocal="1" y="1"/>
+      <pt constSeg="true" x="41,57" yLocal="1.0130999999999999" y="1.0130999999999999"/>
+      <pt constSeg="true" x="38,40,54,56" yLocal="1.0438000000000001" y="1.0438000000000001"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D0A4EF5B4955C1F57C01F82" displayOrder="0" width="100" anonymous="false">
+     <step val="1" start="1" stop="1"/>
+     <points version="2">
+      <pt constSeg="true" x="38,40,54,56" yLocal="0.91490000000000005" y="0.91490000000000005"/>
+      <pt constSeg="true" x="41,57" yLocal="0.98229999999999995" y="0.98229999999999995"/>
+      <pt constSeg="true" x="42-43,58-59,189,195-196" yLocal="1" y="1"/>
+      <pt constSeg="true" x="194" yLocal="1.0095000000000001" y="1.0095000000000001"/>
+      <pt constSeg="true" x="190" yLocal="1.0144" y="1.0144"/>
+      <pt constSeg="true" x="193" yLocal="1.0301" y="1.0301"/>
+      <pt constSeg="true" x="191" yLocal="1.0456000000000001" y="1.0456000000000001"/>
+      <pt constSeg="true" x="192" yLocal="1.103" y="1.103"/>
+      <pt constSeg="true" x="39,55" yLocal="1.3240000000000001" y="1.3240000000000001"/>
+     </points>
     </column>
    </columns>
    <options>
@@ -706,6 +763,7 @@
          <tileHorizontal val="false"/>
          <tileVertical val="false"/>
          <framerate val="12" defaultValue="-1"/>
+         <useFileUnits val="false"/>
         </attrs>
        </module>
        <module type="READ" name="Drawing_1" pos="0,0,0" publishUnderTab="Drawing_1">
@@ -819,6 +877,7 @@
          <tileHorizontal val="false"/>
          <tileVertical val="false"/>
          <framerate val="12" defaultValue="-1"/>
+         <useFileUnits val="false"/>
         </attrs>
        </module>
        <module type="READ" name="Drawing" pos="-65,-50,0" publishUnderTab="Drawing">
@@ -832,16 +891,16 @@
          <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
          <offset>
           <separate val="true"/>
-          <x val="0" defaultValue="0"/>
-          <y val="0" defaultValue="0"/>
-          <z val="0" defaultValue="0"/>
+          <x val="0" defaultValue="0" col="ATV-0D284ED7B4845C3457C01F7E"/>
+          <y val="0" defaultValue="0" col="ATV-0D824E7DB47B5CB157C01F7F"/>
+          <z val="0" defaultValue="0" col="ATV-0D594EA6B46B5C1B57C01F80"/>
          </offset>
          <scale>
           <separate val="true"/>
           <inFields val="false"/>
           <xy val="1" defaultValue="1"/>
-          <x val="1" defaultValue="1"/>
-          <y val="1" defaultValue="1"/>
+          <x val="1" defaultValue="1" col="ATV-0DFB4E04B4E75C8357C01F81"/>
+          <y val="1" defaultValue="1" col="ATV-0D0A4EF5B4955C1F57C01F82"/>
           <z val="1" defaultValue="1"/>
          </scale>
          <rotation>
@@ -932,6 +991,7 @@
          <tileHorizontal val="false"/>
          <tileVertical val="false"/>
          <framerate val="-1" defaultValue="-1"/>
+         <useFileUnits val="false"/>
         </attrs>
        </module>
        <module type="COMPOSITE" name="Composite" pos="0,0,0" publishUnderTab="Composite">
@@ -1029,7 +1089,7 @@
    <int value=""/>
   </meta>
   <meta type="checksumValidation" name="checksumValidation" creator="Harmony Advanced" version="1.0">
-   <value data="6C00000000000000030314FEAF824B4B0124EBE14BBB78384B0615E2F440E2B1149FB8B0F206E0ADC6E4BAD46B1B33DD32F36D76195951BBD1BBA0D4514160D262A4510FAB3A91D26908BD4980CE14D5B9C468E7413567F30481702215A9749A1A72439244A222D00FE5D35DF6209797A5C3F1D36B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A40000000D12019320A523C125E2E58524257330C68EE8149DB00E8A46E510DBC9AA21B8E103CB11E372EA704531BD6E53474828E6BA8E30384ED718FF23DA41932BAD7F5"/>
+   <value data="6C0000000000000003033CD687AA6363290CC3C963935010632E3DCADC68CA993CB79098DA2EC885EECC92FC43331BF51ADB455E31717993F99388FC796948FA4A8C79278312B9FA41209561A8E63CFD91EC40CF691D4FDB2CA9580A3D815CB2325A6BBA6C8A0AF827CDFB75DE08BFBF8DEBD9FB6B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A400000002FAC94686BAB3297D6E95924C418D4500EE07C8B493364069A3A36D3E76AE12BD96C9D09C0A1F6FF6D3EE9545CA0CC2BF549529105822B7454FBA82A55FB87B2"/>
   </meta>
  </metas>
 </project>
