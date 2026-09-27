@@ -1,5 +1,6 @@
 {
   "name": "walk_slow",
+  "looping": true,
   "keyframes": [
     {
       "frame": 0,

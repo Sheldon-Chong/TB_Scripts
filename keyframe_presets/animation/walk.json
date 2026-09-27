@@ -1,5 +1,6 @@
 {
   "name": "walk",
+  "looping": true,
   "keyframes": [
     {
       "frame": 0,

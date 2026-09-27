@@ -82,7 +82,7 @@ function registerCameraSwipeTool() {
     name: string = MEASURE_LINE_TOOL_ID;
     displayName: string = 'Camera Swipe Tool';
     icon: string = 'MyTool.png';
-    toolType: string = 'drawing';
+    toolType: string = 'scenePlanning';
     canBeOverridenBySelectOrTransformTool: boolean = false;
     options: { snapToBoundary: boolean };
     resourceFolder: string = 'resources';
@@ -91,7 +91,7 @@ function registerCameraSwipeTool() {
     // Custom properties
     swipeScale: number = 80;
     cameraPegPath: string = 'Top/Camera-P';
-    ui: { snapCheckbox: any } | undefined;
+    ui: { snapCheckbox: any; optionsButton: any } | undefined;
 
     constructor(deps: { _: any; Shapes: any; Maths: any }) {
       this._ = deps._;
@@ -116,6 +116,7 @@ function registerCameraSwipeTool() {
 
     storeToPreferences(): void {
       preferences.setString(this.preferenceName(), JSON.stringify(this.options));
+      MessageLog.trace(`[CameraSwipeTool] Stored snapToBoundary=${this.options.snapToBoundary}`);
     }
 
     onRegister(): void {
@@ -259,11 +260,11 @@ function registerCameraSwipeTool() {
           } else {
             var pos = camPeg.position as oPathColumn3D;
             MessageLog.trace(`[CameraSwipeTool.ts] >> ${pos} | ${typeof pos}`);
-            var sel = new G.oSelection();
-            var startFrame = sel.startFrame;
+            var currentFrame = frame.current();
+            var startFrame = currentFrame;
 
             if (this.options.snapToBoundary) {
-              startFrame = G.FrameSnapping.getNearestBoundaryFrame(startFrame) - 1;
+              startFrame = G.FrameSnapping.getNearestBoundaryFrame(currentFrame) - 1;
             }
 
             scene.beginUndoRedoAccum('Camera Swipe');
@@ -330,20 +331,41 @@ function registerCameraSwipeTool() {
 
     loadPanel(dialog: any, responder: any): void {
       try {
-        var snapCheckbox = new QCheckBox('Snap to nearest boundary (every 32 frames)');
-        snapCheckbox.setChecked(this.options.snapToBoundary);
-        snapCheckbox.toggled.connect(this, function (checked: boolean) {
-          this.options.snapToBoundary = checked;
+        var snapCheckbox = new G.Widgets.BoundarySnapSwitch(dialog);
+        snapCheckbox.setEnabledState(this.options.snapToBoundary);
+        snapCheckbox.onStateChanged((state: number) => {
+          this.options.snapToBoundary = state !== 0;
+          MessageLog.trace(
+            `[CameraSwipeTool] Boundary switch state=${state}, enabled=${this.options.snapToBoundary}`,
+          );
           this.storeToPreferences();
           responder.settingsChanged();
         });
 
+        var optionsButton = new G.Widgets.UI_QToolButton({ dialog: dialog });
+        var optionsMenu = WidgetKit.optionsMenu(optionsButton, [
+          [
+            [
+              'Reset Settings',
+              () => {
+                this.options = { snapToBoundary: true };
+                this.storeToPreferences();
+                snapCheckbox.setEnabledState(this.options.snapToBoundary);
+                responder.settingsChanged();
+              },
+            ],
+          ],
+          [['Activate Camera Swipe Tool', () => Tools.setCurrentTool(MEASURE_LINE_TOOL_ID)]],
+        ]);
+        optionsButton.setMenu(optionsMenu);
+
         var layout = new QVBoxLayout(dialog);
         layout.setContentsMargins(8, 8, 8, 8);
         layout.addWidget(snapCheckbox, 0, 0);
+        layout.addWidget(optionsButton, 0, Qt.AlignmentFlag.AlignRight);
         layout.addStretch(1);
 
-        this.ui = { snapCheckbox: snapCheckbox };
+        this.ui = { snapCheckbox: snapCheckbox, optionsButton: optionsButton };
       } catch (e) {
         MessageLog.trace('CameraSwipeTool loadPanel error: ' + e.toString());
       }
@@ -353,7 +375,10 @@ function registerCameraSwipeTool() {
       try {
         var ui = this.ui;
         if (ui && ui.snapCheckbox) {
-          ui.snapCheckbox.setChecked(this.options.snapToBoundary);
+          MessageLog.trace(
+            `[CameraSwipeTool] Refreshing boundary switch to ${this.options.snapToBoundary}`,
+          );
+          ui.snapCheckbox.setEnabledState(this.options.snapToBoundary);
         }
       } catch (e) {
         MessageLog.trace(`CameraSwipeTool refreshPanel error: ${e.toString()}`);

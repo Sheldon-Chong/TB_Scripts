@@ -221,9 +221,11 @@ function updateToolbars() {
 interface RegisterActionOptions {
   name: string;
   icon: string;
-  callback: (_?: any) => void;
+  callback: (_?: any, action?: any) => void;
   shortcut?: string;
   category?: string;
+  checkable?: boolean;
+  isChecked?: boolean;
 }
 
 // include("globals.js");
@@ -250,14 +252,19 @@ function registerAction(options: RegisterActionOptions) {
   }
   this.__proto__.registeredActions[actionKey] = true;
 
-  var action = {
+  var action: any = {
     id: actionId,
     text: options.name,
     icon: options.icon,
     _: _,
     isEnabled: true,
+    checkable: options.checkable === true,
+    isChecked: options.isChecked === true,
     onTrigger: function () {
-      options.callback(globals);
+      if (action.checkable) {
+        action.isChecked = !action.isChecked;
+      }
+      options.callback(globals, action);
     },
   };
   ScriptManager.addAction(action);
@@ -302,6 +309,7 @@ function registerAction(options: RegisterActionOptions) {
       text: options.name,
       icon: options.icon,
       action: action.id,
+      checkable: action.checkable,
     });
   }
 

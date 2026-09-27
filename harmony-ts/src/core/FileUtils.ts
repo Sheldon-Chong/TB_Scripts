@@ -2,7 +2,7 @@
 
 // this.__proto__.PermanentFile = PermanentFile;
 
-function readFrom(file_path): String {
+function readFrom(file_path): string {
   var file = new PermanentFile(file_path);
   if (file.open(1)) {
     var contents = file.read();

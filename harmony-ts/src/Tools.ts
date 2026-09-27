@@ -26,6 +26,42 @@ var presetSettings = {
 
 this.__proto__.presetSettings = presetSettings;
 
+function buildLoopingKeyframes(keyframes: any[], startFrame: number, endFrame: number): any[] {
+  if (!keyframes.length || endFrame < startFrame) return keyframes;
+
+  var patternEndFrame = 0;
+  for (var i = 0; i < keyframes.length; i++) {
+    patternEndFrame = Math.max(patternEndFrame, keyframes[i].frame);
+  }
+
+  var patternLength = patternEndFrame + 1;
+  var repeated: any[] = [];
+  var cycle = 0;
+
+  while (startFrame + cycle * patternLength <= endFrame) {
+    var cycleOffset = cycle * patternLength;
+    for (var j = 0; j < keyframes.length; j++) {
+      var keyframe = keyframes[j];
+      var frameNumber = startFrame + cycleOffset + keyframe.frame;
+      if (frameNumber > endFrame) continue;
+
+      var repeatedKeyframe: any = {};
+      for (var property in keyframe) {
+        if (keyframe.hasOwnProperty(property)) {
+          repeatedKeyframe[property] = keyframe[property];
+        }
+      }
+      repeatedKeyframe.frame = cycleOffset + keyframe.frame;
+      repeated.push(repeatedKeyframe);
+    }
+    cycle++;
+  }
+
+  return repeated;
+}
+
+this.__proto__.buildLoopingKeyframes = buildLoopingKeyframes;
+
 function applyPreset(presetName: string, subFolder: string, applyFnName: string, label: string) {
   try {
     MessageLog.trace('applying');
@@ -45,6 +81,15 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
       currentFrame = G.FrameSnapping.getNearestBoundaryFrame(currentFrame);
 
     const trueStart = currentFrame - (data.center || 0);
+    const keyframes = data.looping
+      ? buildLoopingKeyframes(data.keyframes, trueStart, sel.endFrame)
+      : data.keyframes;
+
+    if (data.looping) {
+      MessageLog.trace(
+        `[Tools.ts] Looping ${data.keyframes.length} keyframes through frame ${sel.endFrame}`,
+      );
+    }
 
     let selected = sel.selectedNodes;
 
@@ -54,7 +99,7 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
     }
 
     // Use the currently selected nodes
-    G.TimelineKit[applyFnName](new G.oSelection(trueStart, undefined, selected), data.keyframes);
+    G.TimelineKit[applyFnName](new G.oSelection(trueStart, undefined, selected), keyframes);
 
     frame.setCurrent(trueStart);
 
@@ -97,6 +142,7 @@ function registerAllTools() {
   registerCameraSwipeTool();
   registerApplyShakeTool();
   registerApplyZoomTool();
+
   registerAction({
     name: 'Previous Boundary Marker',
     icon: `${specialFolders.userScripts}\\script-icons\\previous_boundary.png`,
@@ -116,15 +162,28 @@ function registerAllTools() {
     category: 'custom',
   });
   registerAction({
-    name: 'Apply Tool',
+    name: 'Empty',
     icon: 'earth.png',
     callback: function () {
-      MessageLog.trace('Apply Tool action triggered');
+      MessageLog.trace('Empty action triggered');
     },
     shortcut: 'Ctrl+Alt+R',
     category: 'custom',
-  }); // register a phony tool due to QT engine bug where running another file before this one causes all tools to fail registration, unless this tool is registered
+  });
+  // register a phony tool due to QT engine bug where running another file before
+  // this one causes all tools to fail registration, unless this tool is registered
 
+  registerAction({
+    name: 'Boundary Snapping',
+    icon: `${specialFolders.userScripts}\\script-icons\\snap_to_boundary.png`,
+    checkable: true,
+    isChecked: presetSettings.edgeSnappingEnabled,
+    callback: function (_globals: any, action: any) {
+      presetSettings.edgeSnappingEnabled = action.isChecked;
+      MessageLog.trace('[Tools] Global boundary snapping: ' + presetSettings.edgeSnappingEnabled);
+    },
+    category: 'presets',
+  });
   KEYFRAME_PRESETS.forEach(function (presetName, index) {
     const callback = function () {
       MessageLog.trace('test');

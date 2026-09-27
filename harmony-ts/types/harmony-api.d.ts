@@ -452,7 +452,7 @@ interface HarmonyToolDefinition {
   onMouseMove: (ctx: any) => boolean;
   onMouseUp: (ctx: any) => boolean;
   onResetTool: (ctx: any) => void;
-  showMeasureToast: (labelText: string, duration: number) => void;
+  showMeasureToast?: (labelText: string, duration: number) => void;
   loadPanel: (dialog: any, responder: any) => void;
   refreshPanel: (dialog: any, responder: any) => void;
 

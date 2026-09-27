@@ -145,4 +145,23 @@ namespace WidgetKit {
       this.setFixedSize(30, 30);
     }
   }
+
+  export class BoundarySnapSwitch extends QCheckBox {
+    constructor(parent: any) {
+      super('Snap to nearest boundary (every 32 frames)', parent);
+      this.styleSheet = 'QCheckBox { color: #e0e0e0; font-size: 11pt; }';
+    }
+
+    setEnabledState(enabled: boolean): void {
+      this.setChecked(enabled);
+    }
+
+    isEnabledState(): boolean {
+      return this.checkState() !== 0;
+    }
+
+    onStateChanged(callback: (state: number) => void): void {
+      this.stateChanged.connect(callback);
+    }
+  }
 }
