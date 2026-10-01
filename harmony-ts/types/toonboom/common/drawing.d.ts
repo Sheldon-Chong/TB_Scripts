@@ -4,6 +4,93 @@ type ArtIndex = 0 | 1 | 2 | 3;
 /** Node identifier path string (e.g., "Top/Drawing") */
 type NodePath = string;
 
+/**
+ * Toon Boom Harmony Drawing global object.
+ *
+ * Provides methods for iterating over and manipulating drawings
+ * belonging to an element.
+ */
+declare var Drawing: {
+  query: {
+    getData(options: any): any;
+  };
+
+  /**
+   * Returns the number of drawings in an element.
+   *
+   * @param elementId The unique ID of the element.
+   */
+  numberOf(elementId: number): number;
+
+  /**
+   * Returns the drawing ID/name at the given index.
+   *
+   * @param elementId The unique ID of the element.
+   * @param drawingIndex The drawing index.
+   */
+  name(elementId: number, drawingIndex: number): string;
+
+  /**
+   * Returns true if the given drawing exists in the element.
+   *
+   * @param elementId The unique ID of the element.
+   * @param timing The drawing name/exposure.
+   */
+  isExists(elementId: number, timing: string): boolean;
+
+  /**
+   * Creates a new drawing inside an element.
+   *
+   * The drawing initially resides in the temporary folder until
+   * the project is saved, unless storeInProjectFolder is specified.
+   *
+   * @param elementId The unique ID of the element.
+   * @param timing The proposed drawing name/exposure.
+   * @param fileExists Indicates that the drawing file exists.
+   * @param storeInProjectFolder If true, the drawing exists in the
+   * project folder rather than the temporary folder.
+   *
+   * @returns True if the drawing was created successfully.
+   */
+  create(
+    elementId: number,
+    timing: string,
+    fileExists: boolean,
+    storeInProjectFolder?: boolean,
+  ): boolean;
+
+  /**
+   * Returns the filename of a drawing on disk.
+   *
+   * The returned path may point to either the temporary folder
+   * or the project folder.
+   *
+   * @param elementId The unique ID of the element.
+   * @param drawingName The drawing name/exposure.
+   */
+  filename(elementId: number, drawingName: string): string;
+
+  /**
+   * Creates a drawing key from a descriptor object.
+   *
+   * Supported descriptors:
+   *
+   * - A drawing file path
+   * - A node and frame
+   * - An element ID and exposure, optionally with a synced layer
+   */
+  Key(object: DrawingKeyInput): DrawingKey;
+
+  /**
+   * Creates a drawing key from an element ID and exposure.
+   *
+   * This overload is used by examples in the Toon Boom
+   * documentation even though the primary API signature
+   * documents the object form.
+   */
+  Key(elementId: number, exposure: string, layer?: string): DrawingKey;
+};
+
 /** Drawing Descriptor target */
 interface DrawingDescriptor {
   node: NodePath;

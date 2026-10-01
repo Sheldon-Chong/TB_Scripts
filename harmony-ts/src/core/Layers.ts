@@ -1,6 +1,7 @@
 include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/Vectors.js');
 include(specialFolders.userScripts + '/core/Attributes.js');
+include(specialFolders.userScripts + '/core/Element.js');
 
 class oDrawing {
   public name: string;
@@ -14,81 +15,6 @@ class oDrawing {
 
   toString() {
     return `Drawing<${this.element.folder}-${this.name}.tvg>`;
-  }
-}
-
-class oElement {
-  associatedNode?: oNodeLayer;
-  folder: string;
-  completeFolder: string;
-  drawings: string[];
-
-  elementId?: number;
-
-  constructor(elementId: number, associatedNode?: oNodeLayer) {
-    this.elementId = elementId;
-    this.completeFolder = element.completeFolder(elementId);
-    this.folder = element.folder(elementId);
-    this.associatedNode = associatedNode;
-    this.updateDrawingsList();
-
-    MessageLog.trace(JSON.stringify(this.drawings, null, 2));
-  }
-
-  updateDrawingsList() {
-    this.drawings = listFilesInDirectory(this.completeFolder, ['*.tvg']);
-  }
-
-  getDrawings(): string[] {
-    this.updateDrawingsList();
-    return this.drawings;
-  }
-
-  getDrawing(drawingName: string): oDrawing | null {
-    this.updateDrawingsList();
-    if (this.exists(drawingName)) {
-      return new oDrawing(drawingName, this);
-    }
-    return null;
-  }
-
-  exists(drawingName: string): boolean {
-    this.updateDrawingsList();
-    MessageLog.trace(this.completeFolder);
-    return this.drawings.indexOf(`${this.folder}-${drawingName}.tvg`) !== -1;
-  }
-
-  generateUniqueDrawingName(baseName: string): string {
-    this.updateDrawingsList();
-    let uniqueName = baseName;
-    let counter = 1;
-    while (this.exists(uniqueName)) {
-      uniqueName = `${baseName}_${counter}`;
-      counter++;
-    }
-    return uniqueName;
-  }
-
-  duplicateDrawing(newDrawingName: string, sourceDrawingName: string): oDrawing | null {
-    var sourcePath = this.completeFolder + '/' + `${this.folder}-${sourceDrawingName}.tvg`;
-    var uniqueName = this.generateUniqueDrawingName(newDrawingName);
-    var destPath = this.completeFolder + '/' + `${this.folder}-${uniqueName}.tvg`;
-
-    if (copyFile(sourcePath, destPath)) {
-      Drawing.create(this.elementId!, uniqueName, true, true);
-
-      return new oDrawing(uniqueName, this);
-    }
-
-    return null;
-  }
-
-  revealInFileExplorer(): boolean {
-    return openInFileExplorer(this.completeFolder);
-  }
-
-  toString() {
-    return `Element<${this.completeFolder}>`;
   }
 }
 

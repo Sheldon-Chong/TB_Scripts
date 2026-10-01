@@ -2,8 +2,15 @@
  * Opaque or defined interface representing a Toon Boom Harmony PaletteList object.
  */
 declare interface PaletteList {
-  // Add PaletteList properties/methods here as needed
-  [key: string]: unknown;
+  numPalettes: number;
+  getPaletteByIndex(index: number): PaletteObject;
+}
+
+/** Palette returned by PaletteObjectManager.getScenePaletteList(). */
+declare interface PaletteObject {
+  name: string;
+  path?: string;
+  getColorById(colorId: string): DrawingColor;
 }
 
 /**
