@@ -1,0 +1,31 @@
+declare class Attribute {
+  keyword(): string;
+  name(): string;
+  typeName(): string;
+  boolValue(): boolean;
+  intValue(): number;
+  doubleValue(): number;
+  textValue(): string;
+  colorValue(): ColorRGBA;
+  pos2dValue(): Point2d;
+  pos3dValue(): Point3d;
+  boolValueAt(frame: number): boolean;
+  intValueAt(frame: number): number;
+  doubleValueAt(frame: number): number;
+  textValueAt(frame: number): string;
+  colorValueAt(frame: number): ColorRGBA;
+  pos2dValueAt(frame: number): Point2d;
+  pos3dValueAt(frame: number): Point3d;
+  setValue(value: any): void;
+  setValue(value: number): void;
+  setValue(value: boolean): void;
+  setValue(value: string): void;
+  setValueAt(value: any, frame: number): void;
+  setValueAt(value: number, frame: number): void;
+  setValueAt(value: boolean, frame: number): void;
+  setValueAt(value: string, frame: number): void;
+  getSubAttributes(): Attribute[];
+  hasSubAttributes(): boolean;
+  fullKeyword(): string;
+  possibleTextValues(): string[];
+}
