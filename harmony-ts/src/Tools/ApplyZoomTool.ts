@@ -163,7 +163,9 @@ function registerApplyZoomTool() {
         if (ctx.shiftPressed) {
           var rawCenter = ctx._rawRectCenter || ctx._rectCenter;
           var centerDistance = Math.sqrt(rawCenter.x * rawCenter.x + rawCenter.y * rawCenter.y);
-          MessageLog.trace('shift pressed' + `: ${centerDistance <= CENTER_SNAP_RADIUS}`);
+          MessageLog.trace(
+            `centerDistance${centerDistance} | CENTER_SNAP_RADIUS${CENTER_SNAP_RADIUS}`,
+          );
           // MessageLog.trace(`[ApplyZoomTool.ts] centerDistance: ${centerDistance}`);
           // MessageLog.trace(`[ApplyZoomTool.ts] CENTER_SNAP_RADIUS: ${CENTER_SNAP_RADIUS}`);
           if (centerDistance <= CENTER_SNAP_RADIUS) {

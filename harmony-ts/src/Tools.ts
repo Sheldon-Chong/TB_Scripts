@@ -66,8 +66,9 @@ function applyPreset(presetName: string, subFolder: string, applyFnName: string,
   try {
     MessageLog.trace('applying');
     scene.beginUndoRedoAccum('Apply ' + label + ': ' + presetName);
-    const path =
-      'D:/YT projects/Coding/ToonBoom/keyframe_presets/' + subFolder + presetName + '.json';
+    const path = `${specialFolders.userScripts}/keyframe_presets/${subFolder}${presetName}.json`;
+    MessageLog.trace(`[Tools.ts] Applying preset from path: ${path}`);
+    // 'D:/YT projects/Coding/ToonBoom/keyframe_presets/' + subFolder + presetName + '.json';
 
     var content = G.FileUtils.readFrom(path);
 
