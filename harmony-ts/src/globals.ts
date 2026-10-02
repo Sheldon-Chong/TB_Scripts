@@ -17,6 +17,7 @@ include(specialFolders.userScripts + '/core/MetadataKit.js');
 include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
 include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
+include(specialFolders.userScripts + '/core/DrawingDataKit.js');
 
 // --- ES6+ Array method polyfills for QtScript's ES5 engine ---
 if (!Array.prototype.find) {
@@ -93,6 +94,7 @@ if (!Array.prototype.includes) {
 // scopes that interact badly with QtScript's GC — when Qt widget wrappers are
 // created (e.g. in CameraSwipeToolPanel), the GC can corrupt built-in globals like
 // Array, causing crashes or "Array is undefined" errors.
+
 class HarmonyGlobals {
   Shapes = Shapes;
   Math = Maths;
@@ -105,6 +107,10 @@ class HarmonyGlobals {
   ColorUtils = ColorUtils;
   Vectors = vectors;
   Scene = SceneKit;
+
+  Drawing = Drawing;
+  DrawingTools = DrawingTools;
+  DrawingDataKit = DrawingDataKit;
 
   // dgets = Widgets;
   LayerManager = LayerManager;
@@ -173,6 +179,8 @@ if (Object.keys(this.__proto__).indexOf('G') === -1) {
   this.__proto__.registeredActions = this.__proto__.registeredActions || {};
   this.__proto__.registeredToolbars = this.__proto__.registeredToolbars || {};
   this.__proto__.PermanentFile = PermanentFile;
+  this.__proto__.Drawing = Drawing;
+  this.__proto__.DrawingTools = DrawingTools;
   this.__proto__.column = column;
   // this.__proto__.TimelineMarker = TimelineMarker;
 
