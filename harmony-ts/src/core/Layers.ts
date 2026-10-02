@@ -35,7 +35,7 @@ class oDrawing {
     return this.filepath.substring(this.filepath.lastIndexOf('/') + 1);
   }
 
-  copy(destFileName?: string, override: boolean = false): oDrawing | null {
+  duplicate(destFileName?: string, override: boolean = false): oDrawing | null {
     let drawingName = '';
     if (destFileName) {
       drawingName = destFileName;
@@ -48,6 +48,7 @@ class oDrawing {
 }
 
 /* ====================== COLUMN ====================== */
+
 class oColumn {
   name: string;
   parent: oNodeLayer;
@@ -163,9 +164,98 @@ class oColumn {
     return true;
   }
 
+  /**
+   * Repeat the values from sourceSelection across pasteSelection.
+   * Subclasses can override pasteLoopKeyframe() when copying a value requires
+   * more than writing the source value into the destination column.
+   */
+  loopKeyframes(sourceSelection: oSelection, pasteSelection: oSelection): boolean {
+    if (sourceSelection.endFrame < sourceSelection.startFrame) return false;
+    if (pasteSelection.endFrame < pasteSelection.startFrame) return false;
+
+    const sourceLength = sourceSelection.endFrame - sourceSelection.startFrame + 1;
+    const sourceValues: any[] = [];
+    for (
+      let sourceFrame = sourceSelection.startFrame;
+      sourceFrame <= sourceSelection.endFrame;
+      sourceFrame++
+    ) {
+      sourceValues.push(this.getKeyframe(sourceFrame));
+    }
+
+    for (
+      let destinationFrame = pasteSelection.startFrame;
+      destinationFrame <= pasteSelection.endFrame;
+      destinationFrame++
+    ) {
+      const sourceValue =
+        sourceValues[(destinationFrame - pasteSelection.startFrame) % sourceLength];
+      if (!this.pasteLoopKeyframe(sourceValue, destinationFrame)) return false;
+    }
+    return true;
+  }
+
+  protected pasteLoopKeyframe(sourceValue: any, destinationFrame: number): boolean {
+    return this.setKeyFrame(destinationFrame, sourceValue);
+  }
+
   /** Returns true if the specified frame is a keyframe (uses column.isKeyFrame with subColumn 0). */
   isKeyFrame(frameNumber: number): boolean {
     return column.isKeyFrame(this.name, 0, frameNumber);
+  }
+}
+class oDrawingElementColumn extends oColumn {
+  element: oElement;
+
+  constructor(name: string, parentLayer: oNodeLayer) {
+    MessageLog.trace('name ' + name);
+    MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
+    super(name, parentLayer);
+    this.element = new oElement(node.getElementId(parentLayer.nodePath));
+  }
+
+  getKeyframe(frameNumber: number): oDrawing | null {
+    if (super.getKeyframe(frameNumber) === '') {
+      return null;
+    }
+    return new oDrawing(super.getKeyframe(frameNumber), this.element);
+  }
+
+  setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
+  setKeyFrame(selection: oSelection, value: any): boolean;
+  setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
+    if (value instanceof oDrawing) {
+      return super.setKeyFrame(startOrSelection as any, value.name, endFrame);
+    }
+    return super.setKeyFrame(startOrSelection as any, value, endFrame);
+  }
+
+  protected pasteLoopKeyframe(sourceValue: any, destinationFrame: number): boolean {
+    const drawing = sourceValue as oDrawing | null;
+    if (!drawing) {
+      return super.setKeyFrame(destinationFrame, '');
+    }
+
+    const copiedDrawing = drawing.duplicate();
+    if (!copiedDrawing) return false;
+    return super.setKeyFrame(destinationFrame, copiedDrawing.name);
+  }
+
+  copyDrawingRangeTo(selection: oSelection, destFrame: number): boolean {
+    const pasteSelection = new oSelection(
+      destFrame,
+      destFrame + selection.endFrame - selection.startFrame,
+    );
+    return this.loopKeyframes(selection, pasteSelection);
+  }
+
+  copyDrawingTo(drawing: oDrawing, destFrame: number): boolean {
+    const copiedDrawing = drawing.duplicate();
+    if (!copiedDrawing) {
+      MessageLog.trace('Failed to copy drawing for duplication.');
+      return false;
+    }
+    return this.setKeyFrame(destFrame, copiedDrawing.name);
   }
 }
 
@@ -530,45 +620,6 @@ class oNodeLayer {
   }
 }
 
-class oDrawingElementColumn extends oColumn {
-  element: oElement;
-
-  constructor(name: string, parentLayer: oNodeLayer) {
-    MessageLog.trace('name ' + name);
-    MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
-    super(name, parentLayer);
-    this.element = new oElement(node.getElementId(parentLayer.nodePath));
-  }
-
-  getKeyframe(frameNumber: number): oDrawing | null {
-    if (super.getKeyframe(frameNumber) === '') {
-      return null;
-    }
-    return new oDrawing(super.getKeyframe(frameNumber), this.element);
-  }
-
-  setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
-  setKeyFrame(selection: oSelection, value: any): boolean;
-  setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
-    if (value instanceof oDrawing) {
-      return super.setKeyFrame(startOrSelection as any, value.exposureName, endFrame);
-    }
-    return super.setKeyFrame(startOrSelection as any, value, endFrame);
-  }
-
-  copyDrawingTo(drawing: oDrawing, destFrame: number): boolean {
-    const copiedDrawing = drawing.copy();
-    if (!copiedDrawing) {
-      MessageLog.trace('Failed to copy drawing for duplication.');
-      return false;
-    }
-    // MessageLog.trace(copiedDrawing.exposureName);
-    MessageLog.trace(`[Layers.ts] ${copiedDrawing.name}`);
-
-    return this.setKeyFrame(destFrame, copiedDrawing.name);
-  }
-}
-
 class oDrawingNode extends oNodeLayer {
   drawing = new oTextAttr(this.nodePath, 'DRAWING');
   /** Position (OFFSET attribute, type POSITION_3D) */
@@ -577,7 +628,7 @@ class oDrawingNode extends oNodeLayer {
   scale = new oScale3D(this.nodePath);
 
   /** The DRAWING.ELEMENT exposure column. Use setKeyFrame to set an exposure. */
-  get drawingElement(): oColumn {
+  get drawingElement(): oDrawingElementColumn {
     return this.getColumn('DRAWING.ELEMENT');
   }
 
@@ -830,26 +881,40 @@ class _LayerManager {
   updateNodeLayers(): void {
     this.nodeLayers = [];
 
+    const timelineIndices: { [nodePath: string]: number } = {};
+    for (let timelineIndex = 0; timelineIndex < Timeline.numLayers; timelineIndex++) {
+      const nodePath = Timeline.layerToNode(timelineIndex);
+      if (nodePath) {
+        timelineIndices[nodePath] = timelineIndex;
+      }
+    }
+
     const allNodes = getAllNodesInScene();
     for (const nodePath of allNodes) {
       const nodeType = node.type(nodePath);
+      const timelineIndex = timelineIndices[nodePath] ?? -1;
       if (nodeType === 'COLOR_CARD') {
         this.nodeLayers.push(
-          new oColorCardNode(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+          new oColorCardNode(
+            this.nodeLayers.length,
+            timelineIndex,
+            nodePath,
+            node.getName(nodePath),
+          ),
         );
       }
       if (nodeType === 'PEG') {
         this.nodeLayers.push(
-          new oPegNode(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+          new oPegNode(this.nodeLayers.length, timelineIndex, nodePath, node.getName(nodePath)),
         );
       }
       if (nodeType === 'READ') {
         this.nodeLayers.push(
-          new oDrawingNode(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+          new oDrawingNode(this.nodeLayers.length, timelineIndex, nodePath, node.getName(nodePath)),
         );
       } else {
         this.nodeLayers.push(
-          new oNodeLayer(this.nodeLayers.length, 0, nodePath, node.getName(nodePath)),
+          new oNodeLayer(this.nodeLayers.length, timelineIndex, nodePath, node.getName(nodePath)),
         );
       }
     }

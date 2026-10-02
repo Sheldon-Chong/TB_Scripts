@@ -13,11 +13,11 @@ declare var Timeline: {
   setDisplayToUnconnected(): boolean;
   getFrameMarker(layerIndex: number, frameNumber: number): any; // QScriptValue
   getAllFrameMarkers(layerIndex: number): any; // QScriptValue
-  filterFrameMarkers(layerIndex: number, markerType: string): any; // QScriptValue
-  createFrameMarker(layerIndex: number, markerType: string, frameNumber: number): number;
+  filterFrameMarkers(layerIndex: number, markerType: frameMarkerColor): any; // QScriptValue
+  createFrameMarker(layerIndex: number, markerType: frameMarkerColor, frameNumber: number): number;
   deleteFrameMarker(layerIndex: number, markerId: number): boolean;
   moveFrameMarker(layerIndex: number, markerId: number, newFrame: number): boolean;
-  changeFrameMarkerType(layerIndex: number, markerId: number, markerType: string): boolean;
+  changeFrameMarkerType(layerIndex: number, markerId: number, markerType: frameMarkerColor): boolean;
   frameMarkerTypes(): string[]; // StringList
   centerOnFrame(frameNum: number): void;
   numLayerSel(): number;

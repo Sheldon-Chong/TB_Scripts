@@ -110,6 +110,10 @@ class oElement {
     return this.copyDrawing(sourceDrawingName, uniqueName);
   }
 
+  constructDrawingPath(drawingName: string): string {
+    return `${this.completeFolder}/${this.name}-${drawingName}.tvg`;
+  }
+
   copyDrawing(
     sourceDrawingName: string,
     destinationDrawingName: string,
@@ -122,16 +126,18 @@ class oElement {
     }
 
     const sourcePath = Drawing.filename(this.id, sourceDrawingName);
-    const destinationPath = `${this.completeFolder}/${this.name}-${destinationDrawingName}.tvg`;
+    const destinationPath = this.constructDrawingPath(destinationDrawingName);
     if (!override && (this.registered(destinationDrawingName) || exists(destinationPath))) {
       MessageLog.trace('File already exists at destination path: ' + destinationPath);
-      return null;
+      throw new Error(
+        `Destination drawing '${destinationDrawingName}' already exists in element '${this.name}'.`,
+      );
     }
 
     const result = Drawing.create(this.id, destinationDrawingName, true, true);
 
     if (!copyFile(sourcePath, destinationPath)) {
-      return null;
+      throw new Error(`Failed to copy drawing from '${sourcePath}' to '${destinationPath}'.`);
     }
 
     return new oDrawing(destinationDrawingName, this);

@@ -67,3 +67,117 @@ declare var column: {
   getTimesheetEntry(columnName: string, subColumn: number, atFrame: number): QScriptValue;
   getImageBlock(columnName: string, startFrame: number, nbFrames: number): QImage;
 };
+
+type frameMarkerColor =
+  | 'Red'
+  | 'Orange'
+  | 'Yellow'
+  | 'Green'
+  | 'Cyan'
+  | 'Blue'
+  | 'Purple'
+  | 'Pink'
+  | 'White'
+  | 'Black';
+
+
+  
+declare class columnMarkers {
+  /**
+   * Creates a new marker on the current column.
+   *
+   * @param startFrame Frame where the marker starts.
+   * @param length Length of the marker.
+   * @param type User-defined marker type.
+   * @returns The ID of the newly created marker.
+   */
+  createMarker(startFrame: number, length: number, type: string): number;
+
+  /**
+   * Deletes a marker.
+   *
+   * @param id Marker ID to delete.
+   * @returns true if deletion succeeds, otherwise false.
+   */
+  removeMarker(id: number): boolean;
+
+  /**
+   * Returns all marker IDs managed by this marker manager.
+   */
+  markers(): number[];
+
+  /**
+   * Returns all marker IDs at the requested frame.
+   *
+   * @param startFrame Frame to query.
+   */
+  markers(startFrame: number): number[];
+
+  /**
+   * Gets a marker ID at the requested frame for the given type.
+   *
+   * @param startFrame Frame to query.
+   * @param type Marker type to look for.
+   * @returns Marker ID, or 0 if none was found.
+   */
+  marker(startFrame: number, type: string): number;
+
+  /**
+   * Returns the start frame of a marker.
+   *
+   * @param markerId Marker ID.
+   */
+  startFrame(markerId: number): number;
+
+  /**
+   * Returns the length of a marker.
+   *
+   * @param markerId Marker ID.
+   */
+  length(markerId: number): number;
+
+  /**
+   * Moves a marker and optionally changes its length.
+   *
+   * @param markerId Marker ID.
+   * @param newStart New starting frame.
+   * @param newLength New marker length.
+   */
+  moveMarker(markerId: number, newStart: number, newLength: number): void;
+
+  /**
+   * Returns marker IDs whose ranges overlap the requested frame.
+   *
+   * Note: "overlapingMarkers" is intentionally spelled this way
+   * to match the Toon Boom API.
+   *
+   * @param startFrame Frame to query.
+   */
+  overlapingMarkers(startFrame: number): number[];
+
+  /**
+   * Gets a property value from a marker.
+   *
+   * Returns null if the property does not exist.
+   *
+   * @param markerId Marker ID.
+   * @param propertyName Property key.
+   */
+  value(markerId: number, propertyName: string): any | null;
+
+  /**
+   * Sets a property value on a marker.
+   *
+   * @param markerId Marker ID.
+   * @param propertyName Property key.
+   * @param value Value to store.
+   */
+  setValue(markerId: number, propertyName: string, value: any): void;
+
+  /**
+   * Returns all property keys stored on a marker.
+   *
+   * @param markerId Marker ID.
+   */
+  keyValues(markerId: number): string[];
+}
