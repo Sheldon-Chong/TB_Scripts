@@ -16,6 +16,35 @@ class oDrawing {
   toString() {
     return `Drawing<${this.element.folder}-${this.name}.tvg>`;
   }
+
+  getName(): string {
+    return this.name;
+  }
+
+  get exposureName(): string {
+    return this.name.substring(
+      this.name.lastIndexOf(this.element.folder) + this.element.folder.length + 1,
+    );
+  }
+
+  get filepath(): string {
+    return Drawing.filename(this.element.id, this.name);
+  }
+
+  get filename(): string {
+    return this.filepath.substring(this.filepath.lastIndexOf('/') + 1);
+  }
+
+  copy(destFileName?: string, override: boolean = false): oDrawing | null {
+    let drawingName = '';
+    if (destFileName) {
+      drawingName = destFileName;
+    } else {
+      drawingName = this.name;
+    }
+
+    return this.element.duplicateDrawing(drawingName, this.name);
+  }
 }
 
 /* ====================== COLUMN ====================== */
@@ -352,6 +381,11 @@ class oNodeLayer {
     linkType?: string,
     createColumn?: boolean,
   ): oPathColumn3D;
+  getColumn(
+    attrName: 'DRAWING.ELEMENT',
+    linkType?: string,
+    createColumn?: boolean,
+  ): oDrawingElementColumn;
   getColumn(attrName: string, linkType?: string, createColumn?: boolean): oColumn;
   getColumn(attrName: string, linkType?: string, createColumn: boolean = true): oColumn {
     if (attrName.indexOf('|') !== -1) {
@@ -396,10 +430,16 @@ class oNodeLayer {
             "'.",
         );
       }
+      if (attrName === 'DRAWING.ELEMENT') {
+        return new oDrawingElementColumn(colName, this);
+      }
       return new oColumn(colName, this);
     }
     if (attrName === 'offset.attr3dpath' || attrName === 'position.attr3dpath') {
       return new oPathColumn3D(col, this);
+    }
+    if (attrName === 'DRAWING.ELEMENT') {
+      return new oDrawingElementColumn(col, this);
     }
     return new oColumn(col, this);
   }
@@ -490,143 +530,42 @@ class oNodeLayer {
   }
 }
 
-class objElement {
-  id: number;
-
-  constructor(elementId: number) {
-    this.id = elementId;
-  }
-
-  get elementName(): string {
-    return element.getNameById(this.id);
-  }
-  get scanType(): string {
-    return element.scanType(this.id);
-  }
-  get fieldChart(): number {
-    return element.fieldChart(this.id);
-  }
-  get vectorType(): number {
-    return element.vectorType(this.id);
-  }
-  get pixmapFormat(): string {
-    return element.pixmapFormat(this.id);
-  }
-  get folder(): string {
-    return element.folder(this.id);
-  }
-  get completeFolder(): string {
-    return element.completeFolder(this.id);
-  }
-  get physicalName(): string {
-    return element.physicalName(this.id);
-  }
-
-  modify(scanType: string, fieldChart: number, pixmapFormat: string, vectorType: number): boolean {
-    return element.modify(this.id, scanType, fieldChart, pixmapFormat, vectorType);
-  }
-
-  rename(name: string): boolean {
-    return element.renameById(this.id, name);
-  }
-
-  remove(deleteDiskFile: boolean): boolean {
-    return element.remove(this.id, deleteDiskFile);
-  }
-}
-
-class objDrawing {
-  name: string;
-  element: objElement;
-
-  getName(): string {
-    return this.name;
-  }
-
-  get exposureName(): string {
-    return this.name.substring(
-      this.name.lastIndexOf(this.element.folder) + this.element.folder.length + 1,
-    );
-  }
-
-  get filepath(): string {
-    return Drawing.filename(this.element.id, this.name);
-  }
-
-  // returns path without folder
-  get filename(): string {
-    return this.filepath.substring(this.filepath.lastIndexOf('/') + 1);
-  }
-
-  constructor(name: string, element: objElement) {
-    this.name = name;
-    this.element = element;
-  }
-
-  copy(destFileName?: string, override: boolean = false): objDrawing | null {
-    let drawingName = '';
-    if (destFileName) {
-      drawingName = destFileName;
-    } else {
-      const filename = this.filename.substring(0, this.filename.lastIndexOf('.tvg'));
-      drawingName = FileUtils.getUniqueFileName(
-        this.element.completeFolder,
-        filename,
-        '.tvg',
-      ).replace('.tvg', '');
-    }
-
-    const destPath = this.element.completeFolder + '/' + drawingName + '.tvg';
-
-    if (!override && FileUtils.exists(destPath)) {
-      MessageLog.trace('File already exists at destination path: ' + destPath);
-      return null;
-    }
-
-    // MessageLog.trace("drawing name " + this.exposureName);
-    const copiedFile = new objDrawing(drawingName, this.element);
-    const result = Drawing.create(this.element.id, copiedFile.exposureName, true, true);
-    MessageLog.trace('result ' + result);
-    FileUtils.copyTo(this.filepath, destPath);
-    return copiedFile;
-  }
-}
-
 class oDrawingElementColumn extends oColumn {
-  element: objElement;
+  element: oElement;
 
   constructor(name: string, parentLayer: oNodeLayer) {
     MessageLog.trace('name ' + name);
     MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
     super(name, parentLayer);
-    this.element = new objElement(node.getElementId(parentLayer.nodePath));
+    this.element = new oElement(node.getElementId(parentLayer.nodePath));
   }
 
-  getKeyframe(frameNumber: number): any {
+  getKeyframe(frameNumber: number): oDrawing | null {
     if (super.getKeyframe(frameNumber) === '') {
       return null;
     }
-    return new objDrawing(super.getKeyframe(frameNumber), this.element);
+    return new oDrawing(super.getKeyframe(frameNumber), this.element);
   }
 
   setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
   setKeyFrame(selection: oSelection, value: any): boolean;
   setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
-    if (value instanceof objDrawing) {
+    if (value instanceof oDrawing) {
       return super.setKeyFrame(startOrSelection as any, value.exposureName, endFrame);
     }
     return super.setKeyFrame(startOrSelection as any, value, endFrame);
   }
 
-  copyDrawingTo(drawing: objDrawing, destFrame: number): boolean {
+  copyDrawingTo(drawing: oDrawing, destFrame: number): boolean {
     const copiedDrawing = drawing.copy();
     if (!copiedDrawing) {
       MessageLog.trace('Failed to copy drawing for duplication.');
       return false;
     }
-    MessageLog.trace(copiedDrawing.exposureName);
+    // MessageLog.trace(copiedDrawing.exposureName);
+    MessageLog.trace(`[Layers.ts] ${copiedDrawing.name}`);
 
-    return this.setKeyFrame(destFrame, copiedDrawing.exposureName);
+    return this.setKeyFrame(destFrame, copiedDrawing.name);
   }
 }
 
@@ -640,6 +579,10 @@ class oDrawingNode extends oNodeLayer {
   /** The DRAWING.ELEMENT exposure column. Use setKeyFrame to set an exposure. */
   get drawingElement(): oColumn {
     return this.getColumn('DRAWING.ELEMENT');
+  }
+
+  getElement(): oElement {
+    return new oElement(node.getElementId(this.nodePath));
   }
 
   constructor(displayOrder: number, index: number, nodePath: string, name: string) {

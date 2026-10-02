@@ -1,3 +1,5 @@
+include('FileUtils.js');
+
 class oElement {
   readonly id: number;
   associatedNode?: oNodeLayer;
@@ -63,16 +65,21 @@ class oElement {
     for (let i = 0; i < Drawing.numberOf(this.id); i++) {
       drawings.push(Drawing.name(this.id, i));
     }
-
     return drawings;
   }
 
   exists(drawingName: string): boolean {
+    const path = `${this.completeFolder}/${this.name}-${drawingName}.tvg`;
+    MessageLog.trace(`[Element.ts] ${path}`);
+    return exists(path);
+  }
+
+  registered(drawingName: string): boolean {
     return Drawing.isExists(this.id, drawingName);
   }
 
   getDrawing(drawingName: string): oDrawing | null {
-    if (!this.exists(drawingName)) {
+    if (!this.registered(drawingName)) {
       return null;
     }
 
@@ -83,12 +90,51 @@ class oElement {
     let name = baseName;
     let counter = 1;
 
-    while (this.exists(name)) {
+    while (this.registered(name)) {
       name = `${baseName}_${counter}`;
       counter++;
     }
 
     return name;
+  }
+
+  /**
+   * Duplicates a drawing in the element.
+   *
+   * @param baseName The name of the new drawing.
+   * @param sourceDrawingName The name of the source drawing.
+   * @returns The new drawing or null if it failed to create.
+   */
+  duplicateDrawing(baseName: string, sourceDrawingName: string): oDrawing | null {
+    const uniqueName = this.generateUniqueDrawingName(baseName);
+    return this.copyDrawing(sourceDrawingName, uniqueName);
+  }
+
+  copyDrawing(
+    sourceDrawingName: string,
+    destinationDrawingName: string,
+    override: boolean = false,
+  ): oDrawing | null {
+    if (!this.exists(sourceDrawingName)) {
+      throw new Error(
+        `Source drawing '${sourceDrawingName}' does not exist in element '${this.name}'.`,
+      );
+    }
+
+    const sourcePath = Drawing.filename(this.id, sourceDrawingName);
+    const destinationPath = `${this.completeFolder}/${this.name}-${destinationDrawingName}.tvg`;
+    if (!override && (this.registered(destinationDrawingName) || exists(destinationPath))) {
+      MessageLog.trace('File already exists at destination path: ' + destinationPath);
+      return null;
+    }
+
+    const result = Drawing.create(this.id, destinationDrawingName, true, true);
+
+    if (!copyFile(sourcePath, destinationPath)) {
+      return null;
+    }
+
+    return new oDrawing(destinationDrawingName, this);
   }
 
   revealInFileExplorer(): boolean {

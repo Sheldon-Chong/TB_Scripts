@@ -120,8 +120,9 @@ class HarmonyGlobals {
   Column = oColumn;
   PathColumn3D = oPathColumn3D;
   Palettes = GlobalPalettes;
-  objDrawing = objDrawing;
-  objElement = objElement;
+  // Keep the legacy property name while exposing the unified drawing class.
+  objDrawing = oDrawing;
+  // objElement = objElement;
   oDrawingLayer = oDrawingNode;
   ColorCardNode = oColorCardNode;
   columnGroupingColor = columnGroupingColor;

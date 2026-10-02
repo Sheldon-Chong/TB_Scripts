@@ -25,6 +25,14 @@
 	// 	"exclude": ["**/temp/*.ts"],
 	// 	"description": "Insert test block"
 	// }
+
+	"Wrap in MessageLog.trace": {
+  "prefix": "trace-selection",
+  "body": [
+    "MessageLog.trace(${TM_SELECTED_TEXT});"
+  ],
+  "description": "Wrap selected text in MessageLog.trace()"
+},
 	"MessageLog Trace with Context": {
 		"prefix": "mltrace",
 		"body": [
