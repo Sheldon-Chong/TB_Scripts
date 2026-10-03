@@ -663,59 +663,69 @@ function prompt(message: string, title?: string, defaultText?: string): string |
   return result;
 }
 
-
 function createUtils(Core: any) {
   var Utils: any = {};
 
+  Utils.toast = function (labelText, position, duration, color, window?) {
+    var toast = new QWidget();
+    toast.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.ToolTip);
 
-  Utils.openInFileExplorer = function (
-    path: string
-  ) {
-    var process =
-      new Core.QProcess();
+    var bgColor =
+      typeof color === 'string'
+        ? color
+        : 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',0.5)';
+    var styleSheet =
+      'QWidget { background-color: ' +
+      bgColor +
+      '; color: white; border-radius: 10px; padding: 10px; font-family: Arial; font-size: 12pt; }';
+    toast.setStyleSheet(styleSheet);
+
+    var layout = new QHBoxLayout(toast);
+    layout.addWidget(new QLabel(labelText), 0, Qt.AlignmentFlag.AlignLeft);
+
+    toast.setAttribute(Qt.WA_DeleteOnClose);
+
+    var win = window ?? QApplication.activeWindow();
+    if (win && win.geometry) {
+      var geom = win.geometry;
+      var x = geom.x();
+      var y = geom.y();
+    }
+    toast.move(x, y);
+
+    toast.show();
+
+    var timer = new QTimer();
+    timer.singleShot = true;
+    timer.timeout.connect(function () {
+      toast.close();
+    });
+    timer.start(duration || 2000);
+  };
+
+  Utils.openInFileExplorer = function (path: string) {
+    var process = new Core.QProcess();
 
     var args = [];
 
     if (Core.about.isWindowsArch()) {
-      args = [
-        path.replace(/\//g, '\\')
-      ];
+      args = [path.replace(/\//g, '\\')];
 
-      process.start(
-        'explorer',
-        args
-      );
-    } else if (
-      Core.about.isMacArch()
-    ) {
-      if (
-        path.match(/\.[^\\/]+$/)
-      ) {
-        args = [
-          '-R',
-          path
-        ];
+      process.start('explorer', args);
+    } else if (Core.about.isMacArch()) {
+      if (path.match(/\.[^\\/]+$/)) {
+        args = ['-R', path];
       } else {
         args = [path];
       }
 
-      process.start(
-        'open',
-        args
-      );
-    } else if (
-      Core.about.isLinuxArch()
-    ) {
+      process.start('open', args);
+    } else if (Core.about.isLinuxArch()) {
       args = [path];
 
-      process.start(
-        'xdg-open',
-        args
-      );
+      process.start('xdg-open', args);
     } else {
-      Core.MessageLog.trace(
-        'Unsupported OS for opening file explorer.'
-      );
+      Core.MessageLog.trace('Unsupported OS for opening file explorer.');
 
       return false;
     }
@@ -723,199 +733,95 @@ function createUtils(Core: any) {
     return true;
   };
 
+  Utils.copyFile = function (sourcePath: string, destPath: string) {
+    var sourceFile = new Core.PermanentFile(sourcePath);
 
-  Utils.copyFile = function (
-    sourcePath: string,
-    destPath: string
-  ) {
-    var sourceFile =
-      new Core.PermanentFile(
-        sourcePath
-      );
+    var destFile = new Core.PermanentFile(destPath);
 
-    var destFile =
-      new Core.PermanentFile(
-        destPath
-      );
-
-    return sourceFile.copy(
-      destFile
-    );
+    return sourceFile.copy(destFile);
   };
 
-
-  Utils.pathExists = function (
-    path: string
-  ) {
-    var file =
-      new Core.PermanentFile(
-        path
-      );
+  Utils.pathExists = function (path: string) {
+    var file = new Core.PermanentFile(path);
 
     return file.exists();
   };
 
-
-  Utils.getCurrentXstage =
-    function () {
-      return (
-        Core.scene.currentProjectPath() +
-        '/' +
-        Core.scene.currentVersionName() +
-        '.xstage'
-      );
-    };
-
-
-  Utils.stringify = function (
-    obj: any
-  ) {
-    Core.MessageLog.trace(
-      JSON.stringify(
-        obj,
-        null,
-        2
-      )
-    );
+  Utils.getCurrentXstage = function () {
+    return Core.scene.currentProjectPath() + '/' + Core.scene.currentVersionName() + '.xstage';
   };
 
-
-  Utils.hasKeys = function (
-    subject: any,
-    requiredKeys: string[]
-  ) {
-    return requiredKeys.every(
-      function (key) {
-        return subject.hasOwnProperty(
-          key
-        );
-      }
-    );
+  Utils.stringify = function (obj: any) {
+    Core.MessageLog.trace(JSON.stringify(obj, null, 2));
   };
 
+  Utils.hasKeys = function (subject: any, requiredKeys: string[]) {
+    return requiredKeys.every(function (key) {
+      return subject.hasOwnProperty(key);
+    });
+  };
 
-  Utils.merge = function (
-    objA: any,
-    objB: any
-  ) {
+  Utils.merge = function (objA: any, objB: any) {
     var merged: any = {};
 
     var key;
 
     for (key in objA) {
-      if (
-        objA.hasOwnProperty(key)
-      ) {
-        merged[key] =
-          objA[key];
+      if (objA.hasOwnProperty(key)) {
+        merged[key] = objA[key];
       }
     }
 
     for (key in objB) {
-      if (
-        objB.hasOwnProperty(key)
-      ) {
-        merged[key] =
-          objB[key];
+      if (objB.hasOwnProperty(key)) {
+        merged[key] = objB[key];
       }
     }
 
     return merged;
   };
 
-
-  Utils.arrayToDict = function (
-    arr: any[],
-    fn: Function
-  ) {
+  Utils.arrayToDict = function (arr: any[], fn: Function) {
     var dict: any = {};
 
-    for (
-      var i = 0;
-      i < arr.length;
-      i++
-    ) {
-      var pair =
-        fn(arr[i], i);
+    for (var i = 0; i < arr.length; i++) {
+      var pair = fn(arr[i], i);
 
-      dict[pair[0]] =
-        pair[1];
+      dict[pair[0]] = pair[1];
     }
 
     return dict;
   };
 
-
-  Utils.objectForEach = function (
-    obj: any,
-    callback: Function
-  ) {
+  Utils.objectForEach = function (obj: any, callback: Function) {
     for (var key in obj) {
-      if (
-        obj.hasOwnProperty(key)
-      ) {
-        callback(
-          key,
-          obj[key]
-        );
+      if (obj.hasOwnProperty(key)) {
+        callback(key, obj[key]);
       }
     }
   };
 
-
-  Utils.filterArray = function (
-    arr: any[],
-    callback: Function
-  ) {
+  Utils.filterArray = function (arr: any[], callback: Function) {
     var result = [];
 
-    for (
-      var i = 0;
-      i < arr.length;
-      i++
-    ) {
-      if (
-        callback(
-          arr[i],
-          i,
-          arr
-        )
-      ) {
-        result.push(
-          arr[i]
-        );
+    for (var i = 0; i < arr.length; i++) {
+      if (callback(arr[i], i, arr)) {
+        result.push(arr[i]);
       }
     }
 
     return result;
   };
 
-
-  Utils.startsWith = function (
-    str: string,
-    needle: string
-  ) {
-    return (
-      str.substring(
-        0,
-        needle.length
-      ) === needle
-    );
+  Utils.startsWith = function (str: string, needle: string) {
+    return str.substring(0, needle.length) === needle;
   };
 
-
-  Utils.bind = function (
-    fn: Function,
-    context: any
-  ) {
+  Utils.bind = function (fn: Function, context: any) {
     return function () {
-      return fn.apply(
-        context,
-        arguments
-      );
+      return fn.apply(context, arguments);
     };
   };
-
 
   return Utils;
 }

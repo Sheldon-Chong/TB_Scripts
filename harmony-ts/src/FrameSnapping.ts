@@ -1,104 +1,157 @@
-include('globals.js');
+include('global-test.js');
 
-namespace FrameSnapping {
-  export const BOUNDARY_MARKER_COLOR = '#ffe476';
-  export const BOUNDARY_DISTANCE = 32;
+function createFrameSnappingKit(Core: HarmonyCore) {
+  var BOUNDARY_MARKER_COLOR = '#ffe476';
 
-  export function populateFrameSnappingMarkersAll() {
-    const startFrame = G.TimelineKit.startFrame();
-    const endFrame = G.TimelineKit.endFrame();
-    populateFrameSnappingMarkers(startFrame, endFrame);
-  }
+  var BOUNDARY_DISTANCE = 32;
 
-  export function getNearestBoundaryFrame(frame: number): number {
-    const markers = TimelineMarker.getAllMarkers();
-    if (markers.length === 0) return frame;
+  var FrameSnapping = {
+    BOUNDARY_MARKER_COLOR: BOUNDARY_MARKER_COLOR,
 
-    let closestMarker = markers[0];
-    let closestDistance = Math.abs(frame - closestMarker.frame);
+    BOUNDARY_DISTANCE: BOUNDARY_DISTANCE,
 
-    for (let i = 1; i < markers.length; i++) {
-      const distance = Math.abs(frame - markers[i].frame);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestMarker = markers[i];
+    populateFrameSnappingMarkersAll(): void {
+      var startFrame = Core.TimelineKit.startFrame();
+
+      var endFrame = Core.TimelineKit.endFrame();
+
+      FrameSnapping.populateFrameSnappingMarkers(startFrame, endFrame);
+    },
+
+    getNearestBoundaryFrame(frameNumber: number): number {
+      var markers = Core.TimelineKit.getAllMarkers();
+
+      if (markers.length === 0) {
+        return frameNumber;
       }
-    }
 
-    return closestMarker.frame;
-  }
+      var closestMarker = markers[0];
 
-  export function gotoPreviousBoundaryMarker() {
-    const currentFrame = G.TimelineKit.getSelection().startFrame;
-    const markers = TimelineMarker.getAllMarkers();
+      var closestDistance = Core.Math.abs(frameNumber - closestMarker.frame);
 
-    // Find markers before the current frame, pick the closest one
-    const previousMarkers = markers
-      .filter((m) => m.frame < currentFrame)
-      .sort((a, b) => b.frame - a.frame);
+      for (var i = 1; i < markers.length; i++) {
+        var distance = Core.Math.abs(frameNumber - markers[i].frame);
 
-    if (previousMarkers.length > 0) {
-      G.TimelineKit.setCurrentFrame(previousMarkers[0].frame);
-    }
-  }
+        if (distance < closestDistance) {
+          closestDistance = distance;
 
-  export function gotoNextBoundaryMarker() {
-    const currentFrame = G.TimelineKit.getSelection().startFrame;
-    const markers = TimelineMarker.getAllMarkers();
-
-    // Find markers after the current frame, pick the closest one
-    const nextMarkers = markers
-      .filter((m) => m.frame > currentFrame)
-      .sort((a, b) => a.frame - b.frame);
-
-    if (nextMarkers.length > 0) {
-      G.TimelineKit.setCurrentFrame(nextMarkers[0].frame);
-    }
-  }
-
-  export function populateFrameSnappingMarkers(startFrame: number, endFrame: number) {
-    scene.beginUndoRedoAccum('Populate Frame Snapping Markers');
-    MessageLog.trace(`Populating frame snapping markers from ${startFrame} to ${endFrame}`);
-    while (startFrame <= endFrame) {
-      if ((startFrame - 1) % BOUNDARY_DISTANCE === 0) {
-        createBoundaryMarker(startFrame);
+          closestMarker = markers[i];
+        }
       }
-      startFrame++;
-    }
 
-    scene.endUndoRedoAccum();
-  }
+      return closestMarker.frame;
+    },
 
-  export function createBoundaryMarker(frame: number) {
-    G.TimelineKit.createMarker(
-      frame,
-      'Boundary',
-      BOUNDARY_MARKER_COLOR,
-      `Boundary Marker ${frame}`,
-      1,
-    );
-  }
+    gotoPreviousBoundaryMarker(): void {
+      var currentFrame = Core.TimelineKit.getSelection().startFrame;
+
+      var markers = Core.TimelineKit.getAllMarkers();
+
+      var previousMarkers = markers
+        .filter(function (marker: any) {
+          return marker.frame < currentFrame;
+        })
+        .sort(function (a: any, b: any) {
+          return b.frame - a.frame;
+        });
+
+      if (previousMarkers.length > 0) {
+        Core.TimelineKit.setCurrentFrame(previousMarkers[0].frame);
+      }
+    },
+
+    gotoNextBoundaryMarker(): void {
+      var currentFrame = Core.TimelineKit.getSelection().startFrame;
+
+      var markers = Core.TimelineKit.getAllMarkers();
+
+      var nextMarkers = markers
+        .filter(function (marker: any) {
+          return marker.frame > currentFrame;
+        })
+        .sort(function (a: any, b: any) {
+          return a.frame - b.frame;
+        });
+
+      if (nextMarkers.length > 0) {
+        Core.TimelineKit.setCurrentFrame(nextMarkers[0].frame);
+      }
+    },
+
+    populateFrameSnappingMarkers(startFrame: number, endFrame: number): void {
+      Core.scene.beginUndoRedoAccum('Populate Frame Snapping Markers');
+
+      try {
+        Core.MessageLog.trace(
+          'Populating frame snapping markers from ' + startFrame + ' to ' + endFrame,
+        );
+
+        while (startFrame <= endFrame) {
+          if ((startFrame - 1) % BOUNDARY_DISTANCE === 0) {
+            FrameSnapping.createBoundaryMarker(startFrame);
+          }
+
+          startFrame++;
+        }
+      } finally {
+        Core.scene.endUndoRedoAccum();
+      }
+    },
+
+    createBoundaryMarker(frameNumber: number): void {
+      Core.TimelineKit.createMarker(
+        frameNumber,
+        'Boundary',
+        BOUNDARY_MARKER_COLOR,
+        'Boundary Marker ' + frameNumber,
+        1,
+      );
+    },
+  };
+
+  return FrameSnapping;
 }
 
-function testGoingToNextBoundaryMarker() {
+type FrameSnappingKit = ReturnType<typeof createFrameSnappingKit>;
+
+/*
+ * Returns the one persistent FrameSnapping
+ * instance attached to Core.
+ */
+function getFrameSnappingKit(Core: HarmonyCore): FrameSnappingKit {
+  var Runtime: any = Core;
+
+  if (!Runtime.FrameSnapping) {
+    Runtime.FrameSnapping = createFrameSnappingKit(Core);
+  }
+
+  return Runtime.FrameSnapping as FrameSnappingKit;
+}
+
+/*
+ * Toon Boom test entry points.
+ */
+
+function testGoingToNextBoundaryMarker(): void {
+  var Core = getCore();
+
+  var FrameSnapping = getFrameSnappingKit(Core);
+
   FrameSnapping.gotoNextBoundaryMarker();
 }
 
-function testGoingToPreviousBoundaryMarker() {
+function testGoingToPreviousBoundaryMarker(): void {
+  var Core = getCore();
+
+  var FrameSnapping = getFrameSnappingKit(Core);
+
   FrameSnapping.gotoPreviousBoundaryMarker();
 }
 
-function populateFrameSnappingMarkers() {
+function populateFrameSnappingMarkers(): void {
+  var Core = getCore();
+
+  var FrameSnapping = getFrameSnappingKit(Core);
+
   FrameSnapping.populateFrameSnappingMarkersAll();
-  // const nearestBoundaryMarker = FrameSnapping.getNearestBoundaryFrame(
-  //   G.TimelineKit.getSelection().startFrame,
-  // );
-  // MessageLog.trace('Nearest boundary marker to current frame: ' + nearestBoundaryMarker);
 }
-
-interface HarmonyGlobals {
-  FrameSnapping: typeof FrameSnapping;
-}
-
-G.FrameSnapping = FrameSnapping;
-_.FrameSnapping = FrameSnapping;

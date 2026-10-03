@@ -2,43 +2,98 @@
 
 include(specialFolders.userScripts + '/core/MetadataKit.js');
 
-namespace SceneKit {
-  /** Scene metadata utilities — see `MetadataKit` for full documentation. */
-  export import metadata = MetadataKit;
-
-  /**
-   * Session-only tool registry keyed by tool name.
-   * Uses `__proto__.registeredTools` (initialised in `globals.ts`) instead of
-   * scene metadata because metadata persists across project reopens, which
-   * would incorrectly treat a tool as "already registered" on next launch.
+function createSceneKit(Core: HarmonyCore) {
+  /*
+   * Session-only registry.
+   *
+   * Because this SceneKit instance itself is stored on
+   * the persistent Core, this object survives for the
+   * lifetime of that Core instance.
    */
-  function getRegisteredTools(): Record<string, number> {
-    return (this as any).__proto__.registeredTools || {};
-  }
+  var registeredTools: {
+    [toolName: string]: number;
+  } = {};
 
-  export function registerTool(tool: HarmonyToolDefinition): { id: number; isNew: boolean } {
-    const reg = getRegisteredTools();
-    if (reg[tool.name] !== undefined) {
-      MessageLog.trace(
-        `[SceneKit] Tool "${tool.name}" is already registered. Returning existing ID.`,
-      );
-      return { id: reg[tool.name], isNew: false };
-    }
-    const id = Tools.registerTool(tool);
-    reg[tool.name] = id;
-    MessageLog.trace('[SceneKit] Registered tool "' + tool.name + '" with ID: ' + id);
-    return { id: id, isNew: true };
-  }
-  export function switchTool(toolName: string): boolean {
-    MessageLog.trace(`[SceneKit] Attempting to switch to tool "${toolName}"...`);
-    const toolId = getRegisteredTools()[toolName];
-    if (toolId !== undefined) {
-      Tools.setCurrentTool({ id: toolId });
-      MessageLog.trace(`[SceneKit] Switched to tool "${toolName}" (ID: ${toolId})`);
-      return true;
-    } else {
-      MessageLog.trace(`[SceneKit] Tool "${toolName}" is not registered. Cannot switch.`);
+  /*
+   * Temporary bridge if MetadataKit has not yet been
+   * converted to the factory/Core approach.
+   *
+   * This captures it while the current script context
+   * still has access to it.
+   */
+  var Metadata = MetadataKit;
+
+  var SceneKit = {
+    /*
+     * Preserve the old:
+     *
+     * SceneKit.metadata
+     */
+    metadata: Metadata,
+
+    registerTool(tool: HarmonyToolDefinition): {
+      id: number;
+      isNew: boolean;
+    } {
+      if (registeredTools[tool.name] !== undefined) {
+        Core.MessageLog.trace(
+          '[SceneKit] Tool "' + tool.name + '" is already registered. Returning existing ID.',
+        );
+
+        return {
+          id: registeredTools[tool.name],
+
+          isNew: false,
+        };
+      }
+
+      /*
+       * Core.Tools is Toon Boom's native Tools API.
+       */
+      var id = Core.Tools.registerTool(tool);
+
+      registeredTools[tool.name] = id;
+
+      Core.MessageLog.trace('[SceneKit] Registered tool "' + tool.name + '" with ID: ' + id);
+
+      return {
+        id: id,
+
+        isNew: true,
+      };
+    },
+
+    switchTool(toolName: string): boolean {
+      Core.MessageLog.trace('[SceneKit] Attempting to switch to tool "' + toolName + '"...');
+
+      var toolId = registeredTools[toolName];
+
+      if (toolId !== undefined) {
+        Core.Tools.setCurrentTool({
+          id: toolId,
+        });
+
+        Core.MessageLog.trace(
+          '[SceneKit] Switched to tool "' + toolName + '" (ID: ' + toolId + ')',
+        );
+
+        return true;
+      }
+
+      Core.MessageLog.trace('[SceneKit] Tool "' + toolName + '" is not registered. Cannot switch.');
+
       return false;
-    }
-  }
+    },
+
+    /*
+     * Optional utility.
+     */
+    isToolRegistered(toolName: string): boolean {
+      return registeredTools[toolName] !== undefined;
+    },
+  };
+
+  return SceneKit;
 }
+
+type SceneKitType = ReturnType<typeof createSceneKit>;

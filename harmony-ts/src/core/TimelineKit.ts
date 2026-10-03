@@ -731,9 +731,55 @@ function TestCallable() {
 function createLayerManager(Core: any) {
   function LayerManager(this: any) {
     this.nodeLayers = [];
-
-    this.updateNodeLayers();
   }
+
+  LayerManager.prototype.is3DPath = function (n: any) {
+    var attrs = n.getAllAttributes();
+
+    for (var i = 0; i < attrs.length; i++) {
+      var attr = attrs[i];
+
+      if (attr.keyword() === 'POSITION') {
+        Core.MessageLog.trace('POSITION attribute found');
+
+        var subs = attr.getSubAttributes();
+
+        for (var j = 0; j < subs.length; j++) {
+          if (subs[j].keyword() === 'SEPARATE') {
+            Core.MessageLog.trace('SEPARATE: ' + subs[j].boolValue());
+
+            return subs[j].boolValue() === false;
+          }
+        }
+      }
+    }
+
+    return false;
+  };
+
+  LayerManager.prototype.return3DPath = function (n: any) {
+    try {
+      var attributeNames = n.getAttributeNames();
+
+      for (var i = 0; i < attributeNames.length; i++) {
+        // optional logging
+      }
+
+      var attributeKeywords = n.getAttributeKeywords();
+
+      for (var j = 0; j < attributeKeywords.length; j++) {
+        // optional logging
+      }
+
+      var col = n.getColumn('position.attr3dpath', undefined, false);
+
+      Core.MessageLog.trace('return3DPath: ' + col);
+
+      return col;
+    } catch (e) {
+      return null;
+    }
+  };
 
   LayerManager.prototype.updateNodeLayers = function () {
     this.nodeLayers = [];
@@ -742,11 +788,6 @@ function createLayerManager(Core: any) {
       [nodePath: string]: number;
     } = {};
 
-    /*
-     * Build:
-     *
-     * node path -> timeline index
-     */
     for (var timelineIndex = 0; timelineIndex < Core.Timeline.numLayers; timelineIndex++) {
       var timelineNodePath = Core.Timeline.layerToNode(timelineIndex);
 
@@ -756,33 +797,25 @@ function createLayerManager(Core: any) {
     }
 
     function getAllNodesInScene() {
-      var accumulatedNodes = [];
+      var accumulatedNodes: string[] = [];
 
-      // Recursive helper function to crawl nested group layers
-      function crawlGroup(groupPath) {
-        var subNodeCount = node.numberOfSubNodes(groupPath);
+      function crawlGroup(groupPath: string) {
+        var subNodeCount = Core.node.numberOfSubNodes(groupPath);
 
         for (var i = 0; i < subNodeCount; i++) {
-          // Get the full path of the current child node
-          var currentChild = node.subNode(groupPath, i);
+          var currentChild = Core.node.subNode(groupPath, i);
+
           accumulatedNodes.push(currentChild);
 
-          // If this child is a Group, recursively look inside it
-          if (node.isGroup(currentChild)) {
+          if (Core.node.isGroup(currentChild)) {
             crawlGroup(currentChild);
           }
         }
       }
 
-      // Start crawling from the absolute top layer ("Top")
-      var absoluteRoot = node.root();
-      crawlGroup(absoluteRoot);
+      var absoluteRoot = Core.node.root();
 
-      // Output findings to the Message Log
-      // MessageLog.trace('--- total nodes found: ' + accumulatedNodes.length + ' ---');
-      // for (var j = 0; j < accumulatedNodes.length; j++) {
-      //   MessageLog.trace(accumulatedNodes[j]);
-      // }
+      crawlGroup(absoluteRoot);
 
       return accumulatedNodes;
     }
@@ -821,7 +854,7 @@ function createLayerManager(Core: any) {
   LayerManager.prototype.getSelected = function () {
     var selectedNodePaths = Core.selection.selectedNodes();
 
-    var selected = [];
+    var selected: any[] = [];
 
     for (var i = 0; i < selectedNodePaths.length; i++) {
       var layer = this.getNodeLayer(selectedNodePaths[i]);
@@ -861,303 +894,6 @@ function createLayerManager(Core: any) {
   };
 
   return new LayerManager();
-}
-
-function createNodeLayerClass(Core: any) {
-  function NodeLayer(
-    this: any,
-    displayOrder: number,
-    index: number,
-    nodePath: string,
-    name: string,
-  ) {
-    this.displayOrder = displayOrder;
-    this.index = index;
-    this.nodePath = nodePath;
-    this.name = name;
-  }
-
-  NodeLayer.prototype.toString = function () {
-    return 'NodeLayer<' + this.nodePath + '>';
-  };
-
-  NodeLayer.prototype.setEnabled = function (enabled: boolean) {
-    Core.node.setEnable(this.nodePath, enabled);
-  };
-
-  NodeLayer.prototype.isEnabled = function () {
-    return Core.node.getEnable(this.nodePath);
-  };
-
-  NodeLayer.prototype.getAttributeNames = function () {
-    return Core.node.getAllAttrNames(this.nodePath);
-  };
-
-  NodeLayer.prototype.getAllAttributes = function () {
-    var attributeNames = this.getAttributeKeywords();
-
-    var attributes = [];
-
-    for (var i = 0; i < attributeNames.length; i++) {
-      attributes.push(Core.node.getAttr(this.nodePath, Core.frame.current(), attributeNames[i]));
-    }
-
-    return attributes;
-  };
-
-  NodeLayer.prototype.getAttributeKeywords = function () {
-    return Core.node.getAllAttrKeywords(this.nodePath);
-  };
-
-  NodeLayer.prototype.getEditableAttributes = function () {
-    function getAttributes(attribute: any, attributeList: any[]) {
-      attributeList.push(attribute);
-
-      var subAttrList = attribute.getSubAttributes();
-
-      for (var j = 0; j < subAttrList.length; j++) {
-        if (
-          typeof subAttrList[j].keyword() === 'undefined' ||
-          subAttrList[j].keyword().length === 0
-        ) {
-          continue;
-        }
-
-        getAttributes(subAttrList[j], attributeList);
-      }
-    }
-
-    function getFullAttributeList(nodePath: string) {
-      var attributeList = [];
-
-      var topAttributeList = Core.node.getAttrList(nodePath, 1);
-
-      for (var i = 0; i < topAttributeList.length; i++) {
-        getAttributes(topAttributeList[i], attributeList);
-      }
-
-      return attributeList;
-    }
-
-    return getFullAttributeList(this.nodePath)
-      .filter(function (attr: any) {
-        return ['INT', 'DOUBLE'].indexOf(attr.typeName()) >= 0;
-      })
-      .map(function (attr: any) {
-        return attr.fullKeyword();
-      });
-  };
-
-  NodeLayer.prototype.getColumn = function (
-    attrName: string,
-    linkType?: string,
-    createColumn?: boolean,
-  ) {
-    if (createColumn === undefined) {
-      createColumn = true;
-    }
-
-    /*
-     * Support nested node paths:
-     *
-     * Group|POSITION.X
-     */
-    if (attrName.indexOf('|') !== -1) {
-      var lastSlashIndex = attrName.lastIndexOf('|');
-
-      var path = attrName.substring(0, lastSlashIndex);
-
-      var layer = Core.LayerManager.getNodeLayer(this.nodePath + path);
-
-      if (layer === null) {
-        throw new Error('Node not found for path: ' + this.nodePath + path);
-      }
-
-      var attributeName = attrName.substring(lastSlashIndex + 1);
-
-      return layer.getColumn(attributeName, linkType, createColumn);
-    }
-
-    var col = Core.node.linkedColumn(this.nodePath, attrName);
-
-    if (!col) {
-      if (!createColumn) {
-        throw new Error(
-          "Column not found for attribute '" + attrName + "' on node '" + this.nodePath + "'.",
-        );
-      }
-
-      var colName = Core.column.generateAnonymousName();
-
-      var resolvedLinkType = linkType !== undefined ? linkType : 'BEZIER';
-
-      Core.MessageLog.trace(
-        "No column linked to attribute '" +
-          attrName +
-          "' on node '" +
-          this.nodePath +
-          "'. Creating new " +
-          resolvedLinkType +
-          ' column: ' +
-          colName,
-      );
-
-      Core.column.add(colName, resolvedLinkType);
-
-      var result = Core.node.linkAttr(this.nodePath, attrName, colName);
-
-      if (!result) {
-        Core.MessageLog.trace(
-          "Failed to link new column '" +
-            colName +
-            "' to attribute '" +
-            attrName +
-            "' of type '" +
-            resolvedLinkType +
-            "' on node '" +
-            this.nodePath +
-            "'.",
-        );
-      }
-
-      if (attrName === 'DRAWING.ELEMENT') {
-        return new Core.oDrawingElementColumn(colName, this);
-      }
-
-      return new Core.oColumn(colName, this);
-    }
-
-    if (attrName === 'offset.attr3dpath' || attrName === 'position.attr3dpath') {
-      return new Core.oPathColumn3D(col, this);
-    }
-
-    if (attrName === 'DRAWING.ELEMENT') {
-      return new Core.oDrawingElementColumn(col, this);
-    }
-
-    return new Core.oColumn(col, this);
-  };
-
-  NodeLayer.prototype.getType = function () {
-    return Core.node.type(this.nodePath);
-  };
-
-  NodeLayer.prototype.getFullAttributeList = function () {
-    function getAttributes(attribute: any, attributeList: any[]) {
-      attributeList.push(attribute);
-
-      var subAttrList = attribute.getSubAttributes();
-
-      for (var j = 0; j < subAttrList.length; j++) {
-        if (
-          typeof subAttrList[j].keyword() === 'undefined' ||
-          subAttrList[j].keyword().length === 0
-        ) {
-          continue;
-        }
-
-        getAttributes(subAttrList[j], attributeList);
-      }
-    }
-
-    var attributeList = [];
-
-    var topAttributeList = Core.node.getAttrList(this.nodePath, Core.frame.current());
-
-    for (var i = 0; i < topAttributeList.length; i++) {
-      getAttributes(topAttributeList[i], attributeList);
-    }
-
-    return attributeList;
-  };
-
-  NodeLayer.prototype.setAttribute = function (attrName: string, value: any) {
-    var attr = Core.node.getAttr(this.nodePath, Core.frame.current(), attrName);
-
-    if (!attr) {
-      throw new Error("Attribute '" + attrName + "' not found on node '" + this.nodePath + "'.");
-    }
-
-    attr.setValue(value);
-  };
-
-  NodeLayer.prototype.getChildren = function () {
-    var childPaths = Core.node.subNodes(this.nodePath);
-
-    if (!childPaths) {
-      return [];
-    }
-
-    var result = [];
-
-    for (var i = 0; i < childPaths.length; i++) {
-      var layer = Core.LayerManager.getNodeLayer(childPaths[i]);
-
-      if (layer !== null) {
-        result.push(layer);
-      }
-    }
-
-    return result;
-  };
-
-  NodeLayer.prototype.getLocked = function () {
-    return Core.node.getLocked(this.nodePath);
-  };
-
-  NodeLayer.prototype.setLocked = function (locked: boolean) {
-    Core.node.setLocked(this.nodePath, locked);
-  };
-
-  NodeLayer.prototype.getChild = function (name: string) {
-    if (name.indexOf('/') !== -1) {
-      return Core.LayerManager.getNodeLayer(this.nodePath + '/' + name);
-    }
-
-    var childPath = Core.node.subNodeByName(this.nodePath, name);
-
-    if (!childPath) {
-      return null;
-    }
-
-    return Core.LayerManager.getNodeLayer(childPath);
-  };
-
-  NodeLayer.prototype.getChildrenRecursive = function () {
-    var result = [];
-
-    var children = this.getChildren();
-
-    for (var i = 0; i < children.length; i++) {
-      var child = children[i];
-
-      result.push(child);
-
-      var descendants = child.getChildrenRecursive();
-
-      for (var j = 0; j < descendants.length; j++) {
-        result.push(descendants[j]);
-      }
-    }
-
-    return result;
-  };
-
-  NodeLayer.prototype.getParent = function () {
-    var parentPath = Core.node.parentNode(this.nodePath);
-
-    if (parentPath === Core.node.root()) {
-      return null;
-    }
-
-    return Core.LayerManager.getNodeLayer(parentPath);
-  };
-
-  NodeLayer.prototype.isGroup = function () {
-    return Core.node.isGroup(this.nodePath);
-  };
-
-  return NodeLayer;
 }
 
 function createColumnClass(Core: HarmonyCore) {

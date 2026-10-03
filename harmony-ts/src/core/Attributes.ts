@@ -386,6 +386,185 @@ class oAttr3D {
 
 /* ---- concrete 3-D attribute types ---- */
 
+function createAttr3DClass(Core: any) {
+  class Attr3D {
+    /**
+     * Per-axis attribute wrappers.
+     *
+     * GET works via doubleValue().
+     * SET should use set(), setX(), setY(), or setZ().
+     */
+    readonly x: any;
+    readonly y: any;
+    readonly z: any;
+
+    private _nodePath: string;
+    private _keyword: string;
+
+    constructor(nodePath: string, keyword: string) {
+      this._nodePath = nodePath;
+
+      this._keyword = keyword;
+
+      /*
+       * Discover the full keywords for the
+       * X/Y/Z sub-attributes.
+       */
+      var parent = Core.node.getAttr(nodePath, Core.frame.current(), keyword);
+
+      var xKey = '';
+      var yKey = '';
+      var zKey = '';
+
+      if (parent && parent.hasSubAttributes()) {
+        var subs = parent.getSubAttributes();
+
+        for (var i = 0; i < subs.length; i++) {
+          var kw = subs[i].keyword();
+
+          if (kw === 'X') {
+            xKey = subs[i].fullKeyword();
+          } else if (kw === 'Y') {
+            yKey = subs[i].fullKeyword();
+          } else if (kw === 'Z') {
+            zKey = subs[i].fullKeyword();
+          }
+        }
+      }
+
+      this.x = new Core.oDoubleAttr(nodePath, xKey);
+
+      this.y = new Core.oDoubleAttr(nodePath, yKey);
+
+      this.z = new Core.oDoubleAttr(nodePath, zKey);
+    }
+
+    /**
+     * Fetch the parent attribute at a frame.
+     */
+    private _parentAt(f: number): Attribute {
+      var parent = Core.node.getAttr(this._nodePath, f, this._keyword);
+
+      if (!parent) {
+        throw new Error(
+          "Attribute '" +
+            this._keyword +
+            "' not found on node '" +
+            this._nodePath +
+            "' at frame " +
+            f +
+            '.',
+        );
+      }
+
+      return parent;
+    }
+
+    /**
+     * Read one axis.
+     */
+    private _readAxis(axis: 'x' | 'y' | 'z', f: number): number {
+      var wrapper = this[axis];
+
+      return wrapper.getAt(f);
+    }
+
+    /**
+     * Set one axis.
+     */
+    private _setAxis(axis: 'x' | 'y' | 'z', value: number, f: number): void {
+      var wrapper = this[axis];
+
+      wrapper.setAt(value, f);
+    }
+
+    /*
+     * Vec3 convenience
+     */
+
+    get(): Vec3;
+
+    get(atFrame: number): Vec3;
+
+    get(atFrame?: number): Vec3 {
+      var f = atFrame !== undefined ? atFrame : Core.frame.current();
+
+      var x = this._readAxis('x', f);
+
+      var y = this._readAxis('y', f);
+
+      var z = this._readAxis('z', f);
+
+      return new Core.Vec3(x, y, z);
+    }
+
+    set(value: VectorInput): void;
+
+    set(value: VectorInput, atFrame: number): void;
+
+    set(value: VectorInput, atFrame?: number): void {
+      var v = Core.Vectors.resolveVec3(value);
+
+      var f = atFrame !== undefined ? atFrame : Core.frame.current();
+
+      this._setAxis('x', v.x, f);
+
+      this._setAxis('y', v.y, f);
+
+      this._setAxis('z', v.z, f);
+    }
+
+    /**
+     * Set the global, non-keyframed value.
+     */
+    setGlobal(value: VectorInput): void {
+      var v = Core.Vectors.resolveVec3(value);
+
+      var parent = Core.node.getAttr(this._nodePath, Core.frame.current(), this._keyword);
+
+      if (!parent) {
+        throw new Error(
+          "Attribute '" + this._keyword + "' not found on node '" + this._nodePath + "'.",
+        );
+      }
+
+      var subs = parent.getSubAttributes();
+
+      for (var i = 0; i < subs.length; i++) {
+        var kw = subs[i].keyword();
+
+        if (kw === 'X') {
+          subs[i].setValue(v.x);
+        } else if (kw === 'Y') {
+          subs[i].setValue(v.y);
+        } else if (kw === 'Z') {
+          subs[i].setValue(v.z);
+        }
+      }
+    }
+
+    setX(value: number, atFrame?: number): void {
+      try {
+        this._setAxis('x', value, atFrame !== undefined ? atFrame : Core.frame.current());
+      } catch (e) {
+        Core.MessageLog.trace(
+          "Error setting '" + this._keyword + "' X axis on node '" + this._nodePath + "': " + e,
+        );
+      }
+    }
+
+    setY(value: number, atFrame?: number): void {
+      this._setAxis('y', value, atFrame !== undefined ? atFrame : Core.frame.current());
+    }
+
+    setZ(value: number, atFrame?: number): void {
+      this._setAxis('z', value, atFrame !== undefined ? atFrame : Core.frame.current());
+    }
+  }
+
+  return Attr3D;
+}
+
 /**
  * POSITION_3D attribute.
  *
@@ -419,6 +598,44 @@ class oRotation3D extends oAttr3D {
   constructor(nodePath: string, keyword: string = 'ROTATION') {
     super(nodePath, keyword);
   }
+}
+
+type Attr3DConstructor = new (nodePath: string, keyword: string) => any;
+
+function createPosition3DClass(Core: any) {
+  var Attr3D = Core.oAttr3D as Attr3DConstructor;
+
+  class Position3D extends Attr3D {
+    constructor(nodePath: string, keyword: string = 'POSITION') {
+      super(nodePath, keyword);
+    }
+  }
+
+  return Position3D;
+}
+
+function createScale3DClass(Core: any) {
+  var Attr3D = Core.oAttr3D as Attr3DConstructor;
+
+  class Scale3D extends Attr3D {
+    constructor(nodePath: string, keyword: string = 'SCALE') {
+      super(nodePath, keyword);
+    }
+  }
+
+  return Scale3D;
+}
+
+function createRotation3DClass(Core: any) {
+  var Attr3D = Core.oAttr3D as Attr3DConstructor;
+
+  class Rotation3D extends Attr3D {
+    constructor(nodePath: string, keyword: string = 'ROTATION') {
+      super(nodePath, keyword);
+    }
+  }
+
+  return Rotation3D;
 }
 
 /* ===================================================================
@@ -469,3 +686,175 @@ const Attrs = {
     return new oRotation3D(node.nodePath, keyword);
   },
 };
+
+function createAttributeClasses(Core: any) {
+  abstract class Attr<T> {
+    readonly nodePath: string;
+    readonly keyword: string;
+
+    constructor(nodePath: string, keyword: string) {
+      this.nodePath = nodePath;
+      this.keyword = keyword;
+    }
+
+    /**
+     * Raw Harmony Attribute at the current frame.
+     */
+    protected _attr(): Attribute {
+      return Core.node.getAttr(this.nodePath, Core.frame.current(), this.keyword);
+    }
+
+    /**
+     * Raw Harmony Attribute at a specific frame.
+     */
+    protected _attrAt(f: number): Attribute {
+      return Core.node.getAttr(this.nodePath, f, this.keyword);
+    }
+
+    /**
+     * Like _attr(), but throws if the attribute
+     * does not exist.
+     */
+    protected _requireAttr(): Attribute {
+      var attr = this._attr();
+
+      if (!attr) {
+        throw new Error(
+          "Attribute '" + this.keyword + "' not found on node '" + this.nodePath + "'.",
+        );
+      }
+
+      return attr;
+    }
+
+    /**
+     * Like _attrAt(), but throws if the
+     * attribute does not exist.
+     */
+    protected _requireAttrAt(f: number): Attribute {
+      var attr = this._attrAt(f);
+
+      if (!attr) {
+        throw new Error(
+          "Attribute '" +
+            this.keyword +
+            "' not found on node '" +
+            this.nodePath +
+            "' at frame " +
+            f +
+            '.',
+        );
+      }
+
+      return attr;
+    }
+
+    abstract get(): T;
+
+    abstract getAt(frame: number): T;
+
+    abstract set(value: T): void;
+
+    abstract setAt(value: T, frame: number): void;
+  }
+
+  class IntAttr extends Attr<number> {
+    get(): number {
+      return this._requireAttr().intValue();
+    }
+
+    getAt(frame: number): number {
+      return this._requireAttrAt(frame).intValue();
+    }
+
+    set(value: number): void {
+      this._requireAttr().setValue(value);
+    }
+
+    setAt(value: number, frame: number): void {
+      this._requireAttrAt(frame).setValueAt(value, frame);
+    }
+  }
+
+  class DoubleAttr extends Attr<number> {
+    get(): number {
+      return this._requireAttr().doubleValue();
+    }
+
+    getAt(frame: number): number {
+      return this._requireAttrAt(frame).doubleValue();
+    }
+
+    set(value: number): void {
+      this._requireAttr().setValue(value);
+    }
+
+    setAt(value: number, frame: number): void {
+      this._requireAttrAt(frame).setValueAt(value, frame);
+    }
+  }
+
+  class BoolAttr extends Attr<boolean> {
+    get(): boolean {
+      return this._requireAttr().boolValue();
+    }
+
+    getAt(frame: number): boolean {
+      return this._requireAttrAt(frame).boolValue();
+    }
+
+    set(value: boolean): void {
+      this._requireAttr().setValue(value);
+    }
+
+    setAt(value: boolean, frame: number): void {
+      this._requireAttrAt(frame).setValueAt(value, frame);
+    }
+  }
+
+  class TextAttr extends Attr<string> {
+    get(): string {
+      return this._requireAttr().textValue();
+    }
+
+    getAt(frame: number): string {
+      return this._requireAttrAt(frame).textValue();
+    }
+
+    set(value: string): void {
+      this._requireAttr().setValue(value);
+    }
+
+    setAt(value: string, frame: number): void {
+      this._requireAttrAt(frame).setValueAt(value, frame);
+    }
+  }
+
+  class EnumAttr extends TextAttr {
+    possibleValues(): string[] {
+      return this._requireAttr().possibleTextValues();
+    }
+  }
+
+  class DrawingAttr extends TextAttr {}
+
+  class AliasAttr extends TextAttr {}
+
+  return {
+    oAttr: Attr,
+
+    oIntAttr: IntAttr,
+
+    oDoubleAttr: DoubleAttr,
+
+    oBoolAttr: BoolAttr,
+
+    oTextAttr: TextAttr,
+
+    oEnumAttr: EnumAttr,
+
+    oDrawingAttr: DrawingAttr,
+
+    oAliasAttr: AliasAttr,
+  };
+}
