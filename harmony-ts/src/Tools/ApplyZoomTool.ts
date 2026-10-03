@@ -1,89 +1,59 @@
-// ApplyZoomTool.ts — draws diagonal zoom arrows around the click point.
-// The arrows point inward (zoom in) or outward (zoom out) based on
-// the vertical drag direction.
+include('global-test.js');
 
-include('globals.js');
+include(specialFolders.userScripts + '/FrameSnapping.js');
+
 include(specialFolders.userScripts + '/KeyframeGenerator.js');
-this.__proto__.G.KeyframeGeneratorKit = KeyframeGeneratorKit;
 
-function activateApplyZoomTool() {
-  MessageLog.trace('[ApplyZoomTool.ts] ' + 'test');
-  try {
-    MessageLog.trace('ApplyZoomTool action triggered');
-    Tools.setCurrentTool('com.toonboom.applyZoomTool');
-  } catch (e) {
-    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
+function createApplyZoomToolKit($: HarmonyCore, KeyframeGenerator: KeyframeGeneratorKitType) {
+  var FrameSnapping = getFrameSnappingKit($);
+
+  var TOOL_ID = 'com.toonboom.applyZoomTool';
+  var CENTER_SNAP_RADIUS = 600;
+
+  function createArrowPaths(
+    start: any,
+    end: any,
+    color: { r: number; g: number; b: number; a: number },
+  ): { path: any; color: { r: number; g: number; b: number; a: number } }[] {
+    var direction = end.subtract(start);
+    var length = direction.length();
+    if (length < 0.001) {
+      return [];
+    }
+
+    var unit = direction.scale(1 / length);
+    var perpendicular = new $.Vec2(-unit.y, unit.x);
+    var headLength = $.Math.max(6, length * 0.15);
+    var headWidth = headLength * 0.5;
+    var headBase = end.subtract(unit.scale(headLength));
+    var leftTip = headBase.add(perpendicular.scale(headWidth));
+    var rightTip = headBase.subtract(perpendicular.scale(headWidth));
+
+    return [
+      {
+        path: new $.Shapes.Line({ start: start, end: end, color: color }).toPath(),
+        color: color,
+      },
+      {
+        path: new $.Shapes.Line({ start: end, end: leftTip, color: color }).toPath(),
+        color: color,
+      },
+      {
+        path: new $.Shapes.Line({ start: end, end: rightTip, color: color }).toPath(),
+        color: color,
+      },
+    ];
   }
-}
-
-const APPLY_ZOOM_TOOL_ID = 'com.toonboom.applyZoomTool';
-
-/**
- * Builds overlay path entries for an arrow pointing from `start` to `end`.
- * Produces a shaft plus two arrowhead lines, each as a { path, color }
- * entry suitable for ctx.overlay.paths.
- */
-function createArrowPaths(
-  start: any,
-  end: any,
-  color: { r: number; g: number; b: number; a: number },
-): { path: any; color: { r: number; g: number; b: number; a: number } }[] {
-  var dir = end.subtract(start);
-  var len = dir.length();
-  if (len < 0.001) {
-    return [];
-  }
-
-  var unit = dir.scale(1 / len);
-  var perp = new G.Vec2(-unit.y, unit.x);
-
-  // Arrowhead sized relative to the arrow length, with sane bounds.
-  var headLength = Math.min(0.2, Math.max(6, len * 0.3));
-  var headWidth = headLength * 0.5;
-
-  var headBase = end.subtract(unit.scale(headLength));
-  var leftTip = headBase.add(perp.scale(headWidth));
-  var rightTip = headBase.subtract(perp.scale(headWidth));
-
-  var paths: { path: any; color: { r: number; g: number; b: number; a: number } }[] = [];
-
-  paths.push({
-    path: new G.Shapes.Line({ start: start, end: end, color: color }).toPath(),
-    color: color,
-  });
-  paths.push({
-    path: new G.Shapes.Line({ start: end, end: leftTip, color: color }).toPath(),
-    color: color,
-  });
-  paths.push({
-    path: new G.Shapes.Line({ start: end, end: rightTip, color: color }).toPath(),
-    color: color,
-  });
-
-  return paths;
-}
-
-this.__proto__.createArrowPaths = createArrowPaths;
-
-function registerApplyZoomTool() {
-  var _applyZoomToolId: any = null;
-
-  var CENTER_SNAP_RADIUS = 0.3;
 
   class ApplyZoomTool {
-    _: any;
-    Shapes: any;
-
     COLORS = {
-      rect: { r: 0, g: 200, b: 255, a: 200 }, // cyan
-      rectActiveZoomIn: { r: 0, g: 255, b: 0, a: 255 }, // green
-      rectActiveZoomOut: { r: 255, g: 0, b: 0, a: 255 }, // red
-      rectSnapped: { r: 0, g: 110, b: 145, a: 220 }, // darker cyan
-      rectActiveZoomInSnapped: { r: 0, g: 125, b: 0, a: 255 }, // darker green
-      rectActiveZoomOutSnapped: { r: 145, g: 0, b: 0, a: 255 }, // darker red
+      rectActiveZoomIn: { r: 0, g: 255, b: 0, a: 255 },
+      rectActiveZoomOut: { r: 255, g: 0, b: 0, a: 255 },
+      rectActiveZoomInSnapped: { r: 0, g: 125, b: 0, a: 255 },
+      rectActiveZoomOutSnapped: { r: 145, g: 0, b: 0, a: 255 },
     };
 
-    name: string = APPLY_ZOOM_TOOL_ID;
+    name: string = TOOL_ID;
     displayName: string = 'Apply Zoom Tool';
     icon: string = 'MyTool.png';
     toolType: string = 'drawing';
@@ -93,249 +63,269 @@ function registerApplyZoomTool() {
     defaultOptions: { snapToBoundary: boolean };
     ui: { snapCheckbox: any; optionsButton: any } | undefined;
 
-    constructor(deps: { _: any; Shapes: any }) {
-      this._ = deps._;
-      this.Shapes = deps.Shapes;
+    constructor() {
       this.options = { snapToBoundary: true };
       this.defaultOptions = { snapToBoundary: true };
     }
 
     preferenceName(): string {
-      return `${this.name}.settings`;
+      return this.name + '.settings';
     }
 
     loadFromPreferences(): void {
       try {
-        var value = preferences.getString(
+        var value = $.preferences.getString(
           this.preferenceName(),
-          JSON.stringify(this.defaultOptions),
+          $.JSON.stringify(this.defaultOptions),
         );
-        this.options = JSON.parse(value);
+        this.options = $.JSON.parse(value);
       } catch (e) {
         this.options = this.defaultOptions;
       }
     }
 
     storeToPreferences(): void {
-      preferences.setString(this.preferenceName(), JSON.stringify(this.options));
+      $.preferences.setString(this.preferenceName(), $.JSON.stringify(this.options));
     }
 
     onRegister(): void {
-      MessageLog.trace('Registered tool: ApplyZoomTool');
+      $.MessageLog.trace('Registered tool: ApplyZoomTool');
       this.loadFromPreferences();
     }
 
     onCreate(ctx: any): void {
-      MessageLog.trace(`[ApplyZoomTool.ts] ${'on create'}`);
-      // ctx._rectCenter = null;
+      ctx._rectCenter = null;
     }
-
-    // ---- helpers ----
 
     onMouseDown(ctx: any): boolean {
       try {
-        MessageLog.trace(`[ApplyZoomTool.ts] current point ${JSON.stringify(ctx.currentPoint)}`);
         ctx._rectCenter = ctx.currentPoint;
         ctx._rawRectCenter = ctx.currentPoint;
         ctx._centerSnapped = false;
-        MessageLog.trace('[ApplyZoomTool.ts] onMouseDown: ' + JSON.stringify(ctx._rectCenter));
+        ctx._arrowDebugMoves = 0;
+        ctx._snapDebugMoves = 0;
+        $.MessageLog.trace('[ApplyZoomTool] mouse down: arrow preview started');
+        $.MessageLog.trace(
+          '[ApplyZoomTool] snap origin field=(' +
+            ctx._rawRectCenter.x +
+            ', ' +
+            ctx._rawRectCenter.y +
+            ') screen=(' +
+            ctx._rawRectCenter.screenX +
+            ', ' +
+            ctx._rawRectCenter.screenY +
+            ') radius=' +
+            CENTER_SNAP_RADIUS,
+        );
         return true;
-      } catch (e) {
-        MessageLog.trace('ApplyZoomTool onMouseDown error: ' + e.toString());
+      } catch (e: any) {
+        $.MessageLog.trace('ApplyZoomTool onMouseDown error: ' + e.toString());
         return false;
       }
     }
 
     onMouseMove(ctx: any): boolean {
-      // MessageLog.trace(`[ApplyZoomTool.ts] ${JSON.stringify(ctx._rectCenter, null, 2)}`);
-      if (ctx._rectCenter)
-        MessageLog.trace(
-          `[ApplyZoomTool.ts] onMouseMove: rect center: ${JSON.stringify(ctx._rectCenter, null, 2)}`,
-        );
       if (!ctx._rectCenter) {
-        MessageLog.trace('skipping');
         return true;
       }
 
       try {
-        // MessageLog.trace('[ApplyZoomTool.ts] onMouseMove: ' + JSON.stringify(ctx, null, 2));
-        // MessageLog.tra
         if (ctx.shiftPressed) {
           var rawCenter = ctx._rawRectCenter || ctx._rectCenter;
-          var centerDistance = Math.sqrt(rawCenter.x * rawCenter.x + rawCenter.y * rawCenter.y);
-          MessageLog.trace(
-            `centerDistance${centerDistance} | CENTER_SNAP_RADIUS${CENTER_SNAP_RADIUS}`,
+
+          var centerDistance = $.Math.sqrt(
+            rawCenter.x * rawCenter.x + rawCenter.y * rawCenter.y,
           );
-          // MessageLog.trace(`[ApplyZoomTool.ts] centerDistance: ${centerDistance}`);
-          // MessageLog.trace(`[ApplyZoomTool.ts] CENTER_SNAP_RADIUS: ${CENTER_SNAP_RADIUS}`);
+          ctx._snapDebugMoves = (ctx._snapDebugMoves || 0) + 1;
+
+          if (ctx._snapDebugMoves === 1 || ctx._snapDebugMoves % 20 === 0) {
+            $.MessageLog.trace(
+              '[ApplyZoomTool] shift=true fieldDistance=' +
+                centerDistance.toFixed(4) +
+                ' threshold=' +
+                CENTER_SNAP_RADIUS +
+                ' snapped=' +
+                !!ctx._centerSnapped,
+            );
+          }
+
           if (centerDistance <= CENTER_SNAP_RADIUS) {
-            var snappedCenter: any = new G.Vec2(0, 0);
+            if (!ctx._centerSnapped) {
+              $.MessageLog.trace('[ApplyZoomTool] center snap accepted');
+            }
+            var snappedCenter: any = new $.Vec2(0, 0);
             snappedCenter.screenX = rawCenter.screenX;
             snappedCenter.screenY = rawCenter.screenY;
             ctx._rectCenter = snappedCenter;
             ctx._centerSnapped = true;
-            MessageLog.trace('[ApplyZoomTool.ts] Shift center snap enabled');
+          }
+        } else if (ctx._snapDebugMoves && ctx._snapDebugMoves % 20 === 0) {
+          $.MessageLog.trace('[ApplyZoomTool] shift=false; center snap not evaluated');
+        }
+
+        var centerPoint = ctx._rectCenter;
+        var currentPoint = ctx.currentPoint;
+        var center = ctx._centerSnapped ? new $.Vec2(0, 0) : new $.Vec2(centerPoint);
+        var mouse = new $.Vec2(currentPoint);
+        var rawHalf = mouse.subtract(center);
+        var aspectRatio = 1;
+        var halfX = $.Math.abs(rawHalf.x);
+        var halfY = $.Math.abs(rawHalf.y);
+
+        if (halfX <= 0.001 && halfY > 0.001) {
+          halfX = halfY * aspectRatio;
+        } else if (halfY <= 0.001 && halfX > 0.001) {
+          halfY = halfX / aspectRatio;
+        } else if (halfX > 0.001 && halfY > 0.001) {
+          if (halfX / halfY > aspectRatio) {
+            halfX = halfY * aspectRatio;
+          } else {
+            halfY = halfX / aspectRatio;
           }
         }
 
-        var cs = ctx._rectCenter;
-        var cm = ctx.currentPoint;
+        var half = new $.Vec2(rawHalf.x < 0 ? -halfX : halfX, rawHalf.y < 0 ? -halfY : halfY);
+        var fieldX = currentPoint.x - centerPoint.x;
+        var fieldY = currentPoint.y - centerPoint.y;
+        var fieldDistance = $.Math.sqrt(fieldX * fieldX + fieldY * fieldY);
 
-        // Draw overlay in field coordinates.
-        var center = ctx._centerSnapped ? new G.Vec2(0, 0) : new G.Vec2(cs);
-        var mouse = new G.Vec2(cm);
-        var half = mouse.subtract(center);
+        ctx._dragX = currentPoint.screenX - centerPoint.screenX;
+        ctx._dragY = centerPoint.screenY - currentPoint.screenY;
+        ctx._arrowDebugMoves = (ctx._arrowDebugMoves || 0) + 1;
 
-        var fdx = cm.x - cs.x;
-        var fdy = cm.y - cs.y;
-        var fieldDist = Math.sqrt(fdx * fdx + fdy * fdy);
-        var isActive = fieldDist > 2;
-
-        ctx._dragX = cm.screenX - cs.screenX;
-        ctx._dragY = cs.screenY - cm.screenY;
-        MessageLog.trace(`[ApplyZoomTool.ts] ${ctx._dragX}, ${ctx._dragY}`);
-
-        const zoomInOrOut = ctx._dragY < 0 ? 'Zoom Out' : 'Zoom In';
-
+        var zoomOut = ctx._dragY < 0;
         var color = ctx._centerSnapped
-          ? zoomInOrOut === 'Zoom In'
-            ? this.COLORS.rectActiveZoomInSnapped
-            : this.COLORS.rectActiveZoomOutSnapped
-          : zoomInOrOut === 'Zoom In'
-            ? this.COLORS.rectActiveZoomIn
-            : this.COLORS.rectActiveZoomOut;
+          ? zoomOut
+            ? this.COLORS.rectActiveZoomOutSnapped
+            : this.COLORS.rectActiveZoomInSnapped
+          : zoomOut
+            ? this.COLORS.rectActiveZoomOut
+            : this.COLORS.rectActiveZoomIn;
 
-        // Draw diagonal arrows along the four corners of the drag box.
-        // Zoom In: arrows point toward the center. Zoom Out: arrows point outward.
-        var overlayPaths: any[] = [];
-        var halfX = half.x;
-        var halfY = half.y;
-        var corners = [
-          new G.Vec2(center.x + halfX, center.y + halfY),
-          new G.Vec2(center.x - halfX, center.y + halfY),
-          new G.Vec2(center.x - halfX, center.y - halfY),
-          new G.Vec2(center.x + halfX, center.y - halfY),
-        ];
-
-        var zoomIn = zoomInOrOut === 'Zoom In';
-        var cornerDist = half.length();
-        if (cornerDist < 0.001) {
+        var cornerDistance = half.length();
+        if (cornerDistance < 0.001) {
+          if (ctx._arrowDebugMoves === 1) {
+            $.MessageLog.trace('[ApplyZoomTool] preview early exit: corner distance < 0.001');
+          }
           ctx.overlay = { paths: [] };
           return true;
         }
 
-        // Keep converging arrowheads from overlapping at the center by
-        // stopping each zoom-in arrow this many units short of the center.
-        var arrowGap = Math.min(20, Math.max(8, cornerDist * 0.15));
-        if (arrowGap >= cornerDist) {
-          arrowGap = cornerDist * 0.5;
+        var corners = [
+          new $.Vec2(center.x + half.x, center.y + half.y),
+          new $.Vec2(center.x - half.x, center.y + half.y),
+          new $.Vec2(center.x - half.x, center.y - half.y),
+          new $.Vec2(center.x + half.x, center.y - half.y),
+        ];
+        var arrowGap = $.Math.min(cornerDistance * 0.4, $.Math.max(8, cornerDistance * 0.25));
+        if (arrowGap >= cornerDistance) {
+          arrowGap = cornerDistance * 0.5;
         }
 
+        var paths: any[] = [];
+        var firstArrowLength = 0;
         for (var i = 0; i < corners.length; i++) {
           var outward = corners[i].subtract(center).normalized();
-          var arrowStart = zoomIn ? corners[i] : center;
-          var arrowEnd = zoomIn ? center.add(outward.scale(arrowGap)) : corners[i];
-          var arrowStrokes = createArrowPaths(arrowStart, arrowEnd, color);
-          for (var j = 0; j < arrowStrokes.length; j++) {
-            overlayPaths.push(arrowStrokes[j]);
+          var arrowStart = zoomOut ? center : corners[i];
+          var arrowEnd = zoomOut ? corners[i] : center.add(outward.scale(arrowGap));
+          if (i === 0) {
+            firstArrowLength = arrowEnd.subtract(arrowStart).length();
+          }
+          var arrowPaths = createArrowPaths(arrowStart, arrowEnd, color);
+          for (var j = 0; j < arrowPaths.length; j++) {
+            paths.push(arrowPaths[j]);
           }
         }
 
-        ctx.overlay = { paths: overlayPaths };
-      } catch (e) {
-        MessageLog.trace('ApplyZoomTool onMouseMove error: ' + e.toString());
-        MessageLog.trace(e.stack);
-        MessageLog.trace(JSON.stringify(e));
+        ctx.overlay = { paths: paths };
+
+        if (ctx._arrowDebugMoves === 1 || ctx._arrowDebugMoves % 20 === 0) {
+          $.MessageLog.trace(
+            '[ApplyZoomTool] preview paths=' +
+              paths.length +
+              ' arrowLength=' +
+              firstArrowLength.toFixed(3) +
+              ' cornerDistance=' +
+              cornerDistance.toFixed(3) +
+              ' arrowGap=' +
+              arrowGap.toFixed(3) +
+              ' zoomOut=' +
+              zoomOut,
+          );
+        }
+      } catch (e: any) {
+        $.MessageLog.trace('ApplyZoomTool onMouseMove error: ' + e.toString());
+        $.MessageLog.trace('ApplyZoomTool onMouseMove stack: ' + (e.stack || 'none'));
       }
 
       return true;
     }
 
     onMouseUp(ctx: any): boolean {
-      if (!ctx._rectCenter) return true;
+      if (!ctx._rectCenter) {
+        return true;
+      }
 
-      // Guard against click-without-drag (onMouseMove never fired)
       if (typeof ctx._dragX === 'undefined' || typeof ctx._dragY === 'undefined') {
-        // ctx._rectCenter = null;
-        // ctx._rawRectCenter = null;
         ctx._centerSnapped = false;
         ctx.overlay = {};
         return true;
       }
 
       try {
-        var camPeg = G.LayerManager.getNodeLayer('Top/Camera-P') as oPegNode;
+        var camPeg = $.LayerManager.getNodeLayer('Top/Camera-P');
         if (!camPeg) {
-          MessageLog.trace('ApplyZoomTool: Camera peg not found.');
+          $.MessageLog.trace('ApplyZoomTool: Camera peg not found.');
         } else {
-          var pos = camPeg.position as oPathColumn3D;
-          var centerFrame = frame.current();
-
+          var centerFrame = $.frame.current();
           if (this.options.snapToBoundary) {
-            centerFrame = G.FrameSnapping.getNearestBoundaryFrame(centerFrame);
           }
+          centerFrame = FrameSnapping.getNearestBoundaryFrame(centerFrame);
 
           var startFrame = centerFrame - 4;
           var endFrame = startFrame + 7;
-
-          // Direction: from camera toward the click point (the rectangle
-          // is centered on the click, so that's where the zoom should go).
-          // Magnitude: fixed value (drag distance is intentionally ignored).
-          var baseX = pos.getXVal(startFrame);
-          var baseY = pos.getYVal(startFrame);
-          var dirX = ctx._rectCenter.x - baseX;
-          var dirY = ctx._rectCenter.y - baseY;
-          var dirLen = Math.sqrt(dirX * dirX + dirY * dirY);
-
+          var baseX = camPeg.position.getXVal(startFrame);
+          var baseY = camPeg.position.getYVal(startFrame);
+          var directionX = ctx._rectCenter.x - baseX;
+          var directionY = ctx._rectCenter.y - baseY;
+          var directionLength = $.Math.sqrt(directionX * directionX + directionY * directionY);
           var scale = 8;
-          var xy: G.Vec2;
-          if (dirLen > 0.001) {
-            xy = new G.Vec2((dirX / dirLen) * scale, (dirY / dirLen) * scale);
-          } else {
-            xy = new G.Vec2(0, 0);
+          var target =
+            directionLength > 0.001
+              ? new $.Vec2(
+                  (directionX / directionLength) * scale,
+                  (directionY / directionLength) * scale,
+                )
+              : new $.Vec2(0, 0);
+
+          $.scene.beginUndoRedoAccum('Apply Zoom');
+          try {
+            KeyframeGenerator.generateZoom(
+              camPeg.position,
+              startFrame,
+              endFrame,
+              target,
+              ctx._dragY < 0,
+            );
+            $.TimelineKit.setCurrentFrame(centerFrame);
+          } finally {
+            $.scene.endUndoRedoAccum();
           }
 
-          MessageLog.trace(
-            '[ApplyZoomTool] clickDir=(' +
-              dirX.toFixed(1) +
-              ', ' +
-              dirY.toFixed(1) +
-              ') | scale=' +
-              scale.toFixed(3) +
-              ' | xy=(' +
-              xy.x.toFixed(2) +
-              ', ' +
-              xy.y.toFixed(2) +
-              ')',
-          );
-
-          scene.beginUndoRedoAccum('Apply Zoom');
-
-          const zoomInOrOut = ctx._dragY < 0 ? 'Zoom Out' : 'Zoom In';
-          const zoomOut = zoomInOrOut === 'Zoom Out';
-          G.KeyframeGeneratorKit.generateZoom(pos, startFrame, endFrame, xy, zoomOut);
-          G.TimelineKit.setCurrentFrame(centerFrame);
-          scene.endUndoRedoAccum();
-          G.TimelineKit.setCurrentFrame(centerFrame - 4);
+          $.TimelineKit.setCurrentFrame(centerFrame - 4);
         }
-      } catch (e) {
-        MessageLog.trace('ApplyZoomTool onMouseUp error: ' + e.toString());
-        MessageLog.trace(e.stack);
-        MessageLog.trace(JSON.stringify(e));
+      } catch (e: any) {
+        $.MessageLog.trace('ApplyZoomTool onMouseUp error: ' + e.toString());
       }
-      // ctx._rectCenter = null;
-      // ctx._rawRectCenter = null;
+
       ctx._centerSnapped = false;
       ctx._dragX = undefined;
       ctx._dragY = undefined;
       ctx.overlay = {};
-
       return true;
     }
 
     onResetTool(ctx: any): void {
-      // ctx._rectCenter = null;
-      // ctx._rawRectCenter = null;
       ctx._centerSnapped = false;
       ctx._dragX = undefined;
       ctx._dragY = undefined;
@@ -344,40 +334,48 @@ function registerApplyZoomTool() {
 
     loadPanel(dialog: any, responder: any): void {
       try {
-        var snapCheckbox = new G.Widgets.BoundarySnapSwitch(dialog);
+        var snapCheckbox = new $.Widgets.BoundarySnapSwitch(dialog);
         snapCheckbox.setEnabledState(this.options.snapToBoundary);
-        snapCheckbox.onStateChanged((state: number) => {
-          this.options.snapToBoundary = state !== 0;
-          this.storeToPreferences();
-          responder.settingsChanged();
-        });
+        snapCheckbox.onStateChanged(
+          function (state: number) {
+            this.options.snapToBoundary = state !== 0;
+            this.storeToPreferences();
+            responder.settingsChanged();
+          }.bind(this),
+        );
 
-        var optionsButton = new G.Widgets.UI_QToolButton({ dialog: dialog });
-        var optionsMenu = WidgetKit.optionsMenu(optionsButton, [
+        var optionsButton = new $.Widgets.UI_QToolButton({ dialog: dialog });
+        var optionsMenu = $.Widgets.optionsMenu(optionsButton, [
           [
             [
               'Reset Settings',
-              () => {
+              function () {
                 this.options = { snapToBoundary: true };
                 this.storeToPreferences();
                 snapCheckbox.setEnabledState(this.options.snapToBoundary);
                 responder.settingsChanged();
+              }.bind(this),
+            ],
+          ],
+          [
+            [
+              'Activate Apply Zoom Tool',
+              function () {
+                $.Tools.setCurrentTool(TOOL_ID);
               },
             ],
           ],
-          [['Activate Apply Zoom Tool', () => Tools.setCurrentTool(APPLY_ZOOM_TOOL_ID)]],
         ]);
         optionsButton.setMenu(optionsMenu);
 
         var layout = new QVBoxLayout(dialog);
         layout.setContentsMargins(8, 8, 8, 8);
-        layout.addWidget(snapCheckbox, 0, 0);
+        layout.addWidget(snapCheckbox, 0, Qt.AlignmentFlag.AlignLeft);
         layout.addWidget(optionsButton, 0, Qt.AlignmentFlag.AlignRight);
         layout.addStretch(1);
-
         this.ui = { snapCheckbox: snapCheckbox, optionsButton: optionsButton };
-      } catch (e) {
-        MessageLog.trace('ApplyZoomTool loadPanel error: ' + e.toString());
+      } catch (e: any) {
+        $.MessageLog.trace('ApplyZoomTool loadPanel error: ' + e.toString());
       }
     }
 
@@ -386,28 +384,34 @@ function registerApplyZoomTool() {
         if (this.ui && this.ui.snapCheckbox) {
           this.ui.snapCheckbox.setEnabledState(this.options.snapToBoundary);
         }
-      } catch (e) {
-        MessageLog.trace(`ApplyZoomTool refreshPanel error: ${e.toString()}`);
+      } catch (e: any) {
+        $.MessageLog.trace('ApplyZoomTool refreshPanel error: ' + e.toString());
       }
     }
   }
 
-  _applyZoomToolId = SceneKit.registerTool(new ApplyZoomTool({ _: G, Shapes: Shapes }));
+  var ApplyZoomToolKit = {
+    activate(): void {
+      $.MessageLog.trace('ApplyZoomTool action triggered');
+      $.Tools.setCurrentTool(TOOL_ID);
+    },
 
-  registerAction({
-    name: 'Apply Zoom Tool',
-    icon: `${specialFolders.userScripts}\\script-icons\\apply_zoom_tool.png`,
-    callback: activateApplyZoomTool,
-    shortcut: 'Ctrl+Alt+R',
-    category: 'custom',
-  });
+    register(): void {
+      $.SceneKit!.registerTool(new ApplyZoomTool());
+
+      $.Toolbar!.registerAction({
+        name: 'Apply Zoom Tool',
+        icon: $.specialFolders.userScripts + '/script-icons/apply_zoom_tool.png',
+        callback: function () {
+          $.Tools.setCurrentTool(TOOL_ID);
+        },
+        shortcut: 'Ctrl+Alt+R',
+        category: 'custom',
+      });
+    },
+  };
+
+  return ApplyZoomToolKit;
 }
 
-function evaluateAndRunApplyZoomTool() {
-  try {
-    MessageLog.trace('ApplyZoomTool evaluateAndRun triggered');
-    Tools.setCurrentTool(APPLY_ZOOM_TOOL_ID);
-  } catch (e) {
-    MessageLog.trace('error: ' + e.toString() + ' | stack: ' + (e.stack || 'none'));
-  }
-}
+type ApplyZoomToolKitType = ReturnType<typeof createApplyZoomToolKit>;

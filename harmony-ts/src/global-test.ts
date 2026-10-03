@@ -9,8 +9,7 @@ include(specialFolders.userScripts + '/core/ColumnGroupings.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
 include(specialFolders.userScripts + '/core/FileUtils.js');
 include(specialFolders.userScripts + '/core/Attributes.js');
-
-type HarmonyCore = ReturnType<typeof createCore>;
+include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
 
 var __tbGlobal = Function('return this;')();
 
@@ -23,285 +22,179 @@ if (!__tbShared.__TBTest) {
 function mergeCore<TBase, TModules>(base: TBase, modules: TModules): TBase & TModules {
   var target: any = base;
   var source: any = modules;
-
   for (var key in source) {
     if (Object.prototype.hasOwnProperty.call(source, key)) {
       target[key] = source[key];
     }
   }
-
   return target;
 }
 
-function createCore() {
-  var H = Function('return this;')().__proto__;
+type Constructor<T = any> = new (...args: any[]) => T;
 
-  var Base = {
+type CoreBase = ReturnType<typeof createCoreBase>;
+
+interface CoreModules {
+  Utils: ReturnType<typeof createUtils>;
+  FileUtils: ReturnType<typeof createFileUtilsKit>;
+  oAttr: ReturnType<typeof createAttributeClasses>['oAttr'];
+  oIntAttr: ReturnType<typeof createAttributeClasses>['oIntAttr'];
+  oDoubleAttr: ReturnType<typeof createAttributeClasses>['oDoubleAttr'];
+  oBoolAttr: ReturnType<typeof createAttributeClasses>['oBoolAttr'];
+  oTextAttr: ReturnType<typeof createAttributeClasses>['oTextAttr'];
+  oEnumAttr: ReturnType<typeof createAttributeClasses>['oEnumAttr'];
+  oDrawingAttr: ReturnType<typeof createAttributeClasses>['oDrawingAttr'];
+  oAliasAttr: ReturnType<typeof createAttributeClasses>['oAliasAttr'];
+  oAttr3D: ReturnType<typeof createAttr3DClass>;
+  oPosition3D: ReturnType<typeof createPosition3DClass>;
+  oScale3D: ReturnType<typeof createScale3DClass>;
+  oRotation3D: ReturnType<typeof createRotation3DClass>;
+  oElement: ReturnType<typeof createElementClass>;
+  oColumn: ReturnType<typeof createColumnClass>;
+  oPathColumn3D: ReturnType<typeof createPathColumn3DClass>;
+  oDrawingElementColumn: ReturnType<typeof createDrawingElementColumnClass>;
+  columnGrouping: ReturnType<typeof createColumnGroupingClass>;
+  columnGroupingColor: ReturnType<typeof createColumnGroupingColorClass>;
+  oNodeLayer: ReturnType<typeof createNodeLayerClass>;
+  oDrawingNode: ReturnType<typeof createDrawingNodeClass>;
+  oColorCardNode: ReturnType<typeof createColorCardNodeClass>;
+  oPegNode: ReturnType<typeof createPegNodeClass>;
+  TimelineLayer: typeof TimelineLayer;
+  LayerManager: ReturnType<typeof createLayerManager>;
+  TimelineKit: ReturnType<typeof createTimelineKit>;
+  SceneKit: ReturnType<typeof createSceneKit>;
+  Toolbar: ReturnType<typeof createToolbarKit>;
+  Vectors: ReturnType<typeof createVectors>;
+  Vec2: ReturnType<typeof createVectors>['Vec2'];
+  Vec3: ReturnType<typeof createVectors>['Vec3'];
+  Shapes: ReturnType<typeof createShapes>;
+}
+
+type CoreRuntime = CoreBase & Partial<CoreModules>;
+
+/*
+ * Public, completely constructed Core.
+ */
+type HarmonyCore = CoreBase & CoreModules;
+
+function createCoreBase() {
+  var H = Function('return this;')().__proto__;
+  return {
     scene: H.scene as typeof scene,
     node: H.node as typeof node,
     selection: H.selection as typeof selection,
     frame: H.frame as typeof frame,
     column: H.column as typeof column,
     element: H.element as typeof element,
-
     Timeline: H.Timeline as typeof Timeline,
-
     Drawing: H.Drawing as typeof Drawing,
-
     MessageLog: H.MessageLog as typeof MessageLog,
-
     Tools: H.Tools as typeof Tools,
-
     TimelineMarker: H.TimelineMarker as typeof TimelineMarker,
-
+    preferences: H.preferences as typeof preferences,
+    ScriptManager: H.ScriptManager,
+    ScriptToolbarDef: H.ScriptToolbarDef as typeof ScriptToolbarDef,
     PermanentFile: H.PermanentFile as typeof PermanentFile,
-
     QProcess: H.QProcess as typeof QProcess,
-
     about: H.about as typeof about,
-
     QApplication: H.QApplication as typeof QApplication,
-
-    Qt: H.Qt as typeof Qt,
-
-    QDir: H.QDir as typeof QDir,
-
     func: H.func as typeof func,
-
+    specialFolders: H.specialFolders,
+    Qt: H.Qt as typeof Qt,
+    QDir: H.QDir as typeof QDir,
     QFile: H.QFile as typeof QFile,
     QWidget: H.QWidget as typeof QWidget,
-
+    Widgets: WidgetKit,
     Array: Array,
-
     Object: Object,
-
     JSON: JSON,
-
     Math: Math,
-
-    Shapes: Shapes,
-
     Maths: Maths,
-
-    Vectors: vectors,
-
-    Vec2: vectors.Vec2,
-
-    Vec3: vectors.Vec3,
-
-    specialFolders: H.specialFolders,
-
-    ScriptManager: H.ScriptManager,
-
-    ScriptToolbarDef: H.ScriptToolbarDef as typeof ScriptToolbarDef,
-
     getAllNodesInScene: getAllNodesInScene,
   };
+}
 
-  var Runtime: any = Base;
-
-  var AttributeClasses = createAttributeClasses(Runtime);
-
-  Runtime.oAttr = AttributeClasses.oAttr;
-
-  Runtime.oIntAttr = AttributeClasses.oIntAttr;
-
-  Runtime.oDoubleAttr = AttributeClasses.oDoubleAttr;
-
-  Runtime.oBoolAttr = AttributeClasses.oBoolAttr;
-
-  Runtime.oTextAttr = AttributeClasses.oTextAttr;
-
-  Runtime.oEnumAttr = AttributeClasses.oEnumAttr;
-
-  Runtime.oDrawingAttr = AttributeClasses.oDrawingAttr;
-
-  Runtime.oAliasAttr = AttributeClasses.oAliasAttr;
-
-  var Attr3DClass = createAttr3DClass(Runtime);
-
-  Runtime.oAttr3D = Attr3DClass;
-
-  var Position3DClass = createPosition3DClass(Runtime);
-
-  Runtime.oPosition3D = Position3DClass;
-
-  var Scale3DClass = createScale3DClass(Runtime);
-
-  Runtime.oScale3D = Scale3DClass;
-
-  var Rotation3DClass = createRotation3DClass(Runtime);
-
-  Runtime.oRotation3D = Rotation3DClass;
-
+function createCore(): HarmonyCore {
+  var Runtime = createCoreBase() as CoreRuntime;
   /*
-   * Basic services.
+   * Attributes
    */
-  var Utils = createUtils(Runtime);
+  var attrs = createAttributeClasses(Runtime);
+  Runtime.oAttr = attrs.oAttr;
+  Runtime.oIntAttr = attrs.oIntAttr;
+  Runtime.oDoubleAttr = attrs.oDoubleAttr;
+  Runtime.oBoolAttr = attrs.oBoolAttr;
+  Runtime.oTextAttr = attrs.oTextAttr;
+  Runtime.oEnumAttr = attrs.oEnumAttr;
+  Runtime.oDrawingAttr = attrs.oDrawingAttr;
+  Runtime.oAliasAttr = attrs.oAliasAttr;
+  Runtime.oAttr3D = createAttr3DClass(Runtime);
+  Runtime.oPosition3D = createPosition3DClass(Runtime);
+  Runtime.oScale3D = createScale3DClass(Runtime);
+  Runtime.oRotation3D = createRotation3DClass(Runtime);
 
-  Runtime.Utils = Utils;
+  Runtime.Vectors = createVectors(Runtime);
 
-  var FileUtils = createFileUtilsKit(Runtime);
+  Runtime.Vec2 = Runtime.Vectors.Vec2;
+
+  Runtime.Vec3 = Runtime.Vectors.Vec3;
 
   /*
-   * Use the final Core property name here too.
+   * Shapes depends on Vectors.
    */
-  Runtime.FileUtils = FileUtils;
+  Runtime.Shapes = createShapes(Runtime);
 
   /*
-   * Element classes.
+   * Attributes
    */
-  var ElementClass = createElementClass(Runtime);
-
-  Runtime.oElement = ElementClass;
-
+  var attrs = createAttributeClasses(Runtime);
   /*
-   * Column base class first.
+   * Services
    */
-  var ColumnClass = createColumnClass(Runtime);
-
-  Runtime.oColumn = ColumnClass;
-
+  Runtime.Utils = createUtils(Runtime);
+  Runtime.FileUtils = createFileUtilsKit(Runtime);
   /*
-   * Column subclasses can now safely extend
-   * Core.oColumn.
+   * Element
    */
-  var PathColumn3DClass = createPathColumn3DClass(Runtime);
-
-  Runtime.oPathColumn3D = PathColumn3DClass;
-
-  var DrawingElementColumnClass = createDrawingElementColumnClass(Runtime);
-
-  Runtime.oDrawingElementColumn = DrawingElementColumnClass;
-
+  Runtime.oElement = createElementClass(Runtime);
   /*
-   * Column grouping classes.
+   * Columns
    */
-  var ColumnGroupingClass = createColumnGroupingClass();
-
-  Runtime.columnGrouping = ColumnGroupingClass;
-
-  var ColumnGroupingColorClass = createColumnGroupingColorClass(Runtime);
-
-  Runtime.columnGroupingColor = ColumnGroupingColorClass;
-
+  Runtime.oColumn = createColumnClass(Runtime);
+  Runtime.oPathColumn3D = createPathColumn3DClass(Runtime);
+  Runtime.oDrawingElementColumn = createDrawingElementColumnClass(Runtime);
+  Runtime.columnGrouping = createColumnGroupingClass();
+  Runtime.columnGroupingColor = createColumnGroupingColorClass(Runtime);
   /*
-   * Node base class.
+   * Node classes
    */
-  var NodeLayerClass = createNodeLayerClass(Runtime);
-
-  Runtime.oNodeLayer = NodeLayerClass;
-
+  Runtime.oNodeLayer = createNodeLayerClass(Runtime);
+  Runtime.oDrawingNode = createDrawingNodeClass(Runtime);
+  Runtime.oColorCardNode = createColorCardNodeClass(Runtime);
+  Runtime.oPegNode = createPegNodeClass(Runtime);
   /*
-   * ALL oNodeLayer subclasses must exist
-   * before LayerManager is created.
-   */
-  var DrawingNodeClass = createDrawingNodeClass(Runtime);
-
-  Runtime.oDrawingNode = DrawingNodeClass;
-
-  var ColorCardNodeClass = createColorCardNodeClass(Runtime);
-
-  Runtime.oColorCardNode = ColorCardNodeClass;
-
-  var PegNodeClass = createPegNodeClass(Runtime);
-
-  Runtime.oPegNode = PegNodeClass;
-
-  /*
-   * TimelineKit immediately creates TimelineLayer
-   * instances, so TimelineLayer must exist first.
+   * Timeline class
    */
   Runtime.TimelineLayer = TimelineLayer;
-
   /*
-   * LayerManager can now safely construct:
+   * Layer manager
    *
-   * Core.oNodeLayer
-   * Core.oDrawingNode
-   * Core.oPegNode
-   * Core.oColorCardNode
+   * Create, attach, then initialize.
    */
-  var LayerManager = createLayerManager(Runtime);
-
+  Runtime.LayerManager = createLayerManager(Runtime);
+  Runtime.LayerManager.updateNodeLayers();
   /*
-   * Important:
-   * assign it BEFORE populating node layers.
+   * Higher-level modules
    */
-  Runtime.LayerManager = LayerManager;
-
+  Runtime.TimelineKit = createTimelineKit(Runtime);
+  Runtime.SceneKit = createSceneKit(Runtime);
+  Runtime.Toolbar = createToolbarKit(Runtime);
   /*
-   * Now PegNode constructors can safely access
-   * Core.LayerManager.
+   * We know construction is complete here.
    */
-  LayerManager.updateNodeLayers();
-
-  /*
-   * TimelineKit can now safely use:
-   *
-   * Core.TimelineLayer
-   * Core.LayerManager
-   */
-  var TimelineKit = createTimelineKit(Runtime);
-
-  Runtime.TimelineKit = TimelineKit;
-
-  /*
-   * Other services.
-   */
-  var SceneKit = createSceneKit(Runtime);
-
-  Runtime.SceneKit = SceneKit;
-
-  var Toolbar = createToolbarKit(Runtime);
-
-  Runtime.Toolbar = Toolbar;
-
-  return mergeCore(Base, {
-    Utils: Utils,
-    oAttr3D: Attr3DClass,
-
-    oPosition3D: Position3DClass,
-
-    oScale3D: Scale3DClass,
-
-    oRotation3D: Rotation3DClass,
-
-    FileUtils: FileUtils,
-
-    oElement: ElementClass,
-
-    oColumn: ColumnClass,
-
-    oPathColumn3D: PathColumn3DClass,
-
-    oDrawingElementColumn: DrawingElementColumnClass,
-
-    columnGrouping: ColumnGroupingClass,
-
-    columnGroupingColor: ColumnGroupingColorClass,
-
-    oNodeLayer: NodeLayerClass,
-
-    oDrawingNode: DrawingNodeClass,
-
-    oColorCardNode: ColorCardNodeClass,
-
-    oPegNode: PegNodeClass,
-
-    TimelineLayer: TimelineLayer,
-
-    LayerManager: LayerManager,
-
-    TimelineKit: TimelineKit,
-
-    SceneKit: SceneKit,
-
-    Toolbar: Toolbar,
-  });
+  return Runtime as HarmonyCore;
 }
 function getCore(): HarmonyCore {
   var globalObject = Function('return this;')();
-
   return globalObject.__proto__.__TBTest as HarmonyCore;
 }

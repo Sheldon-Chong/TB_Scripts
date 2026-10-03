@@ -4,7 +4,7 @@ include(specialFolders.userScripts + '/FrameSnapping.js');
 
 include(specialFolders.userScripts + '/KeyframeGenerator.js');
 
-function createCameraSwipeToolKit(Core: HarmonyCore) {
+function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeModule) {
   /*
    * These are created here because Core exists here.
    */
@@ -326,7 +326,7 @@ function createCameraSwipeToolKit(Core: HarmonyCore) {
                * a Core/factory module, reference that captured
                * object here instead.
                */
-              Core.CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
+              CameraSwipe.applyCameraSwipe(pos, startFrame, dirVec, 0);
             } finally {
               Core.scene.endUndoRedoAccum();
             }
@@ -371,6 +371,44 @@ function createCameraSwipeToolKit(Core: HarmonyCore) {
       ctx.overlay = {};
     }
 
+    loadPanel(dialog: any, responder: any): void {
+      try {
+        var snapCheckbox = new Core.Widgets.BoundarySnapSwitch(dialog);
+
+        snapCheckbox.setEnabledState(this.options.snapToBoundary);
+
+        snapCheckbox.onStateChanged(
+          function (state: number) {
+            this.options.snapToBoundary = state !== 0;
+            this.storeToPreferences();
+            responder.settingsChanged();
+          }.bind(this),
+        );
+
+        var layout = new QVBoxLayout(dialog);
+        layout.setContentsMargins(8, 8, 8, 8);
+        layout.addWidget(snapCheckbox, 0, Qt.AlignmentFlag.AlignLeft);
+        layout.addStretch(1);
+
+        this.ui = {
+          snapCheckbox: snapCheckbox,
+          optionsButton: undefined,
+        };
+      } catch (e: any) {
+        Core.MessageLog.trace('CameraSwipeTool loadPanel error: ' + e.toString());
+      }
+    }
+
+    refreshPanel(dialog: any, responder: any): void {
+      try {
+        if (this.ui && this.ui.snapCheckbox) {
+          this.ui.snapCheckbox.setEnabledState(this.options.snapToBoundary);
+        }
+      } catch (e: any) {
+        Core.MessageLog.trace('CameraSwipeTool refreshPanel error: ' + e.toString());
+      }
+    }
+
     showMeasureToast(labelText: string, duration: number): void {
       Core.Utils.toast(
         labelText,
@@ -383,11 +421,7 @@ function createCameraSwipeToolKit(Core: HarmonyCore) {
       );
     }
   }
-
   var CameraSwipeToolKit = {
-    /*
-     * Activate the already registered tool.
-     */
     activate(): void {
       Core.MessageLog.trace('CameraSwipeTool action triggered');
 
@@ -397,39 +431,19 @@ function createCameraSwipeToolKit(Core: HarmonyCore) {
       Core.Tools.setCurrentTool(TOOL_ID);
     },
 
-    /*
-     * Register the Scene Planning tool itself,
-     * then register the toolbar action.
-     */
     register(): void {
-      Core.SceneKit.registerTool(new CameraSwipeTool());
+      Core.SceneKit!.registerTool(new CameraSwipeTool());
 
-      Core.Toolbar.registerAction({
+      Core.Toolbar!.registerAction({
         name: 'Camera Swipe Tool',
 
         icon: Core.specialFolders.userScripts + '/script-icons/apply_swipe_tool.png',
 
         callback: function () {
-          CameraSwipeToolKit.activate();
+          Core.Tools.setCurrentTool('com.toonboom.cameraSwipeTool');
         },
-
-        shortcut: 'Ctrl+Alt+M',
-
-        category: 'custom',
       });
     },
-
-    /*
-     * Optional public access to the constructor.
-     */
-    CameraSwipeTool: CameraSwipeTool,
-
-    /*
-     * Optional dependencies if other code needs them.
-     */
-    FrameSnapping: FrameSnapping,
-
-    KeyframeGenerator: KeyframeGenerator,
   };
 
   return CameraSwipeToolKit;

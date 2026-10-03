@@ -5,6 +5,9 @@ include(specialFolders.userScripts + '/FrameSnapping.js');
 include(specialFolders.userScripts + '/KeyframeGenerator.js');
 
 include(specialFolders.userScripts + '/Tools/CameraSwipeTool.js');
+include(specialFolders.userScripts + '/Tools/ApplyShakeTool.js');
+include(specialFolders.userScripts + '/Tools/ApplyZoomTool.js');
+include(specialFolders.userScripts + '/KeyframeProfiles.js');
 
 type ApplyPresetFunction = 'applyKeyFramesToSplittedPath' | 'applyKeyFramesTo3DPath';
 
@@ -15,7 +18,11 @@ function createToolsKit(Core: HarmonyCore) {
    */
   var FrameSnapping = getFrameSnappingKit(Core);
 
-  var CameraSwipe = createCameraSwipeToolKit(Core);
+  var CameraSwipe = createCameraSwipe(Core);
+  var CameraSwipeTool = createCameraSwipeToolKit(Core, CameraSwipe);
+  var KeyframeGenerator = getKeyframeGeneratorKit(Core);
+  var ApplyShakeTool = createApplyShakeToolKit(Core, KeyframeGenerator);
+  var ApplyZoomTool = createApplyZoomToolKit(Core, KeyframeGenerator);
 
   var keyframePresets = [
     'u_bob',
@@ -284,21 +291,10 @@ function createToolsKit(Core: HarmonyCore) {
        * CameraSwipe has already been constructed
        * with this Core and is safely captured.
        */
-      CameraSwipe.register();
+      CameraSwipeTool.register();
 
-      /*
-       * These should be converted to the same
-       * factory pattern before re-enabling:
-       *
-       * var ApplyShake =
-       *   createApplyShakeToolKit(Core);
-       *
-       * var ApplyZoom =
-       *   createApplyZoomToolKit(Core);
-       *
-       * ApplyShake.register();
-       * ApplyZoom.register();
-       */
+      ApplyShakeTool.register();
+      ApplyZoomTool.register();
 
       Core.Toolbar.registerAction({
         name: 'Previous Boundary Marker',

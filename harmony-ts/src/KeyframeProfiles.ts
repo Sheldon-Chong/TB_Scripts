@@ -1,184 +1,208 @@
-include('globals.js');
-column = column;
+function createCameraSwipe(Core: CoreRuntime) {
+  var CameraSwipe = {
+    smoothInPosition(
+      col: any,
+      startFrame: number,
+      endFrame: number,
+      startPos: any,
+      endPos: any,
+      exponent: number = 2,
+    ): void {
+      var totalFrames = endFrame - startFrame;
 
-namespace CameraSwipe {
-  G = _;
+      for (var i = startFrame; i <= endFrame; i++) {
+        var progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
 
-  export function smoothInPosition(
-    col: oPathColumn3D,
-    startFrame: number,
-    endFrame: number,
-    startPos: Vec2,
-    endPos: Vec2,
-    exponent: number = 2,
-  ) {
-    const totalFrames = endFrame - startFrame;
+        var t = Core.Math.pow(progress, exponent);
 
-    for (let i = startFrame; i <= endFrame; i++) {
-      const progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
-      // Ease-In curve: progress^exponent
-      const t = Math.pow(progress, exponent);
+        var current = startPos.lerp(endPos, t);
 
-      // Linear interpolation using Vec2 math
-      const current = startPos.lerp(endPos, t);
-      col.setPosition(i, current.toVec3(), 0, 0, 0);
-    }
-  }
-
-  /**
-   * Smooth-Out (Ease-Out): Starts fast and decelerates smoothly into the target position.
-   */
-  export function smoothOutPosition(
-    col: oPathColumn3D,
-    startFrame: number,
-    endFrame: number,
-    startPos: Vec2,
-    endPos: Vec2,
-    exponent: number = 2,
-  ) {
-    const totalFrames = endFrame - startFrame;
-
-    for (let i = startFrame; i <= endFrame; i++) {
-      const progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
-      // Ease-Out curve: 1 - (1 - progress)^exponent
-      const t = 1 - Math.pow(1 - progress, exponent);
-
-      // Linear interpolation using Vec2 math
-      const current = startPos.lerp(endPos, t);
-      col.setPosition(i, current.toVec3(), 0, 0, 0);
-    }
-  }
-
-  export function applyScalarCurveInDirection(
-    col: oPathColumn3D,
-    startFrame: number,
-    scalarValues: number[],
-    direction: Vector2Input,
-    origin: Vector2Input = new G.Vec2(0, 0),
-  ) {
-    // Normalize direction vector so scalar values retain exact magnitude
-    const dirVec = new G.Vec2(direction).normalized();
-    const originVec = new G.Vec2(origin);
-
-    for (let idx = 0; idx < scalarValues.length; idx++) {
-      const frame = startFrame + idx;
-      const scalarVal = scalarValues[idx];
-
-      // Position = origin + (directionUnitVector * scalarValue)
-      const currentPos = originVec.add(dirVec.scale(scalarVal));
-
-      col.setPosition(frame, currentPos.toVec3(), 0, 0, 0);
-    }
-  }
-
-  /**
-   * Resamples hand-tuned animation curves to any target length while strictly
-   * preserving monotonic velocity (prevents spline overshoot/dips).
-   * Uses monotone Hermite spline interpolation (Fritsch-Carlson).
-   */
-  export function stretchScalarCurve(sourceCurve: number[], targetLength: number): number[] {
-    if (targetLength <= 1) return [sourceCurve[0]];
-    if (sourceCurve.length === targetLength) return sourceCurve.slice();
-
-    const n = sourceCurve.length;
-
-    // Secant slopes
-    const d: number[] = new Array(n - 1);
-    for (let i = 0; i < n - 1; i++) {
-      d[i] = sourceCurve[i + 1] - sourceCurve[i];
-    }
-
-    // Tangents
-    const m: number[] = new Array(n);
-    m[0] = d[0];
-    for (let i = 1; i < n - 1; i++) {
-      m[i] = (d[i - 1] + d[i]) / 2;
-    }
-    m[n - 1] = d[n - 2];
-
-    // Fritsch-Carlson monotonicity enforcement
-    for (let i = 0; i < n - 1; i++) {
-      if (d[i] === 0) {
-        m[i] = 0;
-        m[i + 1] = 0;
-      } else {
-        const alpha = m[i] / d[i];
-        const beta = m[i + 1] / d[i];
-        const dist = alpha * alpha + beta * beta;
-        if (dist > 9) {
-          const tau = 3 / Math.sqrt(dist);
-          m[i] = tau * alpha * d[i];
-          m[i + 1] = tau * beta * d[i];
-        }
+        col.setPosition(i, current.toVec3(), 0, 0, 0);
       }
-    }
+    },
 
-    // Sample Hermite spline at target resolution
-    const result: number[] = [];
-    const srcMaxIdx = n - 1;
-    for (let i = 0; i < targetLength; i++) {
-      const progress = i / (targetLength - 1);
-      const srcIndexFloat = progress * srcMaxIdx;
-      let idx = Math.floor(srcIndexFloat);
-      if (idx >= srcMaxIdx) idx = srcMaxIdx - 1;
+    smoothOutPosition(
+      col: any,
+      startFrame: number,
+      endFrame: number,
+      startPos: any,
+      endPos: any,
+      exponent: number = 2,
+    ): void {
+      var totalFrames = endFrame - startFrame;
 
-      const t = srcIndexFloat - idx;
-      const t2 = t * t;
-      const t3 = t2 * t;
+      for (var i = startFrame; i <= endFrame; i++) {
+        var progress = totalFrames > 0 ? (i - startFrame) / totalFrames : 1;
 
-      const h00 = 2 * t3 - 3 * t2 + 1;
-      const h10 = t3 - 2 * t2 + t;
-      const h01 = -2 * t3 + 3 * t2;
-      const h11 = t3 - t2;
+        var t = 1 - Core.Math.pow(1 - progress, exponent);
 
-      result.push(
-        h00 * sourceCurve[idx] + h10 * m[idx] + h01 * sourceCurve[idx + 1] + h11 * m[idx + 1],
-      );
-    }
-    return result;
-  }
+        var current = startPos.lerp(endPos, t);
 
-  export function applyCameraSwipe(
-    col: oPathColumn3D,
-    startFrame: number,
-    directionVec: Vector2Input,
-    extraFrames: number = 0, // Add frames to stretch the transition
-  ) {
-    scene.beginUndoRedoAccum('Camera Swipe');
-
-    const baseEaseOut = [0.058, 0.201, 0.7, 5.3];
-    const baseEaseIn = [4.5, 0.49, 0.086, 0];
-
-    startFrame -= baseEaseOut.length - 1;
-
-    // Dynamically stretch curve lengths while preserving hand-crafted acceleration
-    const easeOutCurve = stretchScalarCurve(baseEaseOut, baseEaseOut.length + extraFrames);
-    const easeInCurve = stretchScalarCurve(baseEaseIn, baseEaseIn.length + extraFrames);
-
-    MessageLog.trace('easeOutCurve: ' + easeOutCurve);
-
-    // Normalize direction vector safely using Vec2
-    const dir = new G.Vec2(directionVec).normalized();
-    const oppositeDirVec = dir.scale(-1);
-
-    applyScalarCurveInDirection(col, startFrame, easeOutCurve, dir, [0, 0]);
+        col.setPosition(i, current.toVec3(), 0, 0, 0);
+      }
+    },
 
     applyScalarCurveInDirection(
-      col,
-      startFrame + easeOutCurve.length,
-      easeInCurve,
-      oppositeDirVec,
-      [0, 0],
-    );
+      col: any,
+      startFrame: number,
+      scalarValues: number[],
+      direction: Vector2Input,
+      origin: Vector2Input = 0,
+    ): void {
+      var dirVec = new Core.Vec2(direction).normalized();
 
-    scene.endUndoRedoAccum();
-  }
+      var originVec = new Core.Vec2(origin);
+
+      for (var idx = 0; idx < scalarValues.length; idx++) {
+        var targetFrame = startFrame + idx;
+
+        var scalarValue = scalarValues[idx];
+
+        var currentPos = originVec.add(dirVec.scale(scalarValue));
+
+        col.setPosition(targetFrame, currentPos.toVec3(), 0, 0, 0);
+      }
+    },
+
+    stretchScalarCurve(sourceCurve: number[], targetLength: number): number[] {
+      if (targetLength <= 1) {
+        return [sourceCurve[0]];
+      }
+
+      if (sourceCurve.length === targetLength) {
+        return sourceCurve.slice();
+      }
+
+      var n = sourceCurve.length;
+
+      var d: number[] = new Core.Array(n - 1);
+
+      for (var i = 0; i < n - 1; i++) {
+        d[i] = sourceCurve[i + 1] - sourceCurve[i];
+      }
+
+      var m: number[] = new Core.Array(n);
+
+      m[0] = d[0];
+
+      for (var j = 1; j < n - 1; j++) {
+        m[j] = (d[j - 1] + d[j]) / 2;
+      }
+
+      m[n - 1] = d[n - 2];
+
+      for (var k = 0; k < n - 1; k++) {
+        if (d[k] === 0) {
+          m[k] = 0;
+          m[k + 1] = 0;
+        } else {
+          var alpha = m[k] / d[k];
+
+          var beta = m[k + 1] / d[k];
+
+          var dist = alpha * alpha + beta * beta;
+
+          if (dist > 9) {
+            var tau = 3 / Core.Math.sqrt(dist);
+
+            m[k] = tau * alpha * d[k];
+
+            m[k + 1] = tau * beta * d[k];
+          }
+        }
+      }
+
+      var result: number[] = [];
+
+      var srcMaxIdx = n - 1;
+
+      for (var resultIndex = 0; resultIndex < targetLength; resultIndex++) {
+        var progress = resultIndex / (targetLength - 1);
+
+        var srcIndexFloat = progress * srcMaxIdx;
+
+        var sourceIndex = Core.Math.floor(srcIndexFloat);
+
+        if (sourceIndex >= srcMaxIdx) {
+          sourceIndex = srcMaxIdx - 1;
+        }
+
+        var t = srcIndexFloat - sourceIndex;
+
+        var t2 = t * t;
+
+        var t3 = t2 * t;
+
+        var h00 = 2 * t3 - 3 * t2 + 1;
+
+        var h10 = t3 - 2 * t2 + t;
+
+        var h01 = -2 * t3 + 3 * t2;
+
+        var h11 = t3 - t2;
+
+        result.push(
+          h00 * sourceCurve[sourceIndex] +
+            h10 * m[sourceIndex] +
+            h01 * sourceCurve[sourceIndex + 1] +
+            h11 * m[sourceIndex + 1],
+        );
+      }
+
+      return result;
+    },
+
+    applyCameraSwipe(
+      col: any,
+      startFrame: number,
+      directionVec: Vector2Input,
+      extraFrames: number = 0,
+    ): void {
+      Core.scene.beginUndoRedoAccum('Camera Swipe');
+
+      try {
+        var baseEaseOut = [0.058, 0.201, 0.7, 5.3];
+
+        var baseEaseIn = [4.5, 0.49, 0.086, 0];
+
+        startFrame -= baseEaseOut.length - 1;
+
+        var easeOutCurve = CameraSwipe.stretchScalarCurve(
+          baseEaseOut,
+          baseEaseOut.length + extraFrames,
+        );
+
+        var easeInCurve = CameraSwipe.stretchScalarCurve(
+          baseEaseIn,
+          baseEaseIn.length + extraFrames,
+        );
+
+        Core.MessageLog.trace('easeOutCurve: ' + easeOutCurve);
+
+        var dir = new Core.Vec2(directionVec).normalized();
+
+        var oppositeDirVec = dir.scale(-1);
+
+        CameraSwipe.applyScalarCurveInDirection(col, startFrame, easeOutCurve, dir, [0, 0]);
+
+        CameraSwipe.applyScalarCurveInDirection(
+          col,
+
+          startFrame + easeOutCurve.length,
+
+          easeInCurve,
+
+          oppositeDirVec,
+
+          [0, 0],
+        );
+      } finally {
+        Core.scene.endUndoRedoAccum();
+      }
+    },
+  };
+
+  return CameraSwipe;
 }
 
-// Augment HarmonyGlobals so G.CameraSwipe has full intellisense
-interface HarmonyGlobals {
-  CameraSwipe: typeof CameraSwipe;
-}
-
-G.CameraSwipe = CameraSwipe;
-_.CameraSwipe = CameraSwipe;
+type CameraSwipeModule = ReturnType<typeof createCameraSwipe>;

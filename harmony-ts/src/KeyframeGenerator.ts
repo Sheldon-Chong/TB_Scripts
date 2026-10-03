@@ -201,40 +201,6 @@ function createKeyframeGeneratorKit(Core: HarmonyCore) {
 
 type KeyframeGeneratorKitType = ReturnType<typeof createKeyframeGeneratorKit>;
 
-/*
- * Get or create the persistent instance.
- */
-function createKeyframeGeneratorKit(Core: HarmonyCore) {
-  var KeyframeGeneratorKit = {
-    generateShake(
-      col: any,
-      startFrame: number,
-      endFrame: number,
-      shakeAmount: vectors.Vector2Input,
-      decayExponent: number,
-    ): void {
-      // ...
-    },
-
-    generateZoom(
-      col: any,
-      startFrame: number,
-      endFrame: number,
-      xy?: vectors.Vector2Input,
-      zoomOut: boolean = false,
-    ): void {
-      // ...
-    },
-  };
-
-  return KeyframeGeneratorKit;
-}
-
-type KeyframeGeneratorKitType = ReturnType<typeof createKeyframeGeneratorKit>;
-
-/*
- * This is the function you're currently missing.
- */
 function getKeyframeGeneratorKit(Core: HarmonyCore): KeyframeGeneratorKitType {
   var Runtime: any = Core;
 
