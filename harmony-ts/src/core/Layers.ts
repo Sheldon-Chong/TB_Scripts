@@ -2,6 +2,10 @@ include(specialFolders.userScripts + '/core/utils.js');
 include(specialFolders.userScripts + '/core/Vectors.js');
 include(specialFolders.userScripts + '/core/Attributes.js');
 include(specialFolders.userScripts + '/core/Element.js');
+include(specialFolders.userScripts + '/core/nodes/BaseNode.js');
+include(specialFolders.userScripts + '/core/nodes/DrawingNode.js');
+include(specialFolders.userScripts + '/core/nodes/ColorCardNode.js');
+include(specialFolders.userScripts + '/core/nodes/PegNode.js');
 
 class oDrawing {
   public name: string;
@@ -51,9 +55,9 @@ class oDrawing {
 
 class oColumn {
   name: string;
-  parent: oNodeLayer;
+  parent: any;
 
-  constructor(name: string, parentLayer: oNodeLayer) {
+  constructor(name: string, parentLayer: any) {
     this.name = name;
     this.parent = parentLayer;
   }
@@ -208,7 +212,7 @@ class oColumn {
 class oDrawingElementColumn extends oColumn {
   element: oElement;
 
-  constructor(name: string, parentLayer: oNodeLayer) {
+  constructor(name: string, parentLayer: any) {
     MessageLog.trace('name ' + name);
     MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
     super(name, parentLayer);
@@ -261,7 +265,7 @@ class oDrawingElementColumn extends oColumn {
 }
 
 class oPathColumn3D extends oColumn {
-  constructor(name: string, parentLayer: oNodeLayer) {
+  constructor(name: string, parentLayer: any) {
     super(name, parentLayer);
   }
 
@@ -340,12 +344,13 @@ class oPathColumn3D extends oColumn {
       return { x: input, y: input, z: input };
     }
     if (input instanceof G.Vec3) {
-      return { x: input.x, y: input.y, z: input.z };
+      var vector = input as any;
+      return { x: vector.x, y: vector.y, z: vector.z };
     }
     if (Array.isArray(input)) {
       return { x: input[0] ?? 0, y: input[1] ?? 0, z: input[2] ?? 0 };
     }
-    const obj = input as { x: number; y: number; z: number };
+    const obj = input as any;
     return { x: obj.x, y: obj.y, z: obj.z };
   }
 
@@ -809,225 +814,6 @@ class columnGrouping {
 //   }
 // }
 
-type NodeLayerInstance = {
-  displayOrder: number;
-  index: number;
-  nodePath: string;
-  name: string;
-};
-
-type NodeLayerConstructor = new (
-  displayOrder: number,
-  index: number,
-  nodePath: string,
-  name: string,
-) => NodeLayerInstance;
-
-function createPegNodeClass(Core: any) {
-  var NodeLayer = Core.oNodeLayer as NodeLayerConstructor;
-
-  class PegNode extends NodeLayer {
-    position: any;
-    scale: any;
-    rotation: any;
-
-    constructor(displayOrder: number, index: number, nodePath: string, name: string) {
-      super(displayOrder, index, nodePath, name);
-
-      this.position = Core.LayerManager.is3DPath(this)
-        ? Core.LayerManager.return3DPath(this)
-        : new Core.oPosition3D(this.nodePath, 'POSITION');
-
-      this.scale = new Core.oScale3D(this.nodePath);
-
-      this.rotation = new Core.oRotation3D(this.nodePath);
-
-      Core.MessageLog.trace('oPegNode created for ' + this.nodePath);
-    }
-  }
-
-  return PegNode;
-}
-// /**
-//  * Specialised oNodeLayer for COLOR_CARD nodes.
-//  * Provides type-safe access to the RGBA colour columns instead of relying
-//  * on generic getColumn() calls.
-//  */
-// class oColorCardNode extends oNodeLayer {
-//   private _colorGrouping: columnGroupingColor | null = null;
-
-//   constructor(displayOrder: number, index: number, nodePath: string, name: string) {
-//     super(displayOrder, index, nodePath, name);
-//   }
-
-//   get color(): columnGroupingColor {
-//     if (!this._colorGrouping) {
-//       this._colorGrouping = columnGroupingColor.fromNode(this);
-//     }
-//     return this._colorGrouping;
-//   }
-
-//   getColor(frameNumber: number): ColorObj {
-//     return this.color.getColor(frameNumber);
-//   }
-//   setColor(frameNumber: number, color: ColorInput): boolean {
-//     return this.color.setColor(frameNumber, color);
-//   }
-
-//   toString() {
-//     return `ColorCardNode<${this.nodePath}>`;
-//   }
-// }
-
-// class _LayerManager {
-//   nodeLayers: oNodeLayer[] = [];
-
-//   constructor() {
-//     this.updateNodeLayers();
-//   }
-
-//   updateNodeLayers(): void {
-//     this.nodeLayers = [];
-
-//     const timelineIndices: { [nodePath: string]: number } = {};
-//     for (let timelineIndex = 0; timelineIndex < Timeline.numLayers; timelineIndex++) {
-//       const nodePath = Timeline.layerToNode(timelineIndex);
-//       if (nodePath) {
-//         timelineIndices[nodePath] = timelineIndex;
-//       }
-//     }
-
-//     const allNodes = getAllNodesInScene();
-//     for (const nodePath of allNodes) {
-//       const nodeType = node.type(nodePath);
-//       const timelineIndex = timelineIndices[nodePath] ?? -1;
-//       if (nodeType === 'COLOR_CARD') {
-//         this.nodeLayers.push(
-//           new oColorCardNode(
-//             this.nodeLayers.length,
-//             timelineIndex,
-//             nodePath,
-//             node.getName(nodePath),
-//           ),
-//         );
-//       }
-//       if (nodeType === 'PEG') {
-//         this.nodeLayers.push(
-//           new oPegNode(this.nodeLayers.length, timelineIndex, nodePath, node.getName(nodePath)),
-//         );
-//       }
-//       if (nodeType === 'READ') {
-//         this.nodeLayers.push(
-//           new oDrawingNode(this.nodeLayers.length, timelineIndex, nodePath, node.getName(nodePath)),
-//         );
-//       } else {
-//         this.nodeLayers.push(
-//           new oNodeLayer(this.nodeLayers.length, timelineIndex, nodePath, node.getName(nodePath)),
-//         );
-//       }
-//     }
-//   }
-
-//   getSelected(): oNodeLayer[] {
-//     const selectedNodePaths = selection.selectedNodes();
-//     const selected = selectedNodePaths
-//       .map((nodePath: string) => this.getNodeLayer(nodePath))
-//       .filter((layer): layer is oNodeLayer => layer !== null);
-
-//     // Sort by displayOrder property
-//     selected.sort((a, b) => a.displayOrder - b.displayOrder);
-//     return selected;
-//   }
-
-//   getNodeLayers(): oNodeLayer[] {
-//     return this.nodeLayers;
-//   }
-
-//   getNodeLayer(index: string | number): oNodeLayer | null {
-//     for (var i = 0; i < this.nodeLayers.length; i++) {
-//       if (typeof index === 'string') {
-//         if (this.nodeLayers[i].nodePath === index) return this.nodeLayers[i];
-//       } else {
-//         if (this.nodeLayers[i].index === index) return this.nodeLayers[i];
-//       }
-//     }
-//     return null;
-//   }
-// }
-
-// const LayerManager = new _LayerManager();
-
-// class _Selection {
-//   getSelectedNodes(): oNodeLayer[] {
-//     const selectedNodePaths = selection.selectedNodes();
-//     return selectedNodePaths
-//       .map((nodePath: string) => LayerManager.getNodeLayer(nodePath))
-//       .filter((layer): layer is oNodeLayer => layer !== null);
-//   }
-// }
-
-// const GlobalSelection = new _Selection();
-
-function createColorCardNodeClass(Core: HarmonyCore) {
-  var BaseNodeLayer = Core.oNodeLayer;
-
-  function ColorCardNode(
-    this: any,
-    displayOrder: number,
-    index: number,
-    nodePath: string,
-    name: string,
-  ) {
-    /*
-     * Equivalent to:
-     *
-     * super(displayOrder, index, nodePath, name)
-     */
-    BaseNodeLayer.call(this, displayOrder, index, nodePath, name);
-
-    this._colorGrouping = null;
-  }
-
-  /*
-   * ES5 inheritance.
-   */
-  ColorCardNode.prototype = Object.create(BaseNodeLayer.prototype);
-
-  ColorCardNode.prototype.constructor = ColorCardNode;
-
-  /*
-   * Equivalent to:
-   *
-   * get color()
-   */
-  Object.defineProperty(ColorCardNode.prototype, 'color', {
-    get: function () {
-      if (!this._colorGrouping) {
-        this._colorGrouping = Core.columnGroupingColor.fromNode(this);
-      }
-
-      return this._colorGrouping;
-    },
-
-    enumerable: true,
-    configurable: true,
-  });
-
-  ColorCardNode.prototype.getColor = function (frameNumber: number) {
-    return this.color.getColor(frameNumber);
-  };
-
-  ColorCardNode.prototype.setColor = function (frameNumber: number, color: any) {
-    return this.color.setColor(frameNumber, color);
-  };
-
-  ColorCardNode.prototype.toString = function () {
-    return 'ColorCardNode<' + this.nodePath + '>';
-  };
-
-  return ColorCardNode;
-}
-
 function createColumnGroupingClass() {
   function ColumnGrouping(this: any) {
     this.columns = [];
@@ -1100,300 +886,3 @@ function createColumnGroupingClass() {
 }
 
 /* ============================== */
-
-function createNodeLayerClass(Core: HarmonyCore) {
-  class NodeLayer {
-    displayOrder: number;
-    index: number;
-    nodePath: string;
-    name: string;
-
-    constructor(displayOrder: number, index: number, nodePath: string, name: string) {
-      this.displayOrder = displayOrder;
-
-      this.index = index;
-
-      this.nodePath = nodePath;
-
-      this.name = name;
-    }
-
-    toString(): string {
-      return 'NodeLayer<' + this.nodePath + '>';
-    }
-
-    setEnabled(enabled: boolean): void {
-      Core.node.setEnable(this.nodePath, enabled);
-    }
-
-    isEnabled(): boolean {
-      return Core.node.getEnable(this.nodePath);
-    }
-
-    getAttributeNames(): string[] {
-      return Core.node.getAllAttrNames(this.nodePath);
-    }
-
-    getAllAttributes(): Attribute[] {
-      var attributeNames = this.getAttributeKeywords();
-
-      var attributes: Attribute[] = [];
-
-      for (var i = 0; i < attributeNames.length; i++) {
-        attributes.push(Core.node.getAttr(this.nodePath, Core.frame.current(), attributeNames[i]));
-      }
-
-      return attributes;
-    }
-
-    getAttributeKeywords(): string[] {
-      return Core.node.getAllAttrKeywords(this.nodePath);
-    }
-
-    getColumn(attrName: 'offset.attr3dpath', linkType?: string, createColumn?: boolean): any;
-
-    getColumn(attrName: 'position.attr3dpath', linkType?: string, createColumn?: boolean): any;
-
-    getColumn(attrName: 'DRAWING.ELEMENT', linkType?: string, createColumn?: boolean): any;
-
-    getColumn(attrName: string, linkType?: string, createColumn?: boolean): any;
-
-    getColumn(attrName: string, linkType?: string, createColumn: boolean = true): any {
-      if (attrName.indexOf('|') !== -1) {
-        var lastSlashIndex = attrName.lastIndexOf('|');
-
-        var path = attrName.substring(0, lastSlashIndex);
-
-        var targetNode = Core.LayerManager.getNodeLayer(this.nodePath + path);
-
-        if (targetNode === null) {
-          throw new Error('Node not found for path: ' + this.nodePath + path);
-        }
-
-        var attributeName = attrName.substring(lastSlashIndex + 1);
-
-        return targetNode.getColumn(attributeName, linkType);
-      }
-
-      var col = Core.node.linkedColumn(this.nodePath, attrName);
-
-      if (!col) {
-        if (!createColumn) {
-          throw new Error(
-            "Column not found for attribute '" + attrName + "' on node '" + this.nodePath + "'.",
-          );
-        }
-
-        var colName = Core.column.generateAnonymousName();
-
-        Core.MessageLog.trace(
-          "No column linked to attribute '" +
-            attrName +
-            "' on node '" +
-            this.nodePath +
-            "'. Creating column: " +
-            colName,
-        );
-
-        Core.column.add(colName, linkType !== undefined ? linkType : 'BEZIER');
-
-        var result = Core.node.linkAttr(this.nodePath, attrName, colName);
-
-        if (!result) {
-          Core.MessageLog.trace(
-            "Failed to link new column '" + colName + "' to attribute '" + attrName + "'.",
-          );
-        }
-
-        if (attrName === 'DRAWING.ELEMENT') {
-          return new Core.oDrawingElementColumn(colName, this);
-        }
-
-        return new Core.oColumn(colName, this);
-      }
-
-      if (attrName === 'offset.attr3dpath' || attrName === 'position.attr3dpath') {
-        return new Core.oPathColumn3D(col, this);
-      }
-
-      if (attrName === 'DRAWING.ELEMENT') {
-        return new Core.oDrawingElementColumn(col, this);
-      }
-
-      return new Core.oColumn(col, this);
-    }
-
-    getType(): string {
-      return Core.node.type(this.nodePath);
-    }
-
-    getLocked(): boolean {
-      return Core.node.getLocked(this.nodePath);
-    }
-
-    setLocked(locked: boolean): void {
-      Core.node.setLocked(this.nodePath, locked);
-    }
-
-    getChildren(): any[] {
-      var childPaths = Core.node.subNodes(this.nodePath);
-
-      if (!childPaths) {
-        return [];
-      }
-
-      return childPaths
-        .map(function (childPath: string) {
-          return Core.LayerManager.getNodeLayer(childPath);
-        })
-        .filter(function (layer: any) {
-          return layer !== null;
-        });
-    }
-
-    getChild(name: string): any {
-      if (name.indexOf('/') !== -1) {
-        return Core.LayerManager.getNodeLayer(this.nodePath + '/' + name);
-      }
-
-      var childPath = Core.node.subNodeByName(this.nodePath, name);
-
-      if (!childPath) {
-        return null;
-      }
-
-      return Core.LayerManager.getNodeLayer(childPath);
-    }
-
-    getChildrenRecursive(): any[] {
-      var result: any[] = [];
-
-      var children = this.getChildren();
-
-      for (var i = 0; i < children.length; i++) {
-        var child = children[i];
-
-        result.push(child);
-
-        var descendants = child.getChildrenRecursive();
-
-        for (var j = 0; j < descendants.length; j++) {
-          result.push(descendants[j]);
-        }
-      }
-
-      return result;
-    }
-
-    getParent(): any {
-      var parentPath = Core.node.parentNode(this.nodePath);
-
-      if (parentPath === Core.node.root()) {
-        return null;
-      }
-
-      return Core.LayerManager.getNodeLayer(parentPath);
-    }
-
-    isGroup(): boolean {
-      return Core.node.isGroup(this.nodePath);
-    }
-
-    // Move your getEditableAttributes(),
-    // getFullAttributeList(),
-    // setAttribute(), etc. here too,
-    // replacing node/frame with Core.node/Core.frame.
-  }
-
-  return NodeLayer;
-}
-
-function createDrawingNodeClass(Core: CoreRuntime) {
-  /*
-   * extends is resolved NOW, while the factory
-   * is executing.
-   */
-  var NodeLayer = Core.oNodeLayer;
-
-  class DrawingNode extends NodeLayer {
-    drawing: any;
-    position: any;
-    scale: any;
-
-    constructor(displayOrder: number, index: number, nodePath: string, name: string) {
-      super(displayOrder, index, nodePath, name);
-
-      /*
-       * Create these AFTER super(), once
-       * this.nodePath has been assigned.
-       */
-      this.drawing = new Core.oTextAttr(this.nodePath, 'DRAWING');
-
-      this.position = new Core.oPosition3D(this.nodePath, 'OFFSET');
-
-      this.scale = new Core.oScale3D(this.nodePath);
-    }
-
-    get drawingElement(): any {
-      return this.getColumn('DRAWING.ELEMENT');
-    }
-
-    getElement(): any {
-      return new Core.oElement(Core.node.getElementId(this.nodePath));
-    }
-
-    getElementId(): number {
-      return Core.node.getElementId(this.nodePath);
-    }
-
-    createDrawing(baseName: string): string | null {
-      var uniqueName = this.getUniqueDrawingName(baseName);
-
-      if (!uniqueName) {
-        return null;
-      }
-
-      var colName = Core.node.linkedColumn(this.nodePath, 'DRAWING.ELEMENT');
-
-      if (!colName) {
-        Core.MessageLog.trace('[Layers.ts] No DRAWING.ELEMENT column found on ' + this.nodePath);
-
-        return null;
-      }
-
-      var result = Core.column.createDrawing(colName, uniqueName);
-
-      Core.MessageLog.trace("[Layers.ts] createDrawing('" + uniqueName + "') -> " + result);
-
-      return result ? uniqueName : null;
-    }
-
-    getUniqueDrawingName(baseName: string): string | null {
-      var elementId = Core.node.getElementId(this.nodePath);
-
-      if (elementId === -1) {
-        Core.System.println('Node not found or invalid element ID.');
-
-        return null;
-      }
-
-      var counter = 1;
-
-      var uniqueName = baseName + '_' + counter;
-
-      while (Core.Drawing.isExists(elementId, uniqueName)) {
-        counter++;
-
-        uniqueName = baseName + '_' + counter;
-      }
-
-      return uniqueName;
-    }
-
-    toString(): string {
-      return 'DrawingLayer<' + this.nodePath + '>';
-    }
-  }
-
-  return DrawingNode;
-}

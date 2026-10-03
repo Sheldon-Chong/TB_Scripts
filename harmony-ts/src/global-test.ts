@@ -55,7 +55,7 @@ interface CoreModules {
   oDrawingElementColumn: ReturnType<typeof createDrawingElementColumnClass>;
   columnGrouping: ReturnType<typeof createColumnGroupingClass>;
   columnGroupingColor: ReturnType<typeof createColumnGroupingColorClass>;
-  oNodeLayer: ReturnType<typeof createNodeLayerClass>;
+  oBaseNode: ReturnType<typeof createBaseNodeClass>;
   oDrawingNode: ReturnType<typeof createDrawingNodeClass>;
   oColorCardNode: ReturnType<typeof createColorCardNodeClass>;
   oPegNode: ReturnType<typeof createPegNodeClass>;
@@ -168,7 +168,7 @@ function createCore(): HarmonyCore {
   /*
    * Node classes
    */
-  Runtime.oNodeLayer = createNodeLayerClass(Runtime);
+  Runtime.oBaseNode = createBaseNodeClass(Runtime);
   Runtime.oDrawingNode = createDrawingNodeClass(Runtime);
   Runtime.oColorCardNode = createColorCardNodeClass(Runtime);
   Runtime.oPegNode = createPegNodeClass(Runtime);
