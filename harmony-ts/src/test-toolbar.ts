@@ -51,6 +51,7 @@ function registerBareAction() {
       try {
         const sel = Core.TimelineKit.getSelection();
         MessageLog.trace('TimelineKit.getSelection(): ' + JSON.stringify(sel));
+        MessageLog.trace('TimelineKit.getSelection(): ' + sel.startFrame);
       } catch (error) {
         MessageLog.trace('TimelineKit.getSelection() ERROR: ' + error);
       }
@@ -63,6 +64,8 @@ function registerBareAction() {
       Core.Maths;
       Core.SceneKit;
       Core.TimelineKit.getSelection();
+      const markers = Core.TimelineKit.getAllMarkers();
+      MessageLog.trace(`[test-toolbar.ts] ${markers}`);
 
       scene.endUndoRedoAccum();
 
