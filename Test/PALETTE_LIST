@@ -1,3 +1,5 @@
 ToonBoomAnimationInc PaletteList 1
 palette-library/Test LINK "D:/YT projects/Coding/ToonBoom/Test/palette-library/Test.plt"
 palette-library/Test_pencil_texture LINK "D:/YT projects/Coding/ToonBoom/Test/palette-library/Test_pencil_texture.plt"
+palette-library/Sans LINK "D:/YT projects/Coding/ToonBoom/Test/palette-library/Sans.plt"
+palette-library/Verity LINK "D:/YT projects/Coding/ToonBoom/Test/palette-library/Verity.plt"

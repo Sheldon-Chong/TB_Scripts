@@ -103,7 +103,12 @@ function createPaletteClass(Core: CoreRuntime, PaletteColorClass: any) {
 
     getColorById(id: string): any | null {
       var color = this._native.getColorById(id);
-      return color ? new PaletteColorClass(color, this) : null;
+
+      if (!color || color.id !== id) {
+        return null;
+      }
+
+      return new PaletteColorClass(color, this);
     }
 
     getColors(): any[] {

@@ -64,7 +64,7 @@ function testPaletteColors(): void {
 
   const res = Core.PaletteKit.Palettes.getColorById(Core.PaletteKit.Palettes.get(0).id);
   Core.MessageLog.trace(
-    '[Test-duplicate-drawing.ts] getColorById: ' + JSON.stringify(res, null, 2),
+    '[Test-duplicate-drawing.ts] getColorById: ' + JSON.stringify(res.palette.name, null, 2),
   );
 }
 
@@ -173,32 +173,65 @@ function runCycle(): void {
   Core.scene.setStopFrame(sel.startFrame + 7);
 }
 
-function testQueryStrokes() {
+function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
   const Core = getCore();
-  const sel = Core.TimelineKit.getSelection();
   const strokes = Core.DrawingDataKit.query.getStrokes({
     drawing: {
-      frame: Core.frame.current(),
-      node: sel.selectedNodes[0].nodePath,
+      frame: frame,
+      node: node.nodePath,
     },
     art: 2,
   });
-  strokes.layers.forEach((layer) => {
-    layer.strokes.forEach((stroke) => {
-      const colorId = stroke.pencilColorId;
-      Core.MessageLog.trace(
-        `[testQueryStrokes] stroke ${stroke.strokeIndex} on layer ${layer.index} has pencilColorId: ${colorId}`,
-      );
-    });
-  });
 
-  // Core.MessageLog.trace('[Test-duplicate-drawing.ts] strokes: ' + JSON.stringify(strokes, null, 2));
+  function getColorTally(strokes: DrawingStrokesResult) {
+    const tally = {};
+    strokes.layers.forEach((layer) => {
+      layer.strokes.forEach((stroke) => {
+        const colorId = stroke.pencilColorId;
+        tally[colorId] = (tally[colorId] || 0) + 1;
+      });
+    });
+
+    const largestTallyColorId = Object.keys(tally).reduce((a, b) => (tally[a] > tally[b] ? a : b));
+    return largestTallyColorId;
+  }
+
+  var match = Core.PaletteKit.Palettes.getColorById(getColorTally(strokes) ?? '');
+  if (match) {
+    Core.MessageLog.trace(
+      'color=' +
+        JSON.stringify({
+          id: match.color.id,
+          name: match.color.name,
+          colorType: match.color.colorType,
+          isTexture: match.color.isTexture,
+          colorData: match.color.colorData,
+          palette: match.palette.name,
+        }),
+    );
+  }
+
+  const col = node.getColumn('DRAWING.ELEMENT') as CoreInstance<'oDrawingElementColumn'>;
+  col.setDrawingType(frame, match.palette.name);
+}
+
+function testQueryStrokes() {
+  scene.beginUndoRedoAccum('Label Drawing');
+  const Core = getCore();
+  const sel = Core.TimelineKit.getSelection();
+
+  for (const node of sel.selectedNodes) {
+    for (let frame = sel.startFrame; frame <= sel.endFrame; frame++) {
+      labelDrawing(frame, node);
+    }
+  }
+  scene.endUndoRedoAccum();
 }
 
 function testTranslateDrawing() {
   const sel = G.TimelineKit.getSelection();
   const selNode = sel.selectedNodes[0];
-  if (!(selNode instanceof oDrawingNode)) {
+  if (!(selNode instanceof getCore().oDrawingNode)) {
     MessageLog.trace('Selected node is not a drawing node.');
     return;
   }
@@ -210,5 +243,5 @@ function testTranslateDrawing() {
 }
 
 function testDuplicateDrawing() {
-  loopCurrentSelection();
+  getTools(getCore()).loopCurrentSelection();
 }

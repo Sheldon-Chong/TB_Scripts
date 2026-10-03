@@ -4,6 +4,10 @@ function createDrawingElementColumnClass(Core: any) {
   class DrawingElementColumn extends BaseColumn {
     element: any;
 
+    setDrawingType(frameNumber: number, drawingType: string): boolean {
+      return Core.column.setDrawingType(this.name, frameNumber, drawingType);
+    }
+
     constructor(name: string, parentLayer: any) {
       Core.MessageLog.trace('name ' + name);
 
