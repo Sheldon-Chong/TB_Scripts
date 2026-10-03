@@ -175,6 +175,11 @@ function runCycle(): void {
 
 function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
   const Core = getCore();
+
+  const col = node.getColumn('DRAWING.ELEMENT') as CoreInstance<'oDrawingElementColumn'>;
+  if (col.getKeyframe(frame) === null || col.getKeyframe(frame) === '') {
+    return;
+  }
   const strokes = Core.DrawingDataKit.query.getStrokes({
     drawing: {
       frame: frame,
@@ -183,35 +188,107 @@ function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
     art: 2,
   });
 
-  function getColorTally(strokes: DrawingStrokesResult) {
-    const tally = {};
+  function getColorTally(
+    strokes: DrawingStrokesResult,
+    excludedPaletteNames: string[] = ['Template_Lineart'],
+  ): string | null {
+    const tally: Record<string, number> = {};
+
     strokes.layers.forEach((layer) => {
       layer.strokes.forEach((stroke) => {
-        const colorId = stroke.pencilColorId;
-        tally[colorId] = (tally[colorId] || 0) + 1;
+        const colorIds: string[] = [];
+
+        // Pencil / centerline stroke
+        if (stroke.pencilColorId) {
+          colorIds.push(stroke.pencilColorId);
+        }
+
+        // Colour on left side of contour
+        if (typeof stroke.shaderLeft === 'number' && layer.shaders[stroke.shaderLeft]) {
+          const colorId = layer.shaders[stroke.shaderLeft].colorId;
+
+          if (colorId) {
+            colorIds.push(colorId);
+          }
+        }
+
+        // Colour on right side of contour
+        if (typeof stroke.shaderRight === 'number' && layer.shaders[stroke.shaderRight]) {
+          const colorId = layer.shaders[stroke.shaderRight].colorId;
+
+          if (colorId) {
+            colorIds.push(colorId);
+          }
+        }
+
+        // Avoid counting the same color twice on one stroke
+        const uniqueColorIds: string[] = [];
+
+        for (let i = 0; i < colorIds.length; i++) {
+          if (uniqueColorIds.indexOf(colorIds[i]) === -1) {
+            uniqueColorIds.push(colorIds[i]);
+          }
+        }
+
+        for (let i = 0; i < uniqueColorIds.length; i++) {
+          const colorId = uniqueColorIds[i];
+
+          tally[colorId] = (tally[colorId] || 0) + 1;
+        }
       });
     });
 
-    const largestTallyColorId = Object.keys(tally).reduce((a, b) => (tally[a] > tally[b] ? a : b));
-    return largestTallyColorId;
+    MessageLog.trace(`[Test-duplicate-drawing.ts] tally: ${JSON.stringify(tally, null, 2)}`);
+
+    const colorIds = Object.keys(tally);
+
+    let largestColorId: string | null = null;
+    let largestCount = -1;
+
+    for (let i = 0; i < colorIds.length; i++) {
+      const colorId = colorIds[i];
+
+      const match = Core.PaletteKit.Palettes.getColorById(colorId);
+
+      if (!match) {
+        continue;
+      }
+
+      if (excludedPaletteNames.indexOf(match.palette.name) !== -1) {
+        continue;
+      }
+
+      if (tally[colorId] > largestCount) {
+        largestCount = tally[colorId];
+        largestColorId = colorId;
+      }
+    }
+
+    return largestColorId;
   }
 
-  var match = Core.PaletteKit.Palettes.getColorById(getColorTally(strokes) ?? '');
-  if (match) {
-    Core.MessageLog.trace(
-      'color=' +
-        JSON.stringify({
-          id: match.color.id,
-          name: match.color.name,
-          colorType: match.color.colorType,
-          isTexture: match.color.isTexture,
-          colorData: match.color.colorData,
-          palette: match.palette.name,
-        }),
-    );
+  const excludedPaletteNames = ['Template_Lineart'];
+
+  const largestTallyColorId = getColorTally(strokes, excludedPaletteNames);
+
+  MessageLog.trace(`[Test-duplicate-drawing.ts] largest color: ${largestTallyColorId}`);
+
+  if (!largestTallyColorId) {
+    Core.MessageLog.trace('[Test-duplicate-drawing.ts] No eligible color found for frame ' + frame);
+    return;
   }
 
-  const col = node.getColumn('DRAWING.ELEMENT') as CoreInstance<'oDrawingElementColumn'>;
+  const match = Core.PaletteKit.Palettes.getColorById(largestTallyColorId);
+
+  if (!match) {
+    Core.MessageLog.trace('[Test-duplicate-drawing.ts] No matching color found for frame ' + frame);
+    return;
+  }
+
+  MessageLog.trace(
+    'largestTallyColorId: ' + largestTallyColorId + ', match.palette.name: ' + match.palette.name,
+  );
+
   col.setDrawingType(frame, match.palette.name);
 }
 
