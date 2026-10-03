@@ -139,6 +139,54 @@ this.__proto__.applyPreset = applyPreset;
 this.__proto__.applyAnimationPreset = applyAnimationPreset;
 this.__proto__.applyCameraPreset = applyCameraPreset;
 
+function loopCurrentSelection() {
+  scene.saveAll();
+  scene.beginUndoRedoAccum('Duplicate Drawing');
+
+  MessageLog.clearLog();
+  const sel = G.TimelineKit.getSelection();
+
+  for (const selNode of sel.selectedNodes) {
+    if (!(selNode instanceof G.oDrawingNode)) {
+      continue;
+    }
+
+    const elementCol = selNode.drawingElement;
+
+    try {
+      let lastValidFrame = sel.startFrame - 1;
+
+      for (let i = sel.startFrame; i <= sel.endFrame; i++) {
+        const keyframe = elementCol.getKeyframe(i);
+
+        if (keyframe) {
+          lastValidFrame = i;
+        }
+      }
+
+      if (lastValidFrame >= sel.startFrame && lastValidFrame < sel.endFrame) {
+        const sourceSelection = new G.oSelection(sel.startFrame, lastValidFrame);
+        const pasteSelection = new G.oSelection(lastValidFrame + 1, sel.endFrame);
+
+        elementCol.loopKeyframes(sourceSelection, pasteSelection);
+      }
+
+      const repeatSequenceLength = lastValidFrame - sel.startFrame + 1;
+
+      for (let i = sel.startFrame; i <= sel.endFrame; i += repeatSequenceLength) {
+        Timeline.createFrameMarker(selNode.index, 'Red', i);
+      }
+    } catch (error) {
+      MessageLog.trace(`[Test-duplicate-drawing.ts] Error: ${error.message}`);
+    }
+  }
+
+  scene.endUndoRedoAccum();
+  return null;
+}
+
+this.__proto__.loopCurrentSelection = loopCurrentSelection;
+
 function registerAllTools() {
   registerCameraSwipeTool();
   registerApplyShakeTool();
@@ -204,6 +252,14 @@ function registerAllTools() {
       shortcut: index < 9 ? 'Ctrl+' + (index + 1) : undefined,
       category: 'Presets',
     });
+  });
+
+  registerAction({
+    name: 'Loop Current Selection',
+    icon: `${specialFolders.userScripts}\\script-icons\\loop_selection.png`,
+    callback: loopCurrentSelection,
+    shortcut: 'Ctrl+Alt+L',
+    category: 'custom',
   });
 
   updateToolbars();

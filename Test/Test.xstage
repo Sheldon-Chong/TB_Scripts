@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.2.0 build 24991 2026-03-25 08:42:03" version="2520" build="24991" date="Fri Oct 2 13:44:33 2026" timeMsec="1790919873892" username="emers" realUsername="emers" creator="harmony">
+<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.2.0 build 24991 2026-03-25 08:42:03" version="2520" build="24991" date="Fri Oct 2 23:02:52 2026" timeMsec="1790953372790" username="emers" realUsername="emers" creator="harmony">
  <elements>
   <element id="1" elementName="Drawing" elementFolder="Drawing" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
    <drawings>
@@ -169,6 +169,16 @@
     <dwg name="15_4"/>
     <dwg name="14_5"/>
     <dwg name="15_5"/>
+    <dwg name="TestDrawing_53_1"/>
+    <dwg name="TestDrawing_53_2"/>
+    <dwg name="TestDrawing_52_1"/>
+    <dwg name="TestDrawing_54_1"/>
+    <dwg name="TestDrawing_54_2"/>
+    <dwg name="TestDrawing_54_3"/>
+    <dwg name="TestDrawing_52_2"/>
+    <dwg name="TestDrawing_44_1"/>
+    <dwg name="TestDrawing_44_2"/>
+    <dwg name="TestDrawing_45_1"/>
    </drawings>
   </element>
   <element id="2" elementName="Drawing_1" elementFolder="Drawing_1" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
@@ -192,6 +202,40 @@
     <dwg name="11_2"/>
     <dwg name="10_3"/>
     <dwg name="11_3"/>
+    <dwg name="10_10"/>
+    <dwg name="10_11"/>
+    <dwg name="10_12"/>
+    <dwg name="10_13"/>
+    <dwg name="10_14"/>
+    <dwg name="10_4"/>
+    <dwg name="10_5"/>
+    <dwg name="10_6"/>
+    <dwg name="10_7"/>
+    <dwg name="10_8"/>
+    <dwg name="10_9"/>
+    <dwg name="11_10"/>
+    <dwg name="11_11"/>
+    <dwg name="11_12"/>
+    <dwg name="11_13"/>
+    <dwg name="11_4"/>
+    <dwg name="11_5"/>
+    <dwg name="11_6"/>
+    <dwg name="11_7"/>
+    <dwg name="11_8"/>
+    <dwg name="11_9"/>
+    <dwg name="12"/>
+    <dwg name="13"/>
+    <dwg name="12_1"/>
+    <dwg name="13_1"/>
+    <dwg name="12_2"/>
+    <dwg name="13_2"/>
+    <dwg name="12_3"/>
+    <dwg name="13_3"/>
+    <dwg name="12_4"/>
+    <dwg name="13_4"/>
+    <dwg name="12_5"/>
+    <dwg name="13_5"/>
+    <dwg name="12_6"/>
    </drawings>
   </element>
   <element id="3" elementName="Drawing_2" elementFolder="Drawing_2" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
@@ -250,6 +294,29 @@
     <dwg name="8_3"/>
     <dwg name="7_4"/>
     <dwg name="8_4"/>
+    <dwg name="3_10_1"/>
+    <dwg name="3_10_2"/>
+    <dwg name="7_10"/>
+    <dwg name="7_11"/>
+    <dwg name="7_12"/>
+    <dwg name="7_13"/>
+    <dwg name="7_14"/>
+    <dwg name="7_15"/>
+    <dwg name="7_5"/>
+    <dwg name="7_6"/>
+    <dwg name="7_7"/>
+    <dwg name="7_8"/>
+    <dwg name="7_9"/>
+    <dwg name="8_10"/>
+    <dwg name="8_11"/>
+    <dwg name="8_12"/>
+    <dwg name="8_13"/>
+    <dwg name="8_14"/>
+    <dwg name="8_5"/>
+    <dwg name="8_6"/>
+    <dwg name="8_7"/>
+    <dwg name="8_8"/>
+    <dwg name="8_9"/>
    </drawings>
   </element>
  </elements>
@@ -427,8 +494,13 @@
      <elementSeq exposures="10" val="TestDrawing_50" id="1"/>
      <elementSeq exposures="13-14" val="TestDrawing_51" id="1"/>
      <elementSeq exposures="15" val="TestDrawing_53" id="1"/>
-     <elementSeq exposures="16" val="TestDrawing_52" id="1"/>
-     <elementSeq exposures="17" val="TestDrawing_54" id="1"/>
+     <elementSeq exposures="16" val="TestDrawing_53_1" id="1"/>
+     <elementSeq exposures="17" val="TestDrawing_53_2" id="1"/>
+     <elementSeq exposures="18" val="TestDrawing_52_1" id="1"/>
+     <elementSeq exposures="19" val="TestDrawing_54_1" id="1"/>
+     <elementSeq exposures="20" val="TestDrawing_54_2" id="1"/>
+     <elementSeq exposures="21" val="TestDrawing_54_3" id="1"/>
+     <elementSeq exposures="22" val="TestDrawing_52_2" id="1"/>
      <elementSeq exposures="50-177" val="2" id="1"/>
      <elementSeq exposures="182-214" val="3" id="1"/>
      <elementSeq exposures="215" val="4_1" id="1"/>
@@ -446,6 +518,7 @@
      <elementSeq exposures="296" val="TestDrawing_46" id="1"/>
      <elementSeq exposures="297" val="TestDrawing_47" id="1"/>
      <elementSeq exposures="298" val="TestDrawing_48" id="1"/>
+     <elementSeq exposures="299" val="TestDrawing_44_1" id="1"/>
     </column>
     <column type="2" name="ATV-0DDC40234D5F860523904E6D" anonymous="true" displayOrder="0">
      <infoX width="100"/>
@@ -579,7 +652,7 @@
        <pt val="-0,-0,-0" lockedInTime="413"/>
       </points>
      </path3D>
-     <velocity type="3" name="ATV-0DCA50358DB5E0B77BF018EC" displayOrder="0" width="100" anonymous="true">
+     <velocity type="3" name="ATV-0D65509ABB8294C2D5501746" displayOrder="0" width="100" anonymous="true">
       <step val="1" start="1" stop="1"/>
       <noFrames/>
       <points version="2">
@@ -712,6 +785,19 @@
      <elementSeq exposures="28" val="5" id="2"/>
      <elementSeq exposures="244-246,261" val="1" id="2"/>
      <elementSeq exposures="294" val="2" id="2"/>
+     <elementSeq exposures="316" val="12" id="2"/>
+     <elementSeq exposures="317" val="13" id="2"/>
+     <elementSeq exposures="318" val="12_1" id="2"/>
+     <elementSeq exposures="319" val="13_1" id="2"/>
+     <elementSeq exposures="320" val="12_2" id="2"/>
+     <elementSeq exposures="321" val="13_2" id="2"/>
+     <elementSeq exposures="322" val="12_3" id="2"/>
+     <elementSeq exposures="323" val="13_3" id="2"/>
+     <elementSeq exposures="324" val="12_4" id="2"/>
+     <elementSeq exposures="325" val="13_4" id="2"/>
+     <elementSeq exposures="326" val="12_5" id="2"/>
+     <elementSeq exposures="327" val="13_5" id="2"/>
+     <elementSeq exposures="328" val="12_6" id="2"/>
      <elementSeq exposures="525" val="10" id="2"/>
      <elementSeq exposures="526" val="11" id="2"/>
     </column>
@@ -1136,6 +1222,13 @@
        <module type="READ" name="Drawing_1" pos="0,0,0" publishUnderTab="Drawing_1">
         <options>
          <collapsed val="true"/>
+         <frameMarker frame="317" length="0" type="0"/>
+         <frameMarker frame="319" length="0" type="0"/>
+         <frameMarker frame="321" length="0" type="0"/>
+         <frameMarker frame="323" length="0" type="0"/>
+         <frameMarker frame="325" length="0" type="0"/>
+         <frameMarker frame="327" length="0" type="0"/>
+         <frameMarker frame="315" length="0" type="0"/>
          <version val="1"/>
         </options>
         <attrs>
@@ -1456,7 +1549,7 @@
    <int value=""/>
   </meta>
   <meta type="checksumValidation" name="checksumValidation" creator="Harmony Advanced" version="1.0">
-   <value data="6C00000000000000030319F3A28F46460C29E6EC46B67535460B18EFF94DEFBC1992B5BDFF0BEDA0CBE9B7D966163ED03FFE607B14545CB6DCB6ADD95C4C6DDF6FA95C02A6379CDF6405B0448DC319D8B4C965EA4C386AFE098C7D2F18A47997177F4E9F49AF2FDD02E8DE50FB2D9A9AA8CEFCDE6B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A40000000A2064CFC273FBA7DD3D261041A5797B46C2CF307F989A15B4D52838EF896C2ACE4538713535413867EF1AC8D8C4E6869C7FD4B1EAF809C1FF4428C90A37AC37F"/>
+   <value data="6C000000000000000303B75D0C21E8E8A2874842E818DB9BE8A5B64157E34112B73C1B1351A5430E65471977C8B8907E9150CED5BAFAF21872180377F2E2C371C107F2AC08993271CAAB1EEA236DB7761A67CB44E296C450A722D381B60AD739B9D1E031E7018173AC4670FE55833434066052706B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A400000006B0510DAFF5A41CF6AEA5B3013B9F2B94518936E0DDFBC337A1AD9AE90E386A8D8CD4570CE2C95B75E514D4119AF559EC6574300BA877DB6D181EA830E6791C8"/>
   </meta>
  </metas>
 </project>

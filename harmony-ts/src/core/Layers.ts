@@ -718,10 +718,10 @@ function getAllNodesInScene() {
   crawlGroup(absoluteRoot);
 
   // Output findings to the Message Log
-  MessageLog.trace('--- total nodes found: ' + accumulatedNodes.length + ' ---');
-  for (var j = 0; j < accumulatedNodes.length; j++) {
-    MessageLog.trace(accumulatedNodes[j]);
-  }
+  // MessageLog.trace('--- total nodes found: ' + accumulatedNodes.length + ' ---');
+  // for (var j = 0; j < accumulatedNodes.length; j++) {
+  //   MessageLog.trace(accumulatedNodes[j]);
+  // }
 
   return accumulatedNodes;
 }
@@ -810,10 +810,10 @@ function is3DPath(n): boolean {
 function return3DPath(n: oNodeLayer): oPathColumn3D | null {
   try {
     n.getAttributeNames().forEach((attrName) => {
-      MessageLog.trace('Attribute: ' + attrName);
+      // MessageLog.trace('Attribute: ' + attrName);
     });
     n.getAttributeKeywords().forEach((attrKeyword) => {
-      MessageLog.trace('Attribute Keyword: ' + attrKeyword);
+      // MessageLog.trace('Attribute Keyword: ' + attrKeyword);
     });
     const col = n.getColumn('position.attr3dpath', undefined, false);
     MessageLog.trace('return3DPath: ' + col);

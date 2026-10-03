@@ -244,19 +244,19 @@ class oAttr3D {
     var zKey = '';
 
     if (parent && parent.hasSubAttributes()) {
-      MessageLog.trace("\nFound parent attribute '" + keyword + "' on node '" + nodePath + "'.");
+      // MessageLog.trace("\nFound parent attribute '" + keyword + "' on node '" + nodePath + "'.");
       var subs = parent.getSubAttributes();
       for (var i = 0; i < subs.length; i++) {
-        MessageLog.trace(
-          '  sub[' +
-            i +
-            '] keyword=' +
-            subs[i].keyword() +
-            ' fullKeyword=' +
-            subs[i].fullKeyword() +
-            ' type=' +
-            subs[i].typeName(),
-        );
+        // MessageLog.trace(
+        //   '  sub[' +
+        //     i +
+        //     '] keyword=' +
+        //     subs[i].keyword() +
+        //     ' fullKeyword=' +
+        //     subs[i].fullKeyword() +
+        //     ' type=' +
+        //     subs[i].typeName(),
+        // );
         var kw = subs[i].keyword();
         if (kw === 'X') xKey = subs[i].fullKeyword();
         else if (kw === 'Y') yKey = subs[i].fullKeyword();
@@ -267,9 +267,9 @@ class oAttr3D {
     this.x = new oDoubleAttr(nodePath, xKey);
     this.y = new oDoubleAttr(nodePath, yKey);
     this.z = new oDoubleAttr(nodePath, zKey);
-    MessageLog.trace(
-      `oAttr3D '${keyword}' on node '${nodePath}' → x='${xKey}', y='${yKey}', z='${zKey}'`,
-    );
+    // MessageLog.trace(
+    //   `oAttr3D '${keyword}' on node '${nodePath}' → x='${xKey}', y='${yKey}', z='${zKey}'`,
+    // );
   }
 
   // ── helpers ──────────────────────────────────────────────
