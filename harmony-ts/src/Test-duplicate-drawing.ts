@@ -1,58 +1,199 @@
-include('globals.js');
+// include('globals.js');
 
-function runCycle() {
-  const sel = G.TimelineKit.getSelection();
-  const selNode = sel.selectedNodes[0];
-  if (!(selNode instanceof oDrawingNode)) {
-    MessageLog.trace('Selected node is not a drawing node.');
+include('global-test.js');
+include(specialFolders.userScripts + '/core/DrawingDataKit.js');
+
+function getFirstPaletteColors(): {
+  id: string;
+  name: string;
+  hex: string | null;
+}[] {
+  var Core = getCore();
+
+  var palette = Core.PaletteKit.Palettes.get(0);
+
+  if (!palette) {
+    Core.MessageLog.trace('No palette found.');
+
+    return [];
+  }
+
+  var colors = palette.getColors();
+
+  var result: {
+    id: string;
+    name: string;
+    hex: string | null;
+  }[] = [];
+
+  for (var i = 0; i < colors.length; i++) {
+    var color = colors[i];
+
+    var hex: string | null = null;
+
+    /*
+     * A gradient does not have one single hex value,
+     * so only convert solid colours here.
+     */
+    if (color.isSolid) {
+      var colorObj = Core.ColorUtils.ColorObj.fromColorInput(color.colorData);
+
+      hex = colorObj.toHex();
+    }
+
+    result.push({
+      id: color.id,
+
+      name: color.name,
+
+      hex: hex,
+    });
+  }
+
+  return result;
+}
+
+function testPaletteColors(): void {
+  var Core = getCore();
+
+  var colors = getFirstPaletteColors();
+
+  for (var i = 0; i < colors.length; i++) {
+    Core.MessageLog.trace(colors[i].name + ': ' + colors[i].hex);
+  }
+
+  const res = Core.PaletteKit.Palettes.getColorById(Core.PaletteKit.Palettes.get(0).id);
+  Core.MessageLog.trace(
+    '[Test-duplicate-drawing.ts] getColorById: ' + JSON.stringify(res, null, 2),
+  );
+}
+
+function runCycle(): void {
+  var Core = getCore();
+  var DrawingDataKit = Core.DrawingDataKit;
+  var sel = Core.TimelineKit.getSelection();
+  var selNode = sel.selectedNodes[0];
+
+  /*
+   * oDrawingNode as a TypeScript alias is type-only.
+   *
+   * instanceof needs the real runtime constructor.
+   */
+  if (!(selNode instanceof Core.oDrawingNode)) {
+    Core.MessageLog.trace('Selected node is not a drawing node.');
     return;
   }
-  scene.saveAll();
 
-  const drawingElement = selNode.drawingElement;
-  const drawing1 = drawingElement.getKeyframe(sel.startFrame);
-  const drawing2 = drawingElement.getKeyframe(sel.startFrame + 1);
-  const drawing3 = drawingElement.getKeyframe(sel.startFrame + 2);
+  Core.scene.saveAll();
 
-  MessageLog.trace(`[Test-duplicate-drawing.ts] ${drawing1}\n, ${drawing2}\n, ${drawing3}\n`);
-  scene.beginUndoRedoAccum('Duplicate Drawing');
-  drawingElement.copyDrawingTo(drawing1, sel.startFrame + 1);
-  drawingElement.copyDrawingTo(drawing1, sel.startFrame + 2);
-  drawingElement.copyDrawingTo(drawing2, sel.startFrame + 3);
-  drawingElement.copyDrawingTo(drawing3, sel.startFrame + 4);
-  drawingElement.copyDrawingTo(drawing3, sel.startFrame + 5);
-  drawingElement.copyDrawingTo(drawing3, sel.startFrame + 6);
-  drawingElement.copyDrawingTo(drawing2, sel.startFrame + 7);
-  scene.saveAll();
+  var drawingElement = selNode.drawingElement;
+  var drawing1 = drawingElement.getKeyframe(sel.startFrame);
+  var drawing2 = drawingElement.getKeyframe(sel.startFrame + 1);
+  var drawing3 = drawingElement.getKeyframe(sel.startFrame + 2);
 
-  scene.endUndoRedoAccum();
-  scene.beginUndoRedoAccum('Duplicate Drawing');
+  Core.MessageLog.trace(
+    '[Test-duplicate-drawing.ts] ' + drawing1 + '\n, ' + drawing2 + '\n, ' + drawing3 + '\n',
+  );
 
-  const test = () => {
+  Core.scene.beginUndoRedoAccum('Duplicate Drawing');
+
+  try {
+    drawingElement.copyDrawingTo(drawing1, sel.startFrame + 1);
+    drawingElement.copyDrawingTo(drawing1, sel.startFrame + 2);
+    drawingElement.copyDrawingTo(drawing2, sel.startFrame + 3);
+    drawingElement.copyDrawingTo(drawing3, sel.startFrame + 4);
+    drawingElement.copyDrawingTo(drawing3, sel.startFrame + 5);
+    drawingElement.copyDrawingTo(drawing3, sel.startFrame + 6);
+    drawingElement.copyDrawingTo(drawing2, sel.startFrame + 7);
+
+    Core.scene.saveAll();
+  } finally {
+    Core.scene.endUndoRedoAccum();
+  }
+
+  /*
+   * Everything referenced here is a true lexical
+   * capture and survives the delayed callback.
+   */
+  var test = function (): void {
+    Core.scene.beginUndoRedoAccum('Translate Drawing Strokes');
+
     try {
-      G.DrawingDataKit.translateDrawingStrokes(
-        { frame: sel.startFrame + 1, node: selNode.nodePath },
-        { x: 0, y: 50 },
+      DrawingDataKit.translateDrawingStrokes(
+        {
+          frame: sel.startFrame + 1,
+
+          node: selNode.nodePath,
+        },
+
+        {
+          x: 0,
+          y: 50,
+        },
       );
-      G.DrawingDataKit.translateDrawingStrokes(
-        { frame: sel.startFrame + 5, node: selNode.nodePath },
-        { x: 0, y: 50 },
+
+      DrawingDataKit.translateDrawingStrokes(
+        {
+          frame: sel.startFrame + 5,
+
+          node: selNode.nodePath,
+        },
+
+        {
+          x: 0,
+          y: 50,
+        },
       );
-      MessageLog.trace(`[Test-duplicate-drawing.ts] ${'done'}`);
-    } catch (error) {
-      MessageLog.trace(
-        `[Test-duplicate-drawing.ts]>>> Error: ${error.message} ${error.lineNumber} ${error.fileName}`,
+
+      Core.MessageLog.trace('[Test-duplicate-drawing.ts] done');
+    } catch (error: any) {
+      Core.MessageLog.trace(
+        '[Test-duplicate-drawing.ts]>>> Error: ' +
+          error.message +
+          ' ' +
+          error.lineNumber +
+          ' ' +
+          error.fileName,
       );
+    } finally {
+      Core.scene.endUndoRedoAccum();
     }
   };
 
-  var timer = new QTimer();
+  var timer = new Core.QTimer();
+
   timer.singleShot = true;
-  timer.timeout.connect(G.Utils.bindAction(test, this, null));
+
+  timer.timeout.connect(test);
+
   timer.start(200);
-  scene.endUndoRedoAccum();
+  Core.scene.beginUndoRedoAccum('Set Start/End Frame');
+
+  Core.scene.setStartFrame(sel.startFrame);
+  Core.scene.setStopFrame(sel.startFrame + 7);
 }
 
+function testQueryStrokes() {
+  const Core = getCore();
+  const sel = Core.TimelineKit.getSelection();
+  const strokes = Core.DrawingDataKit.query.getStrokes({
+    drawing: {
+      frame: Core.frame.current(),
+      node: sel.selectedNodes[0].nodePath,
+    },
+    art: 2,
+  });
+  strokes.layers.forEach((layer) => {
+    layer.strokes.forEach((stroke) => {
+      const colorId = stroke.pencilColorId;
+      Core.MessageLog.trace(
+        `[testQueryStrokes] stroke ${stroke.strokeIndex} on layer ${layer.index} has pencilColorId: ${colorId}`,
+      );
+    });
+  });
+
+  // Core.MessageLog.trace('[Test-duplicate-drawing.ts] strokes: ' + JSON.stringify(strokes, null, 2));
+}
 
 function testTranslateDrawing() {
   const sel = G.TimelineKit.getSelection();
@@ -61,7 +202,7 @@ function testTranslateDrawing() {
     MessageLog.trace('Selected node is not a drawing node.');
     return;
   }
-  G.DrawingDataKit.translateDrawingStrokes(
+  getCore().DrawingDataKit.translateDrawingStrokes(
     { frame: 83, node: 'Top/Drawing_4' },
     { x: 0, y: 50 },
     DrawingArt.LineArt,

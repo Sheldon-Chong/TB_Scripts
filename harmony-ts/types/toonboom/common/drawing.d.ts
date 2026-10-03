@@ -12,7 +12,14 @@ type NodePath = string;
  */
 declare var Drawing: {
   query: {
-    getData(options: any): any;
+    evaluateStrokes(options: EvaluateStrokesArguments): StrokeEvaluation[];
+    getBox(options: DrawingQueryBasicArguments): DrawingBoundingBox | EmptyDrawingResult;
+    getClosestPoint(options: GetClosestPointArguments): ClosestDrawingPoint[];
+    getData(options: DrawingQueryDataArguments): DrawingQueryData;
+    getIntersections(options: GetIntersectionsArguments): DrawingIntersectionGroup[];
+    getLayerStrokes(options: GetLayerStrokesArguments): DrawingStrokesResult;
+    getNumberOfLayers(options: DrawingQueryBasicArguments): number;
+    getStrokes(options: DrawingQueryBasicArguments): DrawingStrokesResult;
   };
 
   /**
@@ -95,6 +102,167 @@ declare var Drawing: {
 interface DrawingDescriptor {
   node: NodePath;
   frame: number;
+}
+
+interface DrawingQueryBasicArguments {
+  drawing: DrawingDescriptor;
+  art?: ArtIndex;
+}
+
+interface DrawingQueryDataArguments {
+  drawing: DrawingDescriptor;
+  art?: ArtIndex;
+}
+
+interface EvaluateStrokeRequest {
+  layer: number;
+  strokeIndex: number;
+  params: number[];
+}
+
+interface EvaluateStrokesArguments extends DrawingQueryBasicArguments {
+  strokes: EvaluateStrokeRequest[];
+}
+
+interface StrokeEvaluationPoint {
+  x: number;
+  y: number;
+  t: number;
+}
+
+interface StrokeEvaluation {
+  layer: number;
+  strokeIndex: number;
+  points: StrokeEvaluationPoint[];
+}
+
+interface DrawingBoundingBox {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+}
+
+interface EmptyDrawingResult {
+  empty: true;
+}
+
+interface DrawingQueryPoint {
+  x: number;
+  y: number;
+  maxDistanceSq?: number;
+}
+
+interface GetClosestPointArguments extends DrawingQueryBasicArguments {
+  points: DrawingQueryPoint[];
+}
+
+interface ClosestDrawingPoint extends DrawingQueryPoint {
+  closestPoint?: {
+    distanceSq: number;
+    distance: number;
+    layer: number;
+    t: number;
+    strokeIndex: number;
+    x: number;
+    y: number;
+  };
+}
+
+interface DrawingIntersectionPath {
+  polygon?: boolean;
+  path: BezierPoint[];
+}
+
+interface GetIntersectionsArguments extends DrawingQueryBasicArguments {
+  paths: DrawingIntersectionPath[];
+}
+
+interface DrawingIntersection {
+  x0: number;
+  y0: number;
+  t0: number;
+  x1: number;
+  y1: number;
+  t1: number;
+  x: number;
+  y: number;
+}
+
+interface DrawingIntersectionGroup {
+  layer: number;
+  strokeIndex: number;
+  intersections: DrawingIntersection[];
+}
+
+interface GetLayerStrokesArguments extends DrawingQueryBasicArguments {
+  layers: number[];
+}
+
+interface DrawingQueryJoint {
+  x: number;
+  y: number;
+  strokes: Array<{ strokeIndex: number; vertex: number }>;
+}
+
+interface DrawingThicknessKey {
+  t: number;
+  leftThickness: number;
+  rightThickness: number;
+  [key: string]: any;
+}
+
+interface DrawingThicknessPath {
+  minThickness: number;
+  maxThickness: number;
+  keys: DrawingThicknessKey[];
+}
+
+interface DrawingQueryStroke {
+  fromJoint?: number;
+  toJoint?: number;
+  path: BezierPoint[];
+  numBeziers?: number;
+  closed?: boolean;
+  pencilColorId?: string;
+  thickness?: {
+    minThickness: number;
+    maxThickness: number;
+    fromThickness?: number;
+    toThickness?: number;
+    thicknessPath?: number;
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
+interface DrawingQueryLayer {
+  index: number;
+  shaders: ShaderDefinition[];
+  joints: DrawingQueryJoint[];
+  thicknessPaths?: DrawingThicknessPath[];
+  strokes: DrawingQueryStroke[];
+  [key: string]: any;
+}
+
+interface DrawingQueryDrawingInfo {
+  node: NodePath;
+  frame: number;
+  [key: string]: any;
+}
+
+interface DrawingStrokesResult {
+  layers: DrawingQueryLayer[];
+  drawing: DrawingQueryDrawingInfo;
+  art: ArtIndex;
+  [key: string]: any;
+}
+
+interface DrawingQueryData {
+  box?: DrawingBoundingBox;
+  arts?: any[];
+  colors?: { [colorId: string]: any };
+  [key: string]: any;
 }
 
 /** Mask object containing path boundaries and optional hole definitions */

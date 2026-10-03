@@ -39,7 +39,7 @@ interface RegisterActionOptions {
   isChecked?: boolean;
 }
 
-include('globals.js');
+// include('globals.js');
 
 /**
  * Only prints values that were evaluated by the caller.

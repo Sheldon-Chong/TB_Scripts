@@ -68,7 +68,7 @@ include('DrawingPaster.js');
 include('test.js');
 include(specialFolders.userScripts + '/core/Transformations.js');
 include(specialFolders.userScripts + '/core/utils.js');
-include(specialFolders.userScripts + '/core/ColorUtils.js');
+include(specialFolders.userScripts + '/core/colors/Colors.js');
 
 include(specialFolders.userScripts + '/core/Frame.js');
 include('TimelineKit.js');
@@ -143,8 +143,6 @@ function getAllPalletes() {
   }
   return palletes;
 }
-
-
 
 function getProfile(selection) {
   var border = TimelineKit.getFrame({

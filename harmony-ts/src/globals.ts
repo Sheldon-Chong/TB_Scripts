@@ -5,7 +5,7 @@ include(specialFolders.userScripts + '/core/DrawingView.js');
 include(specialFolders.userScripts + '/core/TimelineKit.js');
 include(specialFolders.userScripts + '/core/Frame.js');
 include(specialFolders.userScripts + '/core/Transformations.js');
-include(specialFolders.userScripts + '/core/ColorUtils.js');
+include(specialFolders.userScripts + '/core/colors/Colors.js');
 include(specialFolders.userScripts + '/core/Layers.js');
 include(specialFolders.userScripts + '/core/FileUtils.js');
 include(specialFolders.userScripts + '/core/DrawingDataUtils.js');
@@ -17,7 +17,6 @@ include(specialFolders.userScripts + '/core/MetadataKit.js');
 include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
 include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
-include(specialFolders.userScripts + '/core/DrawingDataKit.js');
 
 // --- ES6+ Array method polyfills for QtScript's ES5 engine ---
 if (!Array.prototype.find) {
@@ -60,7 +59,6 @@ if (!Array.prototype.includes) {
   };
 }
 
-
 // listAll();
 // IMPORTANT: Using a plain function constructor (NOT a TypeScript class) to avoid
 // the IIFE wrapper that TS emits for classes targeting ES5.  IIFEs create closure
@@ -83,8 +81,6 @@ class HarmonyGlobals {
 
   Drawing = Drawing;
   DrawingTools = DrawingTools;
-  DrawingDataKit = DrawingDataKit;
-
   // dgets = Widgets;
   LayerManager = LayerManager;
   FileUtils = ReadWriteOperations;
@@ -101,8 +97,6 @@ class HarmonyGlobals {
   Column = oColumn;
   PathColumn3D = oPathColumn3D;
   Palettes = GlobalPalettes;
-  // Keep the legacy property name while exposing the unified drawing class.
-  objDrawing = oDrawing;
   // objElement = objElement;
   oDrawingLayer = oDrawingNode;
   ColorCardNode = oColorCardNode;

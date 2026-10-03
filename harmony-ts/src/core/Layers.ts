@@ -7,397 +7,353 @@ include(specialFolders.userScripts + '/core/nodes/DrawingNode.js');
 include(specialFolders.userScripts + '/core/nodes/ColorCardNode.js');
 include(specialFolders.userScripts + '/core/nodes/PegNode.js');
 
-class oDrawing {
-  public name: string;
-  public element: oElement;
-  public fullPath: string;
-
-  constructor(name: string, element: oElement) {
-    this.element = element;
-    this.name = name;
-  }
-
-  toString() {
-    return `Drawing<${this.element.folder}-${this.name}.tvg>`;
-  }
-
-  getName(): string {
-    return this.name;
-  }
-
-  get exposureName(): string {
-    return this.name.substring(
-      this.name.lastIndexOf(this.element.folder) + this.element.folder.length + 1,
-    );
-  }
-
-  get filepath(): string {
-    return Drawing.filename(this.element.id, this.name);
-  }
-
-  get filename(): string {
-    return this.filepath.substring(this.filepath.lastIndexOf('/') + 1);
-  }
-
-  duplicate(destFileName?: string, override: boolean = false): oDrawing | null {
-    let drawingName = '';
-    if (destFileName) {
-      drawingName = destFileName;
-    } else {
-      drawingName = this.name;
-    }
-
-    return this.element.duplicateDrawing(drawingName, this.name);
-  }
-}
-
 /* ====================== COLUMN ====================== */
 
-class oColumn {
-  name: string;
-  parent: any;
+// class oColumn {
+//   name: string;
+//   parent: any;
 
-  constructor(name: string, parentLayer: any) {
-    this.name = name;
-    this.parent = parentLayer;
-  }
+//   constructor(name: string, parentLayer: any) {
+//     this.name = name;
+//     this.parent = parentLayer;
+//   }
 
-  getType(): string {
-    return column.type(this.name);
-  }
+//   getType(): string {
+//     return column.type(this.name);
+//   }
 
-  getKeyframe(frameNumber: number): any {
-    return column.getEntry(this.name, 1, frameNumber);
-  }
+//   getKeyframe(frameNumber: number): any {
+//     return column.getEntry(this.name, 1, frameNumber);
+//   }
 
-  toString() {
-    return `Column<${this.name}>`;
-  }
+//   toString() {
+//     return `Column<${this.name}>`;
+//   }
 
-  insertKeyFrame(frameNumber: number): boolean {
-    return column.setKeyFrame(this.name, frameNumber);
-  }
+//   insertKeyFrame(frameNumber: number): boolean {
+//     return column.setKeyFrame(this.name, frameNumber);
+//   }
 
-  deleteKeyframes(selection: oSelection) {
-    for (let frame = selection.startFrame; frame <= selection.endFrame; frame++) {
-      column.clearKeyFrame(this.name, frame);
-    }
-  }
+//   deleteKeyframes(selection: oSelection) {
+//     for (let frame = selection.startFrame; frame <= selection.endFrame; frame++) {
+//       column.clearKeyFrame(this.name, frame);
+//     }
+//   }
 
-  getKeyframeRange(startFrame: number, endFrame: number): any[];
-  getKeyframeRange(selection: oSelection): any[];
-  getKeyframeRange(startOrSelection: number | oSelection, endFrame?: number): any[] {
-    let startFrame: number;
-    if (typeof startOrSelection === 'number') {
-      if (endFrame === undefined)
-        throw new Error('endFrame is required when startFrame is provided');
+//   getKeyframeRange(startFrame: number, endFrame: number): any[];
+//   getKeyframeRange(selection: oSelection): any[];
+//   getKeyframeRange(startOrSelection: number | oSelection, endFrame?: number): any[] {
+//     let startFrame: number;
+//     if (typeof startOrSelection === 'number') {
+//       if (endFrame === undefined)
+//         throw new Error('endFrame is required when startFrame is provided');
 
-      startFrame = startOrSelection;
-    } else {
-      startFrame = startOrSelection.startFrame;
-      endFrame = startOrSelection.endFrame;
-    }
-    const values: any[] = [];
-    for (let frame = startFrame; frame <= endFrame; frame++) {
-      values.push(this.getKeyframe(frame));
-    }
-    return values;
-  }
+//       startFrame = startOrSelection;
+//     } else {
+//       startFrame = startOrSelection.startFrame;
+//       endFrame = startOrSelection.endFrame;
+//     }
+//     const values: any[] = [];
+//     for (let frame = startFrame; frame <= endFrame; frame++) {
+//       values.push(this.getKeyframe(frame));
+//     }
+//     return values;
+//   }
 
-  getKeyframeRangeSimplify(
-    startOrSelection: number | oSelection,
-    endFrame?: number,
-  ): string[] | string {
-    let startFrame: number;
-    if (typeof startOrSelection === 'number') {
-      if (endFrame === undefined)
-        throw new Error('endFrame is required when startFrame is provided');
-      startFrame = startOrSelection;
-    } else {
-      startFrame = startOrSelection.startFrame;
-      endFrame = startOrSelection.endFrame;
-    }
-    const values: string[] = [];
-    for (let frame = startFrame; frame <= endFrame; frame++) {
-      values.push(this.getKeyframe(frame));
-    }
-    if (values.length > 0 && values.every((v) => v === values[0])) {
-      return values[0];
-    }
-    return values;
-  }
+//   getKeyframeRangeSimplify(
+//     startOrSelection: number | oSelection,
+//     endFrame?: number,
+//   ): string[] | string {
+//     let startFrame: number;
+//     if (typeof startOrSelection === 'number') {
+//       if (endFrame === undefined)
+//         throw new Error('endFrame is required when startFrame is provided');
+//       startFrame = startOrSelection;
+//     } else {
+//       startFrame = startOrSelection.startFrame;
+//       endFrame = startOrSelection.endFrame;
+//     }
+//     const values: string[] = [];
+//     for (let frame = startFrame; frame <= endFrame; frame++) {
+//       values.push(this.getKeyframe(frame));
+//     }
+//     if (values.length > 0 && values.every((v) => v === values[0])) {
+//       return values[0];
+//     }
+//     return values;
+//   }
 
-  /** Returns the most common keyframe value in the specified range */
-  getMostCommonKeyframeFromRange(selection: oSelection): string | null {
-    const values = this.getKeyframeRange(selection);
-    const valueCounts: { [key: string]: number } = {};
+//   /** Returns the most common keyframe value in the specified range */
+//   getMostCommonKeyframeFromRange(selection: oSelection): string | null {
+//     const values = this.getKeyframeRange(selection);
+//     const valueCounts: { [key: string]: number } = {};
 
-    let mostCommonValue: string | null = null;
-    let highestCount = 0;
+//     let mostCommonValue: string | null = null;
+//     let highestCount = 0;
 
-    for (const value of values) {
-      valueCounts[value] = value in valueCounts ? valueCounts[value] + 1 : 1;
-      if (valueCounts[value] > highestCount) {
-        highestCount = valueCounts[value];
-        mostCommonValue = value;
-      }
-    }
-    return mostCommonValue;
-  }
+//     for (const value of values) {
+//       valueCounts[value] = value in valueCounts ? valueCounts[value] + 1 : 1;
+//       if (valueCounts[value] > highestCount) {
+//         highestCount = valueCounts[value];
+//         mostCommonValue = value;
+//       }
+//     }
+//     return mostCommonValue;
+//   }
 
-  setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
-  setKeyFrame(selection: oSelection, value: any): boolean;
-  setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
-    let startFrame: number;
-    let endFrameLocal: number;
-    if (typeof startOrSelection === 'number') {
-      startFrame = startOrSelection;
-      if (endFrame === undefined) {
-        endFrameLocal = startFrame;
-      } else {
-        endFrameLocal = endFrame;
-      }
-    } else {
-      startFrame = startOrSelection.startFrame;
-      endFrameLocal = startOrSelection.endFrame;
-    }
-    for (let frame = startFrame; frame <= endFrameLocal; frame++) {
-      const status = column.setEntry(this.name, 1, frame, value.toString());
-      if (!status) return false;
-    }
-    return true;
-  }
+//   setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
+//   setKeyFrame(selection: oSelection, value: any): boolean;
+//   setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
+//     let startFrame: number;
+//     let endFrameLocal: number;
+//     if (typeof startOrSelection === 'number') {
+//       startFrame = startOrSelection;
+//       if (endFrame === undefined) {
+//         endFrameLocal = startFrame;
+//       } else {
+//         endFrameLocal = endFrame;
+//       }
+//     } else {
+//       startFrame = startOrSelection.startFrame;
+//       endFrameLocal = startOrSelection.endFrame;
+//     }
+//     for (let frame = startFrame; frame <= endFrameLocal; frame++) {
+//       const status = column.setEntry(this.name, 1, frame, value.toString());
+//       if (!status) return false;
+//     }
+//     return true;
+//   }
 
-  /**
-   * Repeat the values from sourceSelection across pasteSelection.
-   * Subclasses can override pasteLoopKeyframe() when copying a value requires
-   * more than writing the source value into the destination column.
-   */
-  loopKeyframes(sourceSelection: oSelection, pasteSelection: oSelection): boolean {
-    if (sourceSelection.endFrame < sourceSelection.startFrame) return false;
-    if (pasteSelection.endFrame < pasteSelection.startFrame) return false;
+//   /**
+//    * Repeat the values from sourceSelection across pasteSelection.
+//    * Subclasses can override pasteLoopKeyframe() when copying a value requires
+//    * more than writing the source value into the destination column.
+//    */
+//   loopKeyframes(sourceSelection: oSelection, pasteSelection: oSelection): boolean {
+//     if (sourceSelection.endFrame < sourceSelection.startFrame) return false;
+//     if (pasteSelection.endFrame < pasteSelection.startFrame) return false;
 
-    const sourceLength = sourceSelection.endFrame - sourceSelection.startFrame + 1;
-    const sourceValues: any[] = [];
-    for (
-      let sourceFrame = sourceSelection.startFrame;
-      sourceFrame <= sourceSelection.endFrame;
-      sourceFrame++
-    ) {
-      sourceValues.push(this.getKeyframe(sourceFrame));
-    }
+//     const sourceLength = sourceSelection.endFrame - sourceSelection.startFrame + 1;
+//     const sourceValues: any[] = [];
+//     for (
+//       let sourceFrame = sourceSelection.startFrame;
+//       sourceFrame <= sourceSelection.endFrame;
+//       sourceFrame++
+//     ) {
+//       sourceValues.push(this.getKeyframe(sourceFrame));
+//     }
 
-    for (
-      let destinationFrame = pasteSelection.startFrame;
-      destinationFrame <= pasteSelection.endFrame;
-      destinationFrame++
-    ) {
-      const sourceValue =
-        sourceValues[(destinationFrame - pasteSelection.startFrame) % sourceLength];
-      if (!this.pasteLoopKeyframe(sourceValue, destinationFrame)) return false;
-    }
-    return true;
-  }
+//     for (
+//       let destinationFrame = pasteSelection.startFrame;
+//       destinationFrame <= pasteSelection.endFrame;
+//       destinationFrame++
+//     ) {
+//       const sourceValue =
+//         sourceValues[(destinationFrame - pasteSelection.startFrame) % sourceLength];
+//       if (!this.pasteLoopKeyframe(sourceValue, destinationFrame)) return false;
+//     }
+//     return true;
+//   }
 
-  protected pasteLoopKeyframe(sourceValue: any, destinationFrame: number): boolean {
-    return this.setKeyFrame(destinationFrame, sourceValue);
-  }
+//   protected pasteLoopKeyframe(sourceValue: any, destinationFrame: number): boolean {
+//     return this.setKeyFrame(destinationFrame, sourceValue);
+//   }
 
-  /** Returns true if the specified frame is a keyframe (uses column.isKeyFrame with subColumn 0). */
-  isKeyFrame(frameNumber: number): boolean {
-    return column.isKeyFrame(this.name, 0, frameNumber);
-  }
-}
+//   /** Returns true if the specified frame is a keyframe (uses column.isKeyFrame with subColumn 0). */
+//   isKeyFrame(frameNumber: number): boolean {
+//     return column.isKeyFrame(this.name, 0, frameNumber);
+//   }
+// }
 
-class oDrawingElementColumn extends oColumn {
-  element: oElement;
+// class oDrawingElementColumn extends oColumn {
+//   element: oElement;
 
-  constructor(name: string, parentLayer: any) {
-    MessageLog.trace('name ' + name);
-    MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
-    super(name, parentLayer);
-    this.element = new oElement(node.getElementId(parentLayer.nodePath));
-  }
+//   constructor(name: string, parentLayer: any) {
+//     MessageLog.trace('name ' + name);
+//     MessageLog.trace('name ' + column.getEntry(name, 1, frame.current()));
+//     super(name, parentLayer);
+//     this.element = new oElement(node.getElementId(parentLayer.nodePath));
+//   }
 
-  getKeyframe(frameNumber: number): oDrawing | null {
-    if (super.getKeyframe(frameNumber) === '') {
-      return null;
-    }
-    return new oDrawing(super.getKeyframe(frameNumber), this.element);
-  }
+//   getKeyframe(frameNumber: number): oDrawing | null {
+//     if (super.getKeyframe(frameNumber) === '') {
+//       return null;
+//     }
+//     return new oDrawing(super.getKeyframe(frameNumber), this.element);
+//   }
 
-  setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
-  setKeyFrame(selection: oSelection, value: any): boolean;
-  setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
-    if (value instanceof oDrawing) {
-      return super.setKeyFrame(startOrSelection as any, value.name, endFrame);
-    }
-    return super.setKeyFrame(startOrSelection as any, value, endFrame);
-  }
+//   setKeyFrame(frameNumber: number, value: any, endFrame?: number): boolean;
+//   setKeyFrame(selection: oSelection, value: any): boolean;
+//   setKeyFrame(startOrSelection: number | oSelection, value: any, endFrame?: number): boolean {
+//     if (value instanceof oDrawing) {
+//       return super.setKeyFrame(startOrSelection as any, value.name, endFrame);
+//     }
+//     return super.setKeyFrame(startOrSelection as any, value, endFrame);
+//   }
 
-  protected pasteLoopKeyframe(sourceValue: any, destinationFrame: number): boolean {
-    const drawing = sourceValue as oDrawing | null;
-    if (!drawing) {
-      return super.setKeyFrame(destinationFrame, '');
-    }
+//   protected pasteLoopKeyframe(sourceValue: any, destinationFrame: number): boolean {
+//     const drawing = sourceValue as oDrawing | null;
+//     if (!drawing) {
+//       return super.setKeyFrame(destinationFrame, '');
+//     }
 
-    const copiedDrawing = drawing.duplicate();
-    if (!copiedDrawing) return false;
-    return super.setKeyFrame(destinationFrame, copiedDrawing.name);
-  }
+//     const copiedDrawing = drawing.duplicate();
+//     if (!copiedDrawing) return false;
+//     return super.setKeyFrame(destinationFrame, copiedDrawing.name);
+//   }
 
-  copyDrawingRangeTo(selection: oSelection, destFrame: number): boolean {
-    const pasteSelection = new oSelection(
-      destFrame,
-      destFrame + selection.endFrame - selection.startFrame,
-    );
-    return this.loopKeyframes(selection, pasteSelection);
-  }
+//   copyDrawingRangeTo(selection: oSelection, destFrame: number): boolean {
+//     const pasteSelection = new oSelection(
+//       destFrame,
+//       destFrame + selection.endFrame - selection.startFrame,
+//     );
+//     return this.loopKeyframes(selection, pasteSelection);
+//   }
 
-  copyDrawingTo(drawing: oDrawing, destFrame: number): boolean {
-    const copiedDrawing = drawing.duplicate();
-    if (!copiedDrawing) {
-      MessageLog.trace('Failed to copy drawing for duplication.');
-      return false;
-    }
-    return this.setKeyFrame(destFrame, copiedDrawing.name);
-  }
-}
+//   copyDrawingTo(drawing: oDrawing, destFrame: number): boolean {
+//     const copiedDrawing = drawing.duplicate();
+//     if (!copiedDrawing) {
+//       MessageLog.trace('Failed to copy drawing for duplication.');
+//       return false;
+//     }
+//     return this.setKeyFrame(destFrame, copiedDrawing.name);
+//   }
+// }
 
-class oPathColumn3D extends oColumn {
-  constructor(name: string, parentLayer: any) {
-    super(name, parentLayer);
-  }
+// class oPathColumn3D extends oColumn {
+//   constructor(name: string, parentLayer: any) {
+//     super(name, parentLayer);
+//   }
 
-  getX(frameNumber: number): string {
-    return column.getEntry(this.name, 1, frameNumber);
-  }
-  getY(frameNumber: number): string {
-    return column.getEntry(this.name, 2, frameNumber);
-  }
-  getZ(frameNumber: number): string {
-    return column.getEntry(this.name, 3, frameNumber);
-  }
+//   getX(frameNumber: number): string {
+//     return column.getEntry(this.name, 1, frameNumber);
+//   }
+//   getY(frameNumber: number): string {
+//     return column.getEntry(this.name, 2, frameNumber);
+//   }
+//   getZ(frameNumber: number): string {
+//     return column.getEntry(this.name, 3, frameNumber);
+//   }
 
-  getXVal(frameNumber: number): number {
-    const entry = this.getX(frameNumber);
-    return this.parseDirectionalValue(entry, 'E', 'W');
-  }
-  getYVal(frameNumber: number): number {
-    const entry = this.getY(frameNumber);
-    return this.parseDirectionalValue(entry, 'N', 'S');
-  }
-  getZVal(frameNumber: number): number {
-    const entry = this.getZ(frameNumber);
-    return this.parseDirectionalValue(entry, 'F', 'B');
-  }
+//   getXVal(frameNumber: number): number {
+//     const entry = this.getX(frameNumber);
+//     return this.parseDirectionalValue(entry, 'E', 'W');
+//   }
+//   getYVal(frameNumber: number): number {
+//     const entry = this.getY(frameNumber);
+//     return this.parseDirectionalValue(entry, 'N', 'S');
+//   }
+//   getZVal(frameNumber: number): number {
+//     const entry = this.getZ(frameNumber);
+//     return this.parseDirectionalValue(entry, 'F', 'B');
+//   }
 
-  private parseDirectionalValue(entry: string, positive: string, negative: string): number {
-    const value = parseFloat(entry);
-    return entry.indexOf(positive) !== -1 ? value : -value;
-  }
+//   private parseDirectionalValue(entry: string, positive: string, negative: string): number {
+//     const value = parseFloat(entry);
+//     return entry.indexOf(positive) !== -1 ? value : -value;
+//   }
 
-  setX(frameNumber: number, value: string | number): boolean {
-    const formattedValue =
-      typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' E' : ' W') : value;
-    return column.setEntry(this.name, 1, frameNumber, formattedValue);
-  }
-  setY(frameNumber: number, value: string | number): boolean {
-    const formattedValue =
-      typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' N' : ' S') : value;
-    return column.setEntry(this.name, 2, frameNumber, formattedValue);
-  }
-  setZ(frameNumber: number, value: string | number): boolean {
-    const formattedValue =
-      typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' F' : ' B') : value;
-    return column.setEntry(this.name, 3, frameNumber, formattedValue);
-  }
+//   setX(frameNumber: number, value: string | number): boolean {
+//     const formattedValue =
+//       typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' E' : ' W') : value;
+//     return column.setEntry(this.name, 1, frameNumber, formattedValue);
+//   }
+//   setY(frameNumber: number, value: string | number): boolean {
+//     const formattedValue =
+//       typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' N' : ' S') : value;
+//     return column.setEntry(this.name, 2, frameNumber, formattedValue);
+//   }
+//   setZ(frameNumber: number, value: string | number): boolean {
+//     const formattedValue =
+//       typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' F' : ' B') : value;
+//     return column.setEntry(this.name, 3, frameNumber, formattedValue);
+//   }
 
-  /**
-   * Set the 3D path position at a given frame using `func.addKeyFramePath3d`.
-   *
-   * @param frameNumber  The frame at which to set the keyframe.
-   * @param position     Any VectorInput form:
-   *   - `5`              → scalar: all components = 5
-   *   - `[1, 2, 3]`      → array
-   *   - `{ x:1, y:2, z:3 }` → object literal
-   *   - `new Vec3(1,2,3)`   → another Vec3
-   *   - `new Vec3(1, 2, 3)` → individual components (if supported)
-   * @param tension      Spline tension (default 0).
-   * @param continuity    Spline continuity (default 0).
-   * @param bias          Spline bias (default 0).
-   */
-  setPosition(
-    frameNumber: number,
-    position: VectorInput,
-    tension: number = 0,
-    continuity: number = 0,
-    bias: number = 0,
-  ): void {
-    const v = this.resolveVec3(position);
-    func.addKeyFramePath3d(this.name, frameNumber, v.x, v.y, v.z, tension, continuity, bias);
-  }
+//   /**
+//    * Set the 3D path position at a given frame using `func.addKeyFramePath3d`.
+//    *
+//    * @param frameNumber  The frame at which to set the keyframe.
+//    * @param position     Any VectorInput form:
+//    *   - `5`              → scalar: all components = 5
+//    *   - `[1, 2, 3]`      → array
+//    *   - `{ x:1, y:2, z:3 }` → object literal
+//    *   - `new Vec3(1,2,3)`   → another Vec3
+//    *   - `new Vec3(1, 2, 3)` → individual components (if supported)
+//    * @param tension      Spline tension (default 0).
+//    * @param continuity    Spline continuity (default 0).
+//    * @param bias          Spline bias (default 0).
+//    */
+//   setPosition(
+//     frameNumber: number,
+//     position: VectorInput,
+//     tension: number = 0,
+//     continuity: number = 0,
+//     bias: number = 0,
+//   ): void {
+//     const v = this.resolveVec3(position);
+//     func.addKeyFramePath3d(this.name, frameNumber, v.x, v.y, v.z, tension, continuity, bias);
+//   }
 
-  /** Resolve a VectorInput into plain {x, y, z} numbers. */
-  private resolveVec3(input: VectorInput): { x: number; y: number; z: number } {
-    if (typeof input === 'number') {
-      return { x: input, y: input, z: input };
-    }
-    if (input instanceof G.Vec3) {
-      var vector = input as any;
-      return { x: vector.x, y: vector.y, z: vector.z };
-    }
-    if (Array.isArray(input)) {
-      return { x: input[0] ?? 0, y: input[1] ?? 0, z: input[2] ?? 0 };
-    }
-    const obj = input as any;
-    return { x: obj.x, y: obj.y, z: obj.z };
-  }
+//   /** Resolve a VectorInput into plain {x, y, z} numbers. */
+//   private resolveVec3(input: VectorInput): { x: number; y: number; z: number } {
+//     if (typeof input === 'number') {
+//       return { x: input, y: input, z: input };
+//     }
+//     if (input instanceof G.Vec3) {
+//       var vector = input as any;
+//       return { x: vector.x, y: vector.y, z: vector.z };
+//     }
+//     if (Array.isArray(input)) {
+//       return { x: input[0] ?? 0, y: input[1] ?? 0, z: input[2] ?? 0 };
+//     }
+//     const obj = input as any;
+//     return { x: obj.x, y: obj.y, z: obj.z };
+//   }
 
-  /**
-   * Check if a specific subcolumn has a keyframe at the given frame.
-   * @param frameNumber The frame to check.
-   * @param subColumn 1=X, 2=Y, 3=Z, 4=Velocity. Defaults to 1 (X).
-   */
-  isKeyFrame(frameNumber: number, subColumn?: number): boolean {
-    return column.isKeyFrame(this.name, subColumn ?? 1, frameNumber);
-  }
+//   /**
+//    * Check if a specific subcolumn has a keyframe at the given frame.
+//    * @param frameNumber The frame to check.
+//    * @param subColumn 1=X, 2=Y, 3=Z, 4=Velocity. Defaults to 1 (X).
+//    */
+//   isKeyFrame(frameNumber: number, subColumn?: number): boolean {
+//     return column.isKeyFrame(this.name, subColumn ?? 1, frameNumber);
+//   }
 
-  isKeyFrameX(frameNumber: number): boolean {
-    return column.isKeyFrame(this.name, 1, frameNumber);
-  }
-  isKeyFrameY(frameNumber: number): boolean {
-    return column.isKeyFrame(this.name, 2, frameNumber);
-  }
-  isKeyFrameZ(frameNumber: number): boolean {
-    return column.isKeyFrame(this.name, 3, frameNumber);
-  }
-  isKeyFrameVelocity(frameNumber: number): boolean {
-    return column.isKeyFrame(this.name, 4, frameNumber);
-  }
+//   isKeyFrameX(frameNumber: number): boolean {
+//     return column.isKeyFrame(this.name, 1, frameNumber);
+//   }
+//   isKeyFrameY(frameNumber: number): boolean {
+//     return column.isKeyFrame(this.name, 2, frameNumber);
+//   }
+//   isKeyFrameZ(frameNumber: number): boolean {
+//     return column.isKeyFrame(this.name, 3, frameNumber);
+//   }
+//   isKeyFrameVelocity(frameNumber: number): boolean {
+//     return column.isKeyFrame(this.name, 4, frameNumber);
+//   }
 
-  /** Returns true if ANY subcolumn (X, Y, Z) has a keyframe at the given frame. */
-  isKeyFrameAny(frameNumber: number): boolean {
-    return (
-      this.isKeyFrameX(frameNumber) ||
-      this.isKeyFrameY(frameNumber) ||
-      this.isKeyFrameZ(frameNumber)
-    );
-  }
+//   /** Returns true if ANY subcolumn (X, Y, Z) has a keyframe at the given frame. */
+//   isKeyFrameAny(frameNumber: number): boolean {
+//     return (
+//       this.isKeyFrameX(frameNumber) ||
+//       this.isKeyFrameY(frameNumber) ||
+//       this.isKeyFrameZ(frameNumber)
+//     );
+//   }
 
-  /** Returns true if ALL subcolumns (X, Y, Z) have a keyframe at the given frame. */
-  isKeyFrameAll(frameNumber: number): boolean {
-    return (
-      this.isKeyFrameX(frameNumber) &&
-      this.isKeyFrameY(frameNumber) &&
-      this.isKeyFrameZ(frameNumber)
-    );
-  }
+//   /** Returns true if ALL subcolumns (X, Y, Z) have a keyframe at the given frame. */
+//   isKeyFrameAll(frameNumber: number): boolean {
+//     return (
+//       this.isKeyFrameX(frameNumber) &&
+//       this.isKeyFrameY(frameNumber) &&
+//       this.isKeyFrameZ(frameNumber)
+//     );
+//   }
 
-  toString(): string {
-    return `PathColumn3D<${this.name}>`;
-  }
-}
+//   toString(): string {
+//     return `PathColumn3D<${this.name}>`;
+//   }
+// }
 
 /* ====================== NODES ====================== */
 // class oNodeLayer {

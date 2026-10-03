@@ -3,13 +3,25 @@ include(specialFolders.userScripts + '/core/Maths.js');
 include(specialFolders.userScripts + '/core/Vectors.js');
 include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/TimelineKit.js');
+include(specialFolders.userScripts + '/core/Drawing.js');
 include(specialFolders.userScripts + '/core/Element.js');
 include(specialFolders.userScripts + '/core/Layers.js');
+include(specialFolders.userScripts + '/core/DrawingDataKit.js');
 include(specialFolders.userScripts + '/core/ColumnGroupings.js');
 include(specialFolders.userScripts + '/core/Toolbar.js');
 include(specialFolders.userScripts + '/core/FileUtils.js');
 include(specialFolders.userScripts + '/core/Attributes.js');
 include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
+
+include(specialFolders.userScripts + '/core/columns/BaseColumn.js');
+include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
+include(specialFolders.userScripts + '/core/columns/Path3dColumn.js');
+include(specialFolders.userScripts + '/core/colors/Colors.js');
+include(specialFolders.userScripts + '/core/colors/PaletteColor.js');
+include(specialFolders.userScripts + '/core/colors/Palette.js');
+include(specialFolders.userScripts + '/core/colors/GlobalPaletteManager.js');
+include(specialFolders.userScripts + '/core/colors/PalettesSingleton.js');
+include(specialFolders.userScripts + '/core/colors/Palettes.js');
 
 var __tbGlobal = Function('return this;')();
 
@@ -50,6 +62,7 @@ interface CoreModules {
   oScale3D: ReturnType<typeof createScale3DClass>;
   oRotation3D: ReturnType<typeof createRotation3DClass>;
   oElement: ReturnType<typeof createElementClass>;
+  oDrawing: DrawingClass;
   oColumn: ReturnType<typeof createColumnClass>;
   oPathColumn3D: ReturnType<typeof createPathColumn3DClass>;
   oDrawingElementColumn: ReturnType<typeof createDrawingElementColumnClass>;
@@ -59,6 +72,7 @@ interface CoreModules {
   oDrawingNode: ReturnType<typeof createDrawingNodeClass>;
   oColorCardNode: ReturnType<typeof createColorCardNodeClass>;
   oPegNode: ReturnType<typeof createPegNodeClass>;
+  DrawingDataKit: DrawingDataKitType;
   TimelineLayer: typeof TimelineLayer;
   LayerManager: ReturnType<typeof createLayerManager>;
   TimelineKit: ReturnType<typeof createTimelineKit>;
@@ -68,6 +82,11 @@ interface CoreModules {
   Vec2: ReturnType<typeof createVectors>['Vec2'];
   Vec3: ReturnType<typeof createVectors>['Vec3'];
   Shapes: ReturnType<typeof createShapes>;
+  Action: typeof Action;
+  ColorUtils: ReturnType<typeof createColorUtils>;
+  ColorObj: ReturnType<typeof createColorObjClass>;
+
+  PaletteKit: ReturnType<typeof createPaletteKit>;
 }
 
 type CoreRuntime = CoreBase & Partial<CoreModules>;
@@ -88,6 +107,7 @@ function createCoreBase() {
     element: H.element as typeof element,
     Timeline: H.Timeline as typeof Timeline,
     Drawing: H.Drawing as typeof Drawing,
+    DrawingTools: H.DrawingTools as typeof DrawingTools,
     MessageLog: H.MessageLog as typeof MessageLog,
     Tools: H.Tools as typeof Tools,
     TimelineMarker: H.TimelineMarker as typeof TimelineMarker,
@@ -109,8 +129,12 @@ function createCoreBase() {
     Object: Object,
     JSON: JSON,
     Math: Math,
+    QTimer: QTimer,
     Maths: Maths,
     getAllNodesInScene: getAllNodesInScene,
+    Action: Action,
+    PaletteManager: H.PaletteManager as typeof PaletteManager,
+    PaletteObjectManager: H.PaletteObjectManager as typeof PaletteObjectManager,
   };
 }
 
@@ -119,6 +143,10 @@ function createCore(): HarmonyCore {
   /*
    * Attributes
    */
+  Runtime.ColorUtils = createColorUtils(Runtime);
+
+  Runtime.PaletteKit = createPaletteKit(Runtime);
+
   var attrs = createAttributeClasses(Runtime);
   Runtime.oAttr = attrs.oAttr;
   Runtime.oIntAttr = attrs.oIntAttr;
@@ -132,6 +160,8 @@ function createCore(): HarmonyCore {
   Runtime.oPosition3D = createPosition3DClass(Runtime);
   Runtime.oScale3D = createScale3DClass(Runtime);
   Runtime.oRotation3D = createRotation3DClass(Runtime);
+
+  Runtime.oDrawing = createDrawingClass(Runtime);
 
   Runtime.Vectors = createVectors(Runtime);
 
@@ -172,6 +202,7 @@ function createCore(): HarmonyCore {
   Runtime.oDrawingNode = createDrawingNodeClass(Runtime);
   Runtime.oColorCardNode = createColorCardNodeClass(Runtime);
   Runtime.oPegNode = createPegNodeClass(Runtime);
+  Runtime.DrawingDataKit = getDrawingDataKit(Runtime);
   /*
    * Timeline class
    */
@@ -198,3 +229,13 @@ function getCore(): HarmonyCore {
   var globalObject = Function('return this;')();
   return globalObject.__proto__.__TBTest as HarmonyCore;
 }
+
+type CoreInstance<K extends keyof HarmonyCore> = HarmonyCore[K] extends new (
+  ...args: any[]
+) => infer T
+  ? T
+  : never;
+
+type CoreInstances = {
+  [K in keyof HarmonyCore]: HarmonyCore[K] extends new (...args: any[]) => infer T ? T : never;
+};
