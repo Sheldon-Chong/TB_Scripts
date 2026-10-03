@@ -1,75 +1,211 @@
-// globals-test.ts
-
 include(specialFolders.userScripts + '/core/Shapes.js');
 include(specialFolders.userScripts + '/core/Maths.js');
 include(specialFolders.userScripts + '/core/Vectors.js');
 include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/TimelineKit.js');
+include(specialFolders.userScripts + '/core/Element.js');
+include(specialFolders.userScripts + '/core/Layers.js');
+include(specialFolders.userScripts + '/core/ColumnGroupings.js');
 
-/*
- * Get this entry point's global object and Harmony's shared prototype.
- */
+type HarmonyCore = ReturnType<typeof createCore>;
+
 var __tbGlobal = Function('return this;')();
+
 var __tbShared = __tbGlobal.__proto__;
 
-/*
- * Publish ONE namespace onto the shared Harmony object.
- */
 if (!__tbShared.__TBTest) {
-  __tbShared.__TBTest = {};
+  __tbShared.__TBTest = createCore();
 }
 
-var __TB = __tbShared.__TBTest;
+function mergeCore<TBase, TModules>(base: TBase, modules: TModules): TBase & TModules {
+  var target: any = base;
+  var source: any = modules;
 
-/*
- * References originating from other included files.
- */
-__TB.Shapes = Shapes;
-__TB.Maths = Maths;
+  for (var key in source) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      target[key] = source[key];
+    }
+  }
 
-__TB.Vectors = vectors;
-__TB.Vec2 = vectors.Vec2;
-__TB.Vec3 = vectors.Vec3;
+  return target;
+}
 
-__TB.SceneKit = SceneKit;
+function createCore() {
+  var H = Function('return this;')().__proto__;
 
-__TB.TimelineKit = TimelineKit;
+  /*
+   * DO NOT type this as any.
+   *
+   * This is the part TypeScript will infer.
+   */
+  var Base = {
+    scene: H.scene as typeof scene,
+    node: H.node as typeof node,
+    selection: H.selection as typeof selection,
+    frame: H.frame as typeof frame,
+    column: H.column as typeof column,
+    element: H.element as typeof element,
+    Timeline: H.Timeline as typeof Timeline,
 
-/*
- * Function created in globals-test.ts.
- */
-__TB.testGlobals = function () {
-  MessageLog.trace('[TBTest.testGlobals] called');
+    Drawing: H.Drawing as typeof Drawing,
 
-  MessageLog.trace('[TBTest.testGlobals] scene: ' + typeof scene);
+    MessageLog: H.MessageLog as typeof MessageLog,
 
-  MessageLog.trace('[TBTest.testGlobals] Drawing: ' + typeof Drawing);
+    PermanentFile: H.PermanentFile as typeof PermanentFile,
 
-  MessageLog.trace('[TBTest.testGlobals] node: ' + typeof node);
+    QProcess: H.QProcess as typeof QProcess,
 
-  MessageLog.trace('[TBTest.testGlobals] Shapes: ' + typeof Shapes);
+    about: H.about as typeof about,
 
-  MessageLog.trace('[TBTest.testGlobals] Maths: ' + typeof Maths);
-};
+    QApplication: H.QApplication as typeof QApplication,
 
-/*
- * This is particularly useful:
- *
- * The function is created here, where the included files are visible,
- * and is later invoked from the toolbar action.
- */
-__TB.testExternalReferences = function () {
-  MessageLog.trace('[TBTest.testExternalReferences] Shapes: ' + typeof Shapes);
+    Qt: H.Qt as typeof Qt,
 
-  MessageLog.trace('[TBTest.testExternalReferences] Maths: ' + typeof Maths);
+    func: H.func as typeof func,
 
-  MessageLog.trace('[TBTest.testExternalReferences] vectors: ' + typeof vectors);
-};
+    Array: Array,
+    Object: Object,
+    JSON: JSON,
 
-MessageLog.trace('[globals-test] executed');
+    Shapes: Shapes,
+    Maths: Maths,
 
-MessageLog.trace('[globals-test] __TBTest: ' + typeof __tbShared.__TBTest);
+    Vectors: vectors,
+    Vec2: vectors.Vec2,
+    Vec3: vectors.Vec3,
 
-MessageLog.trace('[globals-test] Shapes: ' + typeof __TB.Shapes);
+    // ColorObj: ColorObj,
 
-MessageLog.trace('[globals-test] Maths: ' + typeof __TB.Maths);
+    getAllNodesInScene: getAllNodesInScene,
+  };
+
+  /*
+   * Runtime is the SAME object as Base.
+   *
+   * We allow factories to treat it dynamically because
+   * the object is still being assembled.
+   */
+  var Runtime: any = Base;
+
+  /*
+   * Utils
+   */
+  var Utils = createUtils(Runtime);
+
+  Runtime.Utils = Utils;
+
+  /*
+   * Elements
+   */
+  var ElementClass = createElementClass(Runtime);
+
+  Runtime.oElement = ElementClass;
+
+  /*
+   * Base column
+   */
+  var ColumnClass = createColumnClass(Runtime);
+
+  Runtime.oColumn = ColumnClass;
+
+  /*
+   * Column subclasses
+   */
+  var PathColumn3DClass = createPathColumn3DClass(Runtime);
+
+  Runtime.oPathColumn3D = PathColumn3DClass;
+
+  var DrawingElementColumnClass = createDrawingElementColumnClass(Runtime);
+
+  Runtime.oDrawingElementColumn = DrawingElementColumnClass;
+
+  /*
+   * Column groupings
+   */
+  var ColumnGroupingClass = createColumnGroupingClass();
+
+  Runtime.columnGrouping = ColumnGroupingClass;
+
+  var ColumnGroupingColorClass = createColumnGroupingColorClass(Runtime);
+
+  Runtime.columnGroupingColor = ColumnGroupingColorClass;
+
+  /*
+   * Base node
+   */
+  var NodeLayerClass = createNodeLayerClass(Runtime);
+
+  Runtime.oNodeLayer = NodeLayerClass;
+
+  /*
+   * Node subclasses
+   */
+  var ColorCardNodeClass = createColorCardNodeClass(Runtime);
+
+  Runtime.oColorCardNode = ColorCardNodeClass;
+
+  /*
+   * Temporary ones that you have not converted yet.
+   */
+  var PegNodeClass = oPegNode;
+
+  Runtime.oPegNode = PegNodeClass;
+
+  var DrawingNodeClass = oDrawingNode;
+
+  Runtime.oDrawingNode = DrawingNodeClass;
+
+  /*
+   * Services
+   */
+  var LayerManager = createLayerManager(Runtime);
+
+  Runtime.LayerManager = LayerManager;
+
+  /*
+   * Higher level modules
+   */
+  var TimelineKit = createTimelineKit(Runtime);
+
+  Runtime.TimelineKit = TimelineKit;
+
+  /*
+   * This is the important part for TypeScript.
+   *
+   * mergeCore returns the SAME Base object, but its
+   * return type contains all of these properties.
+   */
+  return mergeCore(Base, {
+    Utils: Utils,
+
+    oElement: ElementClass,
+
+    oColumn: ColumnClass,
+
+    oPathColumn3D: PathColumn3DClass,
+
+    oDrawingElementColumn: DrawingElementColumnClass,
+
+    columnGrouping: ColumnGroupingClass,
+
+    columnGroupingColor: ColumnGroupingColorClass,
+
+    oNodeLayer: NodeLayerClass,
+
+    oColorCardNode: ColorCardNodeClass,
+
+    oPegNode: PegNodeClass,
+
+    oDrawingNode: DrawingNodeClass,
+
+    LayerManager: LayerManager,
+
+    TimelineKit: TimelineKit,
+  });
+}
+
+function getCore(): HarmonyCore {
+  var globalObject = Function('return this;')();
+
+  return globalObject.__proto__.__TBTest as HarmonyCore;
+}

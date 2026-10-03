@@ -28,8 +28,7 @@ function registerBareAction() {
    *
    * This is what makes it survive.
    */
-  var Core = globalObject.__proto__.__TBTest;
-
+  var Core = getCore();
   registerAction({
     name: 'My Tool',
 
@@ -55,7 +54,7 @@ function registerBareAction() {
       } catch (error) {
         MessageLog.trace('TimelineKit.getSelection() ERROR: ' + error);
       }
-
+      Core;
       /*
        * Your actual tool code.
        */
@@ -63,6 +62,7 @@ function registerBareAction() {
       Core.Shapes;
       Core.Maths;
       Core.SceneKit;
+      Core.TimelineKit.getSelection();
 
       scene.endUndoRedoAccum();
 

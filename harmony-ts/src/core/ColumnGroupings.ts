@@ -63,3 +63,111 @@ class columnGroupingColor extends columnGrouping {
     return `columnGroupingColor<R:${this.r.name}, G:${this.g.name}, B:${this.b.name}, A:${this.a.name}>`;
   }
 }
+
+function createColumnGroupingColorClass(Core: any) {
+  var BaseColumnGrouping = Core.columnGrouping;
+
+  function ColumnGroupingColor(this: any, rCol: any, gCol: any, bCol: any, aCol: any) {
+    /*
+     * Equivalent to:
+     *
+     * super()
+     */
+    BaseColumnGrouping.call(this);
+
+    this.r = rCol;
+    this.g = gCol;
+    this.b = bCol;
+    this.a = aCol;
+
+    this.columns = [rCol, gCol, bCol, aCol];
+  }
+
+  /*
+   * ES5 inheritance.
+   */
+  ColumnGroupingColor.prototype = Object.create(BaseColumnGrouping.prototype);
+
+  ColumnGroupingColor.prototype.constructor = ColumnGroupingColor;
+
+  /*
+   * Equivalent to:
+   *
+   * static fromNode(...)
+   */
+  ColumnGroupingColor.fromNode = function (node: any) {
+    return new ColumnGroupingColor(
+      node.getColumn('COLOR.RED'),
+
+      node.getColumn('COLOR.GREEN'),
+
+      node.getColumn('COLOR.BLUE'),
+
+      node.getColumn('COLOR.ALPHA'),
+    );
+  };
+
+  ColumnGroupingColor.prototype.getColor = function (frameNumber: number) {
+    return new Core.ColorObj({
+      r: parseInt(this.r.getKeyframe(frameNumber), 10) || 0,
+
+      g: parseInt(this.g.getKeyframe(frameNumber), 10) || 0,
+
+      b: parseInt(this.b.getKeyframe(frameNumber), 10) || 0,
+
+      a: parseInt(this.a.getKeyframe(frameNumber), 10) || 0,
+    });
+  };
+
+  ColumnGroupingColor.prototype.setColor = function (frameNumber: number, color: any) {
+    var c = Core.ColorObj.fromColorInput(color);
+
+    var rgba = c.toRgba();
+
+    var rgbOk =
+      this.r.setKeyFrame(frameNumber, rgba.r.toString()) &&
+      this.g.setKeyFrame(frameNumber, rgba.g.toString()) &&
+      this.b.setKeyFrame(frameNumber, rgba.b.toString());
+
+    /*
+     * Leave alpha untouched unless
+     * explicitly provided.
+     */
+    if (rgba.a !== null) {
+      return rgbOk && this.a.setKeyFrame(frameNumber, rgba.a.toString());
+    }
+
+    return rgbOk;
+  };
+
+  ColumnGroupingColor.prototype.setColorRange = function (
+    startFrame: number,
+    endFrame: number,
+    color: any,
+  ) {
+    for (var frame = startFrame; frame <= endFrame; frame++) {
+      if (!this.setColor(frame, color)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  ColumnGroupingColor.prototype.toString = function () {
+    return (
+      'columnGroupingColor<' +
+      'R:' +
+      this.r.name +
+      ', G:' +
+      this.g.name +
+      ', B:' +
+      this.b.name +
+      ', A:' +
+      this.a.name +
+      '>'
+    );
+  };
+
+  return ColumnGroupingColor;
+}

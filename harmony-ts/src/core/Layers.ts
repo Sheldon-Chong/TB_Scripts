@@ -975,3 +975,134 @@ class _Selection {
 }
 
 const GlobalSelection = new _Selection();
+
+function createColorCardNodeClass(Core: any) {
+  var BaseNodeLayer = Core.oNodeLayer;
+
+  function ColorCardNode(
+    this: any,
+    displayOrder: number,
+    index: number,
+    nodePath: string,
+    name: string,
+  ) {
+    /*
+     * Equivalent to:
+     *
+     * super(displayOrder, index, nodePath, name)
+     */
+    BaseNodeLayer.call(this, displayOrder, index, nodePath, name);
+
+    this._colorGrouping = null;
+  }
+
+  /*
+   * ES5 inheritance.
+   */
+  ColorCardNode.prototype = Object.create(BaseNodeLayer.prototype);
+
+  ColorCardNode.prototype.constructor = ColorCardNode;
+
+  /*
+   * Equivalent to:
+   *
+   * get color()
+   */
+  Object.defineProperty(ColorCardNode.prototype, 'color', {
+    get: function () {
+      if (!this._colorGrouping) {
+        this._colorGrouping = Core.columnGroupingColor.fromNode(this);
+      }
+
+      return this._colorGrouping;
+    },
+
+    enumerable: true,
+    configurable: true,
+  });
+
+  ColorCardNode.prototype.getColor = function (frameNumber: number) {
+    return this.color.getColor(frameNumber);
+  };
+
+  ColorCardNode.prototype.setColor = function (frameNumber: number, color: any) {
+    return this.color.setColor(frameNumber, color);
+  };
+
+  ColorCardNode.prototype.toString = function () {
+    return 'ColorCardNode<' + this.nodePath + '>';
+  };
+
+  return ColorCardNode;
+}
+
+function createColumnGroupingClass() {
+  function ColumnGrouping(this: any) {
+    this.columns = [];
+  }
+
+  ColumnGrouping.prototype.addColumn = function (col: any) {
+    this.columns.push(col);
+  };
+
+  ColumnGrouping.prototype.getColumns = function () {
+    return this.columns;
+  };
+
+  /*
+   * Returns true if ANY column in the group
+   * has a keyframe at the given frame.
+   */
+  ColumnGrouping.prototype.isKeyFrameAny = function (frameNumber: number) {
+    for (var i = 0; i < this.columns.length; i++) {
+      if (this.columns[i].isKeyFrame(frameNumber)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  /*
+   * Returns true if ALL columns in the group
+   * have a keyframe at the given frame.
+   */
+  ColumnGrouping.prototype.isKeyFrameAll = function (frameNumber: number) {
+    if (this.columns.length === 0) {
+      return false;
+    }
+
+    for (var i = 0; i < this.columns.length; i++) {
+      if (!this.columns[i].isKeyFrame(frameNumber)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  /*
+   * Insert a keyframe on all grouped columns.
+   */
+  ColumnGrouping.prototype.insertKeyFrame = function (frameNumber: number) {
+    for (var i = 0; i < this.columns.length; i++) {
+      if (!this.columns[i].insertKeyFrame(frameNumber)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  ColumnGrouping.prototype.toString = function () {
+    var names = [];
+
+    for (var i = 0; i < this.columns.length; i++) {
+      names.push(this.columns[i].name);
+    }
+
+    return 'columnGrouping<' + names.join(', ') + '>';
+  };
+
+  return ColumnGrouping;
+}
