@@ -183,13 +183,18 @@ class oSelection {
 type frameRange = Omit<oSelection, 'selectedNodes'>;
 
 // ─── TimelineKit namespace ──────────────────────────────────────────────────
-function createTimelineKit(Core: any) {
+
+function createSelectionClass(Core: CoreRuntime) {
   class Selection {
     startFrame: number;
     endFrame: number;
     isRange: boolean;
     selectedNodes: any[];
     length: number;
+
+    toString() {
+      return `<Selection: ${this.startFrame}-${this.endFrame}>`;
+    }
 
     constructor(startFrame?: number, endFrame?: number, selectedNodes?: any[]) {
       if (startFrame !== undefined) {
@@ -213,12 +218,16 @@ function createTimelineKit(Core: any) {
       }
 
       this.selectedNodes =
-        selectedNodes !== undefined ? selectedNodes : Core.LayerManager.getSelected();
+        selectedNodes !== undefined ? selectedNodes : Core.LayerManager!.getSelected();
 
       this.length = this.endFrame - this.startFrame + 1;
     }
   }
 
+  return Selection;
+}
+
+function createTimelineKit(Core: any) {
   /*
    * Keep the same array instance so
    * TimelineKit.layers always stays current.
@@ -229,8 +238,6 @@ function createTimelineKit(Core: any) {
     /*
      * Types / constructors
      */
-    oSelection: Selection,
-
     /*
      * Cached state
      */
@@ -239,8 +246,8 @@ function createTimelineKit(Core: any) {
     /*
      * Selection
      */
-    getSelection(): Selection {
-      return new Selection();
+    getSelection(): CoreInstance<'oSelection'> {
+      return new Core.oSelection!();
     },
 
     /*
@@ -296,7 +303,6 @@ function createTimelineKit(Core: any) {
           notes: notes,
           length: length,
         });
-
         return true;
       } catch (e) {
         return false;
@@ -308,7 +314,6 @@ function createTimelineKit(Core: any) {
         if (!Core.TimelineMarker.deleteMarker(marker)) {
           return false;
         }
-
         Core.TimelineMarker.createMarker({
           frame: newFrame,
           length: marker.length,
@@ -316,7 +321,6 @@ function createTimelineKit(Core: any) {
           name: marker.name,
           notes: marker.notes,
         });
-
         return true;
       } catch (e) {
         return false;
@@ -328,19 +332,14 @@ function createTimelineKit(Core: any) {
 
       try {
         var markers = Core.TimelineMarker.getAllMarkers();
-
         var markersToReconstruct = markers.filter(function (marker: any) {
           if (mode !== 'delete') {
             return true;
           }
-
           var markerEnd = marker.frame + Math.max(marker.length, 1);
-
           var occupiesFrame = atFrame >= marker.frame && atFrame < markerEnd;
-
           return !occupiesFrame;
         });
-
         /*
          * Delete all markers first so shifted
          * markers do not collide.
@@ -348,18 +347,14 @@ function createTimelineKit(Core: any) {
         for (var i = 0; i < markers.length; i++) {
           Core.TimelineMarker.deleteMarker(markers[i]);
         }
-
         Core.MessageLog.trace(
           '[TimelineKit.ts] ' +
             markersToReconstruct.length +
             ' markers to reconstruct after ripple shift.',
         );
-
         for (var i = 0; i < markersToReconstruct.length; i++) {
           var marker = markersToReconstruct[i];
-
           var newFrame = marker.frame > atFrame ? marker.frame + delta : marker.frame;
-
           Core.TimelineMarker.createMarker({
             frame: newFrame,
             length: marker.length,
@@ -368,11 +363,9 @@ function createTimelineKit(Core: any) {
             notes: marker.notes,
           });
         }
-
         return true;
       } catch (e: any) {
         Core.MessageLog.trace('[TimelineKit.ts] ' + e.message);
-
         return false;
       }
     },
@@ -390,7 +383,7 @@ function createTimelineKit(Core: any) {
     /*
      * Keyframes
      */
-    applyKeyFramesTo3DPath(selection: Selection, keyframes: any[]): void {
+    applyKeyFramesTo3DPath(selection: CoreInstance<'oSelection'>, keyframes: any[]): void {
       var layer = selection.selectedNodes[0];
 
       var PathColumn3D = layer.getColumn('position.attr3dpath');
@@ -404,29 +397,18 @@ function createTimelineKit(Core: any) {
       try {
         for (var i = 0; i < keyframes.length; i++) {
           var kf = keyframes[i];
-
           var frameNumber = selection.startFrame + kf.frame;
-
           Core.MessageLog.trace(' >>> ' + kf.x);
-
           var x = Math.abs(kf.x) + (kf.x >= 0 ? ' E' : ' W');
-
           var y = Math.abs(kf.y) + (kf.y >= 0 ? ' N' : ' S');
-
           var z = Math.abs(kf.z) + (kf.z >= 0 ? ' F' : ' B');
-
           Core.MessageLog.trace('<<<<<<<< ' + Core.JSON.stringify([x, y, z], null, 2));
-
           PathColumn3D.setX(frameNumber, x);
-
           PathColumn3D.setY(frameNumber, y);
-
           PathColumn3D.setZ(frameNumber, z);
-
           if (kf.scaleX !== undefined) {
             ScaleXCol.setKeyFrame(frameNumber, kf.scaleX);
           }
-
           if (kf.scaleY !== undefined) {
             ScaleYCol.setKeyFrame(frameNumber, kf.scaleY);
           }
@@ -436,56 +418,41 @@ function createTimelineKit(Core: any) {
       }
     },
 
-    applyKeyFramesToSplittedPath(selection: Selection, keyframes: any[]): void {
+    applyKeyFramesToSplittedPath(
+      selection: CoreInstance<'oSelection'>,
+      keyframes: any[],
+      applyReset: boolean = true,
+    ): void {
       for (var nodeIndex = 0; nodeIndex < selection.selectedNodes.length; nodeIndex++) {
         var layer = selection.selectedNodes[nodeIndex];
-
         var xCol = layer.getColumn('offset.X');
-
         var yCol = layer.getColumn('offset.Y');
-
         var zCol = layer.getColumn('offset.Z');
-
         var ScaleXCol = layer.getColumn('scale.x');
-
         var ScaleYCol = layer.getColumn('scale.y');
-
-        Core.MessageLog.trace('columns: ' + xCol + ' ' + yCol + ' ' + zCol);
-
+        // Core.MessageLog.trace('columns: ' + xCol + ' ' + yCol + ' ' + zCol);
         Core.scene.beginUndoRedoAccum('Apply 3D Path Keyframes');
-
         try {
           for (var i = 0; i < keyframes.length; i++) {
             var kf = keyframes[i];
-
             var frameNumber = selection.startFrame + kf.frame;
-
-            Core.MessageLog.trace(
-              ' Applying kf at frame ' + frameNumber + ' x:' + kf.x + ' y:' + kf.y + ' z:' + kf.z,
-            );
-
-            xCol.setKeyFrame(frameNumber, String(kf.x));
-
-            yCol.setKeyFrame(frameNumber, String(kf.y));
-
-            zCol.setKeyFrame(frameNumber, String(kf.z));
-
+            // Core.MessageLog.trace(
+            //   ' Applying kf at frame ' + frameNumber + ' x:' + kf.x + ' y:' + kf.y + ' z:' + kf.z,
+            // );
+            xCol.setKeyFrame(frameNumber, Core.String(kf.x));
+            yCol.setKeyFrame(frameNumber, Core.String(kf.y));
+            zCol.setKeyFrame(frameNumber, Core.String(kf.z));
             ScaleXCol.setKeyFrame(frameNumber, kf.scaleX);
-
             ScaleYCol.setKeyFrame(frameNumber, kf.scaleY);
           }
-
           var resetFrame = selection.startFrame + keyframes.length;
-
-          xCol.setKeyFrame(resetFrame, '0');
-
-          yCol.setKeyFrame(resetFrame, '0');
-
-          zCol.setKeyFrame(resetFrame, '0');
-
-          ScaleXCol.setKeyFrame(resetFrame, '1');
-
-          ScaleYCol.setKeyFrame(resetFrame, '1');
+          if (applyReset) {
+            xCol.setKeyFrame(resetFrame, '0');
+            yCol.setKeyFrame(resetFrame, '0');
+            zCol.setKeyFrame(resetFrame, '0');
+            ScaleXCol.setKeyFrame(resetFrame, '1');
+            ScaleYCol.setKeyFrame(resetFrame, '1');
+          }
         } finally {
           Core.scene.endUndoRedoAccum();
         }
@@ -495,14 +462,12 @@ function createTimelineKit(Core: any) {
     /*
      * Frame markers
      */
-    createFrameMarkers(marker: any, selection: Selection): void {
+    createFrameMarkers(marker: any, selection: CoreInstance<'oSelection'>): void {
       for (var i = 0; i < selection.selectedNodes.length; i++) {
         var selectedNode = selection.selectedNodes[i];
-
         for (var f = selection.startFrame; f <= selection.endFrame; f++) {
           try {
             var result = Core.Timeline.createFrameMarker(selectedNode.index, marker, f);
-
             Core.MessageLog.trace(
               'Created frame marker on node ' +
                 selectedNode.name +
@@ -513,7 +478,6 @@ function createTimelineKit(Core: any) {
                 '. Result: ' +
                 result,
             );
-
             Core.MessageLog.trace(Core.JSON.stringify(marker, null, 2));
           } catch (e: any) {
             Core.MessageLog.trace('Error creating frame marker: ' + e.toString());
@@ -522,22 +486,17 @@ function createTimelineKit(Core: any) {
       }
     },
 
-    deleteFrameMarkers(selection: Selection): void {
+    deleteFrameMarkers(selection: CoreInstance<'oSelection'>): void {
       for (var i = 0; i < selection.selectedNodes.length; i++) {
         var selectedNode = selection.selectedNodes[i];
-
         for (var f = selection.startFrame; f <= selection.endFrame; f++) {
           var marker = Core.Timeline.getFrameMarker(selectedNode.index, f);
-
           if (!marker) {
             continue;
           }
-
           var id = marker['id'];
-
           if (id !== -1) {
             var status = Core.Timeline.deleteFrameMarker(selectedNode.index, id);
-
             Core.MessageLog.trace(
               'Deleted frame marker ID ' +
                 id +
@@ -599,13 +558,9 @@ function createTimelineKit(Core: any) {
 
       for (var i = 0; i < numColumns; i++) {
         var colName = Core.column.getName(i);
-
         var pos = Core.column.getPos(colName);
-
         var displayName = Core.column.getDisplayName(colName);
-
         var timelineLayer = new Core.TimelineLayer(colName, displayName, pos, i);
-
         if (timelineLayer.orderIndex !== -1) {
           layers.push(timelineLayer);
         }
@@ -628,7 +583,6 @@ function createTimelineKit(Core: any) {
     getSceneMetadata(key: any, type: any): any {
       try {
         var meta = Core.scene.metadata(key, type);
-
         if (meta && meta.hasOwnProperty('value')) {
           return meta.value;
         }
@@ -646,9 +600,7 @@ function createTimelineKit(Core: any) {
           creator: creator,
           version: version,
         };
-
         Core.scene.setMetadata(metaObj);
-
         Core.MessageLog.trace('Set scene metadata: ' + key + ' = ' + value);
       } catch (e) {}
     },
@@ -670,7 +622,6 @@ function createTimelineKit(Core: any) {
     getMetadata(key: any): any {
       try {
         var meta = Core.scene.metadata(key, 'string');
-
         if (meta && meta.hasOwnProperty('value')) {
           return meta.value;
         }
@@ -743,13 +694,10 @@ function createLayerManager(Core: CoreRuntime) {
 
       if (attr.keyword() === 'POSITION') {
         Core.MessageLog.trace('POSITION attribute found');
-
         var subs = attr.getSubAttributes();
-
         for (var j = 0; j < subs.length; j++) {
           if (subs[j].keyword() === 'SEPARATE') {
             Core.MessageLog.trace('SEPARATE: ' + subs[j].boolValue());
-
             return subs[j].boolValue() === false;
           }
         }
@@ -803,12 +751,9 @@ function createLayerManager(Core: CoreRuntime) {
 
       function crawlGroup(groupPath: string): void {
         var subNodeCount = Core.node.numberOfSubNodes(groupPath);
-
         for (var i = 0; i < subNodeCount; i++) {
           var currentChild = Core.node.subNode(groupPath, i);
-
           accumulatedNodes.push(currentChild);
-
           if (Core.node.isGroup(currentChild)) {
             crawlGroup(currentChild);
           }

@@ -133,9 +133,7 @@ function createApplyZoomToolKit($: HarmonyCore, KeyframeGenerator: KeyframeGener
         if (ctx.shiftPressed) {
           var rawCenter = ctx._rawRectCenter || ctx._rectCenter;
 
-          var centerDistance = $.Math.sqrt(
-            rawCenter.x * rawCenter.x + rawCenter.y * rawCenter.y,
-          );
+          var centerDistance = $.Math.sqrt(rawCenter.x * rawCenter.x + rawCenter.y * rawCenter.y);
           ctx._snapDebugMoves = (ctx._snapDebugMoves || 0) + 1;
 
           if (ctx._snapDebugMoves === 1 || ctx._snapDebugMoves % 20 === 0) {
@@ -273,7 +271,7 @@ function createApplyZoomToolKit($: HarmonyCore, KeyframeGenerator: KeyframeGener
       }
 
       try {
-        var camPeg = $.LayerManager.getNodeLayer('Top/Camera-P');
+        var camPeg = $.LayerManager.getNodeLayer('Top/Camera-P') as CoreInstance<'oPegNode'>;
         if (!camPeg) {
           $.MessageLog.trace('ApplyZoomTool: Camera peg not found.');
         } else {
@@ -286,12 +284,18 @@ function createApplyZoomToolKit($: HarmonyCore, KeyframeGenerator: KeyframeGener
           var endFrame = startFrame + 7;
           var baseX = camPeg.position.getXVal(startFrame);
           var baseY = camPeg.position.getYVal(startFrame);
+
           var directionX = ctx._rectCenter.x - baseX;
+
           var directionY = ctx._rectCenter.y - baseY;
+
           var directionLength = $.Math.sqrt(directionX * directionX + directionY * directionY);
+
           var scale = 8;
-          var target =
-            directionLength > 0.001
+
+          var target = ctx._centerSnapped
+            ? new $.Vec2(0, 0)
+            : directionLength > 0.001
               ? new $.Vec2(
                   (directionX / directionLength) * scale,
                   (directionY / directionLength) * scale,
@@ -406,7 +410,7 @@ function createApplyZoomToolKit($: HarmonyCore, KeyframeGenerator: KeyframeGener
           $.Tools.setCurrentTool(TOOL_ID);
         },
         shortcut: 'Ctrl+Alt+R',
-        category: 'custom',
+        category: 'Camera Animation',
       });
     },
   };

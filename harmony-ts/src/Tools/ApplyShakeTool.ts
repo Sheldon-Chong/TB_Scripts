@@ -159,7 +159,7 @@ function createApplyShakeToolKit(Core: HarmonyCore, KeyframeGenerator: KeyframeG
           Core.Tools.setCurrentTool(TOOL_ID);
         },
         shortcut: 'Ctrl+Alt+R',
-        category: 'custom',
+        category: 'Camera Animation',
       });
     },
   };

@@ -738,7 +738,7 @@ function createUtils(Core: any) {
 
       return true;
     },
-    copyFiletoast: function (sourcePath: string, destPath: string) {
+    copyFile: function (sourcePath: string, destPath: string) {
       var sourceFile = new Core.PermanentFile(sourcePath);
 
       var destFile = new Core.PermanentFile(destPath);

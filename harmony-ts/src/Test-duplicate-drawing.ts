@@ -417,6 +417,32 @@ function setFramesToDrawingType(
   Core.scene.endUndoRedoAccum();
 }
 
+function testSelectAssociates() {
+  const Core = getCore();
+  const sel = Core.TimelineKit.getSelection();
+  const drawingNode = sel.selectedNodes[0] as CoreInstance<'oDrawingNode'>;
+  const drawingElement = drawingNode.drawingElement;
+  const currentDrawingType = drawingElement.getDrawingType(sel.startFrame);
+  MessageLog.trace(`[Test-duplicate-drawing.ts] ${currentDrawingType}`);
+
+  for (let drawingLayerIndex = 1; drawingLayerIndex < 17; drawingLayerIndex++) {
+    const node = Core.LayerManager.getNodeLayer(
+      `Top/${drawingLayerIndex}`,
+    ) as CoreInstance<'oDrawingNode'>;
+    const col = node.getColumn('DRAWING.ELEMENT') as CoreInstance<'oDrawingElementColumn'>;
+    const drawingType = col.getDrawingType(sel.startFrame);
+    if (drawingType === currentDrawingType) {
+      Core.MessageLog.trace(
+        `[Test-duplicate-drawing.ts] ${node.name} has drawing type ${drawingType} at frame ${sel.startFrame}`,
+      );
+      Core.selection.addNodeToSelection(node.nodePath);
+    }
+  }
+
+  // Core.selection.clearSelection();
+  // Core.selection.addNodeToSelection('Top/1');
+}
+
 function applyDrawingTypeFromFile() {
   const Core = getCore();
   reloadDevelopmentCore();

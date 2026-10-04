@@ -111,6 +111,7 @@ interface CoreModules {
   ColorUtils: ReturnType<typeof createColorUtils>;
   ColorObj: ReturnType<typeof createColorObjClass>;
   column: typeof column;
+  oSelection: ReturnType<typeof createSelectionClass>;
 
   PaletteKit: ReturnType<typeof createPaletteKit>;
 }
@@ -161,6 +162,8 @@ function createCoreBase() {
     Action: Action,
     PaletteManager: H.PaletteManager as typeof PaletteManager,
     PaletteObjectManager: H.PaletteObjectManager as typeof PaletteObjectManager,
+    String: String,
+    parseFloat: parseFloat,
   };
 }
 
@@ -169,6 +172,10 @@ function createCore(): HarmonyCore {
   /*
    * Attributes
    */
+  try {
+  } catch (error) {
+    MessageLog.trace(`[global-test.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
+  }
   Runtime.ColorUtils = createColorUtils(Runtime);
 
   Runtime.PaletteKit = createPaletteKit(Runtime);
@@ -243,6 +250,7 @@ function createCore(): HarmonyCore {
   /*
    * Higher-level modules
    */
+  Runtime.oSelection = createSelectionClass(Runtime);
   Runtime.TimelineKit = createTimelineKit(Runtime);
   Runtime.SceneKit = createSceneKit(Runtime);
   Runtime.Toolbar = createToolbarKit(Runtime);

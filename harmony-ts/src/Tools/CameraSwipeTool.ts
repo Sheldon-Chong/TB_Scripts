@@ -442,6 +442,7 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
         callback: function () {
           Core.Tools.setCurrentTool('com.toonboom.cameraSwipeTool');
         },
+        category: 'Camera Animation',
       });
     },
   };

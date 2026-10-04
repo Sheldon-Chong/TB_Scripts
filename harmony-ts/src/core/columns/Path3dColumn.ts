@@ -19,7 +19,7 @@ function createPathColumn3DClass(Core: any) {
     }
 
     private parseDirectionalValue(entry: string, positive: string, negative: string): number {
-      var value = parseFloat(entry);
+      var value = Core.parseFloat(entry);
 
       return entry.indexOf(positive) !== -1 ? value : -value;
     }
