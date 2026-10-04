@@ -9,19 +9,14 @@ function createDrawingElementColumnClass(Core: CoreRuntime) {
 
     setDrawingType(frameNumberOrSelection: any, drawingType: string): boolean {
       if (typeof frameNumberOrSelection === 'number') {
-        Core.MessageLog.trace(`[DrawingElementColumn.ts] ${'number'}`);
         Core.column.setDrawingType(this.name, frameNumberOrSelection, drawingType);
       }
-      Core.MessageLog.trace(`[DrawingElementColumn.ts] ${typeof frameNumberOrSelection}`);
       for (
         var frameNumber = frameNumberOrSelection.startFrame;
         frameNumber <= frameNumberOrSelection.endFrame;
         frameNumber++
       ) {
         Core.column.setDrawingType(this.name, frameNumber, drawingType);
-        MessageLog.trace(
-          `[DrawingElementColumn.ts] >>> ${frameNumberOrSelection.startFrame} -> ${frameNumberOrSelection.endFrame}`,
-        );
       }
     }
 

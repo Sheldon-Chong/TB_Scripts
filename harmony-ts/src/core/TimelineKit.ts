@@ -122,9 +122,13 @@ class oSelection {
   isRange: boolean;
   length: number;
 
-  selectedNodes: oNodeLayer[];
+  selectedNodes: CoreInstance<'oDrawingNode'>[];
 
-  constructor(startFrame?: number, endFrame?: number, selectedNodes?: oNodeLayer[]) {
+  constructor(
+    startFrame?: number,
+    endFrame?: number,
+    selectedNodes?: CoreInstance<'oDrawingNode'>[],
+  ) {
     if (startFrame !== undefined) {
       this.startFrame = startFrame;
       this.endFrame = endFrame !== undefined ? endFrame : startFrame;
@@ -159,7 +163,7 @@ class oSelection {
     return this.length * this.selectedNodes.length;
   }
 
-  forEach(callback: (node: oNodeLayer, frame: number) => void) {
+  forEach(callback: (node: CoreInstance<'oDrawingNode'>, frame: number) => void) {
     for (const node of this.selectedNodes) {
       for (let f = this.startFrame; f <= this.endFrame; f++) {
         callback(node, f);
@@ -728,12 +732,10 @@ function TestCallable() {
   MessageLog.trace('TestCallable invoked');
 }
 
-function createLayerManager(Core: any) {
-  function LayerManager(this: any) {
-    this.nodeLayers = [];
-  }
+function createLayerManager(Core: CoreRuntime) {
+  var nodeLayers: CoreInstance<'oBaseNode'>[] = [];
 
-  LayerManager.prototype.is3DPath = function (n: any) {
+  function is3DPath(n: any): boolean {
     var attrs = n.getAllAttributes();
 
     for (var i = 0; i < attrs.length; i++) {
@@ -755,9 +757,9 @@ function createLayerManager(Core: any) {
     }
 
     return false;
-  };
+  }
 
-  LayerManager.prototype.return3DPath = function (n: any) {
+  function return3DPath(n: any) {
     try {
       var attributeNames = n.getAttributeNames();
 
@@ -779,10 +781,10 @@ function createLayerManager(Core: any) {
     } catch (e) {
       return null;
     }
-  };
+  }
 
-  LayerManager.prototype.updateNodeLayers = function () {
-    this.nodeLayers = [];
+  function updateNodeLayers(): void {
+    nodeLayers = [];
 
     var timelineIndices: {
       [nodePath: string]: number;
@@ -796,10 +798,10 @@ function createLayerManager(Core: any) {
       }
     }
 
-    function getAllNodesInScene() {
+    function getAllNodesInScene(): string[] {
       var accumulatedNodes: string[] = [];
 
-      function crawlGroup(groupPath: string) {
+      function crawlGroup(groupPath: string): void {
         var subNodeCount = Core.node.numberOfSubNodes(groupPath);
 
         for (var i = 0; i < subNodeCount; i++) {
@@ -832,52 +834,48 @@ function createLayerManager(Core: any) {
       var nodeName = Core.node.getName(nodePath);
 
       if (nodeType === 'COLOR_CARD') {
-        this.nodeLayers.push(
-          new Core.oColorCardNode(this.nodeLayers.length, timelineIndex, nodePath, nodeName),
+        nodeLayers.push(
+          new Core.oColorCardNode!(nodeLayers.length, timelineIndex, nodePath, nodeName),
         );
       } else if (nodeType === 'PEG') {
-        this.nodeLayers.push(
-          new Core.oPegNode(this.nodeLayers.length, timelineIndex, nodePath, nodeName),
-        );
+        nodeLayers.push(new Core.oPegNode!(nodeLayers.length, timelineIndex, nodePath, nodeName));
       } else if (nodeType === 'READ') {
-        this.nodeLayers.push(
-          new Core.oDrawingNode(this.nodeLayers.length, timelineIndex, nodePath, nodeName),
+        nodeLayers.push(
+          new Core.oDrawingNode!(nodeLayers.length, timelineIndex, nodePath, nodeName),
         );
       } else {
-        this.nodeLayers.push(
-          new Core.oBaseNode(this.nodeLayers.length, timelineIndex, nodePath, nodeName),
-        );
+        nodeLayers.push(new Core.oBaseNode!(nodeLayers.length, timelineIndex, nodePath, nodeName));
       }
     }
-  };
+  }
 
-  LayerManager.prototype.getSelected = function () {
+  function getSelected() {
     var selectedNodePaths = Core.selection.selectedNodes();
 
-    var selected: any[] = [];
+    var selected: CoreInstance<'oBaseNode'>[] = [];
 
     for (var i = 0; i < selectedNodePaths.length; i++) {
-      var layer = this.getNodeLayer(selectedNodePaths[i]);
+      var layer = getNodeLayer(selectedNodePaths[i]);
 
       if (layer !== null) {
         selected.push(layer);
       }
     }
 
-    selected.sort(function (a: any, b: any) {
+    selected.sort(function (a, b) {
       return a.displayOrder - b.displayOrder;
     });
 
     return selected;
-  };
+  }
 
-  LayerManager.prototype.getNodeLayers = function () {
-    return this.nodeLayers;
-  };
+  function getNodeLayers() {
+    return nodeLayers;
+  }
 
-  LayerManager.prototype.getNodeLayer = function (index: string | number) {
-    for (var i = 0; i < this.nodeLayers.length; i++) {
-      var layer = this.nodeLayers[i];
+  function getNodeLayer(index: string | number): CoreInstance<'oBaseNode'> | null {
+    for (var i = 0; i < nodeLayers.length; i++) {
+      var layer = nodeLayers[i];
 
       if (typeof index === 'string') {
         if (layer.nodePath === index) {
@@ -891,10 +889,14 @@ function createLayerManager(Core: any) {
     }
 
     return null;
+  }
+
+  return {
+    is3DPath: is3DPath,
+    return3DPath: return3DPath,
+    updateNodeLayers: updateNodeLayers,
+    getSelected: getSelected,
+    getNodeLayers: getNodeLayers,
+    getNodeLayer: getNodeLayer,
   };
-
-  return new LayerManager();
 }
-
-
-

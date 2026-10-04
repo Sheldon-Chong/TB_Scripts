@@ -203,102 +203,96 @@ function serializeDrawingTypes(): void {
   Core.Utils.setClipboardText(JSON.stringify(nodes, null, 2));
   Core.MessageLog.trace(`[Test-duplicate-drawing.ts] nodes: ${JSON.stringify(nodes, null, 2)}`);
 }
-function testSetAllFramesToDrawingType(drawingType: string): void {
-  const Core = getCore();
-  Core.scene.beginUndoRedoAccum('Set Drawing Type');
-  reloadDevelopmentCore();
-
-  const sel = Core.TimelineKit.getSelection();
-
-  for (const node of sel.selectedNodes as CoreInstance<'oDrawingNode'>[]) {
-    try {
-      node.drawingElement.setDrawingType(
-        { startFrame: sel.startFrame, endFrame: sel.endFrame },
-        'Sans',
-      );
-    } catch (error) {
-      MessageLog.trace(
-        `[Test-duplicate-drawing.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`,
-      );
-    }
-  }
-
-  Core.scene.endUndoRedoAccum();
-}
 
 function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
   const Core = getCore();
 
   const col = node.getColumn('DRAWING.ELEMENT') as CoreInstance<'oDrawingElementColumn'>;
+
   if (col.getKeyframe(frame) === null || col.getKeyframe(frame) === '') {
     return;
   }
-  const strokes = Core.DrawingDataKit.query.getStrokes({
-    drawing: {
-      frame: frame,
-      node: node.nodePath,
-    },
-    art: 2,
-  });
 
-  function getColorTally(
-    strokes: DrawingStrokesResult,
-    excludedPaletteNames: string[] = ['Template_Lineart'],
-  ): string | null {
+  const excludedPaletteNames = ['Template_Lineart'];
+
+  function getColorTally(excludedPaletteNames: string[] = ['Template_Lineart']): string | null {
     const tally: Record<string, number> = {};
 
-    if (!strokes.layers) {
-      MessageLog.trace(
-        `[Test-duplicate-drawing.ts] stroke layers:: ${JSON.stringify(strokes, null, 2)}`,
-      );
-      return null;
+    /*
+     * Check every art layer.
+     */
+    const artLayers = [0, 1, 2, 3];
+
+    for (let artIndex = 0; artIndex < artLayers.length; artIndex++) {
+      const art = artLayers[artIndex];
+
+      const strokes = Core.DrawingDataKit.query.getStrokes({
+        drawing: {
+          frame: frame,
+          node: node.nodePath,
+        },
+        art: art,
+      });
+
+      if (!strokes.layers) {
+        continue;
+      }
+
+      strokes.layers.forEach((layer) => {
+        layer.strokes.forEach((stroke) => {
+          const colorIds: string[] = [];
+
+          /*
+           * Pencil / centerline stroke
+           */
+          if (stroke.pencilColorId) {
+            colorIds.push(stroke.pencilColorId);
+          }
+
+          /*
+           * Colour on left side of contour
+           */
+          if (typeof stroke.shaderLeft === 'number' && layer.shaders[stroke.shaderLeft]) {
+            const colorId = layer.shaders[stroke.shaderLeft].colorId;
+
+            if (colorId) {
+              colorIds.push(colorId);
+            }
+          }
+
+          /*
+           * Colour on right side of contour
+           */
+          if (typeof stroke.shaderRight === 'number' && layer.shaders[stroke.shaderRight]) {
+            const colorId = layer.shaders[stroke.shaderRight].colorId;
+
+            if (colorId) {
+              colorIds.push(colorId);
+            }
+          }
+
+          /*
+           * Avoid counting the same colour twice
+           * for the same stroke.
+           */
+          const uniqueColorIds: string[] = [];
+
+          for (let i = 0; i < colorIds.length; i++) {
+            if (uniqueColorIds.indexOf(colorIds[i]) === -1) {
+              uniqueColorIds.push(colorIds[i]);
+            }
+          }
+
+          for (let i = 0; i < uniqueColorIds.length; i++) {
+            const colorId = uniqueColorIds[i];
+
+            tally[colorId] = (tally[colorId] || 0) + 1;
+          }
+        });
+      });
     }
 
-    strokes.layers.forEach((layer) => {
-      layer.strokes.forEach((stroke) => {
-        const colorIds: string[] = [];
-
-        // Pencil / centerline stroke
-        if (stroke.pencilColorId) {
-          colorIds.push(stroke.pencilColorId);
-        }
-
-        // Colour on left side of contour
-        if (typeof stroke.shaderLeft === 'number' && layer.shaders[stroke.shaderLeft]) {
-          const colorId = layer.shaders[stroke.shaderLeft].colorId;
-
-          if (colorId) {
-            colorIds.push(colorId);
-          }
-        }
-
-        // Colour on right side of contour
-        if (typeof stroke.shaderRight === 'number' && layer.shaders[stroke.shaderRight]) {
-          const colorId = layer.shaders[stroke.shaderRight].colorId;
-
-          if (colorId) {
-            colorIds.push(colorId);
-          }
-        }
-
-        // Avoid counting the same color twice on one stroke
-        const uniqueColorIds: string[] = [];
-
-        for (let i = 0; i < colorIds.length; i++) {
-          if (uniqueColorIds.indexOf(colorIds[i]) === -1) {
-            uniqueColorIds.push(colorIds[i]);
-          }
-        }
-
-        for (let i = 0; i < uniqueColorIds.length; i++) {
-          const colorId = uniqueColorIds[i];
-
-          tally[colorId] = (tally[colorId] || 0) + 1;
-        }
-      });
-    });
-
-    MessageLog.trace(`[Test-duplicate-drawing.ts] tally: ${JSON.stringify(tally, null, 2)}`);
+    Core.MessageLog.trace('[Test-duplicate-drawing.ts] tally: ' + JSON.stringify(tally, null, 2));
 
     const colorIds = Object.keys(tally);
 
@@ -327,11 +321,9 @@ function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
     return largestColorId;
   }
 
-  const excludedPaletteNames = ['Template_Lineart'];
+  const largestTallyColorId = getColorTally(excludedPaletteNames);
 
-  const largestTallyColorId = getColorTally(strokes, excludedPaletteNames);
-
-  MessageLog.trace(`[Test-duplicate-drawing.ts] largest color: ${largestTallyColorId}`);
+  Core.MessageLog.trace('[Test-duplicate-drawing.ts] largest color: ' + largestTallyColorId);
 
   if (!largestTallyColorId) {
     Core.MessageLog.trace('[Test-duplicate-drawing.ts] No eligible color found for frame ' + frame);
@@ -345,7 +337,7 @@ function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
     return;
   }
 
-  MessageLog.trace(
+  Core.MessageLog.trace(
     'largestTallyColorId: ' + largestTallyColorId + ', match.palette.name: ' + match.palette.name,
   );
 
@@ -353,9 +345,9 @@ function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
     col.setDrawingType(frame, match.color.name);
     return;
   }
+
   col.setDrawingType(frame, match.palette.name);
 }
-
 function testQueryStrokes() {
   scene.beginUndoRedoAccum('Label Drawing');
   const Core = getCore();
@@ -385,4 +377,72 @@ function testTranslateDrawing() {
 
 function testDuplicateDrawing() {
   getTools(getCore()).loopCurrentSelection();
+}
+
+function testSetAllFramesToDrawingType(drawingType: string): void {
+  const Core = getCore();
+  Core.scene.beginUndoRedoAccum('Set Drawing Type');
+  reloadDevelopmentCore();
+
+  const sel = Core.TimelineKit.getSelection();
+
+  for (const node of sel.selectedNodes as CoreInstance<'oDrawingNode'>[]) {
+    try {
+      node.drawingElement.setDrawingType(
+        { startFrame: sel.startFrame, endFrame: sel.endFrame },
+        'Sans',
+      );
+    } catch (error) {
+      MessageLog.trace(
+        `[Test-duplicate-drawing.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`,
+      );
+    }
+  }
+
+  Core.scene.endUndoRedoAccum();
+}
+
+function setFramesToDrawingType(
+  drawingType: string,
+  node: CoreInstance<'oDrawingNode'>,
+  startFrame: number,
+  endFrame: number,
+): void {
+  const Core = getCore();
+  Core.scene.beginUndoRedoAccum('Set Drawing Type');
+  // reloadDevelopmentCore();
+
+  node.drawingElement.setDrawingType({ startFrame, endFrame }, drawingType);
+
+  Core.scene.endUndoRedoAccum();
+}
+
+function applyDrawingTypeFromFile() {
+  const Core = getCore();
+  reloadDevelopmentCore();
+
+  const rawData = Core.Utils.getClipboardText();
+  const data = JSON.parse(rawData);
+
+  // MessageLog.trace(`[Test-duplicate-drawing.ts] ${JSON.stringify(Object.keys(data), null, 2)}`);
+
+  for (const nodePath of Object.keys(data)) {
+    const node = Core.LayerManager.getNodeLayer(nodePath) as CoreInstance<'oDrawingNode'>;
+    // if (node.name !== '1') continue;
+    // MessageLog.trace(
+    //   `[Test-duplicate-drawing.ts] ${node.name} | ${JSON.stringify(data[nodePath], null, 2)}`,
+    // );
+
+    const drawingCol = node.getColumn('DRAWING.ELEMENT') as CoreInstance<'oDrawingElementColumn'>;
+
+    for (let frame = 0; frame < data[nodePath].length; frame++) {
+      const projectedFrame = frame * 32 + 1;
+      // drawingCol.setDrawingType(projectedFrame, data[nodePath][frame]);
+      setFramesToDrawingType(data[nodePath][frame], node, projectedFrame, projectedFrame + 31);
+      if (data[nodePath][frame] === 'I') continue;
+      MessageLog.trace(
+        `[Test-duplicate-drawing.ts] applied ${data[nodePath][frame]} to frame ${projectedFrame}`,
+      );
+    }
+  }
 }
