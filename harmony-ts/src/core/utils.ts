@@ -664,163 +664,159 @@ function prompt(message: string, title?: string, defaultText?: string): string |
 }
 
 function createUtils(Core: any) {
-  var Utils: any = {};
+  var Utils = {
+    getClipboardText(): string {
+      return Core.QApplication.clipboard().text();
+    },
 
-  Utils.toast = function (labelText, position, duration, color, window?) {
-    var toast = new QWidget();
-    toast.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.ToolTip);
+    setClipboardText(text: string): void {
+      Core.QApplication.clipboard().setText(text);
+    },
 
-    var bgColor =
-      typeof color === 'string'
-        ? color
-        : 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',0.5)';
-    var styleSheet =
-      'QWidget { background-color: ' +
-      bgColor +
-      '; color: white; border-radius: 10px; padding: 10px; font-family: Arial; font-size: 12pt; }';
-    toast.setStyleSheet(styleSheet);
+    toast: function (labelText, position, duration, color, window?) {
+      var toast = new QWidget();
+      toast.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.ToolTip);
 
-    var layout = new QHBoxLayout(toast);
-    layout.addWidget(new QLabel(labelText), 0, Qt.AlignmentFlag.AlignLeft);
+      var bgColor =
+        typeof color === 'string'
+          ? color
+          : 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',0.5)';
+      var styleSheet =
+        'QWidget { background-color: ' +
+        bgColor +
+        '; color: white; border-radius: 10px; padding: 10px; font-family: Arial; font-size: 12pt; }';
+      toast.setStyleSheet(styleSheet);
 
-    toast.setAttribute(Qt.WA_DeleteOnClose);
+      var layout = new QHBoxLayout(toast);
+      layout.addWidget(new QLabel(labelText), 0, Qt.AlignmentFlag.AlignLeft);
 
-    var win = window ?? QApplication.activeWindow();
-    if (win && win.geometry) {
-      var geom = win.geometry;
-      var x = geom.x();
-      var y = geom.y();
-    }
-    toast.move(x, y);
+      toast.setAttribute(Qt.WA_DeleteOnClose);
 
-    toast.show();
+      var win = window ?? QApplication.activeWindow();
+      if (win && win.geometry) {
+        var geom = win.geometry;
+        var x = geom.x();
+        var y = geom.y();
+      }
+      toast.move(x, y);
 
-    var timer = new QTimer();
-    timer.singleShot = true;
-    timer.timeout.connect(function () {
-      toast.close();
-    });
-    timer.start(duration || 2000);
-  };
+      toast.show();
 
-  Utils.openInFileExplorer = function (path: string) {
-    var process = new Core.QProcess();
+      var timer = new QTimer();
+      timer.singleShot = true;
+      timer.timeout.connect(function () {
+        toast.close();
+      });
+      timer.start(duration || 2000);
+    },
+    openInFileExplorertoast: function (path: string) {
+      var process = new Core.QProcess();
 
-    var args = [];
+      var args = [];
 
-    if (Core.about.isWindowsArch()) {
-      args = [path.replace(/\//g, '\\')];
+      if (Core.about.isWindowsArch()) {
+        args = [path.replace(/\//g, '\\')];
 
-      process.start('explorer', args);
-    } else if (Core.about.isMacArch()) {
-      if (path.match(/\.[^\\/]+$/)) {
-        args = ['-R', path];
-      } else {
+        process.start('explorer', args);
+      } else if (Core.about.isMacArch()) {
+        if (path.match(/\.[^\\/]+$/)) {
+          args = ['-R', path];
+        } else {
+          args = [path];
+        }
+
+        process.start('open', args);
+      } else if (Core.about.isLinuxArch()) {
         args = [path];
+
+        process.start('xdg-open', args);
+      } else {
+        Core.MessageLog.trace('Unsupported OS for opening file explorer.');
+
+        return false;
       }
 
-      process.start('open', args);
-    } else if (Core.about.isLinuxArch()) {
-      args = [path];
+      return true;
+    },
+    copyFiletoast: function (sourcePath: string, destPath: string) {
+      var sourceFile = new Core.PermanentFile(sourcePath);
 
-      process.start('xdg-open', args);
-    } else {
-      Core.MessageLog.trace('Unsupported OS for opening file explorer.');
+      var destFile = new Core.PermanentFile(destPath);
 
-      return false;
-    }
+      return sourceFile.copy(destFile);
+    },
+    pathExiststoast: function (path: string) {
+      var file = new Core.PermanentFile(path);
 
-    return true;
-  };
+      return file.exists();
+    },
+    getCurrentXstagetoast: function () {
+      return Core.scene.currentProjectPath() + '/' + Core.scene.currentVersionName() + '.xstage';
+    },
+    stringifytoast: function (obj: any) {
+      Core.MessageLog.trace(JSON.stringify(obj, null, 2));
+    },
+    hasKeystoast: function (subject: any, requiredKeys: string[]) {
+      return requiredKeys.every(function (key) {
+        return subject.hasOwnProperty(key);
+      });
+    },
+    mergetoast: function (objA: any, objB: any) {
+      var merged: any = {};
 
-  Utils.copyFile = function (sourcePath: string, destPath: string) {
-    var sourceFile = new Core.PermanentFile(sourcePath);
+      var key;
 
-    var destFile = new Core.PermanentFile(destPath);
-
-    return sourceFile.copy(destFile);
-  };
-
-  Utils.pathExists = function (path: string) {
-    var file = new Core.PermanentFile(path);
-
-    return file.exists();
-  };
-
-  Utils.getCurrentXstage = function () {
-    return Core.scene.currentProjectPath() + '/' + Core.scene.currentVersionName() + '.xstage';
-  };
-
-  Utils.stringify = function (obj: any) {
-    Core.MessageLog.trace(JSON.stringify(obj, null, 2));
-  };
-
-  Utils.hasKeys = function (subject: any, requiredKeys: string[]) {
-    return requiredKeys.every(function (key) {
-      return subject.hasOwnProperty(key);
-    });
-  };
-
-  Utils.merge = function (objA: any, objB: any) {
-    var merged: any = {};
-
-    var key;
-
-    for (key in objA) {
-      if (objA.hasOwnProperty(key)) {
-        merged[key] = objA[key];
+      for (key in objA) {
+        if (objA.hasOwnProperty(key)) {
+          merged[key] = objA[key];
+        }
       }
-    }
 
-    for (key in objB) {
-      if (objB.hasOwnProperty(key)) {
-        merged[key] = objB[key];
+      for (key in objB) {
+        if (objB.hasOwnProperty(key)) {
+          merged[key] = objB[key];
+        }
       }
-    }
 
-    return merged;
-  };
+      return merged;
+    },
+    arrayToDicttoast: function (arr: any[], fn: Function) {
+      var dict: any = {};
 
-  Utils.arrayToDict = function (arr: any[], fn: Function) {
-    var dict: any = {};
+      for (var i = 0; i < arr.length; i++) {
+        var pair = fn(arr[i], i);
 
-    for (var i = 0; i < arr.length; i++) {
-      var pair = fn(arr[i], i);
-
-      dict[pair[0]] = pair[1];
-    }
-
-    return dict;
-  };
-
-  Utils.objectForEach = function (obj: any, callback: Function) {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        callback(key, obj[key]);
+        dict[pair[0]] = pair[1];
       }
-    }
-  };
 
-  Utils.filterArray = function (arr: any[], callback: Function) {
-    var result = [];
-
-    for (var i = 0; i < arr.length; i++) {
-      if (callback(arr[i], i, arr)) {
-        result.push(arr[i]);
+      return dict;
+    },
+    objectForEachtoast: function (obj: any, callback: Function) {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          callback(key, obj[key]);
+        }
       }
-    }
+    },
+    filterArraytoast: function (arr: any[], callback: Function) {
+      var result = [];
 
-    return result;
-  };
+      for (var i = 0; i < arr.length; i++) {
+        if (callback(arr[i], i, arr)) {
+          result.push(arr[i]);
+        }
+      }
 
-  Utils.startsWith = function (str: string, needle: string) {
-    return str.substring(0, needle.length) === needle;
-  };
-
-  Utils.bind = function (fn: Function, context: any) {
-    return function () {
-      return fn.apply(context, arguments);
-    };
+      return result;
+    },
+    startsWithtoast: function (str: string, needle: string) {
+      return str.substring(0, needle.length) === needle;
+    },
+    bindtoast: function (fn: Function, context: any) {
+      return function () {
+        return fn.apply(context, arguments);
+      };
+    },
   };
 
   return Utils;

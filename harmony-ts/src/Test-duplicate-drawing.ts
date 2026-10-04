@@ -58,6 +58,8 @@ function testPaletteColors(): void {
 
   var colors = getFirstPaletteColors();
 
+  return;
+
   for (var i = 0; i < colors.length; i++) {
     Core.MessageLog.trace(colors[i].name + ': ' + colors[i].hex);
   }
@@ -173,6 +175,57 @@ function runCycle(): void {
   Core.scene.setStopFrame(sel.startFrame + 7);
 }
 
+// todo : create function to read drawing type of selection
+// serialize to json. Stores nodename as key and value is sequence of drawing types
+// create another function that loads json
+
+// - modify bobbing button to have another toggle, disable between smart pasting.
+// - when pasting a bobbing preset with smart pasting enabled,
+// it will check the currently selected drawing type, and infer character from it
+// - It will paste around boundaries across all drawing nodes but only to matching drawing types
+
+function serializeDrawingTypes(): void {
+  const Core = getCore();
+  const sel = Core.TimelineKit.getSelection();
+
+  const node = sel.selectedNodes[0] as CoreInstance<'oDrawingNode'>;
+
+  const nodes = {};
+
+  for (const node of sel.selectedNodes) {
+    nodes[node.nodePath] = [];
+    for (let frame = sel.startFrame; frame <= sel.endFrame; frame++) {
+      const drawingType = node.drawingElement.getDrawingType(frame);
+      Core.MessageLog.trace(`[Test-duplicate-drawing.ts] drawingType: "${drawingType}"`);
+      nodes[node.nodePath].push(drawingType);
+    }
+  }
+  Core.Utils.setClipboardText(JSON.stringify(nodes, null, 2));
+  Core.MessageLog.trace(`[Test-duplicate-drawing.ts] nodes: ${JSON.stringify(nodes, null, 2)}`);
+}
+function testSetAllFramesToDrawingType(drawingType: string): void {
+  const Core = getCore();
+  Core.scene.beginUndoRedoAccum('Set Drawing Type');
+  reloadDevelopmentCore();
+
+  const sel = Core.TimelineKit.getSelection();
+
+  for (const node of sel.selectedNodes as CoreInstance<'oDrawingNode'>[]) {
+    try {
+      node.drawingElement.setDrawingType(
+        { startFrame: sel.startFrame, endFrame: sel.endFrame },
+        'Sans',
+      );
+    } catch (error) {
+      MessageLog.trace(
+        `[Test-duplicate-drawing.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`,
+      );
+    }
+  }
+
+  Core.scene.endUndoRedoAccum();
+}
+
 function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
   const Core = getCore();
 
@@ -193,6 +246,13 @@ function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
     excludedPaletteNames: string[] = ['Template_Lineart'],
   ): string | null {
     const tally: Record<string, number> = {};
+
+    if (!strokes.layers) {
+      MessageLog.trace(
+        `[Test-duplicate-drawing.ts] stroke layers:: ${JSON.stringify(strokes, null, 2)}`,
+      );
+      return null;
+    }
 
     strokes.layers.forEach((layer) => {
       layer.strokes.forEach((stroke) => {
@@ -289,6 +349,10 @@ function labelDrawing(frame: number, node: CoreInstance<'oDrawingNode'>): void {
     'largestTallyColorId: ' + largestTallyColorId + ', match.palette.name: ' + match.palette.name,
   );
 
+  if (match.palette.name === 'Others') {
+    col.setDrawingType(frame, match.color.name);
+    return;
+  }
   col.setDrawingType(frame, match.palette.name);
 }
 

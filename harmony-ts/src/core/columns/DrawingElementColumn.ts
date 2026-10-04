@@ -1,20 +1,36 @@
-function createDrawingElementColumnClass(Core: any) {
+function createDrawingElementColumnClass(Core: CoreRuntime) {
   var BaseColumn = Core.oColumn;
 
   class DrawingElementColumn extends BaseColumn {
     element: any;
 
-    setDrawingType(frameNumber: number, drawingType: string): boolean {
-      return Core.column.setDrawingType(this.name, frameNumber, drawingType);
+    setDrawingType(frameNumber: number, drawingType: string): boolean;
+    setDrawingType(selection: any, drawingType: string): boolean;
+
+    setDrawingType(frameNumberOrSelection: any, drawingType: string): boolean {
+      if (typeof frameNumberOrSelection === 'number') {
+        Core.MessageLog.trace(`[DrawingElementColumn.ts] ${'number'}`);
+        Core.column.setDrawingType(this.name, frameNumberOrSelection, drawingType);
+      }
+      Core.MessageLog.trace(`[DrawingElementColumn.ts] ${typeof frameNumberOrSelection}`);
+      for (
+        var frameNumber = frameNumberOrSelection.startFrame;
+        frameNumber <= frameNumberOrSelection.endFrame;
+        frameNumber++
+      ) {
+        Core.column.setDrawingType(this.name, frameNumber, drawingType);
+        MessageLog.trace(
+          `[DrawingElementColumn.ts] >>> ${frameNumberOrSelection.startFrame} -> ${frameNumberOrSelection.endFrame}`,
+        );
+      }
+    }
+
+    getDrawingType(frameNumber: number): string {
+      return Core.column.getDrawingType(this.name, frameNumber);
     }
 
     constructor(name: string, parentLayer: any) {
-      Core.MessageLog.trace('name ' + name);
-
-      Core.MessageLog.trace('name ' + Core.column.getEntry(name, 1, Core.frame.current()));
-
       super(name, parentLayer);
-
       this.element = new Core.oElement(Core.node.getElementId(parentLayer.nodePath));
     }
 

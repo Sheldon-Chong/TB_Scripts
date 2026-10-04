@@ -13,11 +13,11 @@ function createDrawingNodeClass(Core: CoreRuntime) {
       this.scale = new Core.oScale3D(this.nodePath);
     }
 
-    get drawingElement(): any {
+    get drawingElement(): CoreInstance<'oDrawingElementColumn'> {
       return this.getColumn('DRAWING.ELEMENT');
     }
 
-    getElement(): any {
+    getElement():CoreInstance<'oElement'> {
       return new Core.oElement(Core.node.getElementId(this.nodePath));
     }
 

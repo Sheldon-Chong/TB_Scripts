@@ -153,222 +153,176 @@ include('FileUtils.js');
 // }
 
 function createElementClass(Core: CoreRuntime) {
-  function Element(this: any, elementId: number, associatedNode?: any) {
-    this.id = elementId;
-    this.associatedNode = associatedNode;
-  }
+  class Element {
+    id: number;
+    associatedNode: any;
 
-  /*
-   * Basic element information
-   */
+    constructor(elementId: number, associatedNode?: any) {
+      this.id = elementId;
+      this.associatedNode = associatedNode;
+    }
 
-  Object.defineProperty(Element.prototype, 'name', {
-    get: function () {
+    /*
+     * Basic element information
+     */
+
+    get name() {
       return Core.element.getNameById(this.id);
-    },
+    }
 
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(Element.prototype, 'scanType', {
-    get: function () {
+    get scanType() {
       return Core.element.scanType(this.id);
-    },
+    }
 
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(Element.prototype, 'fieldChart', {
-    get: function () {
+    get fieldChart() {
       return Core.element.fieldChart(this.id);
-    },
+    }
 
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(Element.prototype, 'vectorType', {
-    get: function () {
+    get vectorType() {
       return Core.element.vectorType(this.id);
-    },
+    }
 
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(Element.prototype, 'pixmapFormat', {
-    get: function () {
+    get pixmapFormat() {
       return Core.element.pixmapFormat(this.id);
-    },
+    }
 
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(Element.prototype, 'folder', {
-    get: function () {
+    get folder() {
       return Core.element.folder(this.id);
-    },
+    }
 
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(Element.prototype, 'completeFolder', {
-    get: function () {
+    get completeFolder() {
       return Core.element.completeFolder(this.id);
-    },
+    }
 
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(Element.prototype, 'physicalName', {
-    get: function () {
+    get physicalName() {
       return Core.element.physicalName(this.id);
-    },
-
-    enumerable: true,
-    configurable: true,
-  });
-
-  /*
-   * Element management
-   */
-
-  Element.prototype.modify = function (
-    scanType: string,
-    fieldChart: number,
-    pixmapFormat: string,
-    vectorType: number,
-  ) {
-    return Core.element.modify(this.id, scanType, fieldChart, pixmapFormat, vectorType);
-  };
-
-  Element.prototype.rename = function (name: string) {
-    return Core.element.renameById(this.id, name);
-  };
-
-  Element.prototype.remove = function (deleteDiskFile?: boolean) {
-    if (deleteDiskFile === undefined) {
-      deleteDiskFile = false;
     }
 
-    return Core.element.remove(this.id, deleteDiskFile);
-  };
+    /*
+     * Element management
+     */
 
-  /*
-   * Drawings
-   */
-
-  Element.prototype.getDrawings = function () {
-    var drawings = [];
-
-    for (var i = 0; i < Core.Drawing.numberOf(this.id); i++) {
-      drawings.push(Core.Drawing.name(this.id, i));
+    modify(scanType: string, fieldChart: number, pixmapFormat: string, vectorType: number) {
+      return Core.element.modify(this.id, scanType, fieldChart, pixmapFormat, vectorType);
     }
 
-    return drawings;
-  };
-
-  Element.prototype.exists = function (drawingName: string) {
-    var path = this.completeFolder + '/' + this.name + '-' + drawingName + '.tvg';
-
-    Core.MessageLog.trace('[Element.ts] ' + path);
-
-    return Core.FileUtils.exists(path);
-  };
-
-  Element.prototype.registered = function (drawingName: string) {
-    return Core.Drawing.isExists(this.id, drawingName);
-  };
-
-  Element.prototype.getDrawing = function (drawingName: string) {
-    if (!this.registered(drawingName)) {
-      return null;
+    rename(name: string) {
+      return Core.element.renameById(this.id, name);
     }
 
-    return new Core.oDrawing(drawingName, this);
-  };
-
-  Element.prototype.generateUniqueDrawingName = function (baseName: string) {
-    var name = baseName;
-
-    var counter = 1;
-
-    while (this.registered(name)) {
-      name = baseName + '_' + counter;
-
-      counter++;
+    remove(deleteDiskFile: boolean = false) {
+      return Core.element.remove(this.id, deleteDiskFile);
     }
 
-    return name;
-  };
+    /*
+     * Drawings
+     */
 
-  Element.prototype.duplicateDrawing = function (baseName: string, sourceDrawingName: string) {
-    var uniqueName = this.generateUniqueDrawingName(baseName);
+    getDrawings() {
+      var drawings = [];
 
-    return this.copyDrawing(sourceDrawingName, uniqueName);
-  };
+      for (var i = 0; i < Core.Drawing.numberOf(this.id); i++) {
+        drawings.push(Core.Drawing.name(this.id, i));
+      }
 
-  Element.prototype.constructDrawingPath = function (drawingName: string) {
-    return this.completeFolder + '/' + this.name + '-' + drawingName + '.tvg';
-  };
-
-  Element.prototype.copyDrawing = function (
-    sourceDrawingName: string,
-    destinationDrawingName: string,
-    override?: boolean,
-  ) {
-    if (override === undefined) {
-      override = false;
+      return drawings;
     }
 
-    if (!this.exists(sourceDrawingName)) {
-      throw new Error(
-        "Source drawing '" + sourceDrawingName + "' does not exist in element '" + this.name + "'.",
-      );
+    exists(drawingName: string) {
+      var path = this.completeFolder + '/' + this.name + '-' + drawingName + '.tvg';
+
+      Core.MessageLog.trace('[Element.ts] ' + path);
+
+      return Core.FileUtils.exists(path);
     }
 
-    var sourcePath = Core.Drawing.filename(this.id, sourceDrawingName);
+    registered(drawingName: string) {
+      return Core.Drawing.isExists(this.id, drawingName);
+    }
 
-    var destinationPath = this.constructDrawingPath(destinationDrawingName);
+    getDrawing(drawingName: string) {
+      if (!this.registered(drawingName)) {
+        return null;
+      }
 
-    if (
-      !override &&
-      (this.registered(destinationDrawingName) || Core.FileUtils.exists(destinationPath))
+      return new Core.oDrawing(drawingName, this);
+    }
+
+    generateUniqueDrawingName(baseName: string) {
+      var name = baseName;
+      var counter = 1;
+
+      while (this.registered(name)) {
+        name = baseName + '_' + counter;
+        counter++;
+      }
+
+      return name;
+    }
+
+    duplicateDrawing(baseName: string, sourceDrawingName: string) {
+      var uniqueName = this.generateUniqueDrawingName(baseName);
+
+      return this.copyDrawing(sourceDrawingName, uniqueName);
+    }
+
+    constructDrawingPath(drawingName: string) {
+      return this.completeFolder + '/' + this.name + '-' + drawingName + '.tvg';
+    }
+
+    copyDrawing(
+      sourceDrawingName: string,
+      destinationDrawingName: string,
+      override: boolean = false,
     ) {
-      Core.MessageLog.trace('File already exists at destination path: ' + destinationPath);
+      if (!this.exists(sourceDrawingName)) {
+        throw new Error(
+          "Source drawing '" +
+            sourceDrawingName +
+            "' does not exist in element '" +
+            this.name +
+            "'.",
+        );
+      }
 
-      throw new Error(
-        "Destination drawing '" +
-          destinationDrawingName +
-          "' already exists in element '" +
-          this.name +
-          "'.",
-      );
+      var sourcePath = Core.Drawing.filename(this.id, sourceDrawingName);
+
+      var destinationPath = this.constructDrawingPath(destinationDrawingName);
+
+      if (
+        !override &&
+        (this.registered(destinationDrawingName) || Core.FileUtils.exists(destinationPath))
+      ) {
+        Core.MessageLog.trace('File already exists at destination path: ' + destinationPath);
+
+        throw new Error(
+          "Destination drawing '" +
+            destinationDrawingName +
+            "' already exists in element '" +
+            this.name +
+            "'.",
+        );
+      }
+
+      Core.Drawing.create(this.id, destinationDrawingName, true, true);
+
+      if (!Core.Utils.copyFile(sourcePath, destinationPath)) {
+        throw new Error(
+          "Failed to copy drawing from '" + sourcePath + "' to '" + destinationPath + "'.",
+        );
+      }
+
+      return new Core.oDrawing(destinationDrawingName, this);
     }
 
-    Core.Drawing.create(this.id, destinationDrawingName, true, true);
-
-    if (!Core.Utils.copyFile(sourcePath, destinationPath)) {
-      throw new Error(
-        "Failed to copy drawing from '" + sourcePath + "' to '" + destinationPath + "'.",
-      );
+    revealInFileExplorer() {
+      return Core.Utils.openInFileExplorer(this.completeFolder);
     }
 
-    return new Core.oDrawing(destinationDrawingName, this);
-  };
-
-  Element.prototype.revealInFileExplorer = function () {
-    return Core.Utils.openInFileExplorer(this.completeFolder);
-  };
-
-  Element.prototype.toString = function () {
-    return 'Element<' + this.id + ':' + this.name + '>';
-  };
+    toString() {
+      return 'Element<' + this.id + ':' + this.name + '>';
+    }
+  }
 
   return Element;
 }

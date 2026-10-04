@@ -22,13 +22,38 @@ include(specialFolders.userScripts + '/core/colors/Palette.js');
 include(specialFolders.userScripts + '/core/colors/GlobalPaletteManager.js');
 include(specialFolders.userScripts + '/core/colors/PalettesSingleton.js');
 include(specialFolders.userScripts + '/core/colors/Palettes.js');
-
 var __tbGlobal = Function('return this;')();
-
 var __tbShared = __tbGlobal.__proto__;
 
 if (!__tbShared.__TBTest) {
   __tbShared.__TBTest = createCore();
+}
+
+function reloadCore(): HarmonyCore {
+  var fresh = createCore();
+  var current = __tbShared.__TBTest as HarmonyCore;
+
+  if (!current) {
+    __tbShared.__TBTest = fresh;
+    return fresh;
+  }
+
+  for (var key in fresh) {
+    if (Object.prototype.hasOwnProperty.call(fresh, key)) {
+      (current as any)[key] = (fresh as any)[key];
+    }
+  }
+
+  current.MessageLog.trace('[Core] Hot reload complete');
+
+  return current;
+}
+function reloadDevelopmentCore() {
+  include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
+
+  var Core = reloadCore();
+
+  Core.MessageLog.trace('[Core] DrawingElementColumn reloaded');
 }
 
 function mergeCore<TBase, TModules>(base: TBase, modules: TModules): TBase & TModules {
@@ -85,6 +110,7 @@ interface CoreModules {
   Action: typeof Action;
   ColorUtils: ReturnType<typeof createColorUtils>;
   ColorObj: ReturnType<typeof createColorObjClass>;
+  column: typeof column;
 
   PaletteKit: ReturnType<typeof createPaletteKit>;
 }

@@ -57,9 +57,9 @@ function createBaseNodeClass(Core: HarmonyCore) {
       return Core.node.getAllAttrKeywords(this.nodePath);
     }
 
-    getColumn(attrName: 'offset.attr3dpath', linkType?: string, createColumn?: boolean): any;
-    getColumn(attrName: 'position.attr3dpath', linkType?: string, createColumn?: boolean): any;
-    getColumn(attrName: 'DRAWING.ELEMENT', linkType?: string, createColumn?: boolean): any;
+    getColumn(attrName: 'offset.attr3dpath', linkType?: string, createColumn?: boolean): CoreInstance<'oColumn'>;
+    getColumn(attrName: 'position.attr3dpath', linkType?: string, createColumn?: boolean): CoreInstance<'oColumn'>;
+    getColumn(attrName: 'DRAWING.ELEMENT', linkType?: string, createColumn?: boolean): CoreInstance<'oDrawingElementColumn'>;
     getColumn(attrName: string, linkType?: string, createColumn?: boolean): any;
 
     getColumn(attrName: string, linkType?: string, createColumn: boolean = true): any {
