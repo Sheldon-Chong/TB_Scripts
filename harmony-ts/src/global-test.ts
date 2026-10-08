@@ -12,7 +12,7 @@ include(specialFolders.userScripts + '/core/Toolbar.js');
 include(specialFolders.userScripts + '/core/FileUtils.js');
 include(specialFolders.userScripts + '/core/Attributes.js');
 include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
-
+include(specialFolders.userScripts + '/core/Logging.js');
 include(specialFolders.userScripts + '/core/columns/BaseColumn.js');
 include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
 include(specialFolders.userScripts + '/core/columns/Path3dColumn.js');
@@ -50,10 +50,9 @@ function reloadCore(): HarmonyCore {
 }
 function reloadDevelopmentCore() {
   include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
+  include(specialFolders.userScripts + '/core/Logging.js');
 
   var Core = reloadCore();
-
-  Core.MessageLog.trace('[Core] DrawingElementColumn reloaded');
 }
 
 function mergeCore<TBase, TModules>(base: TBase, modules: TModules): TBase & TModules {
@@ -112,6 +111,7 @@ interface CoreModules {
   ColorObj: ReturnType<typeof createColorObjClass>;
   column: typeof column;
   oSelection: ReturnType<typeof createSelectionClass>;
+  log: ReturnType<typeof createLogger>;
 
   PaletteKit: ReturnType<typeof createPaletteKit>;
 }
@@ -176,6 +176,8 @@ function createCore(): HarmonyCore {
   } catch (error) {
     MessageLog.trace(`[global-test.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
   }
+  Runtime.log = createLogger(Runtime);
+
   Runtime.ColorUtils = createColorUtils(Runtime);
 
   Runtime.ColorObj = Runtime.ColorUtils.ColorObj;

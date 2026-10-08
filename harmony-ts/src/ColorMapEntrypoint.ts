@@ -10,6 +10,7 @@ include(specialFolders.userScripts + '/ColorMapGenerator/ColorMatteGeneratorKit.
 function configureNodes2(): void {
   var Core = getCore();
   reloadCore();
+  // reloadDevelopmentCore();
   createColourMapGeneratorKit(Core).initialize();
   MessageLog.trace(`[ColorMapEntrypoint.ts] ${'nodes configured'}`);
 }

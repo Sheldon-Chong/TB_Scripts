@@ -63,17 +63,95 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
     constructor(index: number) {
       this.index = index;
 
+      this.colorCard = null;
+      this.drawingLayer = null;
+
+      this.refresh();
+    }
+
+    get colorCardName(): string {
+      return PASS_PREFIX + this.index;
+    }
+
+    get colorCardPath(): string {
+      return 'Top/' + this.colorCardName;
+    }
+
+    get drawingLayerPath(): string {
+      return 'Top/' + this.index;
+    }
+
+    refresh(): void {
+      Core.log(
+        'refresh matte',
+        this.index,
+        'drawingPath:',
+        this.drawingLayerPath,
+        'drawingType:',
+        Core.node.type(this.drawingLayerPath),
+        'colorCardPath:',
+        this.colorCardPath,
+        'colorCardType:',
+        Core.node.type(this.colorCardPath),
+      );
+
       this.drawingLayer = Core.LayerManager!.getNodeLayer(
-        'Top/' + index,
+        this.drawingLayerPath,
       ) as CoreInstance<'oDrawingNode'> | null;
 
       this.colorCard = Core.LayerManager!.getNodeLayer(
-        'Top/Pass_' + index,
+        this.colorCardPath,
       ) as CoreInstance<'oColorCardNode'> | null;
 
-      MessageLog.trace(
-        `[ColorMatteGeneratorKit.ts] initialized ColorMatte: ${this.index} with colorCard=${this.colorCard} and drawingLayer=${this.drawingLayer}`,
-      );
+      Core.log('LayerManager results:', this.drawingLayer, this.colorCard);
+    }
+
+    colorCardExists(): boolean {
+      return this.colorCard !== null;
+    }
+
+    drawingLayerExists(): boolean {
+      return this.drawingLayer !== null;
+    }
+
+    ensureColorCard(): void {
+      MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${'ensure color card'}`);
+      if (this.colorCardExists()) {
+        MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${'already exists'}`);
+        return;
+      }
+
+      Core.MessageLog.trace('[ColorMatte] Creating ' + this.colorCardName);
+      Core.log(`[ColorMatte] Creating ${this.colorCardName}`);
+
+      Core.node.add('Top', this.colorCardName, 'COLOR_CARD', 0, 0, 0);
+
+      /*
+       * LayerManager needs to discover the
+       * newly created node.
+       */
+      Core.LayerManager!.updateNodeLayers();
+
+      this.refresh();
+    }
+
+    setColor(frame: number, color: any): void {
+      if (!this.colorCard) {
+        return;
+      }
+
+      this.colorCard.setColor(frame, color);
+    }
+    isValid(): boolean {
+      return this.colorCard !== null && this.drawingLayer !== null;
+    }
+
+    setEnabled(enabled: boolean): void {
+      if (!this.colorCard) {
+        return;
+      }
+
+      this.colorCard.setEnabled(enabled);
     }
 
     toString(): string {
@@ -88,7 +166,6 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
       );
     }
   }
-
   /*
    * Color matte collection
    */
@@ -126,11 +203,23 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
    */
 
   function getCameraOffsetPeg(): CoreInstance<'oPegNode'> | null {
-    return Core.LayerManager!.getNodeLayer('Top/Peg') as CoreInstance<'oPegNode'> | null;
+    var layer = Core.LayerManager!.getNodeLayer('Top/Peg');
+
+    if (layer instanceof Core.oPegNode!) {
+      return layer;
+    }
+
+    return null;
   }
 
   function getCameraPeg(): CoreInstance<'oPegNode'> | null {
-    return Core.LayerManager!.getNodeLayer('Top/Camera-P') as CoreInstance<'oPegNode'> | null;
+    var layer = Core.LayerManager!.getNodeLayer('Top/Camera-P');
+
+    if (layer instanceof Core.oPegNode!) {
+      return layer;
+    }
+
+    return null;
   }
 
   function getBackground() {
@@ -156,36 +245,16 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
    */
 
   function ensurePassColorCardsExist(): void {
-    /*
-     * Your old code checked:
-     *
-     * Top/Passes/Pass_X
-     *
-     * but created the node under Top.
-     *
-     * Since the comment says these should live
-     * under the Passes group, use Top/Passes.
-     */
-    var parentGroup = 'Top';
-
-    for (var i = MIN_PASS; i <= MAX_PASS; i++) {
-      var nodeName = PASS_PREFIX + i;
-
-      var nodePath = parentGroup + '/' + nodeName;
-
-      var existing = Core.LayerManager!.getNodeLayer(nodePath);
-
-      if (!existing) {
-        Core.MessageLog.trace('[ColourMapGenerator] Creating COLOR_CARD: ' + nodeName);
-
-        Core.node.add(parentGroup, nodeName, 'COLOR_CARD', 0, 0, 0);
-      }
+    MessageLog.trace(`[ColorMatteGeneratorKit.ts] >>>> ${colorMattes.length}`);
+    for (var i = 0; i < 16; i++) {
+      colorMattes[i].ensureColorCard();
+      Core.log(
+        `[ColorMatteGeneratorKit.ts] ${'ensure color card ' + colorMattes[i].colorCardName}`,
+      );
     }
-
-    reloadColorMattes();
   }
 
-  /*
+  /*`
    * Node connections
    */
 
@@ -261,17 +330,20 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
 
         cameraOffsetPeg.position.setZ(frame, 0);
 
-        Core.MessageLog.trace(
-          '[ColourMapGenerator] Frame ' +
-            frame +
-            ': originalPos=(' +
-            originalPos.x +
-            ', ' +
-            originalPos.y +
-            ', ' +
-            originalPos.z +
-            ')',
+        Core.log(
+          `[ColourMapGenerator] Frame ${frame}: originalPos=(${originalPos.x}, ${originalPos.y}, ${originalPos.z})`,
         );
+        // Core.MessageLog.trace(
+        //   '[ColourMapGenerator] Frame ' +
+        //     frame +
+        //     ': originalPos=(' +
+        //     originalPos.x +
+        //     ', ' +
+        //     originalPos.y +
+        //     ', ' +
+        //     originalPos.z +
+        //     ')',
+        // );
       }
     } catch (e: any) {
       Core.MessageLog.trace('[ColourMapGenerator] Error updating camera offset: ' + e.toString());
@@ -296,17 +368,15 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
 
       var passColor = passColors[PASS_PREFIX + matte.index];
 
-      Core.MessageLog.trace(
-        '[ColourMapGenerator] Configuring ColorMatte ' + matte.index + ': color ' + passColor,
-      );
-
-      if (matte.colorCard) {
-        MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${'seting color'}`);
-        matte.colorCard.setColor(1, passColor);
+      if (!passColor) {
+        continue;
       }
+
+      var color = Core.ColorObj!.fromColorInput(passColor, 255);
+
+      matte.setColor(1, color);
     }
   }
-
   /*
    * Pass keyframes
    */
@@ -423,24 +493,22 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
       var toggleOn = !isAnyEnabled;
 
       MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${isAnyEnabled}`);
-      Core.MessageLog.trace(
-        toggleOn
-          ? '[ColourMapGenerator] Enabling color map mode...'
-          : '[ColourMapGenerator] Disabling color map mode...',
+
+      Core.log(
+        `[ColorMatteGeneratorKit.ts] ${toggleOn ? 'Enabling color map mode...' : 'Disabling color map mode...'}`,
       );
 
       MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${colorMattes.length}`);
       for (var matteIndex = 0; matteIndex < colorMattes.length; matteIndex++) {
         var matte = colorMattes[matteIndex];
 
-        if (!matte.colorCard || !matte.drawingLayer) {
+        if (!matte.isValid()) {
           MessageLog.trace(
-            `[ColorMatteGeneratorKit.ts] ${'skipping matte ' + matteIndex} ${matte.colorCard} ${matte.drawingLayer}`,
+            `[ColorMatteGeneratorKit.ts] ${'Matte ' + matteIndex + ' is not valid, skipping'} ${matte.toString()}`,
           );
           continue;
         }
-
-        matte.colorCard.setEnabled(toggleOn);
+        matte.setEnabled(toggleOn);
 
         if (toggleOn) {
           MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${'Enabling matte ' + matteIndex} `);
@@ -523,11 +591,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
   function initialize(): void {
     reloadPassConfig();
 
-    /*
-     * Ensure LayerManager is current before
-     * looking up any nodes.
-     */
-    Core.LayerManager!.updateNodeLayers();
+    reloadColorMattes();
 
     ensurePassColorCardsExist();
 

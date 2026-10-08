@@ -684,7 +684,7 @@ function TestCallable() {
 }
 
 function createLayerManager(Core: CoreRuntime) {
-  var nodeLayers: CoreInstance<'oBaseNode'>[] = [];
+  var nodeLayers: NodeLayer[] = [];
 
   function is3DPath(n: any): boolean {
     var attrs = n.getAllAttributes();
@@ -732,7 +732,7 @@ function createLayerManager(Core: CoreRuntime) {
   }
 
   function updateNodeLayers(): void {
-    nodeLayers = [];
+    nodeLayers.length = 0;
 
     var timelineIndices: {
       [nodePath: string]: number;
@@ -814,11 +814,11 @@ function createLayerManager(Core: CoreRuntime) {
     return selected;
   }
 
-  function getNodeLayers() {
+  function getNodeLayers(): NodeLayer[] {
     return nodeLayers;
   }
 
-  function getNodeLayer(index: string | number): CoreInstance<'oBaseNode'> | null {
+  function getNodeLayer(index: string | number): NodeLayer | null {
     for (var i = 0; i < nodeLayers.length; i++) {
       var layer = nodeLayers[i];
 
