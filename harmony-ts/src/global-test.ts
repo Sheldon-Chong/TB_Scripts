@@ -178,6 +178,7 @@ function createCore(): HarmonyCore {
   }
   Runtime.ColorUtils = createColorUtils(Runtime);
 
+  Runtime.ColorObj = Runtime.ColorUtils.ColorObj;
   Runtime.PaletteKit = createPaletteKit(Runtime);
 
   var attrs = createAttributeClasses(Runtime);

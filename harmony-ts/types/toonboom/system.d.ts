@@ -1,5 +1,6 @@
 declare var MessageLog: {
   trace(msg: string): void;
+  clearLog(): void;
 };
 
 declare var specialFolders: {
