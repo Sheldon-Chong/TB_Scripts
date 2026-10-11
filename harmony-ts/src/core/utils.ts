@@ -361,34 +361,34 @@ interface StyledButtonOptions {
   color?: string;
 }
 
-function styledButton(options: StyledButtonOptions) {
-  var label = options.label;
-  var onClick = options.onClick;
-  var width = options.width !== undefined ? options.width : 100;
-  var height = options.height !== undefined ? options.height : 30;
-  var color = options.color !== undefined ? options.color : '#4CAF50';
+// function styledButton(options: StyledButtonOptions) {
+//   var label = options.label;
+//   var onClick = options.onClick;
+//   var width = options.width !== undefined ? options.width : 100;
+//   var height = options.height !== undefined ? options.height : 30;
+//   var color = options.color !== undefined ? options.color : '#4CAF50';
 
-  var button = new QPushButton(label);
-  button.setFixedSize(width, height);
-  button.setStyleSheet(
-    'QPushButton {' +
-      'background-color: ' +
-      color +
-      ';' +
-      'color: white;' +
-      'border: none;' +
-      'border-radius: 4px;' +
-      'padding: 6px 12px;' +
-      'font-size: 14px;' +
-      '}' +
-      'QPushButton:hover {' +
-      'background-color: ' +
-      getHoverColor(color) +
-      '}',
-  );
-  button['clicked()'].connect(onClick);
-  return button;
-}
+//   var button = new QPushButton(label);
+//   button.setFixedSize(width, height);
+//   button.setStyleSheet(
+//     'QPushButton {' +
+//       'background-color: ' +
+//       color +
+//       ';' +
+//       'color: white;' +
+//       'border: none;' +
+//       'border-radius: 4px;' +
+//       'padding: 6px 12px;' +
+//       'font-size: 14px;' +
+//       '}' +
+//       'QPushButton:hover {' +
+//       'background-color: ' +
+//       getHoverColor(color) +
+//       '}',
+//   );
+//   button['clicked()'].connect(onClick);
+//   return button;
+// }
 
 function readXmlFile(xmlContent) {
   // Generic XML string parser: returns a document object of nested element nodes.
@@ -464,30 +464,11 @@ const Utils = {
   openWithDefaultApp,
   openInFileExplorer,
   prompt,
-  styledButton,
+  // styledButton,
   readXmlFile,
   getClipboardText,
   setClipboardText,
 };
-
-function getHoverColor(color) {
-  // Convert hex color to RGB
-  const hex = color.replace('#', '');
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-
-  // Increase brightness by 20%
-  const increaseBrightness = (value) => Math.min(Math.floor(value * 1.2), 255);
-
-  const newR = increaseBrightness(r);
-  const newG = increaseBrightness(g);
-  const newB = increaseBrightness(b);
-
-  // Convert back to hex (compatible with older JS engines)
-  const toHex = (value) => (value < 16 ? '0' : '') + value.toString(16);
-  return '#' + toHex(newR) + toHex(newG) + toHex(newB);
-}
 
 function buttonRow(buttons: QPushButton[], spacing: number = 10) {
   var layout = new QHBoxLayout();
@@ -584,8 +565,64 @@ function prompt(message: string, title?: string, defaultText?: string): string |
   return result;
 }
 
-function createUtils(Core: any) {
+function createUtils($: CoreRuntime) {
   var Utils = {
+    getHoverColor(color) {
+      // Convert hex color to RGB
+      const hex = color.replace('#', '');
+      const g = $.parseInt(hex.substring(2, 4), 16);
+      const r = $.parseInt(hex.substring(0, 2), 16);
+      const b = $.parseInt(hex.substring(4, 6), 16);
+
+      // Increase brightness by 20%
+      const increaseBrightness = (value) => $.Math.min($.Math.floor(value * 1.2), 255);
+
+      const newR = increaseBrightness(r);
+      const newG = increaseBrightness(g);
+      const newB = increaseBrightness(b);
+
+      // Convert back to hex (compatible with older JS engines)
+      const toHex = (value) => (value < 16 ? '0' : '') + value.toString(16);
+      return '#' + toHex(newR) + toHex(newG) + toHex(newB);
+    },
+    styledButton(options: StyledButtonOptions) {
+      var label = options.label;
+      var onClick = options.onClick;
+      var width = options.width !== undefined ? options.width : 100;
+      var height = options.height !== undefined ? options.height : 30;
+      var color = options.color !== undefined ? options.color : '#4CAF50';
+
+      var button = new $.QPushButton(label);
+      button.setFixedSize(width, height);
+      button.setStyleSheet(
+        'QPushButton {' +
+          'background-color: ' +
+          color +
+          ';' +
+          'color: white;' +
+          'border: none;' +
+          'border-radius: 4px;' +
+          'padding: 6px 12px;' +
+          'font-size: 14px;' +
+          '}' +
+          'QPushButton:hover {' +
+          'background-color: ' +
+          $.Utils.getHoverColor(color) +
+          '}',
+      );
+      button['clicked()'].connect(onClick);
+      return button;
+    },
+
+    buttonRow: (buttons: QPushButton[], spacing: number = 10) => {
+      var layout = new $.QHBoxLayout();
+      layout.spacing = spacing;
+      for (var i = 0; i < buttons.length; i++) {
+        layout.addWidget(buttons[i], 0, 0);
+      }
+      return layout;
+    },
+
     /**
      * Custom confirmation dialog — drop-in replacement for the broken MessageBox API.
      * Shows a modal dialog with a message and OK/Cancel (or custom) buttons.
@@ -598,22 +635,22 @@ function createUtils(Core: any) {
      * @returns {boolean} true when the user clicks the confirm button, false otherwise.
      */
     confirm(message: string, title?: string, confirmText?: string, cancelText?: string): boolean {
-      var dialog = new QDialog();
+      var dialog = new $.QDialog();
       dialog.windowTitle = title || 'Confirm';
-      dialog.setWindowFlags(Qt.WindowStaysOnTopHint);
+      dialog.setWindowFlags($.Qt.WindowStaysOnTopHint);
       dialog.minimumWidth = 340;
       dialog.modal = true;
 
-      var mainLayout = new QVBoxLayout(dialog);
+      var mainLayout = new $.QVBoxLayout(dialog);
       mainLayout.setContentsMargins(24, 20, 24, 20);
       mainLayout.spacing = 18;
 
       // --- message label ---
-      var label = new QLabel(message);
+      var label = new $.QLabel(message);
       label.wordWrap = true;
-      label.textFormat = Qt.PlainText;
+      label.textFormat = $.Qt.PlainText;
       label.styleSheet = 'font-size: 12pt; color: #e0e0e0;';
-      mainLayout.addWidget(label, 0, Qt.AlignmentFlag.AlignLeft);
+      mainLayout.addWidget(label, 0, $.Qt.AlignmentFlag.AlignLeft);
 
       var result = false;
 
@@ -622,7 +659,7 @@ function createUtils(Core: any) {
       // Cancel / secondary button
       if (cancelText !== null && cancelText !== '') {
         buttons.push(
-          styledButton({
+          $.Utils.styledButton({
             color: '#555555',
             label: cancelText || 'Cancel',
             onClick: function () {
@@ -635,7 +672,7 @@ function createUtils(Core: any) {
 
       // Confirm / primary button
       buttons.push(
-        styledButton({
+        $.Utils.styledButton({
           color: '#4CAF50',
           label: confirmText || 'OK',
           onClick: function () {
@@ -646,7 +683,7 @@ function createUtils(Core: any) {
       );
 
       // --- button row (right-aligned via stretch) ---
-      var buttonRowLayout = buttonRow(buttons);
+      var buttonRowLayout = $.Utils.buttonRow(buttons);
       buttonRowLayout.addStretch(1);
       mainLayout.addLayout(buttonRowLayout, 0);
       dialog.layout = mainLayout;
@@ -659,11 +696,11 @@ function createUtils(Core: any) {
       return result;
     },
     getClipboardText(): string {
-      return Core.QApplication.clipboard().text();
+      return $.QApplication.clipboard().text();
     },
 
     setClipboardText(text: string): void {
-      Core.QApplication.clipboard().setText(text);
+      $.QApplication.clipboard().setText(text);
     },
 
     toast: function (labelText, position, duration, color, window?) {
@@ -680,7 +717,7 @@ function createUtils(Core: any) {
         '; color: white; border-radius: 10px; padding: 10px; font-family: Arial; font-size: 12pt; }';
       toast.setStyleSheet(styleSheet);
 
-      var layout = new QHBoxLayout(toast);
+      var layout = new $.QHBoxLayout(toast);
       layout.addWidget(new QLabel(labelText), 0, Qt.AlignmentFlag.AlignLeft);
 
       toast.setAttribute(Qt.WA_DeleteOnClose);
@@ -695,7 +732,7 @@ function createUtils(Core: any) {
 
       toast.show();
 
-      var timer = new QTimer();
+      var timer = new $.QTimer();
       timer.singleShot = true;
       timer.timeout.connect(function () {
         toast.close();
@@ -703,15 +740,15 @@ function createUtils(Core: any) {
       timer.start(duration || 2000);
     },
     openInFileExplorertoast: function (path: string) {
-      var process = new Core.QProcess();
+      var process = new $.QProcess();
 
       var args = [];
 
-      if (Core.about.isWindowsArch()) {
+      if ($.about.isWindowsArch()) {
         args = [path.replace(/\//g, '\\')];
 
         process.start('explorer', args);
-      } else if (Core.about.isMacArch()) {
+      } else if ($.about.isMacArch()) {
         if (path.match(/\.[^\\/]+$/)) {
           args = ['-R', path];
         } else {
@@ -719,12 +756,12 @@ function createUtils(Core: any) {
         }
 
         process.start('open', args);
-      } else if (Core.about.isLinuxArch()) {
+      } else if ($.about.isLinuxArch()) {
         args = [path];
 
         process.start('xdg-open', args);
       } else {
-        Core.MessageLog.trace('Unsupported OS for opening file explorer.');
+        $.MessageLog.trace('Unsupported OS for opening file explorer.');
 
         return false;
       }
@@ -732,22 +769,22 @@ function createUtils(Core: any) {
       return true;
     },
     copyFile: function (sourcePath: string, destPath: string) {
-      var sourceFile = new Core.PermanentFile(sourcePath);
+      var sourceFile = new $.PermanentFile(sourcePath);
 
-      var destFile = new Core.PermanentFile(destPath);
+      var destFile = new $.PermanentFile(destPath);
 
       return sourceFile.copy(destFile);
     },
     pathExiststoast: function (path: string) {
-      var file = new Core.PermanentFile(path);
+      var file = new $.PermanentFile(path);
 
       return file.exists();
     },
     getCurrentXstagetoast: function () {
-      return Core.scene.currentProjectPath() + '/' + Core.scene.currentVersionName() + '.xstage';
+      return $.scene.currentProjectPath() + '/' + $.scene.currentVersionName() + '.xstage';
     },
     stringifytoast: function (obj: any) {
-      Core.MessageLog.trace(JSON.stringify(obj, null, 2));
+      $.MessageLog.trace(JSON.stringify(obj, null, 2));
     },
     hasKeystoast: function (subject: any, requiredKeys: string[]) {
       return requiredKeys.every(function (key) {

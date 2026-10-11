@@ -28,8 +28,74 @@ var __TB_DEV__ = true;
 var __tbGlobal = Function('return this;')();
 var __tbShared = __tbGlobal.__proto__;
 
+function reportHarmonyError(context: string, error: any): void {
+  MessageLog.trace('');
+  MessageLog.trace('========== HARMONY ERROR ==========');
+  MessageLog.trace('[Context] ' + context);
+
+  var message = error && error.message ? error.message : String(error);
+
+  MessageLog.trace('[Message] ' + message);
+
+  if (error && error.fileName) {
+    MessageLog.trace('[File] ' + error.fileName);
+  }
+
+  if (error && error.lineNumber !== undefined) {
+    MessageLog.trace('[Line] ' + error.lineNumber);
+  }
+
+  // Stack traces vary between JavaScript engines.
+  var stack = error && error.stack;
+
+  if (typeof stack === 'string') {
+    MessageLog.trace('[Stack] ' + stack);
+  } else if (stack && typeof stack.length === 'number') {
+    for (var i = 0; i < stack.length; i++) {
+      var entry = stack[i];
+
+      if (typeof entry === 'string') {
+        MessageLog.trace('[Stack ' + i + '] ' + entry);
+      } else {
+        MessageLog.trace(
+          '[Stack ' +
+            i +
+            '] ' +
+            (entry.functionName || '<anonymous>') +
+            ' | ' +
+            (entry.fileName || 'unknown') +
+            ':' +
+            (entry.lineNumber !== undefined ? entry.lineNumber : '?'),
+        );
+      }
+    }
+  }
+
+  // Available in some QtScript implementations.
+  if (error && typeof error.backtrace === 'function') {
+    try {
+      var frames = error.backtrace();
+
+      for (var j = 0; j < frames.length; j++) {
+        MessageLog.trace('[Backtrace ' + j + '] ' + frames[j]);
+      }
+    } catch (ignored) {
+      // Backtrace is optional.
+    }
+  }
+
+  MessageLog.trace('===================================');
+}
+
 if (!__tbShared.__TBTest) {
+  MessageLog.trace('[Core INIT] Creating Core');
+
   __tbShared.__TBTest = createCore();
+
+  __tbShared.__TBContextID = 'CTX_' + new Date().getTime();
+
+  MessageLog.trace('[Core INIT] Created successfully');
+  MessageLog.trace('[Core INIT] Context: ' + __tbShared.__TBContextID);
 }
 
 function reloadDevelopmentCore() {
@@ -131,6 +197,7 @@ interface CoreModules {
   oDrawingNode: ReturnType<typeof createDrawingNodeClass>;
   oColorCardNode: ReturnType<typeof createColorCardNodeClass>;
   oPegNode: ReturnType<typeof createPegNodeClass>;
+  oWriteNode: ReturnType<typeof createWriteNodeClass>;
   DrawingDataKit: DrawingDataKitType;
   TimelineLayer: typeof TimelineLayer;
   LayerManager: ReturnType<typeof createLayerManager>;
@@ -148,7 +215,7 @@ interface CoreModules {
   oSelection: ReturnType<typeof createSelectionClass>;
   log: ReturnType<typeof createLogger>;
   Timer: ReturnType<typeof createTimerKit>;
-
+  QPushButton;
   PaletteKit: ReturnType<typeof createPaletteKit>;
   reloadDevelopmentCore: typeof reloadDevelopmentCore;
 }
@@ -190,12 +257,18 @@ function createCoreBase(H?: any) {
     QFile: H.QFile as typeof QFile,
     QWidget: H.QWidget as typeof QWidget,
     Widgets: WidgetKit,
+    QDialog: H.QDialog as typeof QDialog,
     Array: Array,
+    QVBoxLayout: H.QVBoxLayout as typeof QVBoxLayout,
+    QLabel: H.QLabel as typeof QLabel,
+    QPushButton: H.QPushButton as typeof QPushButton,
     Object: Object,
     JSON: JSON,
     Math: Math,
     QTimer: QTimer,
     Maths: Maths,
+    parseInt: parseInt,
+    QHBoxLayout: H.QHBoxLayout as typeof QHBoxLayout,
     getAllNodesInScene: getAllNodesInScene,
     Action: Action,
     PaletteManager: H.PaletteManager as typeof PaletteManager,
@@ -207,105 +280,166 @@ function createCoreBase(H?: any) {
 }
 
 function createCore(base?: CoreBase): HarmonyCore {
+  var shared = Function('return this;')().__proto__;
+
+  function setStage(name: string): void {
+    shared.__TBBuildStage = name;
+    MessageLog.trace('[Core BUILD] ' + name);
+  }
+
+  setStage('createCoreBase');
   var Runtime = (base || createCoreBase()) as CoreRuntime;
 
   try {
+    setStage('reloadDevelopmentCore assignment');
     Runtime.reloadDevelopmentCore = reloadDevelopmentCore;
+
+    setStage('createLogger');
+    Runtime.log = createLogger(Runtime);
+
+    setStage('createTimerKit');
+    Runtime.Timer = createTimerKit(Runtime);
+
+    setStage('createColorUtils');
+    Runtime.ColorUtils = createColorUtils(Runtime);
+
+    setStage('ColorObj assignment');
+    Runtime.ColorObj = Runtime.ColorUtils.ColorObj;
+
+    setStage('createPaletteKit');
+    Runtime.PaletteKit = createPaletteKit(Runtime);
+
+    setStage('createAttributeClasses (first)');
+    var attrs = createAttributeClasses(Runtime);
+
+    setStage('attribute class assignments');
+    Runtime.oAttr = attrs.oAttr;
+    Runtime.oIntAttr = attrs.oIntAttr;
+    Runtime.oDoubleAttr = attrs.oDoubleAttr;
+    Runtime.oBoolAttr = attrs.oBoolAttr;
+    Runtime.oTextAttr = attrs.oTextAttr;
+    Runtime.oEnumAttr = attrs.oEnumAttr;
+    Runtime.oDrawingAttr = attrs.oDrawingAttr;
+    Runtime.oAliasAttr = attrs.oAliasAttr;
+
+    setStage('createAttr3DClass');
+    Runtime.oAttr3D = createAttr3DClass(Runtime);
+
+    setStage('createPosition3DClass');
+    Runtime.oPosition3D = createPosition3DClass(Runtime);
+
+    setStage('createScale3DClass');
+    Runtime.oScale3D = createScale3DClass(Runtime);
+
+    setStage('createRotation3DClass');
+    Runtime.oRotation3D = createRotation3DClass(Runtime);
+
+    setStage('createDrawingClass');
+    Runtime.oDrawing = createDrawingClass(Runtime);
+
+    setStage('createVectors');
+    Runtime.Vectors = createVectors(Runtime);
+
+    setStage('Vec2 assignment');
+    Runtime.Vec2 = Runtime.Vectors.Vec2;
+
+    setStage('Vec3 assignment');
+    Runtime.Vec3 = Runtime.Vectors.Vec3;
+
+    setStage('createShapes');
+    Runtime.Shapes = createShapes(Runtime);
+
+    setStage('createAttributeClasses (second)');
+    attrs = createAttributeClasses(Runtime);
+
+    setStage('createUtils');
+    Runtime.Utils = createUtils(Runtime);
+
+    setStage('createFileUtilsKit');
+    Runtime.FileUtils = createFileUtilsKit(Runtime);
+
+    setStage('createElementClass');
+    Runtime.oElement = createElementClass(Runtime);
+
+    setStage('createColumnClass');
+    Runtime.oColumn = createColumnClass(Runtime);
+
+    setStage('createPathColumn3DClass');
+    Runtime.oPathColumn3D = createPathColumn3DClass(Runtime);
+
+    setStage('createDrawingElementColumnClass');
+    Runtime.oDrawingElementColumn = createDrawingElementColumnClass(Runtime);
+
+    setStage('createColumnGroupingClass');
+    Runtime.columnGrouping = createColumnGroupingClass();
+
+    setStage('createColumnGroupingColorClass');
+    Runtime.columnGroupingColor = createColumnGroupingColorClass(Runtime);
+
+    setStage('createBaseNodeClass');
+    Runtime.oBaseNode = createBaseNodeClass(Runtime);
+
+    setStage('createWriteNodeClass');
+    Runtime.oWriteNode = createWriteNodeClass(Runtime);
+
+    setStage('createDrawingNodeClass');
+    Runtime.oDrawingNode = createDrawingNodeClass(Runtime);
+
+    setStage('createColorCardNodeClass');
+    Runtime.oColorCardNode = createColorCardNodeClass(Runtime);
+
+    setStage('createPegNodeClass');
+    Runtime.oPegNode = createPegNodeClass(Runtime);
+
+    setStage('getDrawingDataKit');
+    Runtime.DrawingDataKit = getDrawingDataKit(Runtime);
+
+    setStage('TimelineLayer assignment');
+    Runtime.TimelineLayer = TimelineLayer;
+
+    setStage('createLayerManager');
+    Runtime.LayerManager = createLayerManager(Runtime);
+
+    setStage('LayerManager.updateNodeLayers');
+    Runtime.LayerManager.updateNodeLayers();
+
+    setStage('createSelectionClass');
+    Runtime.oSelection = createSelectionClass(Runtime);
+
+    setStage('createTimelineKit');
+    Runtime.TimelineKit = createTimelineKit(Runtime);
+
+    setStage('createSceneKit');
+    Runtime.SceneKit = createSceneKit(Runtime);
+
+    setStage('createToolbarKit');
+    Runtime.Toolbar = createToolbarKit(Runtime);
+
+    setStage('COMPLETE');
+    MessageLog.trace('[Core BUILD] All factories initialized successfully');
+
+    return Runtime as HarmonyCore;
   } catch (error) {
-    MessageLog.trace(`[global-test.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
+    reportHarmonyError('createCore > ' + shared.__TBBuildStage, error);
+
+    throw error;
   }
-  Runtime.log = createLogger(Runtime);
-
-  Runtime.Timer = createTimerKit(Runtime);
-  Runtime.ColorUtils = createColorUtils(Runtime);
-
-  Runtime.ColorObj = Runtime.ColorUtils.ColorObj;
-  Runtime.PaletteKit = createPaletteKit(Runtime);
-
-  var attrs = createAttributeClasses(Runtime);
-  Runtime.oAttr = attrs.oAttr;
-  Runtime.oIntAttr = attrs.oIntAttr;
-  Runtime.oDoubleAttr = attrs.oDoubleAttr;
-  Runtime.oBoolAttr = attrs.oBoolAttr;
-  Runtime.oTextAttr = attrs.oTextAttr;
-  Runtime.oEnumAttr = attrs.oEnumAttr;
-  Runtime.oDrawingAttr = attrs.oDrawingAttr;
-  Runtime.oAliasAttr = attrs.oAliasAttr;
-  Runtime.oAttr3D = createAttr3DClass(Runtime);
-  Runtime.oPosition3D = createPosition3DClass(Runtime);
-  Runtime.oScale3D = createScale3DClass(Runtime);
-  Runtime.oRotation3D = createRotation3DClass(Runtime);
-
-  Runtime.oDrawing = createDrawingClass(Runtime);
-
-  Runtime.Vectors = createVectors(Runtime);
-
-  Runtime.Vec2 = Runtime.Vectors.Vec2;
-
-  Runtime.Vec3 = Runtime.Vectors.Vec3;
-
-  /*
-   * Shapes depends on Vectors.
-   */
-  Runtime.Shapes = createShapes(Runtime);
-
-  /*
-   * Attributes
-   */
-  var attrs = createAttributeClasses(Runtime);
-  /*
-   * Services
-   */
-  Runtime.Utils = createUtils(Runtime);
-  Runtime.FileUtils = createFileUtilsKit(Runtime);
-  /*
-   * Element
-   */
-  Runtime.oElement = createElementClass(Runtime);
-  /*
-   * Columns
-   */
-  Runtime.oColumn = createColumnClass(Runtime);
-  Runtime.oPathColumn3D = createPathColumn3DClass(Runtime);
-  Runtime.oDrawingElementColumn = createDrawingElementColumnClass(Runtime);
-  Runtime.columnGrouping = createColumnGroupingClass();
-  Runtime.columnGroupingColor = createColumnGroupingColorClass(Runtime);
-  /*
-   * Node classes
-   */
-  Runtime.oBaseNode = createBaseNodeClass(Runtime);
-  Runtime.oDrawingNode = createDrawingNodeClass(Runtime);
-  Runtime.oColorCardNode = createColorCardNodeClass(Runtime);
-  Runtime.oPegNode = createPegNodeClass(Runtime);
-  Runtime.DrawingDataKit = getDrawingDataKit(Runtime);
-  /*
-   * Timeline class
-   */
-  Runtime.TimelineLayer = TimelineLayer;
-  /*
-   * Layer manager
-   *
-   * Create, attach, then initialize.
-   */
-  Runtime.LayerManager = createLayerManager(Runtime);
-  Runtime.LayerManager.updateNodeLayers();
-  /*
-   * Higher-level modules
-   */
-  Runtime.oSelection = createSelectionClass(Runtime);
-  Runtime.TimelineKit = createTimelineKit(Runtime);
-  Runtime.SceneKit = createSceneKit(Runtime);
-  Runtime.Toolbar = createToolbarKit(Runtime);
-  /*
-   * We know construction is complete here.
-   */
-  return Runtime as HarmonyCore;
 }
+
 function getCore(): HarmonyCore {
-  var globalObject = Function('return this;')();
-  return globalObject.__proto__.__TBTest as HarmonyCore;
-}
+  var shared = Function('return this;')().__proto__;
 
+  if (!shared.__TBTest) {
+    throw new Error(
+      '[getCore] Core is unavailable. ' +
+        'Last initialization stage: ' +
+        (shared.__TBBuildStage || 'unknown') +
+        '. Check earlier Core initialization errors.',
+    );
+  }
+
+  return shared.__TBTest as HarmonyCore;
+}
 type CoreInstance<K extends keyof HarmonyCore> = HarmonyCore[K] extends new (
   ...args: any[]
 ) => infer T

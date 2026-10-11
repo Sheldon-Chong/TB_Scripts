@@ -684,7 +684,7 @@ function TestCallable() {
 }
 
 function createLayerManager(Core: CoreRuntime) {
-  var nodeLayers: NodeLayer[] = [];
+  var nodeLayers: CoreInstance<'oBaseNode'>[] = [];
 
   function is3DPath(n: any): boolean {
     var attrs = n.getAllAttributes();
@@ -782,6 +782,8 @@ function createLayerManager(Core: CoreRuntime) {
         nodeLayers.push(
           new Core.oColorCardNode!(nodeLayers.length, timelineIndex, nodePath, nodeName),
         );
+      } else if (nodeType === 'WRITE') {
+        nodeLayers.push(new Core.oWriteNode!(nodeLayers.length, timelineIndex, nodePath, nodeName));
       } else if (nodeType === 'PEG') {
         nodeLayers.push(new Core.oPegNode!(nodeLayers.length, timelineIndex, nodePath, nodeName));
       } else if (nodeType === 'READ') {
@@ -814,7 +816,7 @@ function createLayerManager(Core: CoreRuntime) {
     return selected;
   }
 
-  function getNodeLayers(): NodeLayer[] {
+  function getNodeLayers(): CoreInstance<'oBaseNode'>[] {
     return nodeLayers;
   }
 

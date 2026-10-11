@@ -2,14 +2,14 @@ include('global-test.js');
 
 include(specialFolders.userScripts + '/FrameSnapping.js');
 include(specialFolders.userScripts + '/KeyframeGenerator.js');
-include(specialFolders.userScripts + '/Tools/CameraSwipeTool.js');
-include(specialFolders.userScripts + '/Tools/ApplyShakeTool.js');
-include(specialFolders.userScripts + '/Tools/ApplyZoomTool.js');
+include(specialFolders.userScripts + '/toolbars/animation/tools/CameraSwipeTool.js');
+include(specialFolders.userScripts + '/toolbars/animation/tools/ApplyShakeTool.js');
+include(specialFolders.userScripts + '/toolbars/animation/tools/ApplyZoomTool.js');
 include(specialFolders.userScripts + '/KeyframeProfiles.js');
 
 include(specialFolders.userScripts + '/ToolsKit.js');
 
-function registerAllTools(): void {
+function registerAnimationToolbar(): void {
   var Core = getCore();
 
   /*

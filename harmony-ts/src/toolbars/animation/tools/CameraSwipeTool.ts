@@ -139,6 +139,7 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
       }
 
       try {
+        Core.log('tests?');
         var overlayPaths: any[] = [];
 
         var start = ctx.origin;
@@ -156,21 +157,21 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
         var pxPerFieldUnit = rawFieldDist > 0.001 ? screenDist / rawFieldDist : 1;
 
         if (ctx.shiftPressed) {
-          var angle = Math.atan2(rawDiff.y, rawDiff.x);
+          var angle = Core.Math.atan2(rawDiff.y, rawDiff.x);
 
           var dist = rawDiff.length();
 
-          var diag = Math.atan2(9, 16);
+          var diag = Core.Math.atan2(9, 16);
 
           var snapAngles = [
             0,
             diag,
-            Math.PI / 2,
-            Math.PI - diag,
-            Math.PI,
-            Math.PI + diag,
-            (3 * Math.PI) / 2,
-            2 * Math.PI - diag,
+            Core.Math.PI / 2,
+            Core.Math.PI - diag,
+            Core.Math.PI,
+            Core.Math.PI + diag,
+            (3 * Core.Math.PI) / 2,
+            2 * Core.Math.PI - diag,
           ];
 
           var best = snapAngles[0];
@@ -178,15 +179,15 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
           var bestDiff = Infinity;
 
           for (var i = 0; i < snapAngles.length; i++) {
-            var d = Math.abs(angle - snapAngles[i]);
+            var d = Core.Math.abs(angle - snapAngles[i]);
 
-            var wrapD = Math.abs(angle - (snapAngles[i] - 2 * Math.PI));
+            var wrapD = Core.Math.abs(angle - (snapAngles[i] - 2 * Core.Math.PI));
 
             if (wrapD < d) {
               d = wrapD;
             }
 
-            wrapD = Math.abs(angle - (snapAngles[i] + 2 * Math.PI));
+            wrapD = Core.Math.abs(angle - (snapAngles[i] + 2 * Core.Math.PI));
 
             if (wrapD < d) {
               d = wrapD;
@@ -199,7 +200,9 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
             }
           }
 
-          end = new Core.Vec2(start).add(new Core.Vec2(Math.cos(best), Math.sin(best)).scale(dist));
+          end = new Core.Vec2(start).add(
+            new Core.Vec2(Core.Math.cos(best), Core.Math.sin(best)).scale(dist),
+          );
         }
 
         var fieldVec = new Core.Vec2(end).subtract(start);
@@ -266,7 +269,7 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
 
         ctx.lastDistance = fieldDist;
 
-        ctx.lastAngle = Math.atan2(fieldVec.y, fieldVec.x);
+        ctx.lastAngle = Core.Math.atan2(fieldVec.y, fieldVec.x);
 
         ctx.overlay = {
           paths: overlayPaths,
@@ -292,7 +295,7 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
 
         var angleRad = ctx.lastAngle || 0;
 
-        var angleDeg = Math.round((angleRad * 180) / Math.PI);
+        var angleDeg = Core.Math.round((angleRad * 180) / Core.Math.PI);
 
         if (dist > 2) {
           var dirVec = new Core.Vec2(end).subtract(start).normalized();
@@ -333,7 +336,7 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
 
             var msg =
               'Swipe: ' +
-              Math.round(dist) +
+              Core.Math.round(dist) +
               'px @ ' +
               angleDeg +
               '\u00B0 | mag: ' +

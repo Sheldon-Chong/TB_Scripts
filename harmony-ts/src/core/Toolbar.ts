@@ -4,7 +4,7 @@ interface RegisterActionOptions {
 
   callback?: (action?: any) => void;
   handler?: string;
-
+  reloadGroup?: string;
   shortcut?: string;
   category?: string;
   checkable?: boolean;
@@ -85,38 +85,30 @@ function createToolbarKit(Core: any) {
             var LiveCore = Core;
 
             if (Core.DEV) {
-              Core.MessageLog.trace('[Toolbar] Starting Core reload...');
+              var Runtime: any = Core;
 
-              LiveCore = Core.reloadDevelopmentCore();
+              var reloadGroup = options.reloadGroup;
 
-              Core.MessageLog.trace('[Toolbar] Core reload finished');
+              var reloaders = Runtime.developmentReloaders;
+
+              if (reloadGroup && reloaders && typeof reloaders[reloadGroup] === 'function') {
+                LiveCore = reloaders[reloadGroup]();
+              } else if (!reloadGroup && typeof Core.reloadDevelopmentCore === 'function') {
+                /*
+                 * Temporary compatibility for buttons
+                 * still using the original reloader.
+                 */
+                LiveCore = Core.reloadDevelopmentCore();
+              }
             }
 
-            if (action.checkable) {
-              action.isChecked = !action.isChecked;
-            }
-
+            /*
+             * Use your existing locally captured
+             * callCoreHandler implementation.
+             */
             if (options.handler) {
-              Core.MessageLog.trace('[Toolbar] Resolving handler: ' + options.handler);
-
               ToolbarKit.callCoreHandler(LiveCore, options.handler, action);
-
-              Core.MessageLog.trace('[Toolbar] Handler completed');
-
-              return;
             }
-
-            if (options.callback) {
-              Core.MessageLog.trace('[Toolbar] Running legacy callback');
-
-              options.callback(action);
-
-              Core.MessageLog.trace('[Toolbar] Callback completed');
-
-              return;
-            }
-
-            Core.MessageLog.trace('[Toolbar] WARNING: No handler or callback supplied');
           } catch (error) {
             Core.MessageLog.trace('[Toolbar] ERROR: ' + error);
 

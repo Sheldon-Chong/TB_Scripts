@@ -47,168 +47,13 @@ const AttributeType = {
   DRAWING: 'DRAWING',
 } as const;
 
-/* ===================================================================
-   Base attribute wrapper
-   =================================================================== */
+// /** DRAWING attribute — text-based (exposure name).  May be upgraded
+//  *  later to return an objDrawing instance. */
+// class oDrawingAttr extends oTextAttr {}
 
-/**
- * Typed binding to a single Harmony Attribute identified by node path
- * + keyword.  Subclasses override get/getAt/set/setAt to call the
- * correct type-specific Harmony method (intValue, boolValue, …).
- */
-abstract class oAttr<T> {
-  readonly nodePath: string;
-  readonly keyword: string;
+// /** ALIAS attribute — text-based string alias. */
+// class oAliasAttr extends oTextAttr {}
 
-  constructor(nodePath: string, keyword: string) {
-    this.nodePath = nodePath;
-    this.keyword = keyword;
-  }
-
-  /** Raw Harmony Attribute at the current frame. */
-  protected _attr(): Attribute {
-    return node.getAttr(this.nodePath, frame.current(), this.keyword);
-  }
-
-  /** Raw Harmony Attribute at a specific frame. */
-  protected _attrAt(f: number): Attribute {
-    return node.getAttr(this.nodePath, f, this.keyword);
-  }
-
-  /** Like _attr() but throws a descriptive error when the attribute
-   *  doesn't exist or returns null. */
-  protected _requireAttr(): Attribute {
-    const attr = this._attr();
-    if (!attr) {
-      throw new Error(
-        "Attribute '" + this.keyword + "' not found on node '" + this.nodePath + "'.",
-      );
-    }
-    return attr;
-  }
-
-  /** Like _attrAt() but throws a descriptive error when null. */
-  protected _requireAttrAt(f: number): Attribute {
-    const attr = this._attrAt(f);
-    if (!attr) {
-      throw new Error(
-        "Attribute '" +
-          this.keyword +
-          "' not found on node '" +
-          this.nodePath +
-          "' at frame " +
-          f +
-          '.',
-      );
-    }
-    return attr;
-  }
-
-  abstract get(): T;
-  abstract getAt(frame: number): T;
-  abstract set(value: T): void;
-  abstract setAt(value: T, frame: number): void;
-}
-
-/* ===================================================================
-   Scalar attribute wrappers
-   =================================================================== */
-
-/** INT attribute → number  (Harmony intValue / intValueAt) */
-class oIntAttr extends oAttr<number> {
-  get(): number {
-    return this._requireAttr().intValue();
-  }
-  getAt(frame: number): number {
-    return this._requireAttrAt(frame).intValue();
-  }
-  set(value: number): void {
-    this._requireAttr().setValue(value);
-  }
-  setAt(value: number, frame: number): void {
-    this._requireAttrAt(frame).setValueAt(value, frame);
-  }
-}
-
-/** DOUBLE attribute → number  (Harmony doubleValue / doubleValueAt) */
-class oDoubleAttr extends oAttr<number> {
-  get(): number {
-    return this._requireAttr().doubleValue();
-  }
-  getAt(frame: number): number {
-    return this._requireAttrAt(frame).doubleValue();
-  }
-  set(value: number): void {
-    this._requireAttr().setValue(value);
-  }
-  setAt(value: number, frame: number): void {
-    this._requireAttrAt(frame).setValueAt(value, frame);
-  }
-}
-
-/** BOOL attribute → boolean  (Harmony boolValue / boolValueAt) */
-class oBoolAttr extends oAttr<boolean> {
-  get(): boolean {
-    return this._requireAttr().boolValue();
-  }
-  getAt(frame: number): boolean {
-    return this._requireAttrAt(frame).boolValue();
-  }
-  set(value: boolean): void {
-    this._requireAttr().setValue(value);
-  }
-  setAt(value: boolean, frame: number): void {
-    this._requireAttrAt(frame).setValueAt(value, frame);
-  }
-}
-
-/** Text-based attribute (ALIAS, DRAWING, or GENERIC_ENUM without enum
- *  helpers).  Calls Harmony textValue / textValueAt / setValue(String). */
-class oTextAttr extends oAttr<string> {
-  get(): string {
-    return this._requireAttr().textValue();
-  }
-  getAt(frame: number): string {
-    return this._requireAttrAt(frame).textValue();
-  }
-  set(value: string): void {
-    this._requireAttr().setValue(value);
-  }
-  setAt(value: string, frame: number): void {
-    this._requireAttrAt(frame).setValueAt(value, frame);
-  }
-}
-
-/** GENERIC_ENUM attribute — text-based with possibleTextValues() support. */
-class oEnumAttr extends oTextAttr {
-  /** Return the list of valid enum entries for this attribute. */
-  possibleValues(): string[] {
-    return this._requireAttr().possibleTextValues();
-  }
-}
-
-/** DRAWING attribute — text-based (exposure name).  May be upgraded
- *  later to return an objDrawing instance. */
-class oDrawingAttr extends oTextAttr {}
-
-/** ALIAS attribute — text-based string alias. */
-class oAliasAttr extends oTextAttr {}
-
-/* ===================================================================
-   3-D composite attribute (POSITION_3D / SCALE_3D / ROTATION_3D)
-   =================================================================== */
-
-/**
- * Base for any 3-D attribute whose sub-attributes are .x, .y, .z.
- *
- * At construction time the parent attribute is fetched via
- * `node.getAttr(nodePath, frame.current(), keyword)` and its
- * `getSubAttributes()` are used to discover the actual per-axis
- * full keywords (Harmony keywords are NOT standardised).
- *
- * Per-axis access delegates to `oDoubleAttr` children; convenience
- * `get()` uses the parent's `pos3dValue()` for reliability.
- */
 class oAttr3D {
   /** Per-axis attribute wrappers.  GET works (reads via doubleValue);
    *  SET is NOT reliable on sub-attributes — use oAttr3D.set() or
@@ -568,17 +413,17 @@ function createAttr3DClass(Core: CoreRuntime) {
           Core.log('Y after setValue:', subs[i].doubleValue());
         } else if (kw === 'Z') {
           subs[i].setValue(v.z);
-          MessageLog.trace(`[Attributes.ts] setting Z to ${v.z}`);
+          Core.log(`[Attributes.ts] setting Z to ${v.z}`);
         }
       }
-      MessageLog.trace(`[Attributes.ts] ${'done'}`);
+      Core.log(`[Attributes.ts] ${'done'}`);
     }
 
     setX(value: number, atFrame?: number): void {
       try {
         this._setAxis('x', value, atFrame !== undefined ? atFrame : Core.frame.current());
       } catch (e) {
-        Core.MessageLog.trace(
+        Core.log(
           "Error setting '" + this._keyword + "' X axis on node '" + this._nodePath + "': " + e,
         );
       }
@@ -594,41 +439,6 @@ function createAttr3DClass(Core: CoreRuntime) {
   }
 
   return Attr3D;
-}
-
-/**
- * POSITION_3D attribute.
- *
- * Default keyword: `"POSITION"` (standard peg/group node).
- * Pass a custom keyword for non-standard nodes, e.g.:
- *   pivot = new oPosition3D(this.nodePath, 'PIVOT');
- */
-class oPosition3D extends oAttr3D {
-  constructor(nodePath: string, keyword: string = 'POSITION') {
-    super(nodePath, keyword);
-  }
-}
-
-/**
- * SCALE_3D attribute.
- *
- * Default keyword: `"SCALE"`.
- */
-class oScale3D extends oAttr3D {
-  constructor(nodePath: string, keyword: string = 'SCALE') {
-    super(nodePath, keyword);
-  }
-}
-
-/**
- * ROTATION_3D attribute (Euler angles).
- *
- * Default keyword: `"ROTATION"`.
- */
-class oRotation3D extends oAttr3D {
-  constructor(nodePath: string, keyword: string = 'ROTATION') {
-    super(nodePath, keyword);
-  }
 }
 
 type Attr3DConstructor = new (nodePath: string, keyword: string) => any;
@@ -668,55 +478,6 @@ function createRotation3DClass(Core: any) {
 
   return Rotation3D;
 }
-
-/* ===================================================================
-   Factory helpers for oNodeLayer subclasses
-   =================================================================== */
-
-/**
- * Mixin-style helpers that can be used inside an oNodeLayer subclass
- * constructor to concisely declare attributes.
- *
- *   class oPegNode extends oNodeLayer {
- *     position = Attrs.position3D(this);
- *     scale    = Attrs.scale3D(this);
- *   }
- */
-const Attrs = {
-  /** Shorthand: `Attrs.int(node, 'opacity')` */
-  int(node: oNodeLayer, keyword: string): oIntAttr {
-    return new oIntAttr(node.nodePath, keyword);
-  },
-  /** Shorthand: `Attrs.double(node, 'opacity')` */
-  double(node: oNodeLayer, keyword: string): oDoubleAttr {
-    return new oDoubleAttr(node.nodePath, keyword);
-  },
-  /** Shorthand: `Attrs.bool(node, 'visible')` */
-  bool(node: oNodeLayer, keyword: string): oBoolAttr {
-    return new oBoolAttr(node.nodePath, keyword);
-  },
-  /** Shorthand: `Attrs.text(node, 'alias')` */
-  text(node: oNodeLayer, keyword: string): oTextAttr {
-    return new oTextAttr(node.nodePath, keyword);
-  },
-  /** Shorthand: `Attrs.enum_(node, 'blendMode')` */
-  enum_(node: oNodeLayer, keyword: string): oEnumAttr {
-    return new oEnumAttr(node.nodePath, keyword);
-  },
-
-  /** Shorthand: `Attrs.position3D(node)` or `Attrs.position3D(node, 'PIVOT')` */
-  position3D(node: oNodeLayer, keyword?: string): oPosition3D {
-    return new oPosition3D(node.nodePath, keyword);
-  },
-  /** Shorthand: `Attrs.scale3D(node)` or `Attrs.scale3D(node, 'MY_SCALE')` */
-  scale3D(node: oNodeLayer, keyword?: string): oScale3D {
-    return new oScale3D(node.nodePath, keyword);
-  },
-  /** Shorthand: `Attrs.rotation3D(node)` or `Attrs.rotation3D(node, 'MY_ROT')` */
-  rotation3D(node: oNodeLayer, keyword?: string): oRotation3D {
-    return new oRotation3D(node.nodePath, keyword);
-  },
-};
 
 function createAttributeClasses(Core: any) {
   abstract class Attr<T> {
@@ -889,3 +650,15 @@ function createAttributeClasses(Core: any) {
     oAliasAttr: AliasAttr,
   };
 }
+
+type AttributeClasses = ReturnType<typeof createAttributeClasses>;
+
+type BaseAttribute = InstanceType<AttributeClasses['oAttr']>;
+
+type IntAttribute = InstanceType<AttributeClasses['oIntAttr']>;
+type DoubleAttribute = InstanceType<AttributeClasses['oDoubleAttr']>;
+type BoolAttribute = InstanceType<AttributeClasses['oBoolAttr']>;
+type TextAttribute = InstanceType<AttributeClasses['oTextAttr']>;
+type EnumAttribute = InstanceType<AttributeClasses['oEnumAttr']>;
+type DrawingAttribute = InstanceType<AttributeClasses['oDrawingAttr']>;
+type AliasAttribute = InstanceType<AttributeClasses['oAliasAttr']>;

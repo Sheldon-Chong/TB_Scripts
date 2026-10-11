@@ -6,6 +6,7 @@ include(specialFolders.userScripts + '/core/nodes/BaseNode.js');
 include(specialFolders.userScripts + '/core/nodes/DrawingNode.js');
 include(specialFolders.userScripts + '/core/nodes/ColorCardNode.js');
 include(specialFolders.userScripts + '/core/nodes/PegNode.js');
+include(specialFolders.userScripts + '/core/nodes/WriteNode.js');
 
 /* ====================== COLUMN ====================== */
 

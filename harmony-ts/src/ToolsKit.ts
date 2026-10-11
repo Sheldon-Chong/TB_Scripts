@@ -149,6 +149,7 @@ interface ToolsKitDependencies {
         label: string,
       ): void {
         $.MessageLog.trace('applying');
+        $.MessageLog.trace('applying2');
         $.scene.beginUndoRedoAccum('Apply ' + label + ': ' + presetName);
         try {
           var path = `${$.specialFolders.userScripts}/keyframe_presets/${subFolder}${presetName}.json`;
