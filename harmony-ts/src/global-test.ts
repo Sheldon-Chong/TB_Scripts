@@ -22,6 +22,9 @@ include(specialFolders.userScripts + '/core/colors/Palette.js');
 include(specialFolders.userScripts + '/core/colors/GlobalPaletteManager.js');
 include(specialFolders.userScripts + '/core/colors/PalettesSingleton.js');
 include(specialFolders.userScripts + '/core/colors/Palettes.js');
+include(specialFolders.userScripts + '/core/Timer.js');
+
+var __TB_DEV__ = true;
 var __tbGlobal = Function('return this;')();
 var __tbShared = __tbGlobal.__proto__;
 
@@ -29,32 +32,64 @@ if (!__tbShared.__TBTest) {
   __tbShared.__TBTest = createCore();
 }
 
+function reloadDevelopmentCore() {
+  include(specialFolders.userScripts + '/core/Shapes.js');
+  include(specialFolders.userScripts + '/core/Maths.js');
+  include(specialFolders.userScripts + '/core/Vectors.js');
+  include(specialFolders.userScripts + '/core/SceneKit.js');
+  include(specialFolders.userScripts + '/core/TimelineKit.js');
+  include(specialFolders.userScripts + '/core/Drawing.js');
+  include(specialFolders.userScripts + '/core/Element.js');
+  include(specialFolders.userScripts + '/core/Layers.js');
+  include(specialFolders.userScripts + '/core/DrawingDataKit.js');
+  include(specialFolders.userScripts + '/core/ColumnGroupings.js');
+  include(specialFolders.userScripts + '/core/Toolbar.js');
+  include(specialFolders.userScripts + '/core/FileUtils.js');
+  include(specialFolders.userScripts + '/core/Attributes.js');
+  include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
+  include(specialFolders.userScripts + '/core/Logging.js');
+  include(specialFolders.userScripts + '/core/columns/BaseColumn.js');
+  include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
+  include(specialFolders.userScripts + '/core/columns/Path3dColumn.js');
+  include(specialFolders.userScripts + '/core/colors/Colors.js');
+  include(specialFolders.userScripts + '/core/colors/PaletteColor.js');
+  include(specialFolders.userScripts + '/core/colors/Palette.js');
+  include(specialFolders.userScripts + '/core/colors/GlobalPaletteManager.js');
+  include(specialFolders.userScripts + '/core/colors/PalettesSingleton.js');
+  include(specialFolders.userScripts + '/core/colors/Palettes.js');
+  include(specialFolders.userScripts + '/core/Timer.js');
+
+  return reloadCore();
+}
+
 function reloadCore(): HarmonyCore {
-  var fresh = createCore();
-  var current = __tbShared.__TBTest as HarmonyCore;
+  var current = getCore();
 
   if (!current) {
-    __tbShared.__TBTest = fresh;
-    return fresh;
+    var initial = createCore();
+    __tbShared.__TBTest = initial;
+    return initial;
   }
 
+  var fresh = createCore();
+
   for (var key in fresh) {
-    if (Object.prototype.hasOwnProperty.call(fresh, key)) {
-      (current as any)[key] = (fresh as any)[key];
+    if (!Object.prototype.hasOwnProperty.call(fresh, key)) {
+      continue;
     }
+
+    // Preserve registered toolbar infrastructure.
+    if (key === 'Toolbar') {
+      continue;
+    }
+
+    (current as any)[key] = (fresh as any)[key];
   }
 
   current.MessageLog.trace('[Core] Hot reload complete');
 
   return current;
 }
-function reloadDevelopmentCore() {
-  include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
-  include(specialFolders.userScripts + '/core/Logging.js');
-
-  var Core = reloadCore();
-}
-
 function mergeCore<TBase, TModules>(base: TBase, modules: TModules): TBase & TModules {
   var target: any = base;
   var source: any = modules;
@@ -112,10 +147,11 @@ interface CoreModules {
   column: typeof column;
   oSelection: ReturnType<typeof createSelectionClass>;
   log: ReturnType<typeof createLogger>;
+  Timer: ReturnType<typeof createTimerKit>;
 
   PaletteKit: ReturnType<typeof createPaletteKit>;
+  reloadDevelopmentCore: typeof reloadDevelopmentCore;
 }
-
 type CoreRuntime = CoreBase & Partial<CoreModules>;
 
 /*
@@ -123,8 +159,10 @@ type CoreRuntime = CoreBase & Partial<CoreModules>;
  */
 type HarmonyCore = CoreBase & CoreModules;
 
-function createCoreBase() {
-  var H = Function('return this;')().__proto__;
+function createCoreBase(H?: any) {
+  if (!H) {
+    H = Function('return this;')().__proto__;
+  }
   return {
     scene: H.scene as typeof scene,
     node: H.node as typeof node,
@@ -164,20 +202,21 @@ function createCoreBase() {
     PaletteObjectManager: H.PaletteObjectManager as typeof PaletteObjectManager,
     String: String,
     parseFloat: parseFloat,
+    DEV: __TB_DEV__,
   };
 }
 
-function createCore(): HarmonyCore {
-  var Runtime = createCoreBase() as CoreRuntime;
-  /*
-   * Attributes
-   */
+function createCore(base?: CoreBase): HarmonyCore {
+  var Runtime = (base || createCoreBase()) as CoreRuntime;
+
   try {
+    Runtime.reloadDevelopmentCore = reloadDevelopmentCore;
   } catch (error) {
     MessageLog.trace(`[global-test.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
   }
   Runtime.log = createLogger(Runtime);
 
+  Runtime.Timer = createTimerKit(Runtime);
   Runtime.ColorUtils = createColorUtils(Runtime);
 
   Runtime.ColorObj = Runtime.ColorUtils.ColorObj;

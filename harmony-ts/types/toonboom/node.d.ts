@@ -14,7 +14,7 @@ declare var node: {
   isControlShown(node: string): boolean;
   showControls(node: string, show: boolean): boolean;
   getTextAttr(node: string, atFrame: number, attrName: string): string;
-  getAttr(node: string, atFrame: number, attrName: string): any; // Attribute *
+  getAttr(node: string, atFrame: number, attrName: string): Attribute | null;
   getAttrList(node: string, atFrame: number, attrName?: string): any[]; // QList<Attribute *>
   getAllAttrNames(node: string): string[];
   getAllAttrKeywords(node: string): string[];

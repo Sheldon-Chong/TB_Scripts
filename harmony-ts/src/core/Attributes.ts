@@ -386,7 +386,7 @@ class oAttr3D {
 
 /* ---- concrete 3-D attribute types ---- */
 
-function createAttr3DClass(Core: any) {
+function createAttr3DClass(Core: CoreRuntime) {
   class Attr3D {
     /**
      * Per-axis attribute wrappers.
@@ -530,17 +530,48 @@ function createAttr3DClass(Core: any) {
 
       var subs = parent.getSubAttributes();
 
+      // var frame = Core.frame.current();
+
+      // var before = Core.node.getAttr(this._nodePath, frame, 'SCALE.X');
+
+      // Core.log('before:', before ? before.doubleValue() : null);
+
+      // var success = Core.node.setTextAttr(this._nodePath, 'SCALE.X', frame, '1.5');
+
+      // Core.log('setTextAttr success:', success);
+
+      // var after = Core.node.getAttr(this._nodePath, frame, 'SCALE.X');
+
+      // Core.log('after:', after ? after.doubleValue() : null);
+
+      // Core.log('linked:', Core.node.linkedColumn(this._nodePath, 'SCALE.X'));
+
+      // Core.log(`<<<< ${JSON.stringify(subs, null, 2)}`);
       for (var i = 0; i < subs.length; i++) {
         var kw = subs[i].keyword();
 
+        Core.log(
+          `<<<< sub[${i}] keyword=${kw} fullKeyword=${subs[i].fullKeyword()} type=${subs[i].typeName()}`,
+        );
         if (kw === 'X') {
+          Core.log('X before:', subs[i].doubleValue());
+
           subs[i].setValue(v.x);
-        } else if (kw === 'Y') {
+
+          Core.log('X after setValue:', subs[i].doubleValue());
+        }
+        if (kw === 'Y') {
+          Core.log('Y before:', subs[i].doubleValue());
+
           subs[i].setValue(v.y);
+
+          Core.log('Y after setValue:', subs[i].doubleValue());
         } else if (kw === 'Z') {
           subs[i].setValue(v.z);
+          MessageLog.trace(`[Attributes.ts] setting Z to ${v.z}`);
         }
       }
+      MessageLog.trace(`[Attributes.ts] ${'done'}`);
     }
 
     setX(value: number, atFrame?: number): void {

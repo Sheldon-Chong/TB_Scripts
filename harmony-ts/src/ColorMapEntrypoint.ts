@@ -9,20 +9,22 @@ include(specialFolders.userScripts + '/ColorMapGenerator/Connections.js');
 include(specialFolders.userScripts + '/ColorMapGenerator/ColorMatteGeneratorKit.js');
 function configureNodes2(): void {
   var Core = getCore();
-  reloadCore();
-  // reloadDevelopmentCore();
+
   createColourMapGeneratorKit(Core).initialize();
   MessageLog.trace(`[ColorMapEntrypoint.ts] ${'nodes configured'}`);
 }
 
-function updatePassKeyframes(): void {
+function updatePassKeyframes2(): void {
   var Core = getCore();
-
+  reloadCore();
+  reloadDevelopmentCore();
   createColourMapGeneratorKit(Core).updatePassKeyframes();
 }
 
 function toggleColorMapMode3(): void {
   var Core = getCore();
-
+  Core.MessageLog.clearLog();
+  reloadCore();
   createColourMapGeneratorKit(Core).toggleColorMapMode();
+  reloadDevelopmentCore();
 }

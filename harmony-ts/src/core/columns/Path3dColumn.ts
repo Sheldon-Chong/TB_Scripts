@@ -1,4 +1,4 @@
-function createPathColumn3DClass(Core: any) {
+function createPathColumn3DClass(Core: CoreRuntime) {
   var BaseColumn = Core.oColumn;
 
   class PathColumn3D extends BaseColumn {
@@ -38,21 +38,22 @@ function createPathColumn3DClass(Core: any) {
 
     setX(frameNumber: number, value: string | number): boolean {
       var formattedValue =
-        typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' E' : ' W') : value;
+        typeof value === 'number' ? Core.Math.abs(value) + (value >= 0 ? ' E' : ' W') : value;
+      Core.log(`Setting X at frame ${frameNumber} to ${formattedValue} given value ${value}`);
 
       return Core.column.setEntry(this.name, 1, frameNumber, formattedValue);
     }
 
     setY(frameNumber: number, value: string | number): boolean {
       var formattedValue =
-        typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' N' : ' S') : value;
+        typeof value === 'number' ? Core.Math.abs(value) + (value >= 0 ? ' N' : ' S') : value;
 
       return Core.column.setEntry(this.name, 2, frameNumber, formattedValue);
     }
 
     setZ(frameNumber: number, value: string | number): boolean {
       var formattedValue =
-        typeof value === 'number' ? Math.abs(value) + (value >= 0 ? ' F' : ' B') : value;
+        typeof value === 'number' ? Core.Math.abs(value) + (value >= 0 ? ' F' : ' B') : value;
 
       return Core.column.setEntry(this.name, 3, frameNumber, formattedValue);
     }

@@ -42,7 +42,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
   function reloadPassConfig(): void {
     passConfigData = Core.JSON.parse(Core.FileUtils!.readFrom(PASSES_CONFIG_PATH));
 
-    Core.MessageLog.trace('[ColourMapGenerator] PassConfig reloaded from ' + PASSES_CONFIG_PATH);
+    Core.log('[ColourMapGenerator] PassConfig reloaded from ' + PASSES_CONFIG_PATH);
   }
 
   function getPasses(): Record<string, string> {
@@ -82,19 +82,6 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
     }
 
     refresh(): void {
-      Core.log(
-        'refresh matte',
-        this.index,
-        'drawingPath:',
-        this.drawingLayerPath,
-        'drawingType:',
-        Core.node.type(this.drawingLayerPath),
-        'colorCardPath:',
-        this.colorCardPath,
-        'colorCardType:',
-        Core.node.type(this.colorCardPath),
-      );
-
       this.drawingLayer = Core.LayerManager!.getNodeLayer(
         this.drawingLayerPath,
       ) as CoreInstance<'oDrawingNode'> | null;
@@ -121,7 +108,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
         return;
       }
 
-      Core.MessageLog.trace('[ColorMatte] Creating ' + this.colorCardName);
+      Core.log('[ColorMatte] Creating ' + this.colorCardName);
       Core.log(`[ColorMatte] Creating ${this.colorCardName}`);
 
       Core.node.add('Top', this.colorCardName, 'COLOR_CARD', 0, 0, 0);
@@ -180,7 +167,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
     }
 
     for (var j = 0; j < colorMattes.length; j++) {
-      Core.MessageLog.trace('[ColourMapGenerator] Loaded ' + colorMattes[j].toString());
+      Core.log('[ColourMapGenerator] Loaded ' + colorMattes[j].toString());
     }
   }
 
@@ -305,14 +292,20 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
     var cameraPeg = getCameraPeg();
 
     var cameraOffsetPeg = getCameraOffsetPeg();
+    Core.log(`>>> ${cameraOffsetPeg.constructor.name}`);
 
     if (!cameraPeg || !cameraOffsetPeg) {
-      Core.MessageLog.trace('[ColourMapGenerator] Camera peg missing.');
+      Core.log('[ColourMapGenerator] Camera peg missing.');
 
       return;
     }
 
     Core.scene.beginUndoRedoAccum('Update Camera Offset Keyframes');
+
+    function roundToDecimal(value: number, decimals: number): number {
+      const factor = Core.Math.pow(10, decimals);
+      return Core.Math.round(value * factor) / factor;
+    }
 
     try {
       var pos = cameraPeg.position as CoreInstance<'oPathColumn3D'>;
@@ -324,32 +317,21 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
           z: pos.getZVal(frame),
         };
 
-        cameraOffsetPeg.position.setX(frame, originalPos.x * -0.5);
+        cameraOffsetPeg.position.setX(frame, roundToDecimal(originalPos.x * -1.5, 3));
 
-        cameraOffsetPeg.position.setY(frame, originalPos.y * -0.5);
+        cameraOffsetPeg.position.setY(frame, roundToDecimal(originalPos.y * -1.5, 3));
 
         cameraOffsetPeg.position.setZ(frame, 0);
 
         Core.log(
-          `[ColourMapGenerator] Frame ${frame}: originalPos=(${originalPos.x}, ${originalPos.y}, ${originalPos.z})`,
+          `originalPos=(${originalPos.x}, ${originalPos.y}, ${originalPos.z}) newPos=(${originalPos.x * -1.5}, ${originalPos.y * -1.5}, 0)`,
         );
-        // Core.MessageLog.trace(
-        //   '[ColourMapGenerator] Frame ' +
-        //     frame +
-        //     ': originalPos=(' +
-        //     originalPos.x +
-        //     ', ' +
-        //     originalPos.y +
-        //     ', ' +
-        //     originalPos.z +
-        //     ')',
-        // );
       }
     } catch (e: any) {
-      Core.MessageLog.trace('[ColourMapGenerator] Error updating camera offset: ' + e.toString());
+      Core.log('[ColourMapGenerator] Error updating camera offset: ' + e.toString());
 
       if (e.fileName !== undefined && e.lineNumber !== undefined) {
-        Core.MessageLog.trace(e.fileName + ':' + e.lineNumber);
+        Core.log(e.fileName + ':' + e.lineNumber);
       }
     } finally {
       Core.scene.endUndoRedoAccum();
@@ -382,7 +364,9 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
    */
 
   function updatePassKeyframes(): void {
-    var selection = new Core.oSelection!();
+    reloadPassConfig();
+    reloadColorMattes();
+    var selection = Core.TimelineKit.getSelection();
 
     var startFrame: number;
     var endFrame: number;
@@ -392,11 +376,8 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
 
       endFrame = selection.endFrame;
 
-      Core.MessageLog.trace(
-        '[ColourMapGenerator] Updating pass keyframes for selection: ' +
-          startFrame +
-          ' to ' +
-          endFrame,
+      Core.log(
+        `[ColourMapGenerator] Updating pass keyframes for selection: ${startFrame} to ${endFrame}`,
       );
     } else {
       startFrame = 1;
@@ -410,14 +391,12 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
       );
 
       if (!confirmed) {
-        Core.MessageLog.trace('[ColourMapGenerator] Keyframe update cancelled.');
+        Core.log('[ColourMapGenerator] Keyframe update cancelled.');
 
         return;
       }
 
-      Core.MessageLog.trace(
-        '[ColourMapGenerator] Updating pass keyframes for all ' + endFrame + ' frames.',
-      );
+      Core.log('[ColourMapGenerator] Updating pass keyframes for all ' + endFrame + ' frames.');
     }
 
     Core.scene.beginUndoRedoAccum('Update Pass Keyframes');
@@ -425,6 +404,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
     try {
       var passColors = getPasses();
 
+      MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${colorMattes.length}`);
       for (var i = 0; i < colorMattes.length; i++) {
         var matte = colorMattes[i];
 
@@ -433,11 +413,14 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
         var drawingLayer = matte.drawingLayer;
 
         if (!colorCard || !drawingLayer) {
+          Core.log(
+            `[ColourMapGenerator] ColorMatte ${matte.index} is missing color card or drawing layer, skipping.`,
+          );
           continue;
         }
 
         if (!Core.node.isLinked(colorCard.nodePath, 1)) {
-          Core.MessageLog.trace('  ' + colorCard.name + ': matte port not linked, skipping');
+          Core.log('  ' + colorCard.name + ': matte port not linked, skipping');
 
           continue;
         }
@@ -447,7 +430,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
         var hexColor = passColors[passKey];
 
         if (!hexColor) {
-          Core.MessageLog.trace('  ' + passKey + ': no color in passes.json, skipping');
+          Core.log('  ' + passKey + ': no color in passes.json, skipping');
 
           continue;
         }
@@ -456,6 +439,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
 
         var drawingCol = drawingLayer.drawing;
 
+        MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${'setting color'}`);
         for (var frame = startFrame; frame <= endFrame; frame++) {
           colorCard.setColor(frame, drawingCol.getAt(frame) !== '' ? color : COLOR_CARD_OFF);
         }
@@ -546,7 +530,7 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
 
       var background = getBackground();
 
-      var cameraOffsetPeg = getCameraOffsetPeg();
+      var cameraOffsetPeg = getCameraPeg();
 
       var lineartColor = getLineartColor();
 
@@ -570,9 +554,10 @@ function createColourMapGeneratorKit(Core: CoreRuntime) {
         }
 
         if (cameraOffsetPeg) {
-          cameraOffsetPeg.scale.setGlobal(new Core.Vec3!(ZOOM_ON, ZOOM_ON, 1));
+          // cameraOffsetPeg.scale.setGlobal(new Core.Vec3!(ZOOM_ON, ZOOM_ON, 1));
 
           cameraOffsetPeg.setEnabled(true);
+          MessageLog.trace(`[ColorMatteGeneratorKit.ts] ${'set enabled'}`);
         }
 
         if (lineartColor) {

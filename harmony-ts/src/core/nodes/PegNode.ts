@@ -2,9 +2,9 @@ function createPegNodeClass(Core: HarmonyCore) {
   var NodeLayer = Core.oBaseNode as BasedNodeConstructor;
 
   class PegNode extends NodeLayer {
-    position: any;
-    scale: any;
-    rotation: any;
+    position: CoreInstance<'oPosition3D'>;
+    scale: CoreInstance<'oScale3D'>;
+    rotation: CoreInstance<'oRotation3D'>;
 
     constructor(displayOrder: number, index: number, nodePath: string, name: string) {
       super(displayOrder, index, nodePath, name);

@@ -6,17 +6,14 @@ include(specialFolders.userScripts + '/Tools/ApplyShakeTool.js');
 include(specialFolders.userScripts + '/Tools/ApplyZoomTool.js');
 include(specialFolders.userScripts + '/KeyframeProfiles.js');
 type ApplyPresetFunction = 'applyKeyFramesToSplittedPath' | 'applyKeyFramesTo3DPath';
-function createToolsKit(Core: HarmonyCore) {
-  /*
-   * Capture dependencies while Core is available
-   * as a real local variable.
-   */
-  var FrameSnapping = getFrameSnappingKit(Core);
-  var CameraSwipe = createCameraSwipe(Core);
-  var CameraSwipeTool = createCameraSwipeToolKit(Core, CameraSwipe);
-  var KeyframeGenerator = getKeyframeGeneratorKit(Core);
-  var ApplyShakeTool = createApplyShakeToolKit(Core, KeyframeGenerator);
-  var ApplyZoomTool = createApplyZoomToolKit(Core, KeyframeGenerator);
+
+function createToolsKit($: HarmonyCore) {
+  var FrameSnapping = getFrameSnappingKit($);
+  var CameraSwipe = createCameraSwipe($);
+  var CameraSwipeTool = createCameraSwipeToolKit($, CameraSwipe);
+  var KeyframeGenerator = getKeyframeGeneratorKit($);
+  var ApplyShakeTool = createApplyShakeToolKit($, KeyframeGenerator);
+  var ApplyZoomTool = createApplyZoomToolKit($, KeyframeGenerator);
   var keyframePresets = [
     'u_bob',
     'u_bob_small',
@@ -81,23 +78,23 @@ function createToolsKit(Core: HarmonyCore) {
       applyFnName: ApplyPresetFunction,
       label: string,
     ): void {
-      Core.MessageLog.trace('applying');
-      Core.scene.beginUndoRedoAccum('Apply ' + label + ': ' + presetName);
+      $.MessageLog.trace('applying');
+      $.scene.beginUndoRedoAccum('Apply ' + label + ': ' + presetName);
       try {
-        var path = `${Core.specialFolders.userScripts}/keyframe_presets/${subFolder}${presetName}.json`;
-        Core.MessageLog.trace('[Tools.ts] Applying preset from path: ' + path);
+        var path = `${$.specialFolders.userScripts}/keyframe_presets/${subFolder}${presetName}.json`;
+        $.MessageLog.trace('[Tools.ts] Applying preset from path: ' + path);
 
-        var content = Core.FileUtils.readFrom(path);
+        var content = $.FileUtils.readFrom(path);
         if (!content) throw new Error('Preset file not found: ' + path);
 
-        var presetData = Core.JSON.parse(content);
-        var currentFrame = Core.frame.current();
-        var sel = Core.TimelineKit.getSelection();
+        var presetData = $.JSON.parse(content);
+        var currentFrame = $.frame.current();
+        var sel = $.TimelineKit.getSelection();
         if (presetSettings.edgeSnappingEnabled) {
           currentFrame = FrameSnapping.getNearestBoundaryFrame(currentFrame);
         }
         if (presetSettings.smartPasteEnabled) {
-          Core.MessageLog.trace(
+          $.MessageLog.trace(
             '[Tools.ts] Smart paste enabled, adjusting selection to current frame: ' + currentFrame,
           );
         }
@@ -106,7 +103,7 @@ function createToolsKit(Core: HarmonyCore) {
           ? ToolsModule.buildLoopingKeyframes(presetData.keyframes, trueStart, sel.endFrame)
           : presetData.keyframes;
         if (presetData.looping) {
-          Core.MessageLog.trace(
+          $.MessageLog.trace(
             '[Tools.ts] Looping ' +
               presetData.keyframes.length +
               ' keyframes through frame ' +
@@ -115,61 +112,52 @@ function createToolsKit(Core: HarmonyCore) {
         }
         var selected = sel.selectedNodes;
         if (label === 'camera preset') {
-          selected = [Core.LayerManager.getNodeLayer('Top/Camera-P')];
+          selected = [$.LayerManager.getNodeLayer('Top/Camera-P')];
         }
         const drawingNode = sel.selectedNodes[0] as CoreInstance<'oDrawingNode'>;
-        MessageLog.trace(`[Tools.ts]  selected ${drawingNode.name}`);
+        $.log(`[Tools.ts]  selected ${drawingNode.name}`);
 
         const drawingElementCol = drawingNode.getColumn('DRAWING.ELEMENT');
         const currentDrawingType = drawingElementCol.getDrawingType(sel.startFrame);
 
-        MessageLog.trace(`[Tools.ts] Current Drawing Type${currentDrawingType}`);
+        $.log(`[Tools.ts] Current Drawing Type${currentDrawingType}`);
 
         if (presetSettings.smartPasteEnabled) {
           // HARDCODED 16 nodes
           for (var nodeIndex = 1; nodeIndex < 17; nodeIndex++) {
             const nodePath = 'Top/' + nodeIndex;
             const drawingElementCol =
-              Core.LayerManager.getNodeLayer(nodePath).getColumn('DRAWING.ELEMENT');
-            MessageLog.trace(`[Tools.ts] ${drawingElementCol}`);
+              $.LayerManager.getNodeLayer(nodePath).getColumn('DRAWING.ELEMENT');
+            $.log(`[Tools.ts] ${drawingElementCol}`);
 
             const prevDrawingType = drawingElementCol.getDrawingType(currentFrame - 1);
             const nextDrawingType = drawingElementCol.getDrawingType(currentFrame);
-            // MessageLog.trace(
-            //   `[Tools.ts] ${nodePath} | Prev: ${prevDrawingType} | Next: ${nextDrawingType}`,
-            // );
 
             const keyframesFirstHalf = keyframes.filter((kf) => kf.frame < keyframes.length / 2);
             const keyframesSecondHalf = keyframes.filter((kf) => kf.frame >= keyframes.length / 2);
 
             if (prevDrawingType === currentDrawingType) {
-              MessageLog.trace(`[Tools.ts] ${nodePath} prev match`);
-              const firstHalfSelection = new Core.oSelection(trueStart, undefined, [
-                Core.LayerManager.getNodeLayer(nodePath),
+              $.log(`[Tools.ts] ${nodePath} prev match`);
+              const firstHalfSelection = new $.oSelection(trueStart, undefined, [
+                $.LayerManager.getNodeLayer(nodePath),
               ]);
-              Core.TimelineKit[applyFnName](firstHalfSelection, keyframesFirstHalf, false);
+              $.TimelineKit[applyFnName](firstHalfSelection, keyframesFirstHalf, false);
             }
             if (nextDrawingType === currentDrawingType) {
-              MessageLog.trace(`[Tools.ts] ${nodePath} next match`);
-              const secondHalfSelection = new Core.oSelection(trueStart, undefined, [
-                Core.LayerManager.getNodeLayer(nodePath),
+              $.log(`[Tools.ts] ${nodePath} next match`);
+              const secondHalfSelection = new $.oSelection(trueStart, undefined, [
+                $.LayerManager.getNodeLayer(nodePath),
               ]);
-              Core.TimelineKit[applyFnName](secondHalfSelection, keyframesSecondHalf, false);
+              $.TimelineKit[applyFnName](secondHalfSelection, keyframesSecondHalf, false);
             }
-
-            // var presetSelection = new Core.oSelection(trueStart, undefined, [
-            //   new Core.oDrawingNode(-1, -1, 'Top/16', '16'),
-            //   new Core.oDrawingNode(-1, -1, 'Top/13', '13'),
-            // ]);
-            // Core.TimelineKit[applyFnName](presetSelection, [keyframes[0]], false);
           }
         } else {
-          var presetSelection = new Core.oSelection(trueStart, undefined, selected);
-          Core.TimelineKit[applyFnName](presetSelection, keyframes, true);
+          var presetSelection = new $.oSelection(trueStart, undefined, selected);
+          $.TimelineKit[applyFnName](presetSelection, keyframes, true);
         }
 
-        Core.frame.setCurrent(trueStart);
-        Core.Utils.toast(
+        $.frame.setCurrent(trueStart);
+        $.Utils.toast(
           'Applied ' + label + ': ' + presetName,
           {
             x: 20,
@@ -179,7 +167,7 @@ function createToolsKit(Core: HarmonyCore) {
           '#333333',
         );
       } catch (e: any) {
-        Core.MessageLog.trace(
+        $.MessageLog.trace(
           'Error applying ' +
             label +
             " '" +
@@ -192,11 +180,11 @@ function createToolsKit(Core: HarmonyCore) {
             e.fileName,
         );
       } finally {
-        Core.scene.endUndoRedoAccum();
+        $.scene.endUndoRedoAccum();
       }
     },
     applyAnimationPreset(presetName: string): void {
-      Core.MessageLog.trace('applying animation');
+      $.MessageLog.trace('applying animation');
       ToolsModule.applyPreset(
         presetName,
         'animation/',
@@ -212,7 +200,7 @@ function createToolsKit(Core: HarmonyCore) {
     },
 
     runCycle(): null {
-      var sel = Core.TimelineKit.getSelection();
+      var sel = $.TimelineKit.getSelection();
       var drawingNodes: any[] = [];
 
       /*
@@ -222,19 +210,19 @@ function createToolsKit(Core: HarmonyCore) {
        */
       for (var nodeIndex = 0; nodeIndex < sel.selectedNodes.length; nodeIndex++) {
         var selectedNode = sel.selectedNodes[nodeIndex];
-        if (selectedNode instanceof Core.oDrawingNode) {
+        if (selectedNode instanceof $.oDrawingNode) {
           drawingNodes.push(selectedNode);
         }
       }
 
       if (!drawingNodes.length) {
-        Core.MessageLog.trace('No selected drawing nodes.');
+        $.MessageLog.trace('No selected drawing nodes.');
         return;
       }
 
-      Core.scene.saveAll();
+      $.scene.saveAll();
 
-      Core.scene.beginUndoRedoAccum('Duplicate Drawing');
+      $.scene.beginUndoRedoAccum('Duplicate Drawing');
 
       try {
         for (var nodeIndex = 0; nodeIndex < drawingNodes.length; nodeIndex++) {
@@ -243,7 +231,7 @@ function createToolsKit(Core: HarmonyCore) {
           var drawing2 = drawingElement.getKeyframe(sel.startFrame + 1);
           var drawing3 = drawingElement.getKeyframe(sel.startFrame + 2);
 
-          Core.MessageLog.trace(
+          $.MessageLog.trace(
             '[Test-duplicate-drawing.ts] ' +
               drawing1 +
               '\n, ' +
@@ -270,9 +258,9 @@ function createToolsKit(Core: HarmonyCore) {
           copyOrClearDrawing(drawing2, sel.startFrame + 7);
         }
 
-        Core.scene.saveAll();
+        $.scene.saveAll();
       } finally {
-        Core.scene.endUndoRedoAccum();
+        $.scene.endUndoRedoAccum();
       }
 
       /*
@@ -280,21 +268,22 @@ function createToolsKit(Core: HarmonyCore) {
        * capture and survives the delayed callback.
        */
       var test = function (): void {
-        Core.scene.beginUndoRedoAccum('Translate Drawing Strokes');
+        $.log('testing');
+        $.scene.beginUndoRedoAccum('Translate Drawing Strokes');
 
-        Core.MessageLog.trace('[Test-duplicate-drawing.ts] test function called');
+        $.log('[Test-duplicate-drawing.ts] test function called');
         try {
           var translateIfDrawing = function (drawingNode: any, frame: number): void {
             var drawing = drawingNode.drawingElement.getKeyframe(frame);
             if (!drawing) {
-              Core.MessageLog.trace(
+              $.log(
                 `[Test-duplicate-drawing.ts] skipping empty drawing at ${drawingNode.nodePath}:${frame}`,
               );
               return;
             }
 
             try {
-              Core.DrawingDataKit.translateDrawingStrokes(
+              $.DrawingDataKit.translateDrawingStrokes(
                 {
                   frame: frame,
                   node: drawingNode.nodePath,
@@ -306,65 +295,54 @@ function createToolsKit(Core: HarmonyCore) {
                 },
               );
             } catch (error: any) {
-              Core.MessageLog.trace(
-                '[Test-duplicate-drawing.ts]>>> Error translating ' +
-                  drawingNode.nodePath +
-                  ':' +
-                  frame +
-                  ' ' +
-                  error.message +
-                  ' ' +
-                  error.lineNumber +
-                  ' ' +
-                  error.fileName,
+              $.log(
+                `[Test-duplicate-drawing.ts]>>> Error translating ${drawingNode.nodePath}:${frame} ${error.message} ${error.lineNumber} ${error.fileName}`,
               );
             }
           };
 
           for (var nodeIndex = 0; nodeIndex < drawingNodes.length; nodeIndex++) {
             var drawingNode = drawingNodes[nodeIndex];
-            Core.MessageLog.trace(
-              `[Test-duplicate-drawing.ts] translating ${drawingNode.nodePath}`,
-            );
+            $.log(`[Test-duplicate-drawing.ts] translating ${drawingNode.nodePath}`);
             translateIfDrawing(drawingNode, sel.startFrame + 1);
             translateIfDrawing(drawingNode, sel.startFrame + 5);
           }
         } catch (error: any) {
-          Core.MessageLog.trace(
-            '[Test-duplicate-drawing.ts]>>> Error: ' +
-              error.message +
-              ' ' +
-              error.lineNumber +
-              ' ' +
-              error.fileName,
+          $.log(
+            `[Test-duplicate-drawing.ts]>>> Error: ${error.message} ${error.lineNumber} ${error.fileName}`,
           );
         } finally {
-          Core.scene.endUndoRedoAccum();
+          $.scene.endUndoRedoAccum();
         }
       };
+      $.Timer.createTimer({
+        startTimeMs: 500,
+        callback: test,
+      });
 
-      var timer = new Core.QTimer();
+      // var timer = new $.QTimer();
 
-      timer.singleShot = true;
+      // timer.singleShot = true;
 
-      timer.timeout.connect(test);
+      // timer.timeout.connect(test);
 
-      timer.start(500);
+      // timer.start(500);
       // Core.scene.beginUndoRedoAccum('Set Start/End Frame');
 
-      Core.scene.setStartFrame(sel.startFrame);
-      Core.scene.setStopFrame(sel.startFrame + 7);
+      $.scene.setStartFrame(sel.startFrame);
+      $.scene.setStopFrame(sel.startFrame + 7);
     },
 
     loopCurrentSelection(): null {
-      Core.scene.saveAll();
-      Core.scene.beginUndoRedoAccum('Duplicate Drawing');
+      $.scene.saveAll();
+      $.scene.beginUndoRedoAccum('Duplicate Drawing');
       try {
-        Core.MessageLog.clearLog();
-        var sel = Core.TimelineKit.getSelection();
+        $.MessageLog.clearLog();
+        $.log('[Tools.ts] Looping current selection');
+        var sel = $.TimelineKit.getSelection();
         for (var nodeIndex = 0; nodeIndex < sel.selectedNodes.length; nodeIndex++) {
           var selNode = sel.selectedNodes[nodeIndex];
-          if (!(selNode instanceof Core.oDrawingNode)) {
+          if (!(selNode instanceof $.oDrawingNode)) {
             continue;
           }
           var elementCol = selNode.drawingElement;
@@ -377,8 +355,8 @@ function createToolsKit(Core: HarmonyCore) {
               }
             }
             if (lastValidFrame >= sel.startFrame && lastValidFrame < sel.endFrame) {
-              var sourceSelection = new Core.oSelection(sel.startFrame, lastValidFrame);
-              var pasteSelection = new Core.oSelection(lastValidFrame + 1, sel.endFrame);
+              var sourceSelection = new $.oSelection(sel.startFrame, lastValidFrame);
+              var pasteSelection = new $.oSelection(lastValidFrame + 1, sel.endFrame);
               elementCol.loopKeyframes(sourceSelection, pasteSelection);
             }
             var repeatSequenceLength = lastValidFrame - sel.startFrame + 1;
@@ -394,14 +372,16 @@ function createToolsKit(Core: HarmonyCore) {
               markerFrame <= sel.endFrame;
               markerFrame += repeatSequenceLength
             ) {
-              Core.Timeline.createFrameMarker(selNode.index, 'Red', markerFrame);
+              $.Timeline.createFrameMarker(selNode.index, 'Red', markerFrame);
             }
           } catch (error: any) {
-            Core.MessageLog.trace('[Test-duplicate-drawing.ts] Error: ' + error.message);
+            $.log(
+              `[Test-duplicate-drawing.ts] Error: ${error.message} ${error.lineNumber} ${error.fileName}`,
+            );
           }
         }
       } finally {
-        Core.scene.endUndoRedoAccum();
+        $.scene.endUndoRedoAccum();
       }
       return null;
     },
@@ -413,55 +393,45 @@ function createToolsKit(Core: HarmonyCore) {
       CameraSwipeTool.register();
       ApplyShakeTool.register();
       ApplyZoomTool.register();
-      Core.Toolbar.registerAction({
+      $.Toolbar.registerAction({
         name: 'Previous Boundary Marker',
-        icon: Core.specialFolders.userScripts + '/script-icons/previous_boundary.png',
+        icon: $.specialFolders.userScripts + '/script-icons/previous_boundary.png',
         callback: function () {
           FrameSnapping.gotoPreviousBoundaryMarker();
         },
         shortcut: 'Ctrl+Alt+Left',
         category: 'Navigation',
       });
-      Core.Toolbar.registerAction({
+      $.Toolbar.registerAction({
         name: 'Next Boundary Marker',
-        icon: Core.specialFolders.userScripts + '/script-icons/next_boundary.png',
+        icon: $.specialFolders.userScripts + '/script-icons/next_boundary.png',
         callback: function () {
           FrameSnapping.gotoNextBoundaryMarker();
         },
         shortcut: 'Ctrl+Alt+Right',
         category: 'Navigation',
       });
-      // Core.Toolbar.registerAction({
-      //   name: 'Empty',
-      //   icon: 'earth.png',
-      //   callback: function () {
-      //     Core.MessageLog.trace('Empty action triggered');
-      //   },
-      //   shortcut: 'Ctrl+Alt+R',
-      //   category: 'custom',
-      // });
-      Core.Toolbar.registerAction({
+
+      $.Toolbar.registerAction({
         name: 'Boundary Snapping',
-        icon: Core.specialFolders.userScripts + '/script-icons/snap_to_boundary.png',
+        icon: $.specialFolders.userScripts + '/script-icons/snap_to_boundary.png',
         checkable: true,
         isChecked: presetSettings.edgeSnappingEnabled,
         callback: function (action: any) {
           presetSettings.edgeSnappingEnabled = action.isChecked;
-          Core.MessageLog.trace(
-            '[Tools] Global boundary snapping: ' + presetSettings.edgeSnappingEnabled,
-          );
+          $.log(`[Tools] Global boundary snapping: ${presetSettings.edgeSnappingEnabled}`);
         },
         category: 'Presets',
       });
 
-      Core.Toolbar.registerAction({
+      $.Toolbar.registerAction({
         name: 'Smart Paste',
-        icon: Core.specialFolders.userScripts + '/script-icons/smart_paste.png',
+        icon: $.specialFolders.userScripts + '/script-icons/smart_paste.png',
         checkable: true,
         isChecked: presetSettings.smartPasteEnabled,
         callback: function (action: any) {
           presetSettings.smartPasteEnabled = action.isChecked;
-          Core.MessageLog.trace('[Tools] Global smart paste: ' + presetSettings.smartPasteEnabled);
+          $.log(`[Tools] Global smart paste: ${presetSettings.smartPasteEnabled}`);
         },
         category: 'Presets',
       });
@@ -472,52 +442,49 @@ function createToolsKit(Core: HarmonyCore) {
          * the correct preset name.
          */
         var callback = function () {
-          Core.MessageLog.trace('Applying preset: ' + presetName);
+          $.log(`[Tools.ts] Applying preset: ${presetName}`);
           try {
             ToolsModule.applyAnimationPreset(presetName);
-            Core.MessageLog.trace('Preset complete: ' + presetName);
+            $.log(`[Tools.ts] Preset complete: ${presetName}`);
           } catch (e: any) {
-            Core.MessageLog.trace('Preset error: ' + e.toString());
+            $.log(`[Tools.ts] Preset error: ${e.message} | ${e.fileName} | ${e.lineNumber}`);
           }
         };
         presetCallbacks[presetName] = callback;
-        Core.Toolbar.registerAction({
+
+        $.Toolbar.registerAction({
           name: presetName,
-          icon: `${Core.specialFolders.userScripts}/script-icons/${presetName}.png`,
+          icon: `${$.specialFolders.userScripts}/script-icons/${presetName}.png`,
           callback: callback,
           shortcut: index < 9 ? 'Ctrl+' + (index + 1) : undefined,
           category: 'Presets',
         });
       });
-      Core.Toolbar.registerAction({
+
+      $.Toolbar.registerAction({
         name: 'Loop Selected Frames',
-        icon: `${Core.specialFolders.userScripts}/script-icons/loop.png`,
+        icon: `${$.specialFolders.userScripts}/script-icons/loop.png`,
         callback: function () {
           ToolsModule.loopCurrentSelection();
         },
         shortcut: 'Ctrl+Alt+L',
         category: 'Animation Tools',
       });
-      Core.Toolbar.registerAction({
+
+      $.Toolbar.registerAction({
         name: 'runCycle',
-        icon: `${Core.specialFolders.userScripts}/script-icons/run_cycle.png`,
+        icon: `${$.specialFolders.userScripts}/script-icons/run_cycle.png`,
         callback: function () {
           try {
             ToolsModule.runCycle();
           } catch (error) {
-            MessageLog.trace(
-              `[Tools.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`,
-            );
+            $.log(`[Tools.ts] ${error.message} | ${error.fileName} | ${error.lineNumber}`);
           }
         },
         shortcut: 'Ctrl+Alt+C',
         category: 'Animation Tools',
       });
-      /*
-       * Register all collected toolbar definitions
-       * after their actions/buttons have been added.
-       */
-      Core.Toolbar.updateToolbars();
+      $.Toolbar.updateToolbars();
     },
   };
   return ToolsModule;
@@ -537,15 +504,60 @@ function getTools(Core: HarmonyCore): ToolsKit {
   }
   return Runtime.ToolsKit as ToolsKit;
 }
-/*
- * Toon Boom entry point.
- *
- * Core is obtained here as a genuine local variable,
- * then captured by all factories/callbacks created
- * beneath this call.
- */
+
+function installHotHandlerProbe() {
+  var Core = getCore();
+
+  var includeScript = include;
+  var shared = Function('return this;')().__proto__;
+
+  var path = Core.specialFolders.userScripts + '/core/ReloadProbe.js';
+
+  Core.reloadDevelopmentCore = function (): HarmonyCore {
+    Core.MessageLog.trace('[Reload] Loading updated module');
+
+    includeScript(path);
+
+    var factory = shared.__TBHotReloadProbe;
+
+    if (typeof factory !== 'function') {
+      throw new Error('[Reload] Factory unavailable');
+    }
+
+    /*
+     * Construct the new module against the
+     * existing persistent Core.
+     */
+    (Core as any).DevProbe = factory(Core);
+
+    Core.MessageLog.trace('[Reload] Module replaced');
+
+    return Core;
+  };
+}
+
 function registerAllTools(): void {
   var Core = getCore();
+
+  installHotHandlerProbe();
+
+  Core.Toolbar.registerAction({
+    name: 'Hot Reload Test',
+    icon: 'u_bob',
+    category: 'presets',
+    handler: 'DevProbe.run',
+  });
+
   var ToolsKit = getTools(Core);
+
   ToolsKit.registerAllTools();
 }
+// Core.Toolbar.registerAction({
+//   name: 'Empty',
+//   icon: 'earth.png',
+//   callback: function () {
+//     Core.MessageLog.trace('Empty action triggered');
+//   },
+//   shortcut: 'Ctrl+Alt+R',
+//   category: 'custom',
+// });

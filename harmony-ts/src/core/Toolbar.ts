@@ -2,13 +2,8 @@ interface RegisterActionOptions {
   name: string;
   icon: string;
 
-  /*
-   * Core no longer needs to be injected here.
-   *
-   * The function that registers the tool should already
-   * have captured its local Core.
-   */
-  callback: (action?: any) => void;
+  callback?: (action?: any) => void;
+  handler?: string;
 
   shortcut?: string;
   category?: string;
@@ -42,6 +37,27 @@ function createToolbarKit(Core: any) {
   } = {};
 
   var ToolbarKit = {
+    callCoreHandler: (Core: any, path: string, action: any): any => {
+      var parts = path.split('.');
+      var context = Core;
+
+      for (var i = 0; i < parts.length - 1; i++) {
+        context = context[parts[i]];
+
+        if (!context) {
+          throw new Error('[Toolbar] Could not resolve handler: ' + path);
+        }
+      }
+
+      var functionName = parts[parts.length - 1];
+      var handler = context[functionName];
+
+      if (typeof handler !== 'function') {
+        throw new Error('[Toolbar] Handler is not a function: ' + path);
+      }
+
+      return handler.call(context, action);
+    },
     registerAction(options: RegisterActionOptions): any {
       var actionId = 'com.toonboom.' + options.name.replace(/\s+/g, '').toLowerCase();
 
@@ -63,15 +79,57 @@ function createToolbarKit(Core: any) {
         checkable: options.checkable === true,
         isChecked: options.isChecked === true,
         onTrigger: function () {
-          if (action.checkable) {
-            action.isChecked = !action.isChecked;
-          }
+          Core.MessageLog.trace('[Toolbar] CLICKED: ' + action.id);
 
-          /*
-           * The callback itself should already
-           * have captured a local Core.
-           */
-          options.callback(action);
+          try {
+            var LiveCore = Core;
+
+            if (Core.DEV) {
+              Core.MessageLog.trace('[Toolbar] Starting Core reload...');
+
+              LiveCore = Core.reloadDevelopmentCore();
+
+              Core.MessageLog.trace('[Toolbar] Core reload finished');
+            }
+
+            if (action.checkable) {
+              action.isChecked = !action.isChecked;
+            }
+
+            if (options.handler) {
+              Core.MessageLog.trace('[Toolbar] Resolving handler: ' + options.handler);
+
+              ToolbarKit.callCoreHandler(LiveCore, options.handler, action);
+
+              Core.MessageLog.trace('[Toolbar] Handler completed');
+
+              return;
+            }
+
+            if (options.callback) {
+              Core.MessageLog.trace('[Toolbar] Running legacy callback');
+
+              options.callback(action);
+
+              Core.MessageLog.trace('[Toolbar] Callback completed');
+
+              return;
+            }
+
+            Core.MessageLog.trace('[Toolbar] WARNING: No handler or callback supplied');
+          } catch (error) {
+            Core.MessageLog.trace('[Toolbar] ERROR: ' + error);
+
+            if (error && error.stack) {
+              Core.MessageLog.trace('[Toolbar] STACK: ' + error.stack);
+            }
+
+            if (error && error.fileName) {
+              Core.MessageLog.trace(
+                '[Toolbar] FILE: ' + error.fileName + ' LINE: ' + error.lineNumber,
+              );
+            }
+          }
         },
       };
 
