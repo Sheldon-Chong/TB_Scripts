@@ -303,8 +303,10 @@ function createTimelineKit(Core: any) {
           notes: notes,
           length: length,
         });
+        Core.log(`[TimelineKit.ts] ${'success'}`);
         return true;
       } catch (e) {
+        Core.log(`[TimelineKit.ts] ${e.message}`);
         return false;
       }
     },

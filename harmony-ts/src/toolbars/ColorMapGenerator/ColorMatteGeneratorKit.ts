@@ -1,4 +1,3 @@
-
 (function () {
   var shared = Function('return this;')().__proto__;
 
@@ -460,6 +459,50 @@
       return false;
     }
 
+    function renderWithProgress(): void {
+      var renderer = Core.render;
+
+      var startFrame = 1;
+      var endFrame = 50;
+      var totalFrames = endFrame - startFrame + 1;
+      var completedFrames = 0;
+
+      function onFrameReady(frameNumber: number, celImage: any): void {
+        completedFrames++;
+
+        var percent = Math.round((completedFrames / totalFrames) * 100);
+
+        Core.MessageLog.trace(
+          'Rendering: ' +
+            completedFrames +
+            '/' +
+            totalFrames +
+            ' (' +
+            percent +
+            '%)' +
+            ' | Frame ' +
+            frameNumber,
+        );
+
+        // Save the image here if required.
+        // celImage.imageFile(outputPath);
+      }
+
+      function onRenderFinished(): void {
+        Core.MessageLog.trace('Rendering completed!');
+      }
+
+      renderer.frameReady.connect(onFrameReady);
+      renderer.renderFinished.connect(onRenderFinished);
+
+      try {
+        renderer.renderScene(startFrame, endFrame);
+      } finally {
+        renderer.frameReady.disconnect(onFrameReady);
+        renderer.renderFinished.disconnect(onRenderFinished);
+      }
+    }
+
     function toggleColorMapMode(): void {
       reloadColorMattes();
 
@@ -469,14 +512,15 @@
         }
         const attributes = layer.getAllAttributes();
         attributes.forEach((attr) => {
-          Core.log(`[ColorMatteGeneratorKit.ts] ${attr.name()}: ${attr.typeName()}`);
+          Core.log(`[ColorMatteGeneratorKit.ts] |||| ${attr.name()}: ${attr.textValue()}`);
         });
         Core.log('>>>' + layer.constructor.name + '<<<');
-        Core.log(
-          'PATH: ',
-          (layer as CoreInstance<'oWriteNode'>).MovieVideoAndAudioSettings.constructor.name,
-        );
+        Core.render.setRenderDisplay('Top/Display');
+        Core.log('PATH: ', (layer as CoreInstance<'oWriteNode'>).moviePath.get());
       });
+      // Core.render.renderScene(1, 5);
+
+      renderWithProgress();
       Core.scene.beginUndoRedoAccum('Toggle Color Map Mode');
 
       try {

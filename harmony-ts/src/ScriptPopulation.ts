@@ -1385,6 +1385,8 @@ class TimelineMarkersDialog {
 }
 
 function showMarkerList() {
+  return;
+
   new TimelineMarkersDialog().show();
   MessageLog.trace(`[ScriptPopulation.ts] ${'test'}`);
 }
@@ -1401,19 +1403,19 @@ function deleteMarkers() {
   scene.endUndoRedoAccum();
 }
 
-function populateMarkers() {
-  scene.beginUndoRedoAccum('populate markers');
-  for (var i = 0; i < 310; i++) {
-    const frameNum = i * 32;
-    const marker = {
-      frame: frameNum + 1,
-      color: '#FFFF66',
-      name: `Profile ${i + 1}`,
-      notes: `Dialogue line ${i + 1}`,
-    };
-    G.TimelineKit.createMarker(marker.frame, marker.name, marker.color, marker.notes);
-    // Do something with the created marker, e.g., add it to the timeline
-  }
+// function populateMarkers() {
+//   scene.beginUndoRedoAccum('populate markers');
+//   for (var i = 0; i < 310; i++) {
+//     const frameNum = i * 32;
+//     const marker = {
+//       frame: frameNum + 1,
+//       color: '#FFFF66',
+//       name: `Profile ${i + 1}`,
+//       notes: `Dialogue line ${i + 1}`,
+//     };
+//     G.TimelineKit.createMarker(marker.frame, marker.name, marker.color, marker.notes);
+//     // Do something with the created marker, e.g., add it to the timeline
+//   }
 
-  scene.endUndoRedoAccum();
-}
+//   scene.endUndoRedoAccum();
+// }

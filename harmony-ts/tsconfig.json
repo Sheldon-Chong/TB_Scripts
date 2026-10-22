@@ -12,6 +12,8 @@
       "es5",
       "dom"
     ],
+    "jsx": "react",
+    "jsxFactory": "UI.h",
     "downlevelIteration": false,
     "noEmitHelpers": true,
     "skipLibCheck": true,
@@ -20,5 +22,5 @@
   "include": [
     "src/**/*.ts",
     "types/**/*.d.ts"
-  ]
+, "src/test-reactive.tsx"  ]
 }

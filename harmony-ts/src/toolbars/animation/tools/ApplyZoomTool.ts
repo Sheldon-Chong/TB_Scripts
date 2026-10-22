@@ -340,13 +340,11 @@ function createApplyZoomToolKit($: HarmonyCore, KeyframeGenerator: KeyframeGener
       try {
         var snapCheckbox = new $.Widgets.BoundarySnapSwitch(dialog);
         snapCheckbox.setEnabledState(this.options.snapToBoundary);
-        snapCheckbox.onStateChanged(
-          function (state: number) {
-            this.options.snapToBoundary = state !== 0;
-            this.storeToPreferences();
-            responder.settingsChanged();
-          }.bind(this),
-        );
+        snapCheckbox.onStateChanged(function (state: number) {
+          this.options.snapToBoundary = state !== 0;
+          this.storeToPreferences();
+          responder.settingsChanged();
+        });
 
         var optionsButton = new $.Widgets.UI_QToolButton({ dialog: dialog });
         var optionsMenu = $.Widgets.optionsMenu(optionsButton, [

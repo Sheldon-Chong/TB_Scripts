@@ -108,6 +108,13 @@ function createToolbarKit(Core: any) {
              */
             if (options.handler) {
               ToolbarKit.callCoreHandler(LiveCore, options.handler, action);
+            } else if (options.callback) {
+              Core.MessageLog.trace('[Toolbar] Invoking callback for: ' + action.id);
+              options.callback.call(LiveCore, action);
+            } else {
+              Core.MessageLog.trace(
+                '[Toolbar] Action has no handler or callback: ' + action.id,
+              );
             }
           } catch (error) {
             Core.MessageLog.trace('[Toolbar] ERROR: ' + error);

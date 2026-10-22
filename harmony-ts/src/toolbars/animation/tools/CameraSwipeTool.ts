@@ -380,13 +380,11 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
 
         snapCheckbox.setEnabledState(this.options.snapToBoundary);
 
-        snapCheckbox.onStateChanged(
-          function (state: number) {
-            this.options.snapToBoundary = state !== 0;
-            this.storeToPreferences();
-            responder.settingsChanged();
-          }.bind(this),
-        );
+        snapCheckbox.onStateChanged(function (state: number) {
+          this.options.snapToBoundary = state !== 0;
+          this.storeToPreferences();
+          responder.settingsChanged();
+        });
 
         var layout = new QVBoxLayout(dialog);
         layout.setContentsMargins(8, 8, 8, 8);
@@ -443,10 +441,16 @@ function createCameraSwipeToolKit(Core: HarmonyCore, CameraSwipe: CameraSwipeMod
         icon: Core.specialFolders.userScripts + '/script-icons/apply_swipe_tool.png',
 
         callback: function () {
-          Core.Tools.setCurrentTool('com.toonboom.cameraSwipeTool');
+          try {
+            Core.log(`[CameraSwipeTool.ts] ${'setting tool'}`);
+            Core.Tools.setCurrentTool('com.toonboom.cameraSwipeTool');
+          } catch (e: any) {
+            MessageLog.trace('[CameraSwipeTool.ts] Error setting tool: ' + e.toString());
+          }
         },
         category: 'Camera Animation',
       });
+      MessageLog.trace(`[CameraSwipeTool.ts] ${'registerd tool!'}`);
     },
   };
 

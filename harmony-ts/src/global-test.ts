@@ -244,6 +244,7 @@ function createCoreBase(H?: any) {
     Tools: H.Tools as typeof Tools,
     TimelineMarker: H.TimelineMarker as typeof TimelineMarker,
     preferences: H.preferences as typeof preferences,
+    render: H.render as typeof render,
     ScriptManager: H.ScriptManager,
     ScriptToolbarDef: H.ScriptToolbarDef as typeof ScriptToolbarDef,
     PermanentFile: H.PermanentFile as typeof PermanentFile,

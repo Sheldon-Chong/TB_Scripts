@@ -69,9 +69,7 @@ function createSceneKit(Core: HarmonyCore) {
       var toolId = registeredTools[toolName];
 
       if (toolId !== undefined) {
-        Core.Tools.setCurrentTool({
-          id: toolId,
-        });
+        Core.Tools.setCurrentTool(toolId);
 
         Core.MessageLog.trace(
           '[SceneKit] Switched to tool "' + toolName + '" (ID: ' + toolId + ')',
