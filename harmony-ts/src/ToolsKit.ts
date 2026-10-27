@@ -148,8 +148,6 @@ interface ToolsKitDependencies {
         applyFnName: ApplyPresetFunction,
         label: string,
       ): void {
-        $.MessageLog.trace('applying');
-        $.MessageLog.trace('applying2');
         $.scene.beginUndoRedoAccum('Apply ' + label + ': ' + presetName);
         try {
           var path = `${$.specialFolders.userScripts}/keyframe_presets/${subFolder}${presetName}.json`;
@@ -161,6 +159,7 @@ interface ToolsKitDependencies {
           var presetData = $.JSON.parse(content);
           var currentFrame = $.frame.current();
           var sel = $.TimelineKit.getSelection();
+          $.log(sel);
           if (presetSettings.edgeSnappingEnabled) {
             currentFrame = FrameSnapping.getNearestBoundaryFrame(currentFrame);
           }
@@ -172,7 +171,7 @@ interface ToolsKitDependencies {
           }
           var trueStart = currentFrame - (presetData.center || 0);
           var keyframes = presetData.looping
-            ? ToolsModule.buildLoopingKeyframes(presetData.keyframes, trueStart, sel.endFrame)
+            ? ToolsModule.buildLoopingKeyframes(presetData.keyframes, sel.startFrame, sel.endFrame)
             : presetData.keyframes;
           if (presetData.looping) {
             $.MessageLog.trace(

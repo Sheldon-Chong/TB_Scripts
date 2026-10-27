@@ -34,24 +34,24 @@ function createKeyframeGeneratorKit(Core: HarmonyCore) {
 
         var remainingRatio = 1 - progress;
 
-        var currentX = amount.x * Math.pow(remainingRatio, decayExponent);
+        var currentX = amount.x * Core.Math.pow(remainingRatio, decayExponent);
 
-        var currentY = amount.y * Math.pow(remainingRatio, decayExponent);
+        var currentY = amount.y * Core.Math.pow(remainingRatio, decayExponent);
 
         var current: any;
 
         if (currentX > 0.001 || currentY > 0.001) {
           var maxAmount = currentX > currentY ? currentX : currentY;
 
-          var minDistSq = Math.pow(maxAmount * minStepRatio, 2);
+          var minDistSq = Core.Math.pow(maxAmount * minStepRatio, 2);
 
           var attempts = 0;
 
           do {
             current = new Core.Vec2(
-              (Math.random() - 0.5) * 2 * currentX,
+              (Core.Math.random() - 0.5) * 2 * currentX,
 
-              (Math.random() - 0.5) * 2 * currentY,
+              (Core.Math.random() - 0.5) * 2 * currentY,
             );
 
             attempts++;

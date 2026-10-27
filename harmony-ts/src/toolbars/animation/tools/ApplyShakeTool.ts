@@ -64,12 +64,12 @@ function createApplyShakeToolKit(Core: HarmonyCore, KeyframeGenerator: KeyframeG
       try {
         var centerPoint = ctx._rectCenter;
         var currentPoint = ctx.currentPoint;
-        var screenWidth = Math.abs(currentPoint.screenX - centerPoint.screenX);
-        var screenHeight = Math.abs(currentPoint.screenY - centerPoint.screenY);
+        var screenWidth = Core.Math.abs(currentPoint.screenX - centerPoint.screenX);
+        var screenHeight = Core.Math.abs(currentPoint.screenY - centerPoint.screenY);
         var fieldX = currentPoint.x - centerPoint.x;
         var fieldY = currentPoint.y - centerPoint.y;
-        var fieldDistance = Math.sqrt(fieldX * fieldX + fieldY * fieldY);
-        var screenDistance = Math.sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
+        var fieldDistance = Core.Math.sqrt(fieldX * fieldX + fieldY * fieldY);
+        var screenDistance = Core.Math.sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
 
         ctx._pxPerFieldUnit = fieldDistance > 0.001 ? screenDistance / fieldDistance : 1;
 
@@ -102,8 +102,8 @@ function createApplyShakeToolKit(Core: HarmonyCore, KeyframeGenerator: KeyframeG
       try {
         var centerPoint = ctx._rectCenter;
         var currentPoint = ctx.currentPoint;
-        var screenWidth = Math.abs(currentPoint.screenX - centerPoint.screenX);
-        var screenHeight = Math.abs(currentPoint.screenY - centerPoint.screenY);
+        var screenWidth = Core.Math.abs(currentPoint.screenX - centerPoint.screenX);
+        var screenHeight = Core.Math.abs(currentPoint.screenY - centerPoint.screenY);
         var ratio = this._pxPerFieldUnit || 174;
         var halfX = screenWidth / ratio;
         var halfY = screenHeight / ratio;

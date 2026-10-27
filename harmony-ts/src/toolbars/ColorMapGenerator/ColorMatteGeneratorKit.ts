@@ -520,7 +520,7 @@
       });
       // Core.render.renderScene(1, 5);
 
-      renderWithProgress();
+      // renderWithProgress();
       Core.scene.beginUndoRedoAccum('Toggle Color Map Mode');
 
       try {
