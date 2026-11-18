@@ -1,21 +1,21 @@
-namespace MetadataKit {
-  /**
-   * A metadata object as returned by scene.metadatas().
-   *
-   * IMPORTANT: Regardless of the declared `type`, the `value` is ALWAYS a
-   * string when read back. Harmony's metadata system stores everything as
-   * strings — `type` is purely a semantic label. Use `parseValue()` to
-   * convert the string back to its intended JavaScript type.
-   */
-  export interface MetadataObject {
-    name: string;
-    type: 'string' | 'int' | 'double' | 'bool';
-    creator: string;
-    version: string;
-    /** Always a string when read back from the scene. */
-    value: string;
-  }
+/**
+ * A metadata object as returned by sceneApi.metadatas().
+ *
+ * IMPORTANT: Regardless of the declared `type`, the `value` is ALWAYS a
+ * string when read back. Harmony's metadata system stores everything as
+ * strings — `type` is purely a semantic label. Use `parseValue()` to
+ * convert the string back to its intended JavaScript type.
+ */
+interface SceneMetadataObject {
+  name: string;
+  type: 'string' | 'int' | 'double' | 'bool';
+  creator: string;
+  version: string;
+  /** Always a string when read back from the scene. */
+  value: string;
+}
 
+function createMetadataKit(sceneApi: typeof scene) {
   // ── Internal helpers ──────────────────────────────────────────────
 
   /** Infer the Harmony metadata type string from a JavaScript value. */
@@ -35,13 +35,13 @@ namespace MetadataKit {
   // ── Public API ────────────────────────────────────────────────────
 
   /** Return the list of all metadata objects for the current scene. */
-  export function getAll(): MetadataObject[] {
-    return scene.metadatas();
+  function getAll(): SceneMetadataObject[] {
+    return sceneApi.metadatas();
   }
 
   /** Return all unique metadata key names in the current scene. */
-  export function keys(): string[] {
-    const all = scene.metadatas();
+  function keys(): string[] {
+    const all = sceneApi.metadatas();
     const result: string[] = [];
     for (let i = 0; i < all.length; i++) {
       if (all[i] && all[i].name && result.indexOf(all[i].name) === -1) {
@@ -52,8 +52,8 @@ namespace MetadataKit {
   }
 
   /** Check whether a metadata entry with the given name exists. */
-  export function has(key: string): boolean {
-    const all = scene.metadatas();
+  function has(key: string): boolean {
+    const all = sceneApi.metadatas();
     for (let i = 0; i < all.length; i++) {
       if (all[i] && all[i].name === key) return true;
     }
@@ -65,21 +65,21 @@ namespace MetadataKit {
    * Returns undefined if no match is found.
    *
    * NOTE: When `type` is omitted, we search the full metadatas() array
-   * because Harmony's scene.metadata(name) defaults to type="string"
+   * because Harmony's sceneApi.metadata(name) defaults to type="string"
    * and won't find entries with type "int", "double", or "bool".
    */
-  export function get(
+  function get(
     name: string,
     type?: 'string' | 'int' | 'double' | 'bool',
-  ): MetadataObject | undefined {
+  ): SceneMetadataObject | undefined {
     // If a specific type is requested, use the native API which is faster
     if (type !== undefined) {
-      const m = scene.metadata(name, type);
+      const m = sceneApi.metadata(name, type);
       if (!m || m.name === undefined) return undefined;
       return m;
     }
     // No type specified: search all metadata to avoid the "string" default
-    const all = scene.metadatas();
+    const all = sceneApi.metadatas();
     for (let i = 0; i < all.length; i++) {
       if (all[i] && all[i].name === name) {
         return all[i];
@@ -97,8 +97,8 @@ namespace MetadataKit {
    *   number  → "int" (whole) or "double" (fractional)
    *   boolean → "bool"
    */
-  export function set(key: string, value: string | number | boolean): void {
-    scene.setMetadata({
+  function set(key: string, value: string | number | boolean): void {
+    sceneApi.setMetadata({
       name: key,
       type: inferType(value),
       value: value,
@@ -112,12 +112,12 @@ namespace MetadataKit {
    * JSON.stringify() and saved with type "string". Use getJson() to read
    * it back.
    */
-  export function setJson(key: string, value: unknown): void {
+  function setJson(key: string, value: unknown): void {
     set(key, JSON.stringify(value));
   }
 
-  export function removeAll(): void {
-    const all = scene.metadatas();
+  function removeAll(): void {
+    const all = sceneApi.metadatas();
 
     const skipNames = ['guideList', 'symmetryGuideList', 'alignmentGuideList'];
 
@@ -126,7 +126,7 @@ namespace MetadataKit {
         continue;
       }
       if (all[i] && all[i].name) {
-        scene.removeMetadata({ name: all[i].name, type: all[i].type });
+        sceneApi.removeMetadata({ name: all[i].name, type: all[i].type });
       }
     }
   }
@@ -135,11 +135,11 @@ namespace MetadataKit {
    * Remove all metadata entries with the given name from the scene.
    * @returns true if at least one entry was found and removed.
    */
-  export function remove(key: string): boolean {
-    // Collect matching entries from the full list (avoid scene.metadata()
+  function remove(key: string): boolean {
+    // Collect matching entries from the full list (avoid sceneApi.metadata()
     // which defaults to type="string" and misses non-string types).
-    const all = scene.metadatas();
-    const matches: MetadataObject[] = [];
+    const all = sceneApi.metadatas();
+    const matches: SceneMetadataObject[] = [];
     for (let i = 0; i < all.length; i++) {
       if (all[i] && all[i].name === key) {
         matches.push(all[i]);
@@ -150,7 +150,7 @@ namespace MetadataKit {
 
     let removed = false;
     for (let i = 0; i < matches.length; i++) {
-      if (scene.removeMetadata({ name: key, type: matches[i].type })) {
+      if (sceneApi.removeMetadata({ name: key, type: matches[i].type })) {
         removed = true;
       }
     }
@@ -165,7 +165,7 @@ namespace MetadataKit {
    * - "double" → number (via parseFloat)
    * - "bool"   → boolean ("true" → true, anything else → false)
    */
-  export function parseValue(meta: MetadataObject): string | number | boolean {
+  function parseValue(meta: SceneMetadataObject): string | number | boolean {
     switch (meta.type) {
       case 'string':
         return meta.value;
@@ -184,7 +184,7 @@ namespace MetadataKit {
    * Convenience: get a single metadata by name and return its parsed value,
    * or a default if not found.
    */
-  export function getValue(
+  function getValue(
     name: string,
     defaultValue?: string | number | boolean,
   ): string | number | boolean | undefined {
@@ -198,7 +198,7 @@ namespace MetadataKit {
    * into an object. Returns undefined if the key doesn't exist or the stored
    * value isn't valid JSON.
    */
-  export function getJson<T = unknown>(key: string): T | undefined {
+  function getJson<T = unknown>(key: string): T | undefined {
     const raw = getValue(key);
     if (typeof raw !== 'string') return undefined;
     try {
@@ -207,4 +207,7 @@ namespace MetadataKit {
       return undefined;
     }
   }
+  return {
+    getAll, keys, has, get, set, setJson, removeAll, remove, parseValue, getValue, getJson,
+  };
 }

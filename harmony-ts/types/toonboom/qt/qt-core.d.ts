@@ -46,3 +46,16 @@ declare class QAction {
   checked: boolean;
   [key: string]: any;
 }
+
+declare class QProcess {
+  constructor(parent?: QWidget);
+  start(program: string, args: string[]): void;
+  waitForFinished(msecs: number): boolean;
+  kill(): void;
+  readAllStandardOutput(): { toString(): string };
+  readAllStandardError(): { toString(): string };
+  errorString(): string;
+  readyReadStandardOutput: QSignal;
+  errorOccurred: QSignal;
+  finished: QSignal;
+}

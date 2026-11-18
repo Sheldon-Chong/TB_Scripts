@@ -1,6 +1,7 @@
 include(specialFolders.userScripts + '/core/Shapes.js');
 include(specialFolders.userScripts + '/core/Maths.js');
 include(specialFolders.userScripts + '/core/Vectors.js');
+include(specialFolders.userScripts + '/core/MetadataKit.js');
 include(specialFolders.userScripts + '/core/SceneKit.js');
 include(specialFolders.userScripts + '/core/TimelineKit.js');
 include(specialFolders.userScripts + '/core/Drawing.js');
@@ -23,6 +24,7 @@ include(specialFolders.userScripts + '/core/colors/GlobalPaletteManager.js');
 include(specialFolders.userScripts + '/core/colors/PalettesSingleton.js');
 include(specialFolders.userScripts + '/core/colors/Palettes.js');
 include(specialFolders.userScripts + '/core/Timer.js');
+include(specialFolders.userScripts + '/core/ProcessKit.js');
 
 var __TB_DEV__ = true;
 var __tbGlobal = Function('return this;')();
@@ -96,12 +98,23 @@ if (!__tbShared.__TBTest) {
 
   MessageLog.trace('[Core INIT] Created successfully');
   MessageLog.trace('[Core INIT] Context: ' + __tbShared.__TBContextID);
+} else {
+  if (!__tbShared.__TBTest.ProcessKit) {
+    __tbShared.__TBTest.ProcessKit = createProcessKit(__tbShared.__TBTest);
+  }
+  if (!__tbShared.__TBTest.FileDialog) __tbShared.__TBTest.FileDialog = FileDialog;
+  if (!__tbShared.__TBTest.MetadataKit) {
+    var metadataKit = createMetadataKit(__tbShared.__TBTest.scene);
+    __tbShared.__TBTest.SceneKit.metadata = metadataKit;
+    __tbShared.__TBTest.MetadataKit = metadataKit;
+  }
 }
 
 function reloadDevelopmentCore() {
   include(specialFolders.userScripts + '/core/Shapes.js');
   include(specialFolders.userScripts + '/core/Maths.js');
   include(specialFolders.userScripts + '/core/Vectors.js');
+  include(specialFolders.userScripts + '/core/MetadataKit.js');
   include(specialFolders.userScripts + '/core/SceneKit.js');
   include(specialFolders.userScripts + '/core/TimelineKit.js');
   include(specialFolders.userScripts + '/core/Drawing.js');
@@ -124,6 +137,7 @@ function reloadDevelopmentCore() {
   include(specialFolders.userScripts + '/core/colors/PalettesSingleton.js');
   include(specialFolders.userScripts + '/core/colors/Palettes.js');
   include(specialFolders.userScripts + '/core/Timer.js');
+  include(specialFolders.userScripts + '/core/ProcessKit.js');
 
   return reloadCore();
 }
@@ -203,6 +217,7 @@ interface CoreModules {
   LayerManager: ReturnType<typeof createLayerManager>;
   TimelineKit: ReturnType<typeof createTimelineKit>;
   SceneKit: ReturnType<typeof createSceneKit>;
+  MetadataKit: ReturnType<typeof createMetadataKit>;
   Toolbar: ReturnType<typeof createToolbarKit>;
   Vectors: ReturnType<typeof createVectors>;
   Vec2: ReturnType<typeof createVectors>['Vec2'];
@@ -215,6 +230,7 @@ interface CoreModules {
   oSelection: ReturnType<typeof createSelectionClass>;
   log: ReturnType<typeof createLogger>;
   Timer: ReturnType<typeof createTimerKit>;
+  ProcessKit: ReturnType<typeof createProcessKit>;
   QPushButton;
   PaletteKit: ReturnType<typeof createPaletteKit>;
   reloadDevelopmentCore: typeof reloadDevelopmentCore;
@@ -249,6 +265,7 @@ function createCoreBase(H?: any) {
     ScriptToolbarDef: H.ScriptToolbarDef as typeof ScriptToolbarDef,
     PermanentFile: H.PermanentFile as typeof PermanentFile,
     QProcess: H.QProcess as typeof QProcess,
+    FileDialog: (H.FileDialog || FileDialog) as typeof FileDialog,
     about: H.about as typeof about,
     QApplication: H.QApplication as typeof QApplication,
     func: H.func as typeof func,
@@ -263,6 +280,7 @@ function createCoreBase(H?: any) {
     QVBoxLayout: H.QVBoxLayout as typeof QVBoxLayout,
     QLabel: H.QLabel as typeof QLabel,
     QPushButton: H.QPushButton as typeof QPushButton,
+    QProgressBar: H.QProgressBar as typeof QProgressBar,
     Object: Object,
     JSON: JSON,
     Math: Math,
@@ -300,6 +318,9 @@ function createCore(base?: CoreBase): HarmonyCore {
 
     setStage('createTimerKit');
     Runtime.Timer = createTimerKit(Runtime);
+
+    setStage('createProcessKit');
+    Runtime.ProcessKit = createProcessKit(Runtime);
 
     setStage('createColorUtils');
     Runtime.ColorUtils = createColorUtils(Runtime);
@@ -410,8 +431,11 @@ function createCore(base?: CoreBase): HarmonyCore {
     setStage('createTimelineKit');
     Runtime.TimelineKit = createTimelineKit(Runtime);
 
+    setStage('createMetadataKit');
+    Runtime.MetadataKit = createMetadataKit(Runtime.scene);
+
     setStage('createSceneKit');
-    Runtime.SceneKit = createSceneKit(Runtime);
+    Runtime.SceneKit = createSceneKit(Runtime, Runtime.MetadataKit);
 
     setStage('createToolbarKit');
     Runtime.Toolbar = createToolbarKit(Runtime);

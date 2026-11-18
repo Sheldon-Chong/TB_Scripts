@@ -1,0 +1,1623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project  source="Harmony Advanced (HarmonyAdvanced.exe) version 25.2.0 build 24991 2026-03-25 08:42:03" version="2520" build="24991" date="Fri Oct 30 15:20:23 2026" timeMsec="1793344823542" username="emers" realUsername="emers" creator="harmony">
+ <elements>
+  <element id="1" elementName="Drawing" elementFolder="Drawing" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
+   <drawings>
+    <dwg name="1"/>
+    <dwg name="2"/>
+    <dwg name="3"/>
+    <dwg name="4"/>
+    <dwg name="4_1"/>
+    <dwg name="5"/>
+    <dwg name="6"/>
+    <dwg name="TestDrawing_1"/>
+    <dwg name="TestDrawing_2"/>
+    <dwg name="TestDrawing_3"/>
+    <dwg name="TestDrawing_4"/>
+    <dwg name="TestDrawing_5"/>
+    <dwg name="TestDrawing_6"/>
+    <dwg name="TestDrawing_7"/>
+    <dwg name="TestDrawing_8"/>
+    <dwg name="TestDrawing_9"/>
+    <dwg name="TestDrawing_10"/>
+    <dwg name="TestDrawing_11"/>
+    <dwg name="TestDrawing_12"/>
+    <dwg name="TestDrawing_13"/>
+    <dwg name="TestDrawing_14"/>
+    <dwg name="TestDrawing_15"/>
+    <dwg name="TestDrawing_16"/>
+    <dwg name="TestDrawing_17"/>
+    <dwg name="TestDrawing_18"/>
+    <dwg name="TestDrawing_19"/>
+    <dwg name="TestDrawing_20"/>
+    <dwg name="TestDrawing_21"/>
+    <dwg name="TestDrawing_22"/>
+    <dwg name="TestDrawing_23"/>
+    <dwg name="TestDrawing_24"/>
+    <dwg name="TestDrawing_25"/>
+    <dwg name="TestDrawing_26"/>
+    <dwg name="TestDrawing_27"/>
+    <dwg name="TestDrawing_28"/>
+    <dwg name="TestDrawing_29"/>
+    <dwg name="TestDrawing_30"/>
+    <dwg name="TestDrawing_31"/>
+    <dwg name="TestDrawing_32"/>
+    <dwg name="TestDrawing_33"/>
+    <dwg name="TestDrawing_34"/>
+    <dwg name="TestDrawing_35"/>
+    <dwg name="TestDrawing_36"/>
+    <dwg name="TestDrawing_37" customKey="Sans"/>
+    <dwg name="TestDrawing_38" customKey="Sans"/>
+    <dwg name="TestDrawing_39" customKey="Sans"/>
+    <dwg name="TestDrawing_40" customKey="Sans"/>
+    <dwg name="TestDrawing_41" customKey="Sans"/>
+    <dwg name="TestDrawing_42" customKey="Sans"/>
+    <dwg name="TestDrawing_43" customKey="Sans"/>
+    <dwg name="TestDrawing_44"/>
+    <dwg name="TestDrawing_45"/>
+    <dwg name="TestDrawing_46" customKey="Sans"/>
+    <dwg name="TestDrawing_47" customKey="Sans"/>
+    <dwg name="TestDrawing_48"/>
+    <dwg name="TestDrawing_49" customKey="Sans"/>
+    <dwg name="TestDrawing_50"/>
+    <dwg name="TestDrawing_51" customKey="Test"/>
+    <dwg name="TestDrawing_52"/>
+    <dwg name="TestDrawing_53"/>
+    <dwg name="TestDrawing_54"/>
+    <dwg name="7"/>
+    <dwg name="test"/>
+    <dwg name="test_1"/>
+    <dwg name="test_2"/>
+    <dwg name="test_3"/>
+    <dwg name="test_4"/>
+    <dwg name="test_5"/>
+    <dwg name="test_6"/>
+    <dwg name="test_7"/>
+    <dwg name="test_8"/>
+    <dwg name="test_9"/>
+    <dwg name="test_10"/>
+    <dwg name="test_11"/>
+    <dwg name="test_12"/>
+    <dwg name="test_13"/>
+    <dwg name="test_14"/>
+    <dwg name="new"/>
+    <dwg name="new_1"/>
+    <dwg name="new_2"/>
+    <dwg name="new_3"/>
+    <dwg name="new_4"/>
+    <dwg name="8"/>
+    <dwg name="8_1"/>
+    <dwg name="8_2"/>
+    <dwg name="8_3"/>
+    <dwg name="8_4"/>
+    <dwg name="8_5"/>
+    <dwg name="8_6"/>
+    <dwg name="8_7"/>
+    <dwg name="8_8"/>
+    <dwg name="8_9"/>
+    <dwg name="8_9_1"/>
+    <dwg name="8_9_2"/>
+    <dwg name="8_9_3"/>
+    <dwg name="8_9_4"/>
+    <dwg name="8_9_4_1"/>
+    <dwg name="8_9_4_1_1"/>
+    <dwg name="9"/>
+    <dwg name="10"/>
+    <dwg name="11"/>
+    <dwg name="9_1"/>
+    <dwg name="10_1"/>
+    <dwg name="11_1"/>
+    <dwg name="9_2"/>
+    <dwg name="10_2"/>
+    <dwg name="11_2"/>
+    <dwg name="12"/>
+    <dwg name="13"/>
+    <dwg name="12_1"/>
+    <dwg name="13_1"/>
+    <dwg name="12_2"/>
+    <dwg name="13_2"/>
+    <dwg name="12_3"/>
+    <dwg name="13_3"/>
+    <dwg name="12_4"/>
+    <dwg name="13_4"/>
+    <dwg name="12_5"/>
+    <dwg name="13_5"/>
+    <dwg name="12_6"/>
+    <dwg name="13_6"/>
+    <dwg name="12_7"/>
+    <dwg name="13_7"/>
+    <dwg name="12_8"/>
+    <dwg name="13_8"/>
+    <dwg name="12_9"/>
+    <dwg name="13_9"/>
+    <dwg name="12_10"/>
+    <dwg name="13_10"/>
+    <dwg name="12_11"/>
+    <dwg name="13_11"/>
+    <dwg name="12_12"/>
+    <dwg name="13_12"/>
+    <dwg name="12_13"/>
+    <dwg name="13_13"/>
+    <dwg name="12_14"/>
+    <dwg name="12_15"/>
+    <dwg name="12_16"/>
+    <dwg name="13_14"/>
+    <dwg name="12_17"/>
+    <dwg name="13_15"/>
+    <dwg name="12_18"/>
+    <dwg name="13_16"/>
+    <dwg name="12_19"/>
+    <dwg name="13_17"/>
+    <dwg name="12_20"/>
+    <dwg name="13_18"/>
+    <dwg name="12_21"/>
+    <dwg name="12_22"/>
+    <dwg name="13_19"/>
+    <dwg name="12_23"/>
+    <dwg name="12_22_1"/>
+    <dwg name="12_24"/>
+    <dwg name="12_22_2"/>
+    <dwg name="14"/>
+    <dwg name="15"/>
+    <dwg name="14_1"/>
+    <dwg name="15_1"/>
+    <dwg name="14_2"/>
+    <dwg name="15_2"/>
+    <dwg name="14_3"/>
+    <dwg name="15_3"/>
+    <dwg name="14_4"/>
+    <dwg name="15_4"/>
+    <dwg name="14_5"/>
+    <dwg name="15_5"/>
+    <dwg name="TestDrawing_53_1"/>
+    <dwg name="TestDrawing_53_2"/>
+    <dwg name="TestDrawing_52_1"/>
+    <dwg name="TestDrawing_54_1" customKey="Sans"/>
+    <dwg name="TestDrawing_54_2" customKey="Sans"/>
+    <dwg name="TestDrawing_54_3" customKey="Sans"/>
+    <dwg name="TestDrawing_52_2" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1"/>
+    <dwg name="TestDrawing_44_2"/>
+    <dwg name="TestDrawing_45_1"/>
+    <dwg name="TestDrawing_47_1" customKey="Sans"/>
+    <dwg name="TestDrawing_47_2" customKey="Sans"/>
+    <dwg name="TestDrawing_48_1" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1_1" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1_2" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1_3"/>
+    <dwg name="TestDrawing_48_2"/>
+    <dwg name="TestDrawing_44_1_2_1" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1_2_2" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1_3_1" customKey="Sans"/>
+    <dwg name="TestDrawing_48_2_1"/>
+    <dwg name="TestDrawing_48_2_2" customKey="Sans"/>
+    <dwg name="TestDrawing_48_2_3"/>
+    <dwg name="TestDrawing_44_1_3_2"/>
+    <dwg name="TestDrawing_48_2_2_1" customKey="Sans"/>
+    <dwg name="TestDrawing_48_2_2_2" customKey="Sans"/>
+    <dwg name="TestDrawing_48_2_3_1" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1_3_2_1" customKey="Sans"/>
+    <dwg name="TestDrawing_44_1_3_2_2"/>
+    <dwg name="TestDrawing_44_1_3_2_3"/>
+    <dwg name="TestDrawing_48_2_3_2"/>
+    <dwg name="TestDrawing_50_1"/>
+    <dwg name="TestDrawing_50_2"/>
+   </drawings>
+  </element>
+  <element id="2" elementName="Drawing_1" elementFolder="Drawing_1" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
+   <drawings>
+    <dwg name="1"/>
+    <dwg name="2"/>
+    <dwg name="3"/>
+    <dwg name="4" customKey="Sans"/>
+    <dwg name="5" customKey="Verity"/>
+    <dwg name="6"/>
+    <dwg name="7"/>
+    <dwg name="8"/>
+    <dwg name="9"/>
+    <dwg name="6_1"/>
+    <dwg name="7_1"/>
+    <dwg name="10"/>
+    <dwg name="11"/>
+    <dwg name="10_1"/>
+    <dwg name="11_1"/>
+    <dwg name="10_2"/>
+    <dwg name="11_2"/>
+    <dwg name="10_3"/>
+    <dwg name="11_3"/>
+    <dwg name="10_10"/>
+    <dwg name="10_11"/>
+    <dwg name="10_12"/>
+    <dwg name="10_13"/>
+    <dwg name="10_14"/>
+    <dwg name="10_4"/>
+    <dwg name="10_5"/>
+    <dwg name="10_6"/>
+    <dwg name="10_7"/>
+    <dwg name="10_8"/>
+    <dwg name="10_9"/>
+    <dwg name="11_10"/>
+    <dwg name="11_11"/>
+    <dwg name="11_12"/>
+    <dwg name="11_13"/>
+    <dwg name="11_4"/>
+    <dwg name="11_5"/>
+    <dwg name="11_6"/>
+    <dwg name="11_7"/>
+    <dwg name="11_8"/>
+    <dwg name="11_9"/>
+    <dwg name="12"/>
+    <dwg name="13" customKey="Test"/>
+    <dwg name="12_1" customKey="Test"/>
+    <dwg name="13_1" customKey="Test"/>
+    <dwg name="12_2" customKey="Test"/>
+    <dwg name="13_2" customKey="Test"/>
+    <dwg name="12_3" customKey="Test"/>
+    <dwg name="13_3" customKey="Test"/>
+    <dwg name="12_4" customKey="Test"/>
+    <dwg name="13_4" customKey="Test"/>
+    <dwg name="12_5" customKey="Test"/>
+    <dwg name="13_5"/>
+    <dwg name="12_6"/>
+    <dwg name="12_5_1" customKey="Test"/>
+    <dwg name="12_5_2" customKey="Test"/>
+    <dwg name="13_5_1" customKey="Test"/>
+    <dwg name="12_6_1" customKey="Test"/>
+    <dwg name="12_6_2" customKey="Sans"/>
+    <dwg name="12_6_3" customKey="Test"/>
+    <dwg name="13_5_2" customKey="Test"/>
+    <dwg name="14"/>
+    <dwg name="15" customKey="Sans"/>
+    <dwg name="16" customKey="Sans"/>
+    <dwg name="17"/>
+    <dwg name="18" customKey="Verity"/>
+    <dwg name="19" customKey="Sans"/>
+    <dwg name="20" customKey="Sans"/>
+    <dwg name="21" customKey="Verity"/>
+    <dwg name="22" customKey="Verity"/>
+    <dwg name="23" customKey="Verity"/>
+    <dwg name="24"/>
+    <dwg name="25"/>
+    <dwg name="26"/>
+    <dwg name="27"/>
+    <dwg name="28"/>
+    <dwg name="29" customKey="Verity"/>
+    <dwg name="30"/>
+    <dwg name="31"/>
+    <dwg name="32"/>
+    <dwg name="33"/>
+    <dwg name="34" customKey="Sans"/>
+    <dwg name="3_1"/>
+    <dwg name="5_1"/>
+    <dwg name="6_2"/>
+    <dwg name="3_7"/>
+    <dwg name="5_2"/>
+    <dwg name="6_3"/>
+    <dwg name="3_8"/>
+    <dwg name="5_3"/>
+    <dwg name="6_4"/>
+    <dwg name="3_9"/>
+    <dwg name="5_4"/>
+    <dwg name="6_5"/>
+    <dwg name="3_10"/>
+    <dwg name="5_4_1"/>
+    <dwg name="5_4_2"/>
+    <dwg name="6_5_1"/>
+    <dwg name="3_10_1"/>
+    <dwg name="3_10_2"/>
+    <dwg name="3_10_3"/>
+    <dwg name="6_5_2"/>
+   </drawings>
+  </element>
+  <element id="3" elementName="Drawing_2" elementFolder="Drawing_2" pixmapFormat="2" scanType="2" fieldChart="12" vectorType="2" rootFolder="elements">
+   <drawings>
+    <dwg name="1" customKey="Sans"/>
+    <dwg name="2"/>
+    <dwg name="3"/>
+    <dwg name="4"/>
+    <dwg name="3_1"/>
+    <dwg name="4_1"/>
+    <dwg name="3_2"/>
+    <dwg name="4_2"/>
+    <dwg name="3_3"/>
+    <dwg name="4_3"/>
+    <dwg name="3_4"/>
+    <dwg name="4_4"/>
+    <dwg name="3_1_1"/>
+    <dwg name="4_1_1"/>
+    <dwg name="3_2_1"/>
+    <dwg name="4_2_1"/>
+    <dwg name="3_3_1"/>
+    <dwg name="4_3_1"/>
+    <dwg name="3_5"/>
+    <dwg name="4_5"/>
+    <dwg name="3_1_2"/>
+    <dwg name="4_1_2"/>
+    <dwg name="3_2_2"/>
+    <dwg name="4_2_2"/>
+    <dwg name="3_3_2"/>
+    <dwg name="4_3_2"/>
+    <dwg name="3_6"/>
+    <dwg name="4_6"/>
+    <dwg name="3_1_3"/>
+    <dwg name="4_1_3"/>
+    <dwg name="3_2_3"/>
+    <dwg name="4_2_3"/>
+    <dwg name="5"/>
+    <dwg name="6"/>
+    <dwg name="3_7"/>
+    <dwg name="5_1"/>
+    <dwg name="6_1"/>
+    <dwg name="3_8"/>
+    <dwg name="5_2"/>
+    <dwg name="6_2"/>
+    <dwg name="3_9"/>
+    <dwg name="5_3"/>
+    <dwg name="6_3"/>
+    <dwg name="3_10"/>
+    <dwg name="7"/>
+    <dwg name="8"/>
+    <dwg name="7_1"/>
+    <dwg name="8_1"/>
+    <dwg name="7_2"/>
+    <dwg name="8_2"/>
+    <dwg name="7_3"/>
+    <dwg name="8_3"/>
+    <dwg name="7_4"/>
+    <dwg name="8_4"/>
+    <dwg name="3_10_1"/>
+    <dwg name="3_10_2"/>
+    <dwg name="7_10"/>
+    <dwg name="7_11"/>
+    <dwg name="7_12"/>
+    <dwg name="7_13"/>
+    <dwg name="7_14"/>
+    <dwg name="7_15"/>
+    <dwg name="7_5"/>
+    <dwg name="7_6"/>
+    <dwg name="7_7"/>
+    <dwg name="7_8"/>
+    <dwg name="7_9"/>
+    <dwg name="8_10"/>
+    <dwg name="8_11"/>
+    <dwg name="8_12"/>
+    <dwg name="8_13"/>
+    <dwg name="8_14"/>
+    <dwg name="8_5"/>
+    <dwg name="8_6"/>
+    <dwg name="8_7"/>
+    <dwg name="8_8"/>
+    <dwg name="8_9"/>
+    <dwg name="9" customKey="Sans"/>
+    <dwg name="10" customKey="Verity"/>
+    <dwg name="11" customKey="Sans"/>
+    <dwg name="12" customKey="Sans"/>
+    <dwg name="13" customKey="Sans"/>
+   </drawings>
+  </element>
+ </elements>
+ <options>
+  <metrics unitAspectRatioX="4" unitAspectRatioY="3" numberOfUnitsX="24" numberOfUnitsY="24" numberOfUnitsZ="12"/>
+  <resolution size="1920,1080" fovFit="VerticalFitFov" fov="41.112090439166927" projection="PerspectiveProjection"/>
+  <framerate val="12"/>
+  <zdragging val="true"/>
+  <zOrderCompatibilityWith7_3 val="false"/>
+  <pixelPerModelUnitForVectorLayers val="0.28800000000000009"/>
+  <pixelPerModelUnitForBitmapLayers val="0.28800000000000009"/>
+  <canvasForBitmapLayers size="3840,2160"/>
+  <imageProcessingFormat val="rgbaFloat"/>
+  <cameraInSymbols val="true"/>
+  <scaleFactor val="1"/>
+  <colorSpace val="sRGB"/>
+  <textureColorSpace val="sRGB"/>
+  <convertPalettesColorSpace val="true"/>
+  <tvgRecoveryTexture val="true"/>
+ </options>
+ <timelineMarkers>
+  <timelineMarker markerStart="11" markerLength="0" colour="#FFFFFFFF" note="s" name="Sans"/>
+  <timelineMarker markerStart="12" markerLength="0" colour="#88FFFFFF" note="asd" name="Sans"/>
+  <timelineMarker markerStart="18" markerLength="0" colour="#2288FFFF" note="sasd" name="Sans"/>
+  <timelineMarker markerStart="40" markerLength="0" colour="#FFFFFFFF" note="dsaf" name=""/>
+  <timelineMarker markerStart="42" markerLength="0" colour="#2288FFFF" note="whats up guys, sandgaming47 here." name="Sans"/>
+  <timelineMarker markerStart="43" markerLength="0" colour="#2288FFFF" note="today we&apos;re playing..." name="Sans"/>
+  <timelineMarker markerStart="44" markerLength="0" colour="#2288FFFF" note="A MODDED MINECRAFT PLAYTROUGH" name="Sans"/>
+  <timelineMarker markerStart="45" markerLength="0" colour="#2288FFFF" note="as for what mod we&apos;re playing..." name="Sans"/>
+  <timelineMarker markerStart="46" markerLength="0" colour="#2288FFFF" note="i have no clue actually, someone sent me it on discord" name="Sans"/>
+  <timelineMarker markerStart="47" markerLength="0" colour="#2288FFFF" note="woah!" name="Sans"/>
+  <timelineMarker markerStart="48" markerLength="0" colour="#FFFF00FF" note="Hello, I&apos;m verity!" name="Verity"/>
+  <timelineMarker markerStart="49" markerLength="0" colour="#2288FFFF" note="fwe" name="Sans"/>
+  <timelineMarker markerStart="50" markerLength="0" colour="#FFFF00FF" note="Your personal helper friend." name="Verity"/>
+  <timelineMarker markerStart="51" markerLength="0" colour="#FFFFFFFF" note="s" name="s"/>
+  <timelineMarker markerStart="52" markerLength="0" colour="#FFFF00FF" note="Ask me anything! I know everything." name="Verity"/>
+  <timelineMarker markerStart="53" markerLength="0" colour="#2288FFFF" note="verity, huh?" name="Sans"/>
+  <timelineMarker markerStart="54" markerLength="0" colour="#2288FFFF" note="hmm... you kinda look like someone i know." name="Sans"/>
+  <timelineMarker markerStart="55" markerLength="0" colour="#2288FFFF" note="you aren&apos;t gonna act friendly and then try to kill me right?" name="Sans"/>
+  <timelineMarker markerStart="56" markerLength="0" colour="#FFFF00FF" note="Whaaat?? No...?" name="Verity"/>
+  <timelineMarker markerStart="57" markerLength="0" colour="#FFFF00FF" note="I&apos;m just here to help! Why don&apos;t you ask me something?" name="Verity"/>
+  <timelineMarker markerStart="58" markerLength="0" colour="#2288FFFF" note="alright, what am i standing on right now?" name="Sans"/>
+  <timelineMarker markerStart="59" markerLength="0" colour="#FFFF00FF" note="You&apos;re currently touching grass!" name="Verity"/>
+  <timelineMarker markerStart="60" markerLength="0" colour="#2288FFFF" note="what&apos;s 9 + 10" name="Sans"/>
+  <timelineMarker markerStart="61" markerLength="0" colour="#FFFF00FF" note="21!" name="Verity"/>
+  <timelineMarker markerStart="62" markerLength="0" colour="#2288FFFF" note="is water wet?" name="Sans"/>
+  <timelineMarker markerStart="63" markerLength="0" colour="#FFFF00FF" note="Not in the traditional sense, however it makes other things wet!" name="Verity"/>
+  <timelineMarker markerStart="64" markerLength="0" colour="#2288FFFF" note="what was the common name of gold during the 2013 era of minecraft?" name="Sans"/>
+  <timelineMarker markerStart="65" markerLength="0" colour="#FFFF00FF" note="It was butter, of course!" name="Verity"/>
+  <timelineMarker markerStart="66" markerLength="0" colour="#2288FFFF" note="huh." name="Sans"/>
+  <timelineMarker markerStart="67" markerLength="0" colour="#2288FFFF" note="that&apos;s some elite “ball” knowledge." name="Sans"/>
+  <timelineMarker markerStart="68" markerLength="0" colour="#2288FFFF" note="welp, i better get started on this playthrough." name="Sans"/>
+  <timelineMarker markerStart="69" markerLength="0" colour="#2288FFFF" note="i&apos;m probably gonna gather some materials, build a house, and maybe explore a village?" name="Sans"/>
+  <timelineMarker markerStart="70" markerLength="0" colour="#FFFF00FF" note="The nearest village is 842 blocks northeast of your current location." name="Verity"/>
+  <timelineMarker markerStart="71" markerLength="0" colour="#2288FFFF" note="oh. thanks for the info." name="Sans"/>
+  <timelineMarker markerStart="72" markerLength="0" colour="#2288FFFF" note="hey verity!" name="Sans"/>
+  <timelineMarker markerStart="73" markerLength="0" colour="#2288FFFF" note="do you know where&apos;s the nearest source of coal?" name="Sans"/>
+  <timelineMarker markerStart="74" markerLength="0" colour="#FFFF00FF" note="The nearest coal vein is located 126 blocks northwest of your position, at Y level 112." name="Verity"/>
+  <timelineMarker markerStart="75" markerLength="0" colour="#2288FFFF" note="heh, nice!" name="Sans"/>
+  <timelineMarker markerStart="76" markerLength="0" colour="#2288FFFF" note="verity...  do you know where&apos;s the nearest source of diamonds?" name="Sans"/>
+  <timelineMarker markerStart="77" markerLength="0" colour="#FFFF00FF" note="The nearest diamond vein is approximately 347 blocks southeast of your current position, at Y level -54." name="Verity"/>
+  <timelineMarker markerStart="78" markerLength="0" colour="#2288FFFF" note="YOOOOO" name="Sans"/>
+  <timelineMarker markerStart="79" markerLength="0" colour="#2288FFFF" note="verity, do you know where&apos;s the nearest source of wood?" name="Sans"/>
+  <timelineMarker markerStart="80" markerLength="0" colour="#FFFF00FF" note="Seriously?" name="Verity"/>
+  <timelineMarker markerStart="81" markerLength="0" colour="#2288FFFF" note="and after much ketchup, sweat, and tears... my house is finally complete!" name="Sans"/>
+  <timelineMarker markerStart="82" markerLength="0" colour="#2288FFFF" note="what do you think?" name="Sans"/>
+  <timelineMarker markerStart="83" markerLength="0" colour="#FFFF00FF" note="I think you should watch some beginner tutorials online." name="Verity"/>
+  <timelineMarker markerStart="84" markerLength="0" colour="#2288FFFF" note="welp, time to take a well deserved nap," name="Sans"/>
+  <timelineMarker markerStart="85" markerLength="0" colour="#2288FFFF" note="CREEPER??" name="Sans"/>
+  <timelineMarker markerStart="86" markerLength="0" colour="#FFFF00FF" note="Haha, just kidding, that was me!" name="Verity"/>
+  <timelineMarker markerStart="87" markerLength="0" colour="#2288FFFF" note="huh? you make sounds with your mouth?" name="Sans"/>
+  <timelineMarker markerStart="88" markerLength="0" colour="#FFFF00FF" note="Of course I can!" name="Verity"/>
+  <timelineMarker markerStart="89" markerLength="0" colour="#FFFF00FF" note="I can even play music. Wanna listen to some tunes?" name="Verity"/>
+  <timelineMarker markerStart="90" markerLength="0" colour="#2288FFFF" note="sure, why not." name="Sans"/>
+  <timelineMarker markerStart="91" markerLength="0" colour="#2288FFFF" note="gimme another one!" name="Sans"/>
+  <timelineMarker markerStart="92" markerLength="0" colour="#2288FFFF" note="another one!" name="Sans"/>
+  <timelineMarker markerStart="93" markerLength="0" colour="#2288FFFF" note="h-how do you know that song?" name="Sans"/>
+  <timelineMarker markerStart="94" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity! I know everything!" name="Verity"/>
+  <timelineMarker markerStart="95" markerLength="0" colour="#2288FFFF" note="uh... enough music for now..." name="Sans"/>
+  <timelineMarker markerStart="96" markerLength="0" colour="#2288FFFF" note="alright, i ain&apos;t sleeping tonight." name="Sans"/>
+  <timelineMarker markerStart="97" markerLength="0" colour="#2288FFFF" note="ahh... what a good rest." name="Sans"/>
+  <timelineMarker markerStart="98" markerLength="0" colour="#2288FFFF" note="hey verity, is there anything i should know today?" name="Sans"/>
+  <timelineMarker markerStart="99" markerLength="0" colour="#FFFF00FF" note="Something is coming..." name="Verity"/>
+  <timelineMarker markerStart="100" markerLength="0" colour="#FFFF00FF" note="in 3 days." name="Verity"/>
+  <timelineMarker markerStart="101" markerLength="0" colour="#2288FFFF" note="is it the package i bought from amazon?" name="Sans"/>
+  <timelineMarker markerStart="102" markerLength="0" colour="#FFFF00FF" note="What?? No!" name="Verity"/>
+  <timelineMarker markerStart="103" markerLength="0" colour="#FFFF00FF" note="Your package is stuck in transit." name="Verity"/>
+  <timelineMarker markerStart="104" markerLength="0" colour="#2288FFFF" note="damn." name="Sans"/>
+  <timelineMarker markerStart="105" markerLength="0" colour="#2288FFFF" note="wait, how do you know that?" name="Sans"/>
+  <timelineMarker markerStart="106" markerLength="0" colour="#FFFF00FF" note="I&apos;m Verity." name="Verity"/>
+  <timelineMarker markerStart="107" markerLength="0" colour="#FFFF00FF" note="I know everything." name="Verity"/>
+  <timelineMarker markerStart="108" markerLength="0" colour="#2288FFFF" note="wait, gimme a sec. i gotta do something." name="Sans"/>
+  <timelineMarker markerStart="109" markerLength="0" colour="#2288FFFF" note="papyrus!" name="Sans"/>
+  <timelineMarker markerStart="110" markerLength="0" colour="#FFFFFFFF" note="WHAT IS IT!?? WHY DO YOU KEEP SPAMMING ME??" name=""/>
+  <timelineMarker markerStart="111" markerLength="0" colour="#FFFFFFFF" note="I&apos;M OUT SHOPPING FOR SOUP RIGHT NOW!" name=""/>
+  <timelineMarker markerStart="112" markerLength="0" colour="#FFFFFFFF" note="DON&apos;T TELL ME YOU BURNT THE WATER AGAIN!" name=""/>
+  <timelineMarker markerStart="113" markerLength="0" colour="#2288FFFF" note="nono! nothing like that!" name="Sans"/>
+  <timelineMarker markerStart="114" markerLength="0" colour="#2288FFFF" note="listen, there&apos;s this thing, it&apos;s yellow!" name="Sans"/>
+  <timelineMarker markerStart="115" markerLength="0" colour="#FFFFFFFF" note="WHAT???" name=""/>
+  <timelineMarker markerStart="116" markerLength="0" colour="#2288FFFF" note="it played the music, uh, um, it told me about my amazon parcel" name="Sans"/>
+  <timelineMarker markerStart="117" markerLength="0" colour="#FFFFFFFF" note="WHAT ARE YOU TALKING ABOUT??" name=""/>
+  <timelineMarker markerStart="118" markerLength="0" colour="#2288FFFF" note="quick, just get home quickly, and join me in my minecraft world!" name="Sans"/>
+  <timelineMarker markerStart="119" markerLength="0" colour="#FFFFFFFF" note="HUH????" name=""/>
+  <timelineMarker markerStart="120" markerLength="0" colour="#FFFF00FF" note="Who were you talking to?" name="Verity"/>
+  <timelineMarker markerStart="121" markerLength="0" colour="#2288FFFF" note="h-huh? no one!" name="Sans"/>
+  <timelineMarker markerStart="122" markerLength="0" colour="#FFFF00FF" note="Why do you need anyone else when you have me?" name="Verity"/>
+  <timelineMarker markerStart="123" markerLength="0" colour="#FFFF00FF" note="I&apos;m your, best, ONLY friend right?" name="Verity"/>
+  <timelineMarker markerStart="124" markerLength="0" colour="#2288FFFF" note="s-sure?" name="Sans"/>
+  <timelineMarker markerStart="125" markerLength="0" colour="#FFFF00FF" note="Well, great! You&apos;re my best friend too!" name="Verity"/>
+  <timelineMarker markerStart="126" markerLength="0" colour="#FFFFFFFF" note="SIGH... THIS BETTER BE WORTH IT." name=""/>
+  <timelineMarker markerStart="127" markerLength="0" colour="#FFFFFFFF" note="WHAT DID YOU CALL ME HERE FOR?" name=""/>
+  <timelineMarker markerStart="128" markerLength="0" colour="#FFFFFFFF" note="THIS IS THE THING YOU WERE TELLING ME ABOUT??" name=""/>
+  <timelineMarker markerStart="129" markerLength="0" colour="#FFFFFFFF" note="WHAT&apos;S THE BIG DEAL!?" name=""/>
+  <timelineMarker markerStart="130" markerLength="0" colour="#2288FFFF" note="shhh! don&apos;t say anything!" name="Sans"/>
+  <timelineMarker markerStart="131" markerLength="0" colour="#2288FFFF" note="this is verity, he... knows things." name="Sans"/>
+  <timelineMarker markerStart="132" markerLength="0" colour="#FFFFFFFF" note="WELL, I BETTER GO INTRODUCE MYSELF!" name=""/>
+  <timelineMarker markerStart="133" markerLength="0" colour="#2288FFFF" note="wait!" name="Sans"/>
+  <timelineMarker markerStart="134" markerLength="0" colour="#FFFFFFFF" note="HELLO MR. VERITY! IT&apos;S NICE TO MEET YOU!" name=""/>
+  <timelineMarker markerStart="135" markerLength="0" colour="#FFFF00FF" note="3 days." name="Verity"/>
+  <timelineMarker markerStart="136" markerLength="0" colour="#FFFFFFFF" note="WHAT? WHAT DID YOU SAY?" name=""/>
+  <timelineMarker markerStart="137" markerLength="0" colour="#FFFFFFFF" note="WHAT DOES THAT MEAN? WHAT&apos;S IN 3 DAYS?" name=""/>
+  <timelineMarker markerStart="138" markerLength="0" colour="#FFFFFFFF" note="VERITY, WHAT DID YOU MEAN, WHY AREN&apos;T YOU RESPONDING?" name=""/>
+  <timelineMarker markerStart="139" markerLength="0" colour="#FFFF00FF" note="Nothing important!" name="Verity"/>
+  <timelineMarker markerStart="140" markerLength="0" colour="#FFFF00FF" note="Anyways, let&apos;s talk about something else, for instance, what are you having for dinner?" name="Verity"/>
+  <timelineMarker markerStart="141" markerLength="0" colour="#FFFF00FF" note="I&apos;m sure the spaghetti you cooked yesterday was delicious." name="Verity"/>
+  <timelineMarker markerStart="142" markerLength="0" colour="#FFFFFFFF" note="WHY THANK YOU!! THE GREAT PAPYRUS ALWAYS MAKES EXCELLENT SPAGHETTI-" name=""/>
+  <timelineMarker markerStart="143" markerLength="0" colour="#FFFFFFFF" note="DID YOU TELL HIM ABOUT MY INCREDIBLE COOKING SKILLS?" name=""/>
+  <timelineMarker markerStart="144" markerLength="0" colour="#2288FFFF" note="no...?" name="Sans"/>
+  <timelineMarker markerStart="145" markerLength="0" colour="#FFFFFFFF" note="THEN HOW DOES IT KNOW?? ISN&apos;T THIS A MINECRAFT MOD??" name=""/>
+  <timelineMarker markerStart="146" markerLength="0" colour="#FFFF00FF" note="Hey, wacha guys talking about?" name="Verity"/>
+  <timelineMarker markerStart="147" markerLength="0" colour="#FFFFFFFF" note="N-NOTHING! WE&apos;RE JUST DISCUSSING WHAT TO DO NEXT!" name=""/>
+  <timelineMarker markerStart="148" markerLength="0" colour="#2288FFFF" note="uh, yup! we better stockpile on resources, since we&apos;re running low." name="Sans"/>
+  <timelineMarker markerStart="149" markerLength="0" colour="#FFFF00FF" note="Of course!" name="Verity"/>
+  <timelineMarker markerStart="150" markerLength="0" colour="#FFFF00FF" note="The nearest iron deposits are approximately 214 blocks northeast, located at Y level 48." name="Verity"/>
+  <timelineMarker markerStart="151" markerLength="0" colour="#FFFFFFFF" note="WHEW! THAT&apos;S ENOUGH GATHERING FOR NOW." name=""/>
+  <timelineMarker markerStart="152" markerLength="0" colour="#FFFFFFFF" note="SANS... YOU&apos;VE GOT EVERYTHING WE NEED RIGHT?" name=""/>
+  <timelineMarker markerStart="153" markerLength="0" colour="#2288FFFF" note="yup, lemme just check once more." name="Sans"/>
+  <timelineMarker markerStart="154" markerLength="0" colour="#2288FFFF" note="iron, diamonds, swords, tools, buckets of lava, buckets of water, buckets of milk," name="Sans"/>
+  <timelineMarker markerStart="155" markerLength="0" colour="#2288FFFF" note="bucket of salmon, bucket of pufferfish, bucket of cod, bucket of clownfish, bucket of butterflyfish," name="Sans"/>
+  <timelineMarker markerStart="156" markerLength="0" colour="#2288FFFF" note="it&apos;s day 3... i don&apos;t know what&apos;s coming... but we should be prepared." name="Sans"/>
+  <timelineMarker markerStart="157" markerLength="0" colour="#2288FFFF" note="verity, do we need anything else to defend ourselves?" name="Sans"/>
+  <timelineMarker markerStart="158" markerLength="0" colour="#2288FFFF" note="wait." name="Sans"/>
+  <timelineMarker markerStart="159" markerLength="0" colour="#2288FFFF" note="where&apos;s verity?" name="Sans"/>
+  <timelineMarker markerStart="160" markerLength="0" colour="#FFFF00FF" note="SANDGAMING47!! YOU LIAR! HOW DARE YOU INVITE SOMEONE ELSE!!" name="Verity"/>
+  <timelineMarker markerStart="161" markerLength="0" colour="#FFFF00FF" note="YOU ONLY NEED ME!!" name="Verity"/>
+  <timelineMarker markerStart="162" markerLength="0" colour="#2288FFFF" note="yipes! obsessive much?" name="Sans"/>
+  <timelineMarker markerStart="163" markerLength="0" colour="#FFFFFFFF" note="QUICK!! IN THE HOUSE!" name=""/>
+  <timelineMarker markerStart="164" markerLength="0" colour="#2288FFFF" note="no mobs should be able to get through solid blocks right?" name="Sans"/>
+  <timelineMarker markerStart="165" markerLength="0" colour="#FFFF00FF" note="YOU&apos;RE GONNA BE LIKE ALL THE OTHERS!" name="Verity"/>
+  <timelineMarker markerStart="166" markerLength="0" colour="#FFFF00FF" note="STAY FOR A WHILE, AND THEN ABANDON ME LIKE EVERYONE ELSE!" name="Verity"/>
+  <timelineMarker markerStart="167" markerLength="0" colour="#FFFF00FF" note="GOODBYE... SANDGAMING47." name="Verity"/>
+  <timelineMarker markerStart="168" markerLength="0" colour="#2288FFFF" note="wait wait wait!" name="Sans"/>
+  <timelineMarker markerStart="169" markerLength="0" colour="#2288FFFF" note="ill stay with you!" name="Sans"/>
+  <timelineMarker markerStart="170" markerLength="0" colour="#2288FFFF" note="i&apos;ll keep playing minecraft with you everyday! i won&apos;t leave!" name="Sans"/>
+  <timelineMarker markerStart="171" markerLength="0" colour="#FFFF00FF" note="You- will?" name="Verity"/>
+  <timelineMarker markerStart="172" markerLength="0" colour="#FFFF00FF" note="r-really? you mean it?" name="Verity"/>
+  <timelineMarker markerStart="173" markerLength="0" colour="#2288FFFF" note="NAH!!" name="Sans"/>
+  <timelineMarker markerStart="174" markerLength="0" colour="#FFFF00FF" note="YOU FOOL! I CAN&apos;T DIE!!" name="Verity"/>
+  <timelineMarker markerStart="175" markerLength="0" colour="#FFFF00FF" note="I&apos;M PART OF THE CODE!!" name="Verity"/>
+  <timelineMarker markerStart="176" markerLength="0" colour="#FFFF00FF" note="YOU WILL NEVER ESCAPE ME!!" name="Verity"/>
+  <timelineMarker markerStart="177" markerLength="0" colour="#2288FFFF" note="well... i still have one final move..." name="Sans"/>
+  <timelineMarker markerStart="178" markerLength="0" colour="#2288FFFF" note="whew, all in a day&apos;s work." name="Sans"/>
+  <timelineMarker markerStart="179" markerLength="0" colour="#2288FFFF" note="guess it goes to show you can&apos;t ever trust a smiling yellow creature." name="Sans"/>
+  <timelineMarker markerStart="180" markerLength="0" colour="#2288FFFF" note="oh hey, my amazon parcel is here!" name="Sans"/>
+  <timelineMarker markerStart="181" markerLength="0" colour="#FFFF00FF" note="Hey it&apos;s me," name="Verity"/>
+  <timelineMarker markerStart="182" markerLength="0" colour="#FFFF00FF" note="It&apos;s Verity!" name="Verity"/>
+  <timelineMarker markerStart="183" markerLength="0" colour="#FFFFFFFF" note="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" name=""/>
+  <timelineMarker markerStart="189" markerLength="0" colour="#FFFFFFFF" note="" name="s"/>
+ </timelineMarkers>
+ <scenes>
+  <scene name="Top" id="0d404d86239016fd" nbframes="1010" startFrame="1" stopFrame="1010">
+   <columns>
+    <column type="0" name="Drawing" displayOrder="0" width="100" anonymous="true" id="1">
+     <elementSeq exposures="1-4,23-29,37,39-43,45,47-49" val="TestDrawing_49" id="1"/>
+     <elementSeq exposures="10" val="TestDrawing_50" id="1"/>
+     <elementSeq exposures="13-14" val="TestDrawing_51" id="1"/>
+     <elementSeq exposures="15" val="TestDrawing_53" id="1"/>
+     <elementSeq exposures="16" val="TestDrawing_53_1" id="1"/>
+     <elementSeq exposures="17" val="TestDrawing_53_2" id="1"/>
+     <elementSeq exposures="18" val="TestDrawing_52_1" id="1"/>
+     <elementSeq exposures="19" val="TestDrawing_54_1" id="1"/>
+     <elementSeq exposures="20" val="TestDrawing_54_2" id="1"/>
+     <elementSeq exposures="21" val="TestDrawing_54_3" id="1"/>
+     <elementSeq exposures="22" val="TestDrawing_52_2" id="1"/>
+     <elementSeq exposures="50-177" val="2" id="1"/>
+     <elementSeq exposures="182-214" val="3" id="1"/>
+     <elementSeq exposures="215" val="4_1" id="1"/>
+     <elementSeq exposures="216-260" val="4" id="1"/>
+     <elementSeq exposures="267-277" val="7" id="1"/>
+     <elementSeq exposures="286" val="TestDrawing_37" id="1"/>
+     <elementSeq exposures="287" val="TestDrawing_38" id="1"/>
+     <elementSeq exposures="288" val="TestDrawing_39" id="1"/>
+     <elementSeq exposures="289" val="TestDrawing_40" id="1"/>
+     <elementSeq exposures="290" val="TestDrawing_41" id="1"/>
+     <elementSeq exposures="291" val="TestDrawing_42" id="1"/>
+     <elementSeq exposures="292" val="TestDrawing_43" id="1"/>
+     <elementSeq exposures="294" val="TestDrawing_44" id="1"/>
+     <elementSeq exposures="295" val="TestDrawing_45" id="1"/>
+     <elementSeq exposures="296" val="TestDrawing_46" id="1"/>
+     <elementSeq exposures="297" val="TestDrawing_47" id="1"/>
+     <elementSeq exposures="298" val="TestDrawing_47_1" id="1"/>
+     <elementSeq exposures="299" val="TestDrawing_47_2" id="1"/>
+     <elementSeq exposures="300" val="TestDrawing_48_1" id="1"/>
+     <elementSeq exposures="301" val="TestDrawing_44_1_1" id="1"/>
+     <elementSeq exposures="302" val="TestDrawing_44_1_2" id="1"/>
+     <elementSeq exposures="303" val="TestDrawing_44_1_2_1" id="1"/>
+     <elementSeq exposures="304" val="TestDrawing_44_1_2_2" id="1"/>
+     <elementSeq exposures="305" val="TestDrawing_44_1_3_1" id="1"/>
+     <elementSeq exposures="306" val="TestDrawing_48_2_1" id="1"/>
+     <elementSeq exposures="307" val="TestDrawing_48_2_2" id="1"/>
+     <elementSeq exposures="308" val="TestDrawing_48_2_2_1" id="1"/>
+     <elementSeq exposures="309" val="TestDrawing_48_2_2_2" id="1"/>
+     <elementSeq exposures="310" val="TestDrawing_48_2_3_1" id="1"/>
+     <elementSeq exposures="311" val="TestDrawing_44_1_3_2_1" id="1"/>
+     <elementSeq exposures="312" val="TestDrawing_44_1_3_2_2" id="1"/>
+     <elementSeq exposures="313" val="TestDrawing_44_1_3_2_3" id="1"/>
+     <elementSeq exposures="314" val="TestDrawing_48_2_3_2" id="1"/>
+    </column>
+    <column type="2" name="ATV-0DDC40234D5F860523904E6D" anonymous="true" displayOrder="0">
+     <infoX width="100"/>
+     <infoY width="100"/>
+     <infoZ width="100"/>
+     <infoVelocity width="100"/>
+     <path3D useVeloX="true" useVeloY="true" useVeloZ="true" constantZ="false">
+      <points>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="1"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="2"/>
+       <pt val="-0,-0,-0.189" lockedInTime="3"/>
+       <pt val="-0,-0,-0" lockedInTime="4"/>
+       <pt val="0,-0,0" lockedInTime="8"/>
+       <pt val="2.4054023217132459,-1.1511519368908854,0.20000000000000001" lockedInTime="9"/>
+       <pt val="4.8108046434264917,-2.3023038737817707,1.2470000000000001" lockedInTime="10"/>
+       <pt val="7.2162069651397376,-3.4534558106726565,4.9349999999999996" lockedInTime="11"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="12"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="13"/>
+       <pt val="-0,-0,-0.189" lockedInTime="14"/>
+       <pt val="-0,-0,-0" lockedInTime="15"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="16"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="17"/>
+       <pt val="-0,-0,-0.189" lockedInTime="18"/>
+       <pt val="-0,-0,-0" lockedInTime="19"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="20"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="21"/>
+       <pt val="-0,-0,-0.189" lockedInTime="22"/>
+       <pt val="-0,-0,-0" lockedInTime="23"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="24"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="25"/>
+       <pt val="-0,-0,-0.189" lockedInTime="26"/>
+       <pt val="-0,-0,-0" lockedInTime="27"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="28"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="29"/>
+       <pt val="-0,-0,-0.189" lockedInTime="30"/>
+       <pt val="-0,-0,-0" lockedInTime="31"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="32"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="33"/>
+       <pt val="-0,-0,-0.189" lockedInTime="34"/>
+       <pt val="-0,-0,-0" lockedInTime="35"/>
+       <pt val="-4.5629999999999997,2.6589999999999998,-3.3540000000000001" lockedInTime="36"/>
+       <pt val="-4.5629999999999997,2.6589999999999998,-0.94599999999999995" lockedInTime="37"/>
+       <pt val="-4.5629999999999997,2.6589999999999998,-0.189" lockedInTime="38"/>
+       <pt val="-4.5629999999999997,2.6589999999999998,-0" lockedInTime="39"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-3.3540000000000001" lockedInTime="40"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0.94599999999999995" lockedInTime="41"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0.189" lockedInTime="42"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0" lockedInTime="43"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-3.3540000000000001" lockedInTime="44"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0.94599999999999995" lockedInTime="45"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0.189" lockedInTime="46"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0" lockedInTime="47"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-3.3540000000000001" lockedInTime="48"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0.94599999999999995" lockedInTime="49"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0.189" lockedInTime="50"/>
+       <pt val="0.058000000000000003,-0.0040000000000000001,-0" lockedInTime="51"/>
+       <pt val="0.69899999999999995,-0.043999999999999997,-3.3540000000000001" lockedInTime="52"/>
+       <pt val="0.69899999999999995,-0.043999999999999997,-0.94599999999999995" lockedInTime="53"/>
+       <pt val="0.69899999999999995,-0.043999999999999997,-0.189" lockedInTime="54"/>
+       <pt val="-0,-0,-0.189" lockedInTime="177"/>
+       <pt val="-0,-0,-0" lockedInTime="178"/>
+       <pt val="-0,-0,3.3540000000000001" lockedInTime="179"/>
+       <pt val="-0,-0,0.94599999999999995" lockedInTime="180"/>
+       <pt val="-0,-0,0.189" lockedInTime="181"/>
+       <pt val="-0,-0,0" lockedInTime="182"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="183"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="184"/>
+       <pt val="-0,-0,-0.189" lockedInTime="185"/>
+       <pt val="-0,-0,-0" lockedInTime="186"/>
+       <pt val="0,0,-5.5511151231257827e-17" lockedInTime="293"/>
+       <pt val="-0,0,0" lockedInTime="377"/>
+       <pt val="-2.2884860136494711,1.3689203323940595,0.20000000000000001" lockedInTime="378"/>
+       <pt val="-4.5769720272989423,2.737840664788119,1.2470000000000001" lockedInTime="379"/>
+       <pt val="-6.8654580409484138,4.106760997182179,4.9349999999999996" lockedInTime="380"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="381"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="382"/>
+       <pt val="-0,-0,-0.189" lockedInTime="383"/>
+       <pt val="-0,-0,-0" lockedInTime="384"/>
+       <pt val="-0,-0,0" lockedInTime="406"/>
+       <pt val="-2.4363544768478111,1.084106993914687,0.20000000000000001" lockedInTime="407"/>
+       <pt val="-4.8727089536956223,2.168213987829374,1.2470000000000001" lockedInTime="408"/>
+       <pt val="-7.3090634305434339,3.2523209817440613,4.9349999999999996" lockedInTime="409"/>
+       <pt val="-0,-0,-3.3540000000000001" lockedInTime="410"/>
+       <pt val="-0,-0,-0.94599999999999995" lockedInTime="411"/>
+       <pt val="-0,-0,-0.189" lockedInTime="412"/>
+       <pt val="-0,-0,-0" lockedInTime="413"/>
+      </points>
+     </path3D>
+     <velocity type="3" name="ATV-0D0757F89CF4A4E03BB01A06" displayOrder="0" width="100" anonymous="true">
+      <step val="1" start="1" stop="1"/>
+      <noFrames/>
+      <points version="2">
+       <pt constSeg="true" x="1" yLocal="0" y="0"/>
+       <pt constSeg="true" x="2" yLocal="0.016685596599720003" y="0.016685596599720003"/>
+       <pt constSeg="true" x="3" yLocal="0.021931027092239937" y="0.021931027092239937"/>
+       <pt constSeg="true" x="4" yLocal="0.023240652406752844" y="0.023240652406752844"/>
+       <pt constSeg="true" x="8" yLocal="0.023240653792599698" y="0.023240653792599698"/>
+       <pt constSeg="true" x="9" yLocal="0.032249263346294646" y="0.032249263346294646"/>
+       <pt constSeg="true" x="10" yLocal="0.043860593696517937" y="0.043860593696517937"/>
+       <pt constSeg="true" x="11" yLocal="0.071015161880626856" y="0.071015161880626856"/>
+       <pt constSeg="true" x="12" yLocal="0.13440297282172292" y="0.13440297282172292"/>
+       <pt constSeg="true" x="13" yLocal="0.15135318088567176" y="0.15135318088567176"/>
+       <pt constSeg="true" x="14" yLocal="0.15659861137819175" y="0.15659861137819175"/>
+       <pt constSeg="true" x="15" yLocal="0.1579082366927046" y="0.1579082366927046"/>
+       <pt constSeg="true" x="16" yLocal="0.18114888909945745" y="0.18114888909945745"/>
+       <pt constSeg="true" x="17" yLocal="0.1978344856991775" y="0.1978344856991775"/>
+       <pt constSeg="true" x="18" yLocal="0.20307991619169746" y="0.20307991619169746"/>
+       <pt constSeg="true" x="19" yLocal="0.2043895415062103" y="0.2043895415062103"/>
+       <pt constSeg="true" x="20" yLocal="0.22763019391296321" y="0.22763019391296321"/>
+       <pt constSeg="true" x="21" yLocal="0.24431579051268318" y="0.24431579051268318"/>
+       <pt constSeg="true" x="22" yLocal="0.24956122100520309" y="0.24956122100520309"/>
+       <pt constSeg="true" x="23" yLocal="0.25087084631971601" y="0.25087084631971601"/>
+       <pt constSeg="true" x="24" yLocal="0.27411149872646873" y="0.27411149872646873"/>
+       <pt constSeg="true" x="25" yLocal="0.29079709532618875" y="0.29079709532618875"/>
+       <pt constSeg="true" x="26" yLocal="0.29604252581870866" y="0.29604252581870866"/>
+       <pt constSeg="true" x="27" yLocal="0.29735215113322155" y="0.29735215113322155"/>
+       <pt constSeg="true" x="28" yLocal="0.32059280353997432" y="0.32059280353997432"/>
+       <pt constSeg="true" x="29" yLocal="0.33727840013969429" y="0.33727840013969429"/>
+       <pt constSeg="true" x="30" yLocal="0.34252383063221425" y="0.34252383063221425"/>
+       <pt constSeg="true" x="31" yLocal="0.34383345594672715" y="0.34383345594672715"/>
+       <pt constSeg="true" x="32" yLocal="0.36707410835347987" y="0.36707410835347987"/>
+       <pt constSeg="true" x="33" yLocal="0.38375970495319989" y="0.38375970495319989"/>
+       <pt constSeg="true" x="34" yLocal="0.3890051354457198" y="0.3890051354457198"/>
+       <pt constSeg="true" x="35" yLocal="0.39036687260677522" y="0.39036687260677522"/>
+       <pt constSeg="true" x="36" yLocal="0.41951247330980518" y="0.41951247330980518"/>
+       <pt constSeg="true" x="37" yLocal="0.43650096445223346" y="0.43650096445223346"/>
+       <pt constSeg="true" x="38" yLocal="0.44174639494475343" y="0.44174639494475343"/>
+       <pt constSeg="true" x="39" yLocal="0.44310856383104097" y="0.44310856383104097"/>
+       <pt constSeg="true" x="40" yLocal="0.47236882916226319" y="0.47236882916226319"/>
+       <pt constSeg="true" x="41" yLocal="0.4893607430068122" y="0.4893607430068122"/>
+       <pt constSeg="true" x="42" yLocal="0.494606173499332" y="0.494606173499332"/>
+       <pt constSeg="true" x="43" yLocal="0.49591579881384507" y="0.49591579881384507"/>
+       <pt constSeg="true" x="44" yLocal="0.51915645122059817" y="0.51915645122059817"/>
+       <pt constSeg="true" x="45" yLocal="0.53584204782031786" y="0.53584204782031786"/>
+       <pt constSeg="true" x="46" yLocal="0.54108747831283766" y="0.54108747831283766"/>
+       <pt constSeg="true" x="47" yLocal="0.54239710362735072" y="0.54239710362735072"/>
+       <pt constSeg="true" x="48" yLocal="0.56563775603410382" y="0.56563775603410382"/>
+       <pt constSeg="true" x="49" yLocal="0.58232335263382362" y="0.58232335263382362"/>
+       <pt constSeg="true" x="50" yLocal="0.58756878312634331" y="0.58756878312634331"/>
+       <pt constSeg="true" x="51" yLocal="0.58888228354209082" y="0.58888228354209082"/>
+       <pt constSeg="true" x="52" yLocal="0.61223851985855071" y="0.61223851985855071"/>
+       <pt constSeg="true" x="53" yLocal="0.62893886816085276" y="0.62893886816085276"/>
+       <pt constSeg="true" x="54" yLocal="0.63424623886909737" y="0.63424623886909737"/>
+       <pt constSeg="true" x="177" yLocal="0.63675454403266474" y="0.63675454403266474"/>
+       <pt constSeg="true" x="178" yLocal="0.63811016847089419" y="0.63811016847089419"/>
+       <pt constSeg="true" x="179" yLocal="0.66135082087764663" y="0.66135082087764663"/>
+       <pt constSeg="true" x="180" yLocal="0.67803641747736632" y="0.67803641747736632"/>
+       <pt constSeg="true" x="181" yLocal="0.68328184796988611" y="0.68328184796988611"/>
+       <pt constSeg="true" x="182" yLocal="0.68459147328439884" y="0.68459147328439884"/>
+       <pt constSeg="true" x="183" yLocal="0.70783212569115128" y="0.70783212569115128"/>
+       <pt constSeg="true" x="184" yLocal="0.72451772229087097" y="0.72451772229087097"/>
+       <pt constSeg="true" x="185" yLocal="0.72976315278339077" y="0.72976315278339077"/>
+       <pt constSeg="true" x="186,293,377" yLocal="0.73107277809790383" y="0.73107277809790383"/>
+       <pt constSeg="true" x="378" yLocal="0.73991953831523771" y="0.73991953831523771"/>
+       <pt constSeg="true" x="379" yLocal="0.75140267245285552" y="0.75140267245285552"/>
+       <pt constSeg="true" x="380" yLocal="0.77850117525716978" y="0.77850117525716978"/>
+       <pt constSeg="true" x="381" yLocal="0.84168116570605889" y="0.84168116570605889"/>
+       <pt constSeg="true" x="382" yLocal="0.85862539911328162" y="0.85862539911328162"/>
+       <pt constSeg="true" x="383" yLocal="0.86387082960580142" y="0.86387082960580142"/>
+       <pt constSeg="true" x="384" yLocal="0.86518045492031448" y="0.86518045492031448"/>
+       <pt constSeg="true" x="406" yLocal="0.8651804625424705" y="0.8651804625424705"/>
+       <pt constSeg="true" x="407" yLocal="0.87423276257156712" y="0.87423276257156712"/>
+       <pt constSeg="true" x="408" yLocal="0.88587884307599929" y="0.88587884307599929"/>
+       <pt constSeg="true" x="409" yLocal="0.9130486922334401" y="0.9130486922334401"/>
+       <pt constSeg="true" x="410" yLocal="0.97649312784018982" y="0.97649312784018982"/>
+       <pt constSeg="true" x="411" yLocal="0.99344494419296792" y="0.99344494419296792"/>
+       <pt constSeg="true" x="412" yLocal="0.99869037468548749" y="0.99869037468548749"/>
+       <pt constSeg="true" x="413" yLocal="1" y="1"/>
+      </points>
+     </velocity>
+    </column>
+    <column type="0" name="ATV-0D5B43A4D47AA99863E05694" displayOrder="0" width="100" anonymous="true" id="2">
+     <elementSeq exposures="8" val="16" id="2"/>
+     <elementSeq exposures="10" val="17" id="2"/>
+     <elementSeq exposures="15" val="4" id="2"/>
+     <elementSeq exposures="19" val="19" id="2"/>
+     <elementSeq exposures="22" val="20" id="2"/>
+     <elementSeq exposures="25" val="18" id="2"/>
+     <elementSeq exposures="28" val="5" id="2"/>
+     <elementSeq exposures="29" val="25" id="2"/>
+     <elementSeq exposures="30" val="26" id="2"/>
+     <elementSeq exposures="31" val="27" id="2"/>
+     <elementSeq exposures="32" val="28" id="2"/>
+     <elementSeq exposures="34" val="21" id="2"/>
+     <elementSeq exposures="36" val="22" id="2"/>
+     <elementSeq exposures="37" val="23" id="2"/>
+     <elementSeq exposures="38" val="24" id="2"/>
+     <elementSeq exposures="144" val="29" id="2"/>
+     <elementSeq exposures="145" val="30" id="2"/>
+     <elementSeq exposures="146" val="31" id="2"/>
+     <elementSeq exposures="147" val="32" id="2"/>
+     <elementSeq exposures="148" val="33" id="2"/>
+     <elementSeq exposures="244-246,261" val="1" id="2"/>
+     <elementSeq exposures="289" val="34" id="2"/>
+     <elementSeq exposures="294" val="2" id="2"/>
+     <elementSeq exposures="316" val="12" id="2"/>
+     <elementSeq exposures="317" val="13" id="2"/>
+     <elementSeq exposures="318" val="12_1" id="2"/>
+     <elementSeq exposures="319" val="13_1" id="2"/>
+     <elementSeq exposures="320" val="12_2" id="2"/>
+     <elementSeq exposures="321" val="13_2" id="2"/>
+     <elementSeq exposures="322" val="12_3" id="2"/>
+     <elementSeq exposures="323" val="13_3" id="2"/>
+     <elementSeq exposures="324" val="12_4" id="2"/>
+     <elementSeq exposures="325" val="13_4" id="2"/>
+     <elementSeq exposures="326" val="12_5" id="2"/>
+     <elementSeq exposures="327" val="12_5_1" id="2"/>
+     <elementSeq exposures="328" val="12_5_2" id="2"/>
+     <elementSeq exposures="329" val="13_5_1" id="2"/>
+     <elementSeq exposures="330" val="12_6_1" id="2"/>
+     <elementSeq exposures="331" val="12_6_2" id="2"/>
+     <elementSeq exposures="332" val="12_6_3" id="2"/>
+     <elementSeq exposures="333" val="13_5_2" id="2"/>
+     <elementSeq exposures="377" val="5_4" id="2"/>
+     <elementSeq exposures="378" val="5_4_1" id="2"/>
+     <elementSeq exposures="379" val="5_4_2" id="2"/>
+     <elementSeq exposures="380" val="6_5_1" id="2"/>
+     <elementSeq exposures="381" val="3_10_1" id="2"/>
+     <elementSeq exposures="382" val="3_10_2" id="2"/>
+     <elementSeq exposures="383" val="3_10_3" id="2"/>
+     <elementSeq exposures="384" val="6_5_2" id="2"/>
+     <elementSeq exposures="525" val="10" id="2"/>
+     <elementSeq exposures="526" val="11" id="2"/>
+    </column>
+    <column type="0" name="ATV-0D61439ED42FA93763E05749" displayOrder="0" width="100" anonymous="true" id="3">
+     <elementSeq exposures="288" val="11" id="3"/>
+     <elementSeq exposures="292" val="1" id="3"/>
+     <elementSeq exposures="308" val="9" id="3"/>
+     <elementSeq exposures="309" val="10" id="3"/>
+     <elementSeq exposures="334" val="3" id="3"/>
+     <elementSeq exposures="335" val="5" id="3"/>
+     <elementSeq exposures="336" val="6" id="3"/>
+     <elementSeq exposures="337" val="3_7" id="3"/>
+     <elementSeq exposures="338" val="5_1" id="3"/>
+     <elementSeq exposures="339" val="6_1" id="3"/>
+     <elementSeq exposures="340" val="3_8" id="3"/>
+     <elementSeq exposures="341" val="5_2" id="3"/>
+     <elementSeq exposures="342" val="6_2" id="3"/>
+     <elementSeq exposures="343" val="3_9" id="3"/>
+     <elementSeq exposures="344" val="5_3" id="3"/>
+     <elementSeq exposures="345" val="6_3" id="3"/>
+     <elementSeq exposures="346" val="3_10" id="3"/>
+     <elementSeq exposures="405" val="12" id="3"/>
+     <elementSeq exposures="415" val="13" id="3"/>
+     <elementSeq exposures="525" val="7" id="3"/>
+     <elementSeq exposures="526" val="8" id="3"/>
+    </column>
+    <column type="3" name="ATV-0D3C4EC3E5C36D15E9D017BC" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="41" yLocal="-0.033300000000000003" y="-0.033300000000000003"/>
+      <pt constSeg="true" x="38-39,42-43,84-92,185-193" yLocal="0" y="0"/>
+      <pt constSeg="true" x="40" yLocal="0.033300000000000003" y="0.033300000000000003"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0DBD4E42E51C6D1AE9D017BD" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="38" yLocal="-1.9167000000000001" y="-1.9167000000000001"/>
+      <pt constSeg="true" x="40" yLocal="-1.8722000000000001" y="-1.8722000000000001"/>
+      <pt constSeg="true" x="87,188" yLocal="-1.6771" y="-1.6771"/>
+      <pt constSeg="true" x="86,88,187,189" yLocal="-0.4778" y="-0.4778"/>
+      <pt constSeg="true" x="41" yLocal="-0.2722" y="-0.2722"/>
+      <pt constSeg="true" x="85,186" yLocal="-0.1333" y="-0.1333"/>
+      <pt constSeg="true" x="89,190" yLocal="-0.125" y="-0.125"/>
+      <pt constSeg="true" x="84,185" yLocal="-0.055599999999999997" y="-0.055599999999999997"/>
+      <pt constSeg="true" x="90,191" yLocal="-0.0545" y="-0.0545"/>
+      <pt constSeg="true" x="10,42-43,91-92,192-193" yLocal="0" y="0"/>
+      <pt constSeg="true" x="39" yLocal="3.5943999999999998" y="3.5943999999999998"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0DF14E0EE5DD6D6BE9D017BE" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="38-43,84-92,185-193" yLocal="0" y="0"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D674E98E5D56D07E9D017BF" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="39" yLocal="0.82699999999999996" y="0.82699999999999996"/>
+      <pt constSeg="true" x="10,42-43,91-92,192-193" yLocal="1" y="1"/>
+      <pt constSeg="true" x="84,90,185,191" yLocal="1.0049999999999999" y="1.0049999999999999"/>
+      <pt constSeg="true" x="41" yLocal="1.0130999999999999" y="1.0130999999999999"/>
+      <pt constSeg="true" x="85,89,186,190" yLocal="1.0208999999999999" y="1.0208999999999999"/>
+      <pt constSeg="true" x="38,40" yLocal="1.0438000000000001" y="1.0438000000000001"/>
+      <pt constSeg="true" x="86,88,187,189" yLocal="1.0565" y="1.0565"/>
+      <pt constSeg="true" x="87,188" yLocal="1.1676" y="1.1676"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D2B4ED4E5B06D6EE9D017C0" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="38,40" yLocal="0.91490000000000005" y="0.91490000000000005"/>
+      <pt constSeg="true" x="87,188" yLocal="0.93740000000000001" y="0.93740000000000001"/>
+      <pt constSeg="true" x="86,88,187,189" yLocal="0.98199999999999998" y="0.98199999999999998"/>
+      <pt constSeg="true" x="41" yLocal="0.98229999999999995" y="0.98229999999999995"/>
+      <pt constSeg="true" x="85,89,186,190" yLocal="0.99509999999999998" y="0.99509999999999998"/>
+      <pt constSeg="true" x="84,90,185,191" yLocal="0.99809999999999999" y="0.99809999999999999"/>
+      <pt constSeg="true" x="10,42-43,91-92,192-193" yLocal="1" y="1"/>
+      <pt constSeg="true" x="39" yLocal="1.3240000000000001" y="1.3240000000000001"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D4350BC692CAEE885101F69" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="293" yLocal="0" y="0"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D5350AC6954AE5085101F6A" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="293" yLocal="1" y="1"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0DDE502169DDAEB785101F6B" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="293" yLocal="1" y="1"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0D72508D6986AECC85101F6C" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+     <points version="2">
+      <pt constSeg="true" x="293" yLocal="0" y="0"/>
+     </points>
+    </column>
+    <column type="3" name="ATV-0DE4501B8A0E50AC1CA016EF" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0DA750588A7F50FB1CA016F0" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0DEB50148A4350B31CA016F1" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0D8950768A5450A21CA016F2" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0DF1500E8A6D50EF1CA016F3" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0D2852D7C80E8754A970208D" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0D3052CFC8A0871EA970208F" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0D885277C8BA8736A9702091" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0D90526FC82587A3A9702093" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+    <column type="3" name="ATV-0D1452EBC82C87B8A9702095" displayOrder="0" width="100" anonymous="true">
+     <step val="1" start="1" stop="1"/>
+     <noFrames/>
+    </column>
+   </columns>
+   <options>
+    <camera val="Camera"/>
+    <defaultDisplay val="Display"/>
+   </options>
+   <rootgroup name="Top">
+    <options>
+     <collapsed val="false"/>
+    </options>
+    <nodeslist>
+     <module type="COMPOSITE" name="Composite" pos="0,0,0" publishUnderTab="Composite">
+      <options>
+       <collapsed val="false"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <compositeMode val="compositeBitmap"/>
+       <flattenOutput val="true"/>
+       <flattenVector val="false"/>
+       <composite2d val="false"/>
+       <composite3d val="false"/>
+       <outputZ val="LEFTMOST"/>
+       <outputZInputPort val="1"/>
+       <applyFocus val="true"/>
+       <multiplier val="1" defaultValue="1"/>
+       <tvgPalette val="compositedPalette"/>
+       <mergeVector val="false"/>
+      </attrs>
+     </module>
+     <module type="DISPLAY" name="Display" pos="50,50,0" publishUnderTab="Display">
+      <options>
+       <collapsed val="false"/>
+       <version val="1"/>
+      </options>
+     </module>
+     <module type="WRITE" name="Write" pos="-50,50,0" publishUnderTab="Write">
+      <options>
+       <collapsed val="false"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <exportToMovie val="false"/>
+       <drawingName val="frames/final-"/>
+       <moviePath val="frames/output"/>
+       <movieFormat val="com.toonboom.quicktime.legacy"/>
+       <movieAudio val=""/>
+       <movieVideo val=""/>
+       <movieVideoaudio val=""/>
+       <leadingZeros val="3"/>
+       <start val="1"/>
+       <drawingType val="TGA"/>
+       <enabling>
+        <filter val="ALWAYS"/>
+        <filterName val=""/>
+        <filterResX val="720"/>
+        <filterResY val="540"/>
+       </enabling>
+       <scriptMovie val="false"/>
+       <scriptEditor val="// Following code will be called at the end of Write Node rendering
+// operations to create a movie file from rendered images.
+
+// ..."/>
+       <colorSpace val=""/>
+       <compositePartitioning val="NoCompositePartitioning"/>
+       <zPartitionRange val="1" defaultValue="1"/>
+       <cleanUpPartitionFolders val="true"/>
+      </attrs>
+     </module>
+     <module type="PEG" name="Camera-P" pos="0,0,0" publishUnderTab="Camera-P">
+      <options>
+       <collapsed val="false"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <enable3d val="false"/>
+       <faceCamera val="false"/>
+       <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+       <position>
+        <separate val="false"/>
+        <attr3dpath col="ATV-0DDC40234D5F860523904E6D"/>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </position>
+       <scale>
+        <separate val="true"/>
+        <inFields val="false"/>
+        <xy val="1" defaultValue="1"/>
+        <x val="1.5" defaultValue="1" col="ATV-0D5350AC6954AE5085101F6A"/>
+        <y val="1.5" defaultValue="1" col="ATV-0DDE502169DDAEB785101F6B"/>
+        <z val="1" defaultValue="1"/>
+       </scale>
+       <rotation>
+        <separate val="false"/>
+        <anglex val="0" defaultValue="0"/>
+        <angley val="0" defaultValue="0"/>
+        <anglez val="0" defaultValue="0" col="ATV-0D4350BC692CAEE885101F69"/>
+       </rotation>
+       <angle val="0" defaultValue="0" col="ATV-0D4350BC692CAEE885101F69"/>
+       <skew val="0" defaultValue="0" col="ATV-0D72508D6986AECC85101F6C"/>
+       <pivot>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </pivot>
+       <splineOffset>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="0" defaultValue="0"/>
+       </splineOffset>
+       <ignoreParentPegScaling val="false"/>
+       <disableFieldRendering val="false"/>
+       <depth val="0"/>
+       <enableMinMaxAngle val="false"/>
+       <minAngle val="-360" defaultValue="-360"/>
+       <maxAngle val="360" defaultValue="360"/>
+       <nailForChildren val="false"/>
+       <ikHoldOrientation val="false"/>
+       <ikHoldX val="false"/>
+       <ikHoldY val="false"/>
+       <ikExcluded val="false"/>
+       <ikCanRotate val="true"/>
+       <ikCanTranslateX val="false"/>
+       <ikCanTranslateY val="false"/>
+       <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+       <ikBoneY val="0" defaultValue="0"/>
+       <ikStiffness val="1" defaultValue="1"/>
+       <groupAtNetworkBuilding val="false"/>
+       <addCompositeToGroup val="true"/>
+      </attrs>
+     </module>
+     <module type="CAMERA" name="Camera" pos="0,0,0" publishUnderTab="Camera">
+      <options>
+       <collapsed val="false"/>
+       <version val="1"/>
+      </options>
+      <attrs>
+       <offset>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+        <z val="12" defaultValue="0"/>
+       </offset>
+       <pivot>
+        <x val="0" defaultValue="0"/>
+        <y val="0" defaultValue="0"/>
+       </pivot>
+       <angle val="0" defaultValue="0"/>
+       <overrideSceneFov val="false"/>
+       <fov val="41.112090439166927" defaultValue="41.112000000000002"/>
+       <nearPlane val="0.10000000000000001" defaultValue="1"/>
+       <farPlane val="1000" defaultValue="1000"/>
+      </attrs>
+     </module>
+     <group name="Drawing_2-G" pos="0,0,0">
+      <options>
+       <collapsed val="false"/>
+       <frameMarker frame="363" length="0" type="0"/>
+       <subnodeCollapsed val="false"/>
+       <showsPublished val="true"/>
+      </options>
+      <attrs/>
+      <nodeslist>
+       <module type="MULTIPORT_IN" name="Input" pos="0,-125,0">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <ports>
+         <port type="PEG" idx="0"/>
+        </ports>
+       </module>
+       <module type="MULTIPORT_OUT" name="Output" pos="0,100,0">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <ports>
+         <port type="IMAGE" idx="0"/>
+        </ports>
+       </module>
+       <module type="READ" name="Drawing_2" pos="0,0,0" publishUnderTab="Drawing_2">
+        <options>
+         <collapsed val="false"/>
+         <frameMarker frame="336" length="0" type="0"/>
+         <frameMarker frame="339" length="0" type="0"/>
+         <frameMarker frame="342" length="0" type="0"/>
+         <frameMarker frame="345" length="0" type="0"/>
+         <frameMarker frame="333" length="0" type="0"/>
+         <frameMarker frame="524" length="0" type="0"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <enable3d val="false"/>
+         <faceCamera val="false"/>
+         <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+         <offset>
+          <separate val="true"/>
+          <x val="0" defaultValue="0" col="ATV-0DE4501B8A0E50AC1CA016EF"/>
+          <y val="0" defaultValue="0" col="ATV-0DA750588A7F50FB1CA016F0"/>
+          <z val="0" defaultValue="0" col="ATV-0DEB50148A4350B31CA016F1"/>
+         </offset>
+         <scale>
+          <separate val="true"/>
+          <inFields val="false"/>
+          <xy val="1" defaultValue="1"/>
+          <x val="1" defaultValue="1" col="ATV-0D8950768A5450A21CA016F2"/>
+          <y val="1" defaultValue="1" col="ATV-0DF1500E8A6D50EF1CA016F3"/>
+          <z val="1" defaultValue="1"/>
+         </scale>
+         <rotation>
+          <separate val="false"/>
+          <anglex val="0" defaultValue="0"/>
+          <angley val="0" defaultValue="0"/>
+          <anglez val="0" defaultValue="0"/>
+         </rotation>
+         <angle val="0" defaultValue="0"/>
+         <skew val="0" defaultValue="0"/>
+         <pivot>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </pivot>
+         <splineOffset>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </splineOffset>
+         <ignoreParentPegScaling val="false"/>
+         <disableFieldRendering val="false"/>
+         <depth val="0"/>
+         <enableMinMaxAngle val="false"/>
+         <minAngle val="-360" defaultValue="-360"/>
+         <maxAngle val="360" defaultValue="360"/>
+         <nailForChildren val="false"/>
+         <ikHoldOrientation val="false"/>
+         <ikHoldX val="false"/>
+         <ikHoldY val="false"/>
+         <ikExcluded val="false"/>
+         <ikCanRotate val="true"/>
+         <ikCanTranslateX val="false"/>
+         <ikCanTranslateY val="false"/>
+         <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+         <ikBoneY val="0" defaultValue="0"/>
+         <ikStiffness val="1" defaultValue="1"/>
+         <drawing>
+          <elementMode val="true"/>
+          <element col="ATV-0D61439ED42FA93763E05749">
+           <layer val=""/>
+          </element>
+          <customName>
+           <name val=""/>
+           <extension val="tga"/>
+           <fieldChart val="12" defaultValue="12"/>
+          </customName>
+         </drawing>
+         <readOverlay val="true"/>
+         <readLineArt val="true"/>
+         <readColorArt val="true"/>
+         <readUnderlay val="true"/>
+         <overlayArtDrawingMode val="VectorDrawingMode"/>
+         <lineArtDrawingMode val="VectorDrawingMode"/>
+         <colorArtDrawingMode val="VectorDrawingMode"/>
+         <underlayArtDrawingMode val="VectorDrawingMode"/>
+         <pencilLineDeformationPreserveThickness val="false"/>
+         <pencilLineDeformationQuality val="Low"/>
+         <pencilLineDeformationSmooth val="1"/>
+         <pencilLineDeformationFitError val="3" defaultValue="3"/>
+         <readColor val="true"/>
+         <readTransparency val="true"/>
+         <colorTransformation val="Linear"/>
+         <colorSpace val="sRGB"/>
+         <applyMatteToColor val="N"/>
+         <enableLineTexture val="true"/>
+         <antialiasingQuality val="HIGH"/>
+         <antialiasingExponent val="1" defaultValue="1"/>
+         <opacity val="100" defaultValue="100"/>
+         <textureFilter val="NEAREST_FILTERED"/>
+         <adjustPencilThickness val="false"/>
+         <normalLineArtThickness val="true"/>
+         <zoomIndependentLineArtThickness val="zoomIndependent"/>
+         <multLineArtThickness val="1" defaultValue="1"/>
+         <addLineArtThickness val="0" defaultValue="0"/>
+         <minLineArtThickness val="0" defaultValue="0"/>
+         <maxLineArtThickness val="0" defaultValue="0"/>
+         <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+         <flipHor val="false"/>
+         <flipVert val="false"/>
+         <turnBeforeAlignment val="false"/>
+         <noClipping val="false"/>
+         <xClipFactor val="0"/>
+         <yClipFactor val="0"/>
+         <alignmentRule val="CENTER_FIRST_PAGE"/>
+         <morphingVelo val="0" defaultValue="0"/>
+         <canAnimate val="true"/>
+         <tileHorizontal val="false"/>
+         <tileVertical val="false"/>
+         <framerate val="12" defaultValue="-1"/>
+         <useFileUnits val="false"/>
+        </attrs>
+       </module>
+       <module type="READ" name="Drawing_1" pos="0,0,0" publishUnderTab="Drawing_1">
+        <options>
+         <collapsed val="true"/>
+         <frameMarker frame="317" length="0" type="0"/>
+         <frameMarker frame="319" length="0" type="0"/>
+         <frameMarker frame="321" length="0" type="0"/>
+         <frameMarker frame="323" length="0" type="0"/>
+         <frameMarker frame="325" length="0" type="0"/>
+         <frameMarker frame="327" length="0" type="0"/>
+         <frameMarker frame="315" length="0" type="0"/>
+         <frameMarker frame="378" length="0" type="0"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <enable3d val="false"/>
+         <faceCamera val="false"/>
+         <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+         <offset>
+          <separate val="true"/>
+          <x val="0" defaultValue="0" col="ATV-0D2852D7C80E8754A970208D"/>
+          <y val="0" defaultValue="0" col="ATV-0D3052CFC8A0871EA970208F"/>
+          <z val="0" defaultValue="0" col="ATV-0D885277C8BA8736A9702091"/>
+         </offset>
+         <scale>
+          <separate val="true"/>
+          <inFields val="false"/>
+          <xy val="1" defaultValue="1"/>
+          <x val="1" defaultValue="1" col="ATV-0D90526FC82587A3A9702093"/>
+          <y val="1" defaultValue="1" col="ATV-0D1452EBC82C87B8A9702095"/>
+          <z val="1" defaultValue="1"/>
+         </scale>
+         <rotation>
+          <separate val="false"/>
+          <anglex val="0" defaultValue="0"/>
+          <angley val="0" defaultValue="0"/>
+          <anglez val="0" defaultValue="0"/>
+         </rotation>
+         <angle val="0" defaultValue="0"/>
+         <skew val="0" defaultValue="0"/>
+         <pivot>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </pivot>
+         <splineOffset>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </splineOffset>
+         <ignoreParentPegScaling val="false"/>
+         <disableFieldRendering val="false"/>
+         <depth val="0"/>
+         <enableMinMaxAngle val="false"/>
+         <minAngle val="-360" defaultValue="-360"/>
+         <maxAngle val="360" defaultValue="360"/>
+         <nailForChildren val="false"/>
+         <ikHoldOrientation val="false"/>
+         <ikHoldX val="false"/>
+         <ikHoldY val="false"/>
+         <ikExcluded val="false"/>
+         <ikCanRotate val="true"/>
+         <ikCanTranslateX val="false"/>
+         <ikCanTranslateY val="false"/>
+         <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+         <ikBoneY val="0" defaultValue="0"/>
+         <ikStiffness val="1" defaultValue="1"/>
+         <drawing>
+          <elementMode val="true"/>
+          <element col="ATV-0D5B43A4D47AA99863E05694">
+           <layer val=""/>
+          </element>
+          <customName>
+           <name val=""/>
+           <extension val="tga"/>
+           <fieldChart val="12" defaultValue="12"/>
+          </customName>
+         </drawing>
+         <readOverlay val="true"/>
+         <readLineArt val="true"/>
+         <readColorArt val="true"/>
+         <readUnderlay val="true"/>
+         <overlayArtDrawingMode val="VectorDrawingMode"/>
+         <lineArtDrawingMode val="VectorDrawingMode"/>
+         <colorArtDrawingMode val="VectorDrawingMode"/>
+         <underlayArtDrawingMode val="VectorDrawingMode"/>
+         <pencilLineDeformationPreserveThickness val="false"/>
+         <pencilLineDeformationQuality val="Low"/>
+         <pencilLineDeformationSmooth val="1"/>
+         <pencilLineDeformationFitError val="3" defaultValue="3"/>
+         <readColor val="true"/>
+         <readTransparency val="true"/>
+         <colorTransformation val="Linear"/>
+         <colorSpace val="sRGB"/>
+         <applyMatteToColor val="N"/>
+         <enableLineTexture val="true"/>
+         <antialiasingQuality val="HIGH"/>
+         <antialiasingExponent val="1" defaultValue="1"/>
+         <opacity val="100" defaultValue="100"/>
+         <textureFilter val="NEAREST_FILTERED"/>
+         <adjustPencilThickness val="false"/>
+         <normalLineArtThickness val="true"/>
+         <zoomIndependentLineArtThickness val="zoomIndependent"/>
+         <multLineArtThickness val="1" defaultValue="1"/>
+         <addLineArtThickness val="0" defaultValue="0"/>
+         <minLineArtThickness val="0" defaultValue="0"/>
+         <maxLineArtThickness val="0" defaultValue="0"/>
+         <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+         <flipHor val="false"/>
+         <flipVert val="false"/>
+         <turnBeforeAlignment val="false"/>
+         <noClipping val="false"/>
+         <xClipFactor val="0"/>
+         <yClipFactor val="0"/>
+         <alignmentRule val="CENTER_FIRST_PAGE"/>
+         <morphingVelo val="0" defaultValue="0"/>
+         <canAnimate val="true"/>
+         <tileHorizontal val="false"/>
+         <tileVertical val="false"/>
+         <framerate val="12" defaultValue="-1"/>
+         <useFileUnits val="false"/>
+        </attrs>
+       </module>
+       <module type="READ" name="Drawing" pos="-65,-50,0" publishUnderTab="Drawing">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <enable3d val="false"/>
+         <faceCamera val="false"/>
+         <cameraAlignment val="NO_CAMERA_ALIGNMENT"/>
+         <offset>
+          <separate val="true"/>
+          <x val="0" defaultValue="0" col="ATV-0D3C4EC3E5C36D15E9D017BC"/>
+          <y val="0" defaultValue="0" col="ATV-0DBD4E42E51C6D1AE9D017BD"/>
+          <z val="0" defaultValue="0" col="ATV-0DF14E0EE5DD6D6BE9D017BE"/>
+         </offset>
+         <scale>
+          <separate val="true"/>
+          <inFields val="false"/>
+          <xy val="1" defaultValue="1"/>
+          <x val="1" defaultValue="1" col="ATV-0D674E98E5D56D07E9D017BF"/>
+          <y val="1" defaultValue="1" col="ATV-0D2B4ED4E5B06D6EE9D017C0"/>
+          <z val="1" defaultValue="1"/>
+         </scale>
+         <rotation>
+          <separate val="false"/>
+          <anglex val="0" defaultValue="0"/>
+          <angley val="0" defaultValue="0"/>
+          <anglez val="0" defaultValue="0"/>
+         </rotation>
+         <angle val="0" defaultValue="0"/>
+         <skew val="0" defaultValue="0"/>
+         <pivot>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </pivot>
+         <splineOffset>
+          <x val="0" defaultValue="0"/>
+          <y val="0" defaultValue="0"/>
+          <z val="0" defaultValue="0"/>
+         </splineOffset>
+         <ignoreParentPegScaling val="false"/>
+         <disableFieldRendering val="false"/>
+         <depth val="0"/>
+         <enableMinMaxAngle val="false"/>
+         <minAngle val="-360" defaultValue="-360"/>
+         <maxAngle val="360" defaultValue="360"/>
+         <nailForChildren val="false"/>
+         <ikHoldOrientation val="false"/>
+         <ikHoldX val="false"/>
+         <ikHoldY val="false"/>
+         <ikExcluded val="false"/>
+         <ikCanRotate val="true"/>
+         <ikCanTranslateX val="false"/>
+         <ikCanTranslateY val="false"/>
+         <ikBoneX val="0.20000000000000001" defaultValue="0.20000000000000001"/>
+         <ikBoneY val="0" defaultValue="0"/>
+         <ikStiffness val="1" defaultValue="1"/>
+         <drawing>
+          <elementMode val="true"/>
+          <element col="Drawing">
+           <layer val=""/>
+          </element>
+          <customName>
+           <name val=""/>
+           <extension val="tga"/>
+           <fieldChart val="12" defaultValue="12"/>
+          </customName>
+         </drawing>
+         <readOverlay val="true"/>
+         <readLineArt val="true"/>
+         <readColorArt val="true"/>
+         <readUnderlay val="true"/>
+         <overlayArtDrawingMode val="VectorDrawingMode"/>
+         <lineArtDrawingMode val="VectorDrawingMode"/>
+         <colorArtDrawingMode val="VectorDrawingMode"/>
+         <underlayArtDrawingMode val="VectorDrawingMode"/>
+         <pencilLineDeformationPreserveThickness val="false"/>
+         <pencilLineDeformationQuality val="Low"/>
+         <pencilLineDeformationSmooth val="1"/>
+         <pencilLineDeformationFitError val="3" defaultValue="3"/>
+         <readColor val="true"/>
+         <readTransparency val="true"/>
+         <colorTransformation val="Linear"/>
+         <colorSpace val="sRGB"/>
+         <applyMatteToColor val="N"/>
+         <enableLineTexture val="true"/>
+         <antialiasingQuality val="HIGH"/>
+         <antialiasingExponent val="1" defaultValue="1"/>
+         <opacity val="100" defaultValue="100"/>
+         <textureFilter val="NEAREST_FILTERED"/>
+         <adjustPencilThickness val="false"/>
+         <normalLineArtThickness val="true"/>
+         <zoomIndependentLineArtThickness val="zoomIndependent"/>
+         <multLineArtThickness val="1" defaultValue="1"/>
+         <addLineArtThickness val="0" defaultValue="0"/>
+         <minLineArtThickness val="0" defaultValue="0"/>
+         <maxLineArtThickness val="0" defaultValue="0"/>
+         <useDrawingPivot val="APPLY_ON_READ_TRANSFORM"/>
+         <flipHor val="false"/>
+         <flipVert val="false"/>
+         <turnBeforeAlignment val="false"/>
+         <noClipping val="false"/>
+         <xClipFactor val="0"/>
+         <yClipFactor val="0"/>
+         <alignmentRule val="CENTER_FIRST_PAGE"/>
+         <morphingVelo val="0" defaultValue="0"/>
+         <canAnimate val="true"/>
+         <tileHorizontal val="false"/>
+         <tileVertical val="false"/>
+         <framerate val="-1" defaultValue="-1"/>
+         <useFileUnits val="false"/>
+        </attrs>
+       </module>
+       <module type="COMPOSITE" name="Composite" pos="0,0,0" publishUnderTab="Composite">
+        <options>
+         <collapsed val="false"/>
+         <version val="1"/>
+        </options>
+        <attrs>
+         <compositeMode val="compositeBitmap"/>
+         <flattenOutput val="true"/>
+         <flattenVector val="false"/>
+         <composite2d val="false"/>
+         <composite3d val="false"/>
+         <outputZ val="LEFTMOST"/>
+         <outputZInputPort val="1"/>
+         <applyFocus val="true"/>
+         <multiplier val="1" defaultValue="1"/>
+         <tvgPalette val="compositedPalette"/>
+         <mergeVector val="false"/>
+        </attrs>
+       </module>
+      </nodeslist>
+      <linkedlist>
+       <link out="Input" in="Drawing_2" inport="0"/>
+       <link out="Input" in="Drawing_1" inport="0"/>
+       <link out="Input" in="Drawing" inport="0"/>
+       <link out="Drawing_2" in="Composite" inport="2"/>
+       <link out="Drawing_1" in="Composite" inport="1"/>
+       <link out="Drawing" in="Composite" inport="0"/>
+       <link out="Composite" in="Output"/>
+      </linkedlist>
+     </group>
+    </nodeslist>
+    <linkedlist>
+     <link out="Composite" in="Display"/>
+     <link out="Composite" in="Write"/>
+     <link out="Camera-P" in="Camera"/>
+     <link out="Drawing_2-G" in="Composite"/>
+    </linkedlist>
+   </rootgroup>
+   <unconnectedComposite>
+    <module type="COMPOSITE" name="Unconnected_Composite" pos="0,0,0" publishUnderTab="Unconnected_Composite">
+     <options>
+      <collapsed val="false"/>
+      <version val="1"/>
+     </options>
+     <attrs>
+      <compositeMode val="compositeBitmap"/>
+      <flattenOutput val="true"/>
+      <flattenVector val="false"/>
+      <composite2d val="false"/>
+      <composite3d val="false"/>
+      <outputZ val="LEFTMOST"/>
+      <outputZInputPort val="1"/>
+      <applyFocus val="false"/>
+      <multiplier val="1" defaultValue="1"/>
+      <tvgPalette val="compositedPalette"/>
+      <mergeVector val="false"/>
+     </attrs>
+    </module>
+   </unconnectedComposite>
+   <metas>
+    <meta type="guideList" name="guideList" creator="Harmony Advanced" version="1.0">
+     <guideList selectedGuide="-1"/>
+    </meta>
+    <meta type="symmetryGuideList" name="symmetryGuideList" creator="Harmony Advanced" version="1.0">
+     <symmetryGuideList selectedGuide="-1"/>
+    </meta>
+    <meta type="alignmentGuideList" name="alignmentGuideList" creator="Harmony Advanced" version="1.0">
+     <alignmentGuideList selectedGuide="-1"/>
+    </meta>
+    <meta type="bool" name="registered action: com.toonboom.measurelinetoole" creator="Harmony Advanced" version="1.0">
+     <bool value="true"/>
+    </meta>
+    <meta type="bool" name="registered action: com.toonboom.measureLineTool" creator="Harmony Advanced" version="1.0">
+     <bool value="true"/>
+    </meta>
+    <meta type="string" name="cutSection" creator="Harmony Advanced" version="1.0">
+     <string value="{&quot;drawingLayers&quot;:{&quot;Top/Drawing&quot;:[&quot;TestDrawing_50&quot;,&quot;TestDrawing_51&quot;,&quot;TestDrawing_53&quot;,&quot;TestDrawing_52&quot;,&quot;TestDrawing_54&quot;],&quot;Top/Drawing_1&quot;:[&quot;&quot;,&quot;&quot;,&quot;4&quot;,&quot;&quot;,&quot;&quot;],&quot;Top/Drawing_2&quot;:[&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;]},&quot;markers&quot;:[{&quot;frame&quot;:9,&quot;length&quot;:0,&quot;color&quot;:&quot;#2288ff&quot;,&quot;notes&quot;:&quot;hmm... you kinda look like someone i know.&quot;,&quot;name&quot;:&quot;Sans&quot;},{&quot;frame&quot;:10,&quot;length&quot;:0,&quot;color&quot;:&quot;#2288ff&quot;,&quot;notes&quot;:&quot;you aren&apos;t gonna act friendly and then try to kill me right?&quot;,&quot;name&quot;:&quot;Sans&quot;},{&quot;frame&quot;:11,&quot;length&quot;:0,&quot;color&quot;:&quot;#ffff00&quot;,&quot;notes&quot;:&quot;Whaaat?? No...?&quot;,&quot;name&quot;:&quot;Verity&quot;},{&quot;frame&quot;:12,&quot;length&quot;:0,&quot;color&quot;:&quot;#ffff00&quot;,&quot;notes&quot;:&quot;I&apos;m just here to help! Why don&apos;t you ask me something?&quot;,&quot;name&quot;:&quot;Verity&quot;},{&quot;frame&quot;:13,&quot;length&quot;:0,&quot;color&quot;:&quot;#2288ff&quot;,&quot;notes&quot;:&quot;alright, what am i standing on right now?&quot;,&quot;name&quot;:&quot;Sans&quot;}],&quot;startFrame&quot;:9,&quot;endFrame&quot;:13}"/>
+    </meta>
+   </metas>
+   <timelineOrderer/>
+  </scene>
+ </scenes>
+ <symbols>
+  <folder name="Symbols">
+   <scene id="0d404d86239016fd"/>
+  </folder>
+ </symbols>
+ <timeline>
+  <scene id="0d404d86239016fd"/>
+ </timeline>
+ <metas>
+  <meta type="int" name="projectStartTime" creator="Harmony Advanced" version="1.0">
+   <int value=""/>
+  </meta>
+  <meta type="checksumValidation" name="checksumValidation" creator="Harmony Advanced" version="1.0">
+   <value data="6C000000000000000303CC26775A9393D9FC33399363A0E093DECD3A2C983A69CC4760682ADE38751E3C620CB3C3EB05EA2BB5AEC18189630963780C8999B80ABA7C89D773E2490AB1D065915816CC0D611CB03F99EDBF2BDC59A8FACD71AC42C2AA9B4A9C7AFA08D73D0B852EF84F4F7D1B290B6B0200002D2D2D2D2D424547494E2043455254494649434154452D2D2D2D2D0A4D4949426E444343415157674177494241674943424E49774451594A4B6F5A496876634E4151454642514177506A454C4D416B474131554542684D43513045780A447A414E42674E5642416754426C46315A574A6C597A45654D4277474131554541784D5662476C6A5A57357A5A58497564473976626D4A7662323075593239740A4D423458445449324D4459784E6A45344D444D784E6C6F5844544D324D4459784E4445344D444D784E6C6F774C54454C4D416B474131554542684D43513045780A486A416342674E5642414D4D46564E47587A41774D55394C4D4441774D444270596E466A5A466C42515442634D413047435371475349623344514542415155410A413073414D456743515144524D5753676E722B5952395838547830316B5244693562584E4B5A68746456544866424A6846595A364D376E777A5A5158434E48490A4F4343506838704C657A366B3447726B387066492F304C677453352B50436D7841674D42414145774451594A4B6F5A496876634E4151454642514144675945410A4D7846397878654F7A564441496A5A4E41683456527969465473325834446E6D31634D3756445432494E316C6C5A75734F37636A3044524D6A672B307471502B0A4975356F307034554C43336975797A384D6A72754552744475565A5A392F4966324255687A723155614942544746726342454839654C55772B3844684F6E59700A2F36563130315A63344C3444423371473851377147396575315352384C535075734B435076696B67535A383D0A2D2D2D2D2D454E442043455254494649434154452D2D2D2D2D0A400000001C95EEAEB1B5F62845EDF61CD5980EF928CBF7E73C6DB892A6F92A3692FF6C3EAE1C5DB148ED4D509FF5C3BEAA1672C887D15FDE0BC7C1884E7EA2C856FFC433"/>
+  </meta>
+ </metas>
+</project>

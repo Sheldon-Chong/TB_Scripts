@@ -1,8 +1,7 @@
-/// <reference path="MetadataKit.ts" />
-
-include(specialFolders.userScripts + '/core/MetadataKit.js');
-
-function createSceneKit(Core: HarmonyCore) {
+function createSceneKit(
+  Core: Pick<CoreBase, 'Tools' | 'MessageLog'>,
+  metadata: ReturnType<typeof createMetadataKit>,
+) {
   /*
    * Session-only registry.
    *
@@ -14,22 +13,8 @@ function createSceneKit(Core: HarmonyCore) {
     [toolName: string]: number;
   } = {};
 
-  /*
-   * Temporary bridge if MetadataKit has not yet been
-   * converted to the factory/Core approach.
-   *
-   * This captures it while the current script context
-   * still has access to it.
-   */
-  var Metadata = MetadataKit;
-
   var SceneKit = {
-    /*
-     * Preserve the old:
-     *
-     * SceneKit.metadata
-     */
-    metadata: Metadata,
+    metadata,
 
     registerTool(tool: HarmonyToolDefinition): {
       id: number;

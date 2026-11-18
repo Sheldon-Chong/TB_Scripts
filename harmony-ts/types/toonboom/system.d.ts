@@ -8,6 +8,11 @@ declare var specialFolders: {
   userConfig: string;
 };
 
+declare var FileDialog: {
+  getExistingDirectory(directory: string, title: string, parent?: QWidget): string;
+  getOpenFileNames(directory: string, filter: string, title: string, parent?: QWidget): string[];
+};
+
 declare var System: {
   println(text: String): void;
   getenv(environmentVariable: String): String;

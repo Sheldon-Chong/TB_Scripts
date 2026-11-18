@@ -104,7 +104,7 @@ class HarmonyGlobals {
   columnGrouping = columnGrouping;
   PermanentFile = PermanentFile;
   Widgets = WidgetKit;
-  Metadata = MetadataKit;
+  Metadata = createMetadataKit(scene);
 }
 
 var _ = new HarmonyGlobals();

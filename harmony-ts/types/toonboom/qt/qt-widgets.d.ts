@@ -39,11 +39,14 @@ declare class QLabel extends QWidget {
 declare class QLineEdit extends QWidget {
   constructor(...args: any[]);
   text: string;
+  textChanged: QSignal;
   editingFinished: QSignal;
 }
 declare class QTextEdit extends QWidget {
   constructor(...args: any[]);
   plainText: string;
+  html: string;
+  readOnly: boolean;
   lineWrapMode: number;
   static NoWrap: number;
   static WidgetWidth: number;
@@ -119,4 +122,81 @@ declare class QTabWidget extends QWidget {
   static South: number;
   static West: number;
   static East: number;
+}
+
+declare class QProgressBar extends QWidget {
+  constructor(parent?: QWidget);
+
+  /** Minimum progress value. Defaults to 0. */
+  minimum: number;
+
+  /** Maximum progress value. Defaults to 100. */
+  maximum: number;
+
+  /** Current progress value. */
+  value: number;
+
+  /**
+   * Text format displayed on the progress bar.
+   * %p = percentage
+   * %v = current value
+   * %m = total number of steps
+   */
+  format: string;
+
+  /** Whether progress text is displayed. */
+  textVisible: boolean;
+
+  /** The generated display text. Read-only. */
+  readonly text: string;
+
+  /** Qt.Horizontal or Qt.Vertical. */
+  orientation: number;
+
+  /** Qt alignment flags. */
+  alignment: number;
+
+  /** Reverse the direction of progress. */
+  invertedAppearance: boolean;
+
+  /** Direction of text on vertical progress bars. */
+  textDirection: number;
+
+  /** Emitted when the progress value changes. */
+  valueChanged: QSignal;
+
+  /** Sets both minimum and maximum values. */
+  setRange(minimum: number, maximum: number): void;
+
+  /** Sets the current progress value. */
+  setValue(value: number): void;
+
+  setMinimum(minimum: number): void;
+  setMaximum(maximum: number): void;
+
+  /** Resets the progress bar to its initial state. */
+  reset(): void;
+
+  /** Sets the displayed text format. */
+  setFormat(format: string): void;
+
+  /** Restores the default text format. */
+  resetFormat(): void;
+
+  setTextVisible(visible: boolean): void;
+  isTextVisible(): boolean;
+
+  setOrientation(orientation: number): void;
+  setAlignment(alignment: number): void;
+
+  setInvertedAppearance(invert: boolean): void;
+  setTextDirection(direction: number): void;
+
+  /** Preferred size suggested by Qt. */
+  sizeHint(): any;
+  minimumSizeHint(): any;
+
+  /** Vertical text direction constants. */
+  static TopToBottom: number;
+  static BottomToTop: number;
 }

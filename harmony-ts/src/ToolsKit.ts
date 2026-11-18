@@ -272,6 +272,19 @@ interface ToolsKitDependencies {
         ToolsModule.applyCameraPreset('pan_right');
       },
 
+      setStartEndFrames(): void {
+        var sel = $.TimelineKit.getSelection();
+        if (scene.getStartFrame() === sel.startFrame && scene.getStopFrame() === sel.endFrame) {
+          $.log(
+            "[Tools.ts] Start/End frames already match selection, resetting to scene's full range",
+          );
+          scene.setStartFrame(1);
+          scene.setStopFrame($.frame.numberOf());
+          return;
+        }
+        $.scene.setStartFrame(sel.startFrame);
+        $.scene.setStopFrame(sel.endFrame);
+      },
       runCycle(): null {
         var sel = $.TimelineKit.getSelection();
         var drawingNodes: any[] = [];
@@ -406,6 +419,67 @@ interface ToolsKitDependencies {
         $.scene.setStopFrame(sel.startFrame + 7);
       },
 
+      sliceFrames(selection: any): number {
+        var startFrame = Math.max(1, selection.startFrame);
+        var endFrame = Math.min(selection.endFrame, $.frame.numberOf());
+
+        if (endFrame < startFrame) {
+          return 0;
+        }
+
+        var columnName = this.name;
+        var originalValues: string[] = [];
+        var copiedCount = 0;
+
+        // Snapshot the original exposure at each frame.
+        for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++) {
+          originalValues.push($.column.getEntry(columnName, 1, frameNumber));
+        }
+
+        // Preserve the original drawing immediately after the selection.
+        // This prevents the final duplicate from extending beyond the range.
+        if (endFrame < $.frame.numberOf()) {
+          var nextFrame = endFrame + 1;
+          var nextDrawing = $.column.getEntry(columnName, 1, nextFrame);
+          var lastDrawing = originalValues[originalValues.length - 1];
+
+          if (nextDrawing && nextDrawing === lastDrawing) {
+            if (!$.column.setEntry(columnName, 1, nextFrame, nextDrawing)) {
+              throw new Error('Failed to preserve exposure at frame ' + nextFrame);
+            }
+          }
+        }
+
+        // Work backwards so each copy originates from its original drawing.
+        for (var frameNumber = endFrame; frameNumber >= startFrame; frameNumber--) {
+          var originalDrawing = originalValues[frameNumber - startFrame];
+
+          // Do not create drawings on empty frames.
+          if (!originalDrawing) {
+            continue;
+          }
+
+          // Start a separate exposure at this frame.
+          if (!$.column.setEntry(columnName, 1, frameNumber, originalDrawing)) {
+            throw new Error('Failed to create exposure at frame ' + frameNumber);
+          }
+
+          // Duplicate the actual drawing artwork.
+          if (!$.column.duplicateDrawingAt(columnName, frameNumber)) {
+            throw new Error('Failed to duplicate drawing at frame ' + frameNumber);
+          }
+
+          var copiedDrawing = $.column.getEntry(columnName, 1, frameNumber);
+
+          if (!copiedDrawing || copiedDrawing === originalDrawing) {
+            throw new Error('Drawing was not duplicated at frame ' + frameNumber);
+          }
+
+          copiedCount++;
+        }
+
+        return copiedCount;
+      },
       loopCurrentSelection(): null {
         $.scene.saveAll();
         $.scene.beginUndoRedoAccum('Duplicate Drawing');
@@ -480,6 +554,13 @@ interface ToolsKitDependencies {
           shortcut: 'Ctrl+Alt+Right',
           category: 'Navigation',
         });
+        $.Toolbar.registerAction({
+          name: 'Set start/end',
+          icon: $.specialFolders.userScripts + '/script-icons/set_start_end.png',
+          handler: 'ToolsKit.setStartEndFrames',
+          shortcut: 'Ctrl+Alt+S',
+          category: 'Navigation',
+        });
 
         $.Toolbar.registerAction({
           name: 'Boundary Snapping',
@@ -517,6 +598,7 @@ interface ToolsKitDependencies {
             category: 'Presets',
           });
         });
+
         $.Toolbar.registerAction({
           name: 'Loop Selected Frames',
           icon: $.specialFolders.userScripts + '/script-icons/loop.png',
@@ -524,6 +606,16 @@ interface ToolsKitDependencies {
           handler: 'ToolsKit.loopCurrentSelection',
 
           shortcut: 'Ctrl+Alt+L',
+          category: 'Animation Tools',
+        });
+
+        $.Toolbar.registerAction({
+          name: 'Slice Selected Frames',
+          icon: $.specialFolders.userScripts + '/script-icons/slice.png',
+
+          handler: 'ToolsKit.sliceFrames',
+
+          shortcut: 'Ctrl+Alt+S',
           category: 'Animation Tools',
         });
 

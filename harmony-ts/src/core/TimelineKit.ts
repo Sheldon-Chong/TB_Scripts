@@ -470,15 +470,8 @@ function createTimelineKit(Core: any) {
         for (var f = selection.startFrame; f <= selection.endFrame; f++) {
           try {
             var result = Core.Timeline.createFrameMarker(selectedNode.index, marker, f);
-            Core.MessageLog.trace(
-              'Created frame marker on node ' +
-                selectedNode.name +
-                ' (index ' +
-                selectedNode.index +
-                ') at frame ' +
-                f +
-                '. Result: ' +
-                result,
+            Core.log(
+              `Created frame marker on node ${selectedNode.name} (index ${selectedNode.index}) at frame ${f}. Result: ${result}`,
             );
             Core.MessageLog.trace(Core.JSON.stringify(marker, null, 2));
           } catch (e: any) {
