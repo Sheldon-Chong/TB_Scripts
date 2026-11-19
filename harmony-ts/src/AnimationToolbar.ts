@@ -7,6 +7,7 @@ include(specialFolders.userScripts + '/toolbars/animation/tools/ApplyShakeTool.j
 include(specialFolders.userScripts + '/toolbars/animation/tools/ApplyZoomTool.js');
 include(specialFolders.userScripts + '/KeyframeProfiles.js');
 
+include(specialFolders.userScripts + '/reactive-ui.js');
 include(specialFolders.userScripts + '/ToolsKit.js');
 
 function registerAnimationToolbar(): void {
@@ -20,6 +21,7 @@ function registerAnimationToolbar(): void {
   var shared = Function('return this;')().__proto__;
 
   var dependencies: ToolsKitDependencies = {
+    ui: createUIRuntime(Core),
     getFrameSnappingKit: getFrameSnappingKit,
     createCameraSwipe: createCameraSwipe,
     createCameraSwipeToolKit: createCameraSwipeToolKit,

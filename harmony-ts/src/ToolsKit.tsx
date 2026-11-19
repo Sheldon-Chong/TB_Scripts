@@ -1,4 +1,4 @@
-// ToolsKit.ts
+// ToolsKit.tsx
 
 type ApplyPresetFunction = 'applyKeyFramesToSplittedPath' | 'applyKeyFramesTo3DPath';
 
@@ -10,6 +10,7 @@ interface PresetSettings {
 }
 
 interface ToolsKitDependencies {
+  ui: UIRuntime;
   getFrameSnappingKit: typeof getFrameSnappingKit;
   createCameraSwipe: typeof createCameraSwipe;
   createCameraSwipeToolKit: typeof createCameraSwipeToolKit;
@@ -683,57 +684,51 @@ interface ToolsKitDependencies {
 
       quickInsertMarker(): void {
         var currentFrame = $.frame.current();
-        var dialog = new $.QDialog();
-        dialog.windowTitle = 'Insert Marker at Frame ' + currentFrame;
-        dialog.minimumWidth = 320;
-        var layout = new $.QVBoxLayout(dialog);
-        var nameLabel = new $.QLabel('Name (optional)');
-        var nameInput = new $.QLineEdit(dialog);
-        var descriptionLabel = new $.QLabel('Description (optional)');
-        var descriptionInput = new $.QTextEdit(dialog);
-        descriptionInput.maximumHeight = 95;
+        var UI = deps.ui;
+        if (!UI) {
+          throw new $.Error('Reactive UI is unavailable. Restart Harmony to reload the animation toolbar.');
+        }
 
-        var color = '#ff0000';
-        var colorButton = new $.QPushButton(dialog);
-        colorButton.text = 'Color: Default red';
-        colorButton.clicked.connect(function () {
-          var chosen = $.QColorDialog.getColor(new $.QColor(color), dialog);
-          if (chosen.isValid()) {
-            color = chosen.name();
-            colorButton.text = 'Color: ' + color;
-          }
-        });
+        var dialog: QDialog = (
+          <dialog windowTitle={'Insert Marker at Frame ' + currentFrame} minimumWidth={320} />
+        ).value;
+        var nameInput = <lineEdit />;
+        var descriptionInput = <textEdit maximumHeight={95} />;
+        var color = UI.createSignal('#ff0000');
+        var insertButton = <pushButton text="Insert" onClicked={() => dialog.accept()} />;
+        insertButton.value['default'] = true;
 
-        var buttons = new $.QHBoxLayout();
-        var cancel = new $.QPushButton(dialog);
-        cancel.text = 'Cancel';
-        cancel.clicked.connect(function () {
-          dialog.reject();
-        });
-        var insert = new $.QPushButton(dialog);
-        insert.text = 'Insert';
-        insert['default'] = true;
-        insert.clicked.connect(function () {
-          dialog.accept();
-        });
-        buttons.addWidget(cancel);
-        buttons.addWidget(insert);
-
-        layout.addWidget(nameLabel);
-        layout.addWidget(nameInput);
-        layout.addWidget(descriptionLabel);
-        layout.addWidget(descriptionInput);
-        layout.addWidget(colorButton);
-        layout.addLayout(buttons);
+        <column parent={dialog}>
+          <label text="Name (optional)" />
+          {nameInput}
+          <label text="Description (optional)" />
+          {descriptionInput}
+          <row>
+            <label text="Color (optional)" />
+            <pushButton
+              text={color}
+              onClicked={() => {
+                var chosen = $.QColorDialog.getColor(new $.QColor(color.get()), dialog);
+                if (chosen.isValid()) {
+                  color.set(chosen.name());
+                }
+              }}
+            />
+          </row>
+          <row>
+            <pushButton text="Cancel" onClicked={() => dialog.reject()} />
+            {insertButton}
+          </row>
+        </column>;
 
         if (dialog.exec()) {
           applyMarkerEdit('Insert Marker', function () {
             return !!$.TimelineMarker.createMarker({
               frame: currentFrame,
               length: 1,
-              name: nameInput.text,
-              notes: descriptionInput.plainText,
-              color: color,
+              name: nameInput.value.text,
+              notes: descriptionInput.value.plainText,
+              color: color.get(),
             });
           });
         }

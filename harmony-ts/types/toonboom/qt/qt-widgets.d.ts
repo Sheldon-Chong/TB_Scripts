@@ -52,6 +52,11 @@ declare class QLineEdit extends QWidget {
   textChanged: QSignal;
   editingFinished: QSignal;
 }
+declare class QComboBox extends QWidget {
+  currentIndex: number;
+  currentIndexChanged: QSignal;
+  addItem(text: string): void;
+}
 declare class QTextEdit extends QWidget {
   constructor(...args: any[]);
   plainText: string;
