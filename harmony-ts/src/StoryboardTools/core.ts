@@ -565,69 +565,110 @@ namespace StoryboardTools {
     scene.endUndoRedoAccum();
   }
 
-  /**
-   * Move every marker to `frame * 32`, stretching the spacing between markers
-   * out to the fixed 32-frame boundary.
-   *
-   * Markers are deleted first and then recreated at their new frames, so moves
-   * never collide with markers that have not been moved yet. Target frames are
-   * de-duplicated to avoid overlapping markers at the same frame.
-   */
   export function extendToBoundary(): void {
+    const sourceFrame = Timeline.firstFrameSel > 0 ? Timeline.firstFrameSel : frame.current();
+    const sceneEnd = frame.numberOf();
     const markers = G.TimelineKit.getAllMarkers();
+    let leftBoundary = sourceFrame;
+    let rightBoundary = sourceFrame;
 
-    const rebuilt: Array<{
-      frame: number;
-      length: number;
-      color: string;
-      name: string;
-      notes: string;
-    }> = [];
     for (let i = 0; i < markers.length; i++) {
-      const marker = markers[i];
-      rebuilt.push({
-        frame: marker.frame * 32,
-        length: marker.length !== undefined ? marker.length : 0,
-        color: marker.color || '#ffffff',
-        name: marker.name || '',
-        notes: marker.notes || '',
-      });
+      const markerFrame = markers[i].frame;
+      if (markerFrame >= 1 && markerFrame < sourceFrame &&
+          (leftBoundary === sourceFrame || markerFrame > leftBoundary)) {
+        leftBoundary = markerFrame;
+      }
+      if (markerFrame <= sceneEnd && markerFrame > sourceFrame &&
+          (rightBoundary === sourceFrame || markerFrame < rightBoundary)) {
+        rightBoundary = markerFrame;
+      }
     }
 
-    // Recreate in frame order for a deterministic timeline layout.
-    rebuilt.sort(function (a, b) {
-      return a.frame - b.frame;
-    });
+    const columns: string[] = [];
+    function addDrawingColumn(columnName: string): void {
+      if (columnName && column.type(columnName) === 'DRAWING' && columns.indexOf(columnName) === -1) {
+        columns.push(columnName);
+      }
+    }
 
-    scene.beginUndoRedoAccum('extend to boundary');
-    try {
-      // Delete everything first so recreated markers never overlap an old one.
-      for (let i = 0; i < markers.length; i++) {
-        TimelineMarker.deleteMarker(markers[i]);
+    function addDrawingNode(nodePath: string): void {
+      if (node.type(nodePath) === 'READ') {
+        addDrawingColumn(node.linkedColumn(nodePath, 'DRAWING.ELEMENT'));
+      }
+    }
+
+    const layerCount = Timeline.numLayerSel;
+    for (let i = 0; i < layerCount; i++) {
+      if (Timeline.selIsColumn(i)) {
+        addDrawingColumn(Timeline.selToColumn(i));
+      }
+      if (Timeline.selIsNode(i)) {
+        addDrawingNode(Timeline.selToNode(i));
+      }
+    }
+    if (layerCount === 0) {
+      const selectedNodes = selection.selectedNodes();
+      for (let i = 0; i < selectedNodes.length; i++) {
+        addDrawingNode(selectedNodes[i]);
+      }
+    }
+
+    const extensions: { columnName: string; drawing: string; frame: number }[] = [];
+    for (let i = 0; i < columns.length; i++) {
+      const columnName = columns[i];
+      const drawing = column.getEntry(columnName, 1, sourceFrame);
+      let sourceEntry = column.getTimesheetEntry(columnName, 1, sourceFrame);
+      if (!drawing || sourceEntry.emptyCell) {
+        continue;
       }
 
-      const usedFrames: { [frame: number]: boolean } = {};
-      for (let i = 0; i < rebuilt.length; i++) {
-        const m = rebuilt[i];
-        if (usedFrames[m.frame]) {
-          MessageLog.trace(
-            `[ScriptPopulation.ts] Skipping marker "${m.name}" — frame ${m.frame} is already occupied.`,
-          );
-          continue;
+      // Find the edges of the selected exposure before looking for empty cells.
+      let first = sourceFrame;
+      while (first > leftBoundary && sourceEntry.heldFrame) {
+        first--;
+        sourceEntry = column.getTimesheetEntry(columnName, 1, first);
+      }
+
+      let last = sourceFrame;
+      while (last < rightBoundary) {
+        const next = column.getTimesheetEntry(columnName, 1, last + 1);
+        if (next.emptyCell || !next.heldFrame) {
+          break;
         }
-        usedFrames[m.frame] = true;
-        TimelineMarker.createMarker({
-          frame: m.frame,
-          length: m.length,
-          color: m.color,
-          name: m.name,
-          notes: m.notes,
-        });
+        last++;
+      }
+
+      for (let target = first - 1; target >= leftBoundary; target--) {
+        if (!column.getTimesheetEntry(columnName, 1, target).emptyCell) {
+          break;
+        }
+        extensions.push({ columnName: columnName, drawing: drawing, frame: target });
+      }
+      for (let target = last + 1; target <= rightBoundary; target++) {
+        if (!column.getTimesheetEntry(columnName, 1, target).emptyCell) {
+          break;
+        }
+        extensions.push({ columnName: columnName, drawing: drawing, frame: target });
+      }
+    }
+
+    if (extensions.length === 0) {
+      return;
+    }
+
+    scene.beginUndoRedoAccum('Extend to Boundary');
+    try {
+      for (let i = 0; i < extensions.length; i++) {
+        const target = extensions[i];
+        if (!column.setEntry(target.columnName, 1, target.frame, target.drawing)) {
+          scene.cancelUndoRedoAccum();
+          MessageLog.trace('[Extend to Boundary] Could not set ' + target.columnName + ' at frame ' + target.frame);
+          return;
+        }
       }
     } catch (error) {
-      MessageLog.trace(
-        `[ScriptPopulation.ts] Error extending to boundary: ${error.message} ${error.fileName} ${error.lineNumber}`,
-      );
+      scene.cancelUndoRedoAccum();
+      throw error;
     }
     scene.endUndoRedoAccum();
   }

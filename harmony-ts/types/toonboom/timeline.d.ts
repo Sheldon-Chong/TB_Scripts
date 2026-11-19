@@ -20,9 +20,9 @@ declare var Timeline: {
   changeFrameMarkerType(layerIndex: number, markerId: number, markerType: frameMarkerColor): boolean;
   frameMarkerTypes(): string[]; // StringList
   centerOnFrame(frameNum: number): void;
-  numLayerSel(): number;
-  firstFrameSel(): number;
-  numFrameSel(): number;
+  numLayerSel: number;
+  firstFrameSel: number;
+  numFrameSel: number;
   numLayers: number;
 };
 

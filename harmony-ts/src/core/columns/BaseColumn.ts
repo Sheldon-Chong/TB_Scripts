@@ -16,6 +16,10 @@ function createColumnClass(Core: HarmonyCore) {
       return Core.column.getEntry(this.name, 1, frameNumber);
     }
 
+    getTimesheetEntry(frameNumber: number, subColumn: number = 1): TimesheetEntry {
+      return Core.column.getTimesheetEntry(this.name, subColumn, frameNumber);
+    }
+
     toString(): string {
       return 'Column<' + this.name + '>';
     }

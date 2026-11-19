@@ -24,9 +24,12 @@ function createDrawingElementColumnClass(Core: CoreRuntime) {
       return Core.column.getDrawingType(this.name, frameNumber);
     }
 
-    constructor(name: string, parentLayer: any) {
+    constructor(name: string, parentLayer?: any) {
       super(name, parentLayer);
-      this.element = new Core.oElement(Core.node.getElementId(parentLayer.nodePath));
+      var elementId = parentLayer
+        ? Core.node.getElementId(parentLayer.nodePath)
+        : Core.column.getElementIdOfDrawing(name);
+      this.element = new Core.oElement(elementId);
     }
 
     getKeyframe(frameNumber: number): any {

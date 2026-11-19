@@ -1,3 +1,11 @@
+interface TimesheetEntry {
+  displayText: string;
+  heldFrame: boolean;
+  emptyCell: boolean;
+  isCtrlPnt: boolean;
+  isSymbol: boolean;
+}
+
 declare var column: {
   // Column Data
   numberOf(): number;
@@ -64,7 +72,7 @@ declare var column: {
   ): boolean;
   soundColumn(columnName: string): QObject;
   columnMarkers(columnName: string): columnMarkers;
-  getTimesheetEntry(columnName: string, subColumn: number, atFrame: number): QScriptValue;
+  getTimesheetEntry(columnName: string, subColumn: number, atFrame: number): TimesheetEntry;
   getImageBlock(columnName: string, startFrame: number, nbFrames: number): QImage;
 };
 

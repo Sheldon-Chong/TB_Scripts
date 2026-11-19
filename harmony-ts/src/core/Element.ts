@@ -252,7 +252,7 @@ function createElementClass(Core: CoreRuntime) {
       var name = baseName;
       var counter = 1;
 
-      while (this.registered(name)) {
+      while (this.registered(name) || this.exists(name)) {
         name = baseName + '_' + counter;
         counter++;
       }
@@ -275,8 +275,9 @@ function createElementClass(Core: CoreRuntime) {
       destinationDrawingName: string,
       override: boolean = false,
     ) {
-      if (!this.exists(sourceDrawingName)) {
-        throw new Error(
+      var sourcePath = Core.Drawing.filename(this.id, sourceDrawingName);
+      if (!sourcePath || !Core.FileUtils.exists(sourcePath)) {
+        throw new Core.Error(
           "Source drawing '" +
             sourceDrawingName +
             "' does not exist in element '" +
@@ -295,7 +296,7 @@ function createElementClass(Core: CoreRuntime) {
       ) {
         Core.MessageLog.trace('File already exists at destination path: ' + destinationPath);
 
-        throw new Error(
+        throw new Core.Error(
           "Destination drawing '" +
             destinationDrawingName +
             "' already exists in element '" +
@@ -307,7 +308,7 @@ function createElementClass(Core: CoreRuntime) {
       Core.Drawing.create(this.id, destinationDrawingName, true, true);
 
       if (!Core.Utils.copyFile(sourcePath, destinationPath)) {
-        throw new Error(
+        throw new Core.Error(
           "Failed to copy drawing from '" + sourcePath + "' to '" + destinationPath + "'.",
         );
       }

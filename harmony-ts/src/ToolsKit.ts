@@ -86,6 +86,57 @@ interface ToolsKitDependencies {
       maxEdgeSnappingSearch: 100,
       smartPasteEnabled: false,
     };
+    function getSelectedDrawingColumns(selection: CoreInstance<'oSelection'>): string[] {
+      var layerCount = $.Timeline.numLayerSel;
+      var columns: string[] = [];
+
+      function addDrawingColumn(columnName: string): void {
+        if (
+          columnName &&
+          $.column.type(columnName) === 'DRAWING' &&
+          columns.indexOf(columnName) === -1
+        ) {
+          columns.push(columnName);
+        }
+      }
+
+      for (var index = 0; index < layerCount; index++) {
+        if ($.Timeline.selIsColumn(index)) {
+          addDrawingColumn($.Timeline.selToColumn(index));
+        }
+        if ($.Timeline.selIsNode(index)) {
+          var nodePath = $.Timeline.selToNode(index);
+          if ($.node.type(nodePath) === 'READ') {
+            addDrawingColumn($.node.linkedColumn(nodePath, 'DRAWING.ELEMENT'));
+          }
+        }
+      }
+
+      if (layerCount === 0) {
+        for (var index = 0; index < selection.selectedNodes.length; index++) {
+          var selectedNode = selection.selectedNodes[index];
+          if (selectedNode instanceof $.oDrawingNode) {
+            addDrawingColumn($.node.linkedColumn(selectedNode.nodePath, 'DRAWING.ELEMENT'));
+          }
+        }
+      }
+
+      return columns;
+    }
+
+    function applyMarkerEdit(label: string, edit: () => boolean): void {
+      $.scene.beginUndoRedoAccum(label);
+      try {
+        if (!edit()) {
+          throw new $.Error(label + ' failed');
+        }
+      } catch (error) {
+        $.scene.cancelUndoRedoAccum();
+        throw error;
+      }
+      $.scene.endUndoRedoAccum();
+    }
+
     var ToolsModule = {
       /*
        * Public state
@@ -154,7 +205,7 @@ interface ToolsKitDependencies {
           $.MessageLog.trace('[Tools.ts] Applying preset from path: ' + path);
 
           var content = $.FileUtils.readFrom(path);
-          if (!content) throw new Error('Preset file not found: ' + path);
+          if (!content) throw new $.Error('Preset file not found: ' + path);
 
           var presetData = $.JSON.parse(content);
           var currentFrame = $.frame.current();
@@ -419,64 +470,81 @@ interface ToolsKitDependencies {
         $.scene.setStopFrame(sel.startFrame + 7);
       },
 
-      sliceFrames(selection: any): number {
+      sliceFrames(
+        drawingColumn: CoreInstance<'oDrawingElementColumn'>,
+        selection: { startFrame: number; endFrame: number },
+      ): number {
         var startFrame = Math.max(1, selection.startFrame);
-        var endFrame = Math.min(selection.endFrame, $.frame.numberOf());
+        var sceneLength = $.frame.numberOf();
+        var endFrame = Math.min(selection.endFrame, sceneLength);
+        var framesToSlice: { frame: number; drawing: CoreInstance<'oDrawing'> }[] = [];
 
-        if (endFrame < startFrame) {
-          return 0;
-        }
-
-        var columnName = this.name;
-        var originalValues: string[] = [];
-        var copiedCount = 0;
-
-        // Snapshot the original exposure at each frame.
+        // Check the original exposure boundaries, including holds outside the selection.
         for (var frameNumber = startFrame; frameNumber <= endFrame; frameNumber++) {
-          originalValues.push($.column.getEntry(columnName, 1, frameNumber));
-        }
+          var entry = drawingColumn.getTimesheetEntry(frameNumber);
+          if (entry.emptyCell) {
+            continue;
+          }
 
-        // Preserve the original drawing immediately after the selection.
-        // This prevents the final duplicate from extending beyond the range.
-        if (endFrame < $.frame.numberOf()) {
-          var nextFrame = endFrame + 1;
-          var nextDrawing = $.column.getEntry(columnName, 1, nextFrame);
-          var lastDrawing = originalValues[originalValues.length - 1];
-
-          if (nextDrawing && nextDrawing === lastDrawing) {
-            if (!$.column.setEntry(columnName, 1, nextFrame, nextDrawing)) {
-              throw new Error('Failed to preserve exposure at frame ' + nextFrame);
+          var nextEntry =
+            frameNumber < sceneLength ? drawingColumn.getTimesheetEntry(frameNumber + 1) : null;
+          if (entry.heldFrame || (nextEntry && !nextEntry.emptyCell && nextEntry.heldFrame)) {
+            var drawing = drawingColumn.getKeyframe(frameNumber);
+            if (drawing) {
+              framesToSlice.push({ frame: frameNumber, drawing: drawing });
             }
           }
         }
 
-        // Work backwards so each copy originates from its original drawing.
-        for (var frameNumber = endFrame; frameNumber >= startFrame; frameNumber--) {
-          var originalDrawing = originalValues[frameNumber - startFrame];
-
-          // Do not create drawings on empty frames.
-          if (!originalDrawing) {
-            continue;
+        var copiedCount = 0;
+        for (var index = 0; index < framesToSlice.length; index++) {
+          var exposure = framesToSlice[index];
+          try {
+            if (!drawingColumn.copyDrawingTo(exposure.drawing, exposure.frame)) {
+              throw new $.Error('Failed to set duplicated drawing');
+            }
+            copiedCount++;
+          } catch (error) {
+            $.MessageLog.trace(
+              `[Slice Selected Frames] Skipped ${drawingColumn.name} at frame ${exposure.frame}: ${error.message || error}`,
+            );
           }
-
-          // Start a separate exposure at this frame.
-          if (!$.column.setEntry(columnName, 1, frameNumber, originalDrawing)) {
-            throw new Error('Failed to create exposure at frame ' + frameNumber);
-          }
-
-          // Duplicate the actual drawing artwork.
-          if (!$.column.duplicateDrawingAt(columnName, frameNumber)) {
-            throw new Error('Failed to duplicate drawing at frame ' + frameNumber);
-          }
-
-          var copiedDrawing = $.column.getEntry(columnName, 1, frameNumber);
-
-          if (!copiedDrawing || copiedDrawing === originalDrawing) {
-            throw new Error('Drawing was not duplicated at frame ' + frameNumber);
-          }
-
-          copiedCount++;
         }
+
+        return copiedCount;
+      },
+      sliceCurrentSelection(): number {
+        var selection = $.TimelineKit.getSelection();
+        var columns = getSelectedDrawingColumns(selection);
+        var layerCount = $.Timeline.numLayerSel;
+
+        if (columns.length === 0) {
+          return 0;
+        }
+
+        var firstFrame = layerCount > 0 ? $.Timeline.firstFrameSel : 0;
+        var frameCount = layerCount > 0 ? $.Timeline.numFrameSel : 0;
+        var range =
+          firstFrame > 0 && frameCount > 0
+            ? { startFrame: firstFrame, endFrame: firstFrame + frameCount - 1 }
+            : selection;
+        var copiedCount = 0;
+
+        $.scene.saveAll();
+
+        $.scene.beginUndoRedoAccum('Slice Selected Frames');
+        $.log('testing5');
+
+        try {
+          for (var index = 0; index < columns.length; index++) {
+            var drawingColumn = new $.oDrawingElementColumn(columns[index]);
+            copiedCount += ToolsModule.sliceFrames(drawingColumn, range);
+          }
+        } catch (error) {
+          $.scene.cancelUndoRedoAccum();
+          throw error;
+        }
+        $.scene.endUndoRedoAccum();
 
         return copiedCount;
       },
@@ -532,6 +600,176 @@ interface ToolsKitDependencies {
         }
         return null;
       },
+      extendDrawingToBoundary(): void {
+        var selection = $.TimelineKit.getSelection();
+        var columns = getSelectedDrawingColumns(selection);
+        var frameNumber = $.Timeline.firstFrameSel || selection.startFrame;
+        var sceneLength = $.frame.numberOf();
+        var selectedFrameCount = $.Timeline.numFrameSel || selection.length;
+        if (columns.length !== 1 || selectedFrameCount !== 1 ||
+            frameNumber < 1 || frameNumber > sceneLength) {
+          return;
+        }
+
+        var drawingColumn = new $.oDrawingElementColumn(columns[0]);
+        var drawing = drawingColumn.getKeyframe(frameNumber);
+        if (!drawing) {
+          return;
+        }
+
+        var leftMarker = 1;
+        var rightMarker = 0;
+        var markers = $.TimelineKit.getAllMarkers();
+        for (var index = 0; index < markers.length; index++) {
+          var markerFrame = markers[index].frame;
+          if (markerFrame < frameNumber && markerFrame > leftMarker) {
+            leftMarker = markerFrame;
+          } else if (markerFrame > frameNumber && markerFrame <= sceneLength &&
+                     (!rightMarker || markerFrame < rightMarker)) {
+            rightMarker = markerFrame;
+          }
+        }
+
+        // Locate the edges of the selected exposure before looking for empty cells.
+        var start = frameNumber;
+        while (start > leftMarker && drawingColumn.getTimesheetEntry(start).heldFrame) {
+          start--;
+        }
+
+        var rightLimit = rightMarker || sceneLength;
+        var end = frameNumber;
+        while (end < rightLimit && drawingColumn.getTimesheetEntry(end + 1).heldFrame) {
+          end++;
+        }
+
+        var left = start;
+        while (left > leftMarker && drawingColumn.getTimesheetEntry(left - 1).emptyCell) {
+          left--;
+        }
+
+        var right = end;
+        while (right < rightLimit && drawingColumn.getTimesheetEntry(right + 1).emptyCell) {
+          right++;
+        }
+        if (!rightMarker && right === sceneLength) {
+          right = end;
+        }
+
+        if (left === start && right === end) {
+          return;
+        }
+
+        $.scene.beginUndoRedoAccum('Extend Drawing to Boundary');
+        try {
+          if ((left < start && !drawingColumn.setKeyFrame(left, drawing, start - 1)) ||
+              (right > end && !drawingColumn.setKeyFrame(end + 1, drawing, right))) {
+            throw new $.Error('Failed to extend drawing exposure');
+          }
+        } catch (error) {
+          $.scene.cancelUndoRedoAccum();
+          throw error;
+        }
+        $.scene.endUndoRedoAccum();
+      },
+
+      quickInsertMarker(): void {
+        var currentFrame = $.frame.current();
+        var dialog = new $.QDialog();
+        dialog.windowTitle = 'Insert Marker at Frame ' + currentFrame;
+        dialog.minimumWidth = 320;
+        var layout = new $.QVBoxLayout(dialog);
+        var nameLabel = new $.QLabel('Name (optional)');
+        var nameInput = new $.QLineEdit(dialog);
+        var descriptionLabel = new $.QLabel('Description (optional)');
+        var descriptionInput = new $.QTextEdit(dialog);
+        descriptionInput.maximumHeight = 95;
+
+        var color = '#ff0000';
+        var colorButton = new $.QPushButton(dialog);
+        colorButton.text = 'Color: Default red';
+        colorButton.clicked.connect(function () {
+          var chosen = $.QColorDialog.getColor(new $.QColor(color), dialog);
+          if (chosen.isValid()) {
+            color = chosen.name();
+            colorButton.text = 'Color: ' + color;
+          }
+        });
+
+        var buttons = new $.QHBoxLayout();
+        var cancel = new $.QPushButton(dialog);
+        cancel.text = 'Cancel';
+        cancel.clicked.connect(function () { dialog.reject(); });
+        var insert = new $.QPushButton(dialog);
+        insert.text = 'Insert';
+        insert['default'] = true;
+        insert.clicked.connect(function () { dialog.accept(); });
+        buttons.addWidget(cancel);
+        buttons.addWidget(insert);
+
+        layout.addWidget(nameLabel);
+        layout.addWidget(nameInput);
+        layout.addWidget(descriptionLabel);
+        layout.addWidget(descriptionInput);
+        layout.addWidget(colorButton);
+        layout.addLayout(buttons);
+
+        if (dialog.exec()) {
+          applyMarkerEdit('Insert Marker', function () {
+            return !!$.TimelineMarker.createMarker({
+              frame: currentFrame,
+              length: 1,
+              name: nameInput.text,
+              notes: descriptionInput.plainText,
+              color: color,
+            });
+          });
+        }
+      },
+
+      pushFramesAndMarkers(): void {
+        applyMarkerEdit('Push Frames and Markers', function () {
+          return $.frame.insert($.frame.current(), 1, { ripple_markers: true });
+        });
+      },
+
+      rippleDeleteCurrentFrame(): void {
+        if ($.frame.numberOf() <= 1) {
+          return;
+        }
+
+        applyMarkerEdit('Ripple Delete Current Frame', function () {
+          return $.frame.remove($.frame.current() - 1, 1, { ripple_markers: true });
+        });
+      },
+
+      deleteMarkersInSelection(): void {
+        var start = $.Timeline.firstFrameSel;
+        var length = $.Timeline.numFrameSel;
+        var end = start + length - 1;
+        if (start < 1 || length < 1) {
+          var selection = $.TimelineKit.getSelection();
+          start = selection.startFrame;
+          end = selection.endFrame;
+        }
+
+        var markers = $.TimelineKit.getAllMarkers().filter(function (marker: oTimelineMarker) {
+          var markerEnd = marker.frame + $.Math.max(marker.length, 1) - 1;
+          return marker.frame <= end && markerEnd >= start;
+        });
+        if (markers.length === 0) {
+          return;
+        }
+
+        applyMarkerEdit('Delete Markers in Selection', function () {
+          for (var index = 0; index < markers.length; index++) {
+            if (!$.TimelineMarker.deleteMarker(markers[index])) {
+              return false;
+            }
+          }
+          return true;
+        });
+      },
+
       registerAllTools(): void {
         /*
          * CameraSwipe has already been constructed
@@ -613,7 +851,7 @@ interface ToolsKitDependencies {
           name: 'Slice Selected Frames',
           icon: $.specialFolders.userScripts + '/script-icons/slice.png',
 
-          handler: 'ToolsKit.sliceFrames',
+          handler: 'ToolsKit.sliceCurrentSelection',
 
           shortcut: 'Ctrl+Alt+S',
           category: 'Animation Tools',
@@ -632,6 +870,38 @@ interface ToolsKitDependencies {
           handler: 'ToolsKit.runCycle',
           shortcut: 'Ctrl+Alt+C',
           category: 'Animation Tools',
+        });
+        $.Toolbar.registerAction({
+          name: 'extendDrawingToBoundary',
+          icon: `${$.specialFolders.userScripts}/script-icons/extend_drawing_to_boundary.png`,
+          handler: 'ToolsKit.extendDrawingToBoundary',
+          shortcut: 'Ctrl+Alt+E',
+          category: 'Animation Tools',
+        });
+        var markerIconFolder = $.specialFolders.userScripts + '/script-icons/';
+        $.Toolbar.registerAction({
+          name: 'Quick Insert Marker',
+          icon: markerIconFolder + 'populate_markers.png',
+          handler: 'ToolsKit.quickInsertMarker',
+          category: 'Markers',
+        });
+        $.Toolbar.registerAction({
+          name: 'Push Frames and Markers Right',
+          icon: markerIconFolder + 'next_boundary.png',
+          handler: 'ToolsKit.pushFramesAndMarkers',
+          category: 'Markers',
+        });
+        $.Toolbar.registerAction({
+          name: 'Ripple Delete Current Frame',
+          icon: markerIconFolder + 'previous_boundary.png',
+          handler: 'ToolsKit.rippleDeleteCurrentFrame',
+          category: 'Markers',
+        });
+        $.Toolbar.registerAction({
+          name: 'Delete Markers in Selection',
+          icon: markerIconFolder + 'showMarkerList.png',
+          handler: 'ToolsKit.deleteMarkersInSelection',
+          category: 'Markers',
         });
         $.Toolbar.updateToolbars();
       },

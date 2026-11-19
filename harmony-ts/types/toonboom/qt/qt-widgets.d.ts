@@ -36,6 +36,16 @@ declare class QLabel extends QWidget {
   textFormat: number;
   alignment: number;
 }
+declare class QColor {
+  constructor(color: string);
+  isValid(): boolean;
+  name(): string;
+}
+
+declare class QColorDialog extends QWidget {
+  static getColor(initial: QColor, parent?: QWidget): QColor;
+}
+
 declare class QLineEdit extends QWidget {
   constructor(...args: any[]);
   text: string;
