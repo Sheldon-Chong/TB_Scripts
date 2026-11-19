@@ -606,8 +606,12 @@ interface ToolsKitDependencies {
         var frameNumber = $.Timeline.firstFrameSel || selection.startFrame;
         var sceneLength = $.frame.numberOf();
         var selectedFrameCount = $.Timeline.numFrameSel || selection.length;
-        if (columns.length !== 1 || selectedFrameCount !== 1 ||
-            frameNumber < 1 || frameNumber > sceneLength) {
+        if (
+          columns.length !== 1 ||
+          selectedFrameCount !== 1 ||
+          frameNumber < 1 ||
+          frameNumber > sceneLength
+        ) {
           return;
         }
 
@@ -624,8 +628,11 @@ interface ToolsKitDependencies {
           var markerFrame = markers[index].frame;
           if (markerFrame < frameNumber && markerFrame > leftMarker) {
             leftMarker = markerFrame;
-          } else if (markerFrame > frameNumber && markerFrame <= sceneLength &&
-                     (!rightMarker || markerFrame < rightMarker)) {
+          } else if (
+            markerFrame > frameNumber &&
+            markerFrame <= sceneLength &&
+            (!rightMarker || markerFrame < rightMarker)
+          ) {
             rightMarker = markerFrame;
           }
         }
@@ -661,8 +668,10 @@ interface ToolsKitDependencies {
 
         $.scene.beginUndoRedoAccum('Extend Drawing to Boundary');
         try {
-          if ((left < start && !drawingColumn.setKeyFrame(left, drawing, start - 1)) ||
-              (right > end && !drawingColumn.setKeyFrame(end + 1, drawing, right))) {
+          if (
+            (left < start && !drawingColumn.setKeyFrame(left, drawing, start - 1)) ||
+            (right > end && !drawingColumn.setKeyFrame(end + 1, drawing, right))
+          ) {
             throw new $.Error('Failed to extend drawing exposure');
           }
         } catch (error) {
@@ -698,11 +707,15 @@ interface ToolsKitDependencies {
         var buttons = new $.QHBoxLayout();
         var cancel = new $.QPushButton(dialog);
         cancel.text = 'Cancel';
-        cancel.clicked.connect(function () { dialog.reject(); });
+        cancel.clicked.connect(function () {
+          dialog.reject();
+        });
         var insert = new $.QPushButton(dialog);
         insert.text = 'Insert';
         insert['default'] = true;
-        insert.clicked.connect(function () { dialog.accept(); });
+        insert.clicked.connect(function () {
+          dialog.accept();
+        });
         buttons.addWidget(cancel);
         buttons.addWidget(insert);
 
@@ -849,7 +862,7 @@ interface ToolsKitDependencies {
 
         $.Toolbar.registerAction({
           name: 'Slice Selected Frames',
-          icon: $.specialFolders.userScripts + '/script-icons/slice.png',
+          icon: $.specialFolders.userScripts + '/script-icons/slice_frames.png',
 
           handler: 'ToolsKit.sliceCurrentSelection',
 
@@ -857,6 +870,13 @@ interface ToolsKitDependencies {
           category: 'Animation Tools',
         });
 
+        $.Toolbar.registerAction({
+          name: 'extendDrawingToBoundary',
+          icon: `${$.specialFolders.userScripts}/script-icons/extend_to_boundary.png`,
+          handler: 'ToolsKit.extendDrawingToBoundary',
+          shortcut: 'Ctrl+Alt+E',
+          category: 'Animation Tools',
+        });
         $.Toolbar.registerAction({
           name: 'runCycle',
           icon: `${$.specialFolders.userScripts}/script-icons/run_cycle.png`,
@@ -871,13 +891,7 @@ interface ToolsKitDependencies {
           shortcut: 'Ctrl+Alt+C',
           category: 'Animation Tools',
         });
-        $.Toolbar.registerAction({
-          name: 'extendDrawingToBoundary',
-          icon: `${$.specialFolders.userScripts}/script-icons/extend_drawing_to_boundary.png`,
-          handler: 'ToolsKit.extendDrawingToBoundary',
-          shortcut: 'Ctrl+Alt+E',
-          category: 'Animation Tools',
-        });
+
         var markerIconFolder = $.specialFolders.userScripts + '/script-icons/';
         $.Toolbar.registerAction({
           name: 'Quick Insert Marker',
@@ -887,19 +901,19 @@ interface ToolsKitDependencies {
         });
         $.Toolbar.registerAction({
           name: 'Push Frames and Markers Right',
-          icon: markerIconFolder + 'next_boundary.png',
+          icon: markerIconFolder + 'push_to_right.png',
           handler: 'ToolsKit.pushFramesAndMarkers',
           category: 'Markers',
         });
         $.Toolbar.registerAction({
           name: 'Ripple Delete Current Frame',
-          icon: markerIconFolder + 'previous_boundary.png',
+          icon: markerIconFolder + 'push_to_left.png',
           handler: 'ToolsKit.rippleDeleteCurrentFrame',
           category: 'Markers',
         });
         $.Toolbar.registerAction({
           name: 'Delete Markers in Selection',
-          icon: markerIconFolder + 'showMarkerList.png',
+          icon: markerIconFolder + 'delete_marker.png',
           handler: 'ToolsKit.deleteMarkersInSelection',
           category: 'Markers',
         });
