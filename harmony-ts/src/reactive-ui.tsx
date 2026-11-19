@@ -48,6 +48,7 @@ interface MenuAction {
 interface LayoutProps {
   parent?: QWidget;
   spacing?: number;
+  alignment?: number;
   children?: JSX.Element | JSX.Element[];
 }
 
@@ -245,7 +246,12 @@ function createUIRuntime(core?: HarmonyCore): UIRuntime {
     var elements: any[] = [];
 
     for (var i = 0; i < nodes.length; i++) {
-      if (isElement(nodes[i])) elements.push(nodes[i]);
+      var node = nodes[i];
+      if (Array.isArray(node)) {
+        elements = elements.concat(toElements(node));
+      } else if (isElement(node)) {
+        elements.push(node);
+      }
     }
 
     return elements;
@@ -365,7 +371,8 @@ function createUIRuntime(core?: HarmonyCore): UIRuntime {
 
         layout.spacing = props.spacing === undefined ? 8 : props.spacing;
 
-        addToLayout(layout, toElements(children), $.Qt.AlignmentFlag.AlignLeft);
+        var alignment = props.alignment === undefined ? $.Qt.AlignmentFlag.AlignLeft : props.alignment;
+        addToLayout(layout, toElements(children), alignment);
 
         return { kind: 'layout', value: layout, props: props };
       }

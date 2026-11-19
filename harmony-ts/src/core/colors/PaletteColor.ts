@@ -66,7 +66,9 @@ function createPaletteColorClass(
     }
 
     get isTexture(): boolean {
-      return this._native.isTexture ? this._native.isTexture() : false;
+      return typeof this._native.isTexture === 'function'
+        ? !!this._native.isTexture()
+        : this._native.isTexture === true;
     }
 
     get isValid(): boolean {

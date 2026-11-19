@@ -21,7 +21,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/ToolsKit.tsx",
+    "src/**/*.tsx",
     "types/**/*.d.ts"
-, "src/test-reactive.tsx", "src/reactive-ui.tsx"  ]
+  ]
 }
