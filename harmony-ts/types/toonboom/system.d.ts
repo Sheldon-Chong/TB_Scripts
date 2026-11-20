@@ -9,9 +9,20 @@ declare var specialFolders: {
 };
 
 declare var FileDialog: {
+  getSaveFileName(filter: string, title: string, parent?: QWidget): string;
   getExistingDirectory(directory: string, title: string, parent?: QWidget): string;
   getOpenFileNames(directory: string, filter: string, title: string, parent?: QWidget): string[];
 };
+
+declare var Input: {
+  getText(label: string, text: string, title: string, parent?: QWidget): unknown;
+};
+
+declare class TemporaryFile {
+  constructor(extension: string);
+  path(): string;
+  remove(): boolean;
+}
 
 declare var System: {
   println(text: String): void;

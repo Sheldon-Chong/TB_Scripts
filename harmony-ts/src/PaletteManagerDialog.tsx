@@ -13,6 +13,14 @@ interface PaletteSwatchAppearance {
   stops?: PaletteGradientStop[];
 }
 
+interface PaletteJson {
+  version: 1;
+  id: string;
+  name: string;
+  type: 'color' | 'texture';
+  colors: { id: string; name: string; type: string; data: unknown }[];
+}
+
 interface PaletteColorEdit {
   resolvePalette: () => PaletteInstance | undefined;
   colorId: string;
@@ -24,10 +32,20 @@ interface PaletteManagerSwatch {
   id: string;
   name: string;
   widget: QPushButton;
+  hex(): string;
   edit(): void;
   refresh(color: PaletteColorInstance): boolean;
   setSelected(selected: boolean): void;
   setSearchMatch(matched: boolean): void;
+}
+
+interface PaletteSwatchGesture {
+  swatch: PaletteManagerSwatch;
+  x: number;
+  y: number;
+  modifiers: { shift: boolean; ctrl: boolean };
+  dragging: boolean;
+  cancel(): void;
 }
 
 interface PaletteManagerCard {
@@ -58,9 +76,41 @@ function showPaletteManager(): void {
   const UI = createUIRuntime($);
   const ScriptError = Error;
   const Menu = QMenu;
+  const RenameInput = Input;
+  const TempFile = TemporaryFile;
+  const app = QApplication;
+  const qtGlobals = Function('return this;')().__proto__;
+  const Icon = qtGlobals.QIcon;
+  const Size = qtGlobals.QSize;
+  const iconFolder = specialFolders.userScripts + '/script-icons/ui/';
+  const iconSize = new Size(16, 16);
+  function loadPaletteIcon(name: string): any {
+    const icon = new Icon(iconFolder + name + '.svg');
+    return icon.pixmap(iconSize, Icon.Normal, Icon.Off).isNull()
+      ? new Icon(iconFolder + 'raster/' + name + '.png')
+      : icon;
+  }
+  const icons = {
+    search: loadPaletteIcon('search'),
+    expand: loadPaletteIcon('chevron-right'),
+    collapse: loadPaletteIcon('chevron-left'),
+    pin: loadPaletteIcon('pin'),
+    download: loadPaletteIcon('download'),
+    remove: loadPaletteIcon('trash'),
+    duplicate: loadPaletteIcon('copy'),
+  };
   const mainWindow = QApplication.activeWindow();
   const projectPath = $.scene.currentProjectPath();
+  const paletteFolder = projectPath.replace(/[\\/]+$/, '') + '/palette-library';
   const versionName = $.scene.currentVersionName();
+  const pinKey = 'TB_PALETTE_MANAGER_PINS:' + projectPath + '/' + versionName;
+  let pinnedIds: string[] = [];
+  try {
+    const savedPins = $.JSON.parse($.preferences.getString(pinKey, '[]'));
+    if ($.Array.isArray(savedPins)) pinnedIds = savedPins.filter((id) => typeof id === 'string');
+  } catch (error) {
+    $.MessageLog.trace('Palette Manager could not read pinned palettes: ' + error);
+  }
   // Use the current wrapper definitions even when the shared Core was initialized earlier.
   const paletteKit = createPaletteKit($);
   const paletteManager = paletteKit.Palettes;
@@ -88,18 +138,24 @@ function showPaletteManager(): void {
   let lastSearchQuery = '';
   let pendingScroll: QWidget | undefined;
   let lastClick: { swatch: PaletteManagerSwatch; time: number } | undefined;
+  let swatchGesture: PaletteSwatchGesture | undefined;
   const Clock = Date;
   const clickInterval =
-    typeof QApplication.doubleClickInterval === 'function'
-      ? QApplication.doubleClickInterval()
-      : QApplication.doubleClickInterval;
+    typeof app.doubleClickInterval === 'function' ? app.doubleClickInterval() : app.doubleClickInterval;
   const doubleClickInterval =
     typeof clickInterval === 'number' && clickInterval > 0 ? clickInterval : 400;
+  const platformDragDistance =
+    typeof app.startDragDistance === 'function' ? app.startDragDistance() : app.startDragDistance;
+  const dragDistance =
+    typeof platformDragDistance === 'number' && platformDragDistance > 0 ? platformDragDistance : 10;
   let closed = false;
   const styleSheet = `
     QDialog#scenePaletteManager { background: #414141; }
-    QLineEdit#paletteSearch { background: #4e4e4e; color: white; border: 1px solid #676767; border-radius: 12px; padding: 9px 14px; font-size: 15px; }
-    QLineEdit#paletteSearch:focus { border-color: #a5a5a5; }
+    QWidget#paletteSearchBox { background: #4e4e4e; border: 1px solid #676767; border-radius: 12px; }
+    QLabel#paletteSearchIcon { background: transparent; }
+    QLineEdit#paletteSearch { background: transparent; color: white; border: none; padding: 0; font-size: 15px; }
+    QPushButton#paletteToolbarButton { background: #4e4e4e; color: #eee; border: none; outline: none; border-radius: 9px; font-size: 20px; }
+    QPushButton#paletteToolbarButton:hover, QPushButton#paletteToolbarButton:focus { background: #656565; }
     QScrollArea#paletteScroll { border: none; background: #414141; }
     QWidget#paletteList { background: #414141; }
     QLabel#paletteTitle, QLabel#paletteCount, QWidget#paletteSwatchGrid { background: transparent; }
@@ -111,7 +167,9 @@ function showPaletteManager(): void {
     QToolTip { background-color: #292929; color: #f5f5f5; border: 1px solid #696969; padding: 5px; opacity: 255; }
     QPushButton#paletteAddColor { border: 1px dashed #8e8e8e; border-radius: 6px; background: transparent; color: #ddd; padding: 0; font-size: 17px; }
     QPushButton#paletteAddColor:hover, QPushButton#paletteAddColor:focus { border-color: #eee; background: #555; }
-    QPushButton#paletteAction { border: 1px solid #777; border-radius: 5px; background: #555; color: #a8a8a8; }
+    QPushButton#paletteAction { border: none; outline: none; border-radius: 5px; background: #555; color: #a8a8a8; }
+    QPushButton#paletteAction:hover, QPushButton#paletteAction:focus { background: #656565; }
+    QPushButton#paletteAction:checked { background: #52677b; }
     QScrollBar:vertical { background: #4e4e4e; width: 11px; border-radius: 5px; }
     QScrollBar::handle:vertical { background: #bbb; min-height: 28px; border-radius: 5px; }
     QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
@@ -128,15 +186,50 @@ function showPaletteManager(): void {
       styleSheet={styleSheet}
     />
   ).value;
+  const searchBox = <qwidget objectName="paletteSearchBox" minimumHeight={42} stretch={1} />;
+  searchBox.value.setAttribute($.Qt.WA_StyledBackground, true);
+  const searchIcon = <label objectName="paletteSearchIcon" />;
+  searchIcon.value.pixmap = icons.search.pixmap(iconSize, Icon.Normal, Icon.Off);
+  searchIcon.value.setFixedSize(16, 16);
   const search = (
     <lineEdit
       objectName="paletteSearch"
       placeholderText="Search palettes and colors..."
       accessibleName="Search palettes and colors"
       clearButtonEnabled={true}
+      stretch={1}
       onTextChanged={updateSearch}
     />
   );
+  const searchLayout = (
+    <row parent={searchBox.value} spacing={9} alignment={$.Qt.AlignmentFlag.AlignVCenter}>
+      {searchIcon}
+      {search}
+    </row>
+  );
+  searchLayout.value.setContentsMargins(12, 0, 10, 0);
+  const addPaletteButton = (
+    <pushButton
+      objectName="paletteToolbarButton"
+      text="+"
+      autoDefault={false}
+      toolTip="Add palette"
+      accessibleName="Add palette"
+      onClicked={() => runColorAction(addPalette, true)}
+    />
+  );
+  const paletteMenuButton = (
+    <pushButton
+      objectName="paletteToolbarButton"
+      text="⋯"
+      autoDefault={false}
+      toolTip="Palette options"
+      accessibleName="Palette options"
+      onClicked={() => runColorAction(openPaletteMenu, true)}
+    />
+  );
+  addPaletteButton.value.setFixedSize(42, 42);
+  paletteMenuButton.value.setFixedSize(42, 42);
   const list = <qwidget objectName="paletteList" />;
   const empty = (
     <label
@@ -173,19 +266,351 @@ function showPaletteManager(): void {
   const selectionCount = <label objectName="paletteSelectionCount" text={selectionSummary} />;
   const dialogColumn = (
     <column parent={dialog} spacing={14} alignment={0}>
-      {search}
+      <row spacing={8} alignment={$.Qt.AlignmentFlag.AlignVCenter}>
+        {searchBox}
+        {addPaletteButton}
+        {paletteMenuButton}
+      </row>
       {scroll}
       {selectionCount}
     </column>
   );
   dialogColumn.value.setContentsMargins(18, 18, 18, 18);
 
-  function runColorAction(action: () => void): void {
+  function runColorAction(action: () => void, reportError = false): void {
     if (closed) return;
     try {
       action();
     } catch (error) {
+      if (reportError) showPaletteProblem(String(error));
       $.MessageLog.trace(`Palette Manager: ${error}`);
+    }
+  }
+
+  function showPaletteProblem(message: string): void {
+    $.Utils.confirm(message, 'Palette Manager', 'OK', '');
+  }
+
+  function executePaletteMenu(menu: QMenu, position?: any): QAction {
+    try {
+      return position ? menu.exec(position) : menu.exec();
+    } finally {
+      menu.deleteLater();
+    }
+  }
+
+  function openPaletteMenu(): void {
+    const menu = new Menu(dialog);
+    const plt = menu.addAction('Download all palettes (.plt)');
+    const json = menu.addAction('Download all palettes (JSON)');
+    const folder = menu.addAction('Open palette folder');
+    const load = menu.addAction('Import palettes…');
+    plt.enabled = json.enabled = cards.length > 0;
+    const button = paletteMenuButton.value;
+    const Point = qtGlobals.QPoint;
+    const position = Point ? button.mapToGlobal(new Point(0, button.height)) : unset;
+    const action = executePaletteMenu(menu, position);
+    if (action === plt) downloadAllPalettes('.plt');
+    if (action === json) downloadAllPalettes('.json');
+    if (action === folder && isCurrentScene()) {
+      ensurePaletteDirectory(paletteFolder);
+      if (!$.Utils.openInFileExplorertoast(paletteFolder)) {
+        throw new ScriptError('Could not open "' + paletteFolder + '" in File Explorer.');
+      }
+    }
+    if (action === load) importPalettes();
+  }
+
+  function ensurePaletteDirectory(path: string): void {
+    if (!new $.QDir().mkpath(path)) throw new ScriptError('Could not open or create "' + path + '".');
+  }
+
+  function safePaletteName(name: string): string {
+    const cleaned = name.trim().replace(/[<>:"/\\|?*\x00-\x1f]/g, '_').replace(/[. ]+$/, '');
+    return /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i.test(cleaned)
+      ? '_' + cleaned
+      : cleaned || 'New Palette';
+  }
+
+  function paletteStem(directory: string, name: string): string {
+    return directory.replace(/[\\/]+$/, '') + '/' + name;
+  }
+
+  function pathTaken(stem: string, extension: '.plt' | '.json'): boolean {
+    return new $.QFile(stem + extension).exists() ||
+      (extension === '.plt' && (
+        new $.QDir(stem + '_textures').exists() || new $.QFile(stem + '_textures').exists()
+      ));
+  }
+
+  function nextPaletteName(directory: string, name: string, extension: '.plt' | '.json', sceneNames: string[] = []): string {
+    const base = safePaletteName(name);
+    let candidate = base;
+    for (let suffix = 2; sceneNames.indexOf(candidate.toLowerCase()) !== -1 ||
+      pathTaken(paletteStem(directory, candidate), extension); suffix++) {
+      candidate = base + '_' + suffix;
+    }
+    return candidate;
+  }
+
+  function scenePaletteNames(): string[] {
+    return paletteManager.getAll(true).map((palette) => palette.name.toLowerCase());
+  }
+
+  function withScenePaletteList<T>(label: string, edit: (list: PaletteList) => T): T {
+    const list = $.PaletteObjectManager.getScenePaletteList();
+    if (!list.getLock()) throw new ScriptError('Could not lock the scene palette list.');
+    try {
+      return withUndoGroup(label, () => edit(list));
+    } finally {
+      list.releaseLock();
+    }
+  }
+
+  function newScenePalette(list: PaletteList, name: string): PaletteInstance {
+    const location = $.PaletteObjectManager.Constants.Location.SCENE;
+    const native = list.createPaletteAtLocation(location, -1, name);
+    const palette = native && new paletteKit.Palette(native);
+    if (!palette || !palette.isValid || !palette.id) {
+      throw new ScriptError('Could not create "' + name + '" in the scene palette library.');
+    }
+    return palette;
+  }
+
+  function addPalette(): void {
+    if (!isCurrentScene() || editSolidColor.isDragging() || editGradientColor.isDragging()) return;
+    ensurePaletteDirectory(paletteFolder);
+    const id = withScenePaletteList('Add Palette', (list) => {
+      const name = nextPaletteName(paletteFolder, 'New Palette', '.plt', scenePaletteNames());
+      return newScenePalette(list, name).id;
+    });
+    revealNewPalette(id);
+  }
+
+  function revealNewPalette(id: string): void {
+    syncPaletteContents();
+    const card = cards.filter((entry) => entry.id === id)[0];
+    if (!card) return;
+    if (lastSearchQuery) filterPalettes(card);
+    setSelection(card);
+    pendingScroll = card.element.value;
+  }
+
+  function writePaletteJson(palette: PaletteInstance, path: string): void {
+    const data: PaletteJson = {
+      version: 1,
+      id: palette.id,
+      name: palette.name,
+      type: palette.isTexturePalette ? 'texture' : 'color',
+      colors: palette.getColors().map(serializeColor),
+    };
+    const file = new $.PermanentFile(path);
+    file.setTextCodec('UTF-8');
+    if (!file.open(2)) throw new ScriptError('Could not write "' + path + '".');
+    let saved: boolean;
+    try {
+      file.write($.JSON.stringify(data, null, 2) + '\n');
+    } finally {
+      saved = file.close();
+    }
+    if (saved === false) throw new ScriptError('Could not close "' + path + '" after writing.');
+  }
+
+  // Harmony keeps the bitmap files beside the PLT in a matching _textures directory.
+  function copyNativePalette(sourcePath: string, destStem: string): () => void {
+    const sourceStem = sourcePath.slice(0, -4);
+    const copies: string[] = [];
+    const sourceTextures = new $.QDir(sourceStem + '_textures');
+    const destTextures = destStem + '_textures';
+    let createdTextureDir = false;
+    function copy(source: string, dest: string): void {
+      if (!$.Utils.copyFile(source, dest)) throw new ScriptError('Could not copy "' + source + '".');
+      copies.push(dest);
+    }
+    function rollback(): void {
+      for (const path of copies) new $.PermanentFile(path).remove();
+      if (createdTextureDir) new $.QDir().rmdir(destTextures);
+    }
+    try {
+      if (sourceTextures.exists()) {
+        // mkdir fails if another file operation has already claimed this directory.
+        if (!new $.QDir().mkdir(destTextures)) {
+          throw new ScriptError('Could not create "' + destTextures + '".');
+        }
+        createdTextureDir = true;
+        for (const file of sourceTextures.entryList(['*'], $.QDir.Files, $.QDir.Name)) {
+          copy(sourceStem + '_textures/' + file, destTextures + '/' + file);
+        }
+      }
+      copy(sourcePath, destStem + '.plt');
+    } catch (error) {
+      rollback();
+      throw error;
+    }
+    return rollback;
+  }
+
+  function downloadAllPalettes(extension: '.plt' | '.json'): void {
+    if (!isCurrentScene()) return;
+    const title = extension === '.plt' ? 'Download All Palettes (.plt)' : 'Download All Palettes (JSON)';
+    const directory = $.FileDialog.getExistingDirectory(projectPath, title, dialog);
+    if (!directory || closed || !isCurrentScene()) return;
+    if (extension === '.plt' && $.scene.isDirty()) {
+      if (!$.Utils.confirm('Save the scene to include the latest palette changes in the PLT export?',
+        title, 'Save and Export', 'Cancel') || closed || !isCurrentScene()) return;
+      if (!$.scene.saveAll()) {
+        showPaletteProblem('Harmony could not save the scene.');
+        return;
+      }
+    }
+    const failures: string[] = [];
+    for (const palette of paletteManager.getAll(true)) {
+      const name = nextPaletteName(directory, palette.name, extension);
+      const destination = paletteStem(directory, name);
+      try {
+        if (extension === '.plt') {
+          copyNativePalette(paletteStem(palette.path, palette.name) + '.plt', destination);
+        } else {
+          writePaletteJson(palette, destination + extension);
+        }
+      } catch (error) {
+        failures.push(palette.name + ' — ' + error);
+      }
+    }
+    if (failures.length) showPaletteProblem('Could not export some palettes.\n\n' + failures.join('\n'));
+  }
+
+  function importPalettes(): void {
+    if (!isCurrentScene() || editSolidColor.isDragging() || editGradientColor.isDragging()) return;
+    const paths = $.FileDialog.getOpenFileNames(projectPath, 'Palette files (*.json *.plt)', 'Import Palettes', dialog);
+    if (!paths || !paths.length || closed || !isCurrentScene()) return;
+    ensurePaletteDirectory(paletteFolder);
+    const failures: string[] = [];
+    let lastId = '';
+    for (const path of paths) {
+      try {
+        if (/\.plt$/i.test(path)) lastId = importNativePalette(path);
+        else if (/\.json$/i.test(path)) lastId = importPaletteJson(path);
+        else throw new ScriptError('Select a JSON or PLT palette file.');
+      } catch (error) {
+        failures.push(path.split(/[\\/]/).pop() + ' — ' + error);
+      }
+    }
+    if (lastId) revealNewPalette(lastId);
+    else syncPaletteContents();
+    if (failures.length) showPaletteProblem('Could not import some palettes.\n\n' + failures.join('\n'));
+  }
+
+  function importNativePalette(path: string): string {
+    const sourceStem = path.slice(0, -4);
+    const basename = sourceStem.split(/[\\/]/).pop() || 'New Palette';
+    let rollback = () => {};
+    try {
+      return withScenePaletteList('Import PLT Palette', (list) => {
+        const name = nextPaletteName(paletteFolder, basename, '.plt', scenePaletteNames());
+        const destination = paletteStem(paletteFolder, name);
+        rollback = copyNativePalette(path, destination);
+        const native = list.addPalette(destination + '.plt');
+        const palette = native && new paletteKit.Palette(native);
+        if (!palette || !palette.isValid || !palette.id) throw new ScriptError('Harmony could not load this PLT file.');
+        return palette.id;
+      });
+    } catch (error) {
+      rollback();
+      throw error;
+    }
+  }
+
+  function importPaletteJson(path: string): string {
+    const file = new $.PermanentFile(path);
+    file.setTextCodec('UTF-8');
+    if (!file.open(1)) throw new ScriptError('Could not read this JSON file.');
+    let contents: string;
+    try {
+      contents = file.read();
+    } finally {
+      file.close();
+    }
+    const data = $.JSON.parse(contents.replace(/^\uFEFF/, ''));
+    if (!data || data.version !== 1 || typeof data.name !== 'string' ||
+      (data.type !== 'color' && data.type !== 'texture') || !$.Array.isArray(data.colors)) {
+      throw new ScriptError('Expected a version 1 Palette Manager JSON file.');
+    }
+    for (const color of data.colors) validateJsonColor(color);
+
+    return withScenePaletteList('Import JSON Palette', (list) => {
+      const name = nextPaletteName(paletteFolder, data.name, '.plt', scenePaletteNames());
+      const palette = newScenePalette(list, name);
+      const imported = palette.withLock(function () {
+        clearDefaultColors(palette);
+        if (data.type === 'texture') palette.setToTexturePalette();
+        for (const color of data.colors) {
+          const value = color.data;
+          let created: PaletteColorInstance | null;
+          if (color.type === 'solid') created = palette.createSolidColor(color.name, value);
+          else if (color.type === 'linear-gradient') created = palette.createLinearGradient(color.name, value);
+          else if (color.type === 'radial-gradient') created = palette.createRadialGradient(color.name, value);
+          else created = importJsonTexture(palette, color.name, value);
+          if (!created || !created.id) throw new ScriptError('Could not import "' + color.name + '".');
+        }
+        return palette.id;
+      });
+      if (!imported) throw new ScriptError('Could not edit "' + name + '".');
+      return imported;
+    });
+  }
+
+  function clearDefaultColors(palette: PaletteInstance): void {
+    for (const color of palette.getColors()) {
+      if (!palette.removeColor(color.id)) {
+        throw new ScriptError('Could not clear the default colors in "' + palette.name + '".');
+      }
+    }
+  }
+
+  function validateJsonColor(color: any): void {
+    function isIntegerInRange(value: any, max: number): boolean {
+      return typeof value === 'number' && value >= 0 && value <= max && $.Math.floor(value) === value;
+    }
+    function isRgba(value: any): boolean {
+      return !!value && isIntegerInRange(value.r, 255) && isIntegerInRange(value.g, 255) &&
+        isIntegerInRange(value.b, 255) && isIntegerInRange(value.a, 255);
+    }
+    if (!color || typeof color.name !== 'string') throw new ScriptError('Invalid palette color.');
+    const data = color.data;
+    let valid = false;
+    if (color.type === 'solid') valid = isRgba(data);
+    if (color.type === 'linear-gradient' || color.type === 'radial-gradient') {
+      valid = $.Array.isArray(data) && data.length > 0 && data.every(
+        (stop) => isRgba(stop) && typeof stop.t === 'number' && stop.t >= 0 && stop.t <= 1,
+      );
+    }
+    if (color.type === 'texture') {
+      valid = !!data && typeof data.tiled === 'boolean' &&
+        isIntegerInRange(data.width, 0x7fffffff) && isIntegerInRange(data.height, 0x7fffffff) &&
+        data.width > 0 && data.height > 0 && $.Array.isArray(data.argb32) &&
+        data.argb32.length === data.width * data.height &&
+        data.argb32.every((pixel) => isIntegerInRange(pixel, 0xffffffff));
+    }
+    if (!valid) throw new ScriptError('Invalid data for "' + color.name + '".');
+  }
+
+  function importJsonTexture(
+    palette: PaletteInstance, name: string, data: { width: number; height: number; argb32: number[]; tiled: boolean },
+  ): PaletteColorInstance | null {
+    const Image = qtGlobals.QImage;
+    const format = Image.Format_ARGB32 == null ? Image.Format.Format_ARGB32 : Image.Format_ARGB32;
+    const bitmap = new Image(data.width, data.height, format);
+    if (bitmap.isNull()) throw new ScriptError('Could not allocate the texture "' + name + '".');
+    for (let y = 0; y < data.height; y++) {
+      for (let x = 0; x < data.width; x++) bitmap.setPixel(x, y, data.argb32[y * data.width + x]);
+    }
+    const file = new TempFile('png');
+    try {
+      if (!bitmap.save(file.path(), 'PNG')) throw new ScriptError('Could not write the texture "' + name + '".');
+      return palette.createTexture(name, file.path(), data.tiled);
+    } finally {
+      file.remove();
     }
   }
 
@@ -348,6 +773,15 @@ function showPaletteManager(): void {
     }
   }
 
+  function selectedSwatchHexes(): string[] {
+    const hexes: string[] = [];
+    for (const swatch of selectedSwatches) {
+      const hex = swatch.hex();
+      if (hex) hexes.push(hex);
+    }
+    return hexes;
+  }
+
   function duplicateSelectedSwatches(): void {
     const snapshot = selectedSwatches.slice();
     if (!snapshot.length && selectedSwatch && selectedSwatch.widget.visible) {
@@ -431,9 +865,11 @@ function showPaletteManager(): void {
       listColumn.value.removeWidget(card.element.value);
     }
 
-    const results = paletteMatches.concat(colorMatches);
-    empty.value.visible = results.length === 0;
-    if (revealedCard) results.push(revealedCard);
+    const matches = paletteMatches.concat(colorMatches);
+    empty.value.visible = !matches.length && !revealedCard;
+    if (revealedCard) matches.push(revealedCard);
+    const results = matches.filter((card) => pinnedIds.indexOf(card.id) !== -1)
+      .concat(matches.filter((card) => pinnedIds.indexOf(card.id) === -1));
     for (let i = 0; i < results.length; i++) {
       const widget = results[i].element.value;
       listColumn.value.insertWidget(i + 1, widget, 0, 0);
@@ -498,19 +934,24 @@ function showPaletteManager(): void {
     }
   }
 
-  function ActionPlaceholder(): JSX.Element {
-    return (
+  function paletteAction(icon: any, label: string, action: () => void, checked?: boolean): JSX.Element {
+    const button = (
       <pushButton
         objectName="paletteAction"
-        text="·"
-        toolTip="Palette action placeholder"
-        minimumWidth={24}
-        maximumWidth={24}
-        minimumHeight={24}
-        maximumHeight={24}
-        enabled={false}
+        toolTip={label}
+        accessibleName={label}
+        autoDefault={false}
+        onClicked={() => runColorAction(action)}
       />
     );
+    button.value.setFixedSize(24, 24);
+    button.value.icon = icon;
+    button.value.iconSize = iconSize;
+    if (checked != null) {
+      button.value.checkable = true;
+      button.value.checked = checked;
+    }
+    return button;
   }
 
   function createCard(palette: PaletteInstance): PaletteManagerCard {
@@ -524,12 +965,19 @@ function showPaletteManager(): void {
 
     const swatchGrid = <qwidget objectName="paletteSwatchGrid" />;
     const grid: QWidget = swatchGrid.value;
+    let insertionMarker: QLabel | undefined;
     let expanded = true;
     let expandedForSearch = false;
     const chevron = (
       <pushButton objectName="paletteChevron" autoDefault={false} onClicked={toggleExpanded} />
     );
     chevron.value.setFixedSize(24, 24);
+    chevron.value.iconSize = iconSize;
+    const pin = paletteAction(icons.pin, 'Pin palette', togglePin, pinnedIds.indexOf(paletteId) !== -1);
+    updatePinLabel();
+    const download = paletteAction(icons.download, 'Download palette as JSON', downloadPalette);
+    const remove = paletteAction(icons.remove, 'Delete palette', deletePalette);
+    const duplicate = paletteAction(icons.duplicate, 'Duplicate palette', duplicatePalette);
     const colorCount = <label objectName="paletteCount" />;
     const addColorButton: QPushButton = (
       <pushButton
@@ -548,20 +996,26 @@ function showPaletteManager(): void {
         objectName="paletteTitle"
         textFormat={$.Qt.PlainText}
         text={name}
+        toolTip="Double-click to rename palette"
         wordWrap={true}
         stretch={1}
       />
     );
+    title.value.mouseDoubleClickEvent = function (event: any): void {
+      if (event.button() !== $.Qt.LeftButton) return;
+      event.accept();
+      runColorAction(renamePalette, true);
+    };
     const cardColumn = (
       <column parent={card.value} spacing={9} alignment={0}>
         <row spacing={6}>
           {chevron}
           {title}
           {colorCount}
-          <ActionPlaceholder />
-          <ActionPlaceholder />
-          <ActionPlaceholder />
-          <ActionPlaceholder />
+          {pin}
+          {download}
+          {remove}
+          {duplicate}
         </row>
         {swatchGrid}
       </column>
@@ -609,7 +1063,7 @@ function showPaletteManager(): void {
     function updateExpansion(): void {
       const showSwatches = expanded || expandedForSearch;
       grid.visible = showSwatches;
-      chevron.value.text = showSwatches ? '<' : '>';
+      chevron.value.icon = showSwatches ? icons.collapse : icons.expand;
       const action = (showSwatches ? 'Collapse ' : 'Expand ') + name;
       chevron.value.toolTip = action;
       chevron.value.accessibleName = action;
@@ -641,6 +1095,224 @@ function showPaletteManager(): void {
 
     function resolvePalette(): PaletteInstance | undefined {
       return paletteManager.getById(paletteId) || unset;
+    }
+
+    function renamePalette(): void {
+      if (!isCurrentScene()) return;
+      const entered = RenameInput.getText('Palette name', name, 'Rename Palette', dialog);
+      if (typeof entered !== 'string' || !entered.trim() || closed || !isCurrentScene()) return;
+      const target = resolvePalette();
+      const nextName = entered.trim();
+      if (!target || nextName === target.name) return;
+      if (safePaletteName(nextName) !== nextName) {
+        showPaletteProblem('Enter a valid palette file name.');
+        return;
+      }
+      const duplicates = paletteManager.getAll(true).some(
+        (palette) => palette.id !== paletteId && palette.name.toLowerCase() === nextName.toLowerCase(),
+      );
+      if (duplicates || (nextName.toLowerCase() !== target.name.toLowerCase() &&
+        pathTaken(paletteStem(target.path, nextName), '.plt'))) {
+        showPaletteProblem('A palette named "' + nextName + '" already exists.');
+        return;
+      }
+      const renamed = withScenePaletteList('Rename Palette', function () {
+        return target.withLock(function () {
+          target.name = nextName;
+          return target.name === nextName;
+        });
+      });
+      if (!renamed) showPaletteProblem('Harmony could not rename "' + name + '".');
+      syncPaletteContents();
+    }
+
+    function updatePinLabel(): void {
+      const pinned = pinnedIds.indexOf(paletteId) !== -1;
+      const label = pinned ? 'Unpin palette' : 'Pin palette';
+      pin.value.checked = pinned;
+      pin.value.toolTip = pin.value.accessibleName = label;
+    }
+
+    function togglePin(): void {
+      const index = pinnedIds.indexOf(paletteId);
+      if (index === -1) pinnedIds.push(paletteId);
+      else pinnedIds.splice(index, 1);
+      updatePinLabel();
+      filterPalettes(revealedCard);
+      $.preferences.setString(pinKey, $.JSON.stringify(pinnedIds));
+    }
+
+    function downloadPalette(): void {
+      const target = resolvePalette();
+      if (!target || !isCurrentScene()) return;
+      let path = $.FileDialog.getSaveFileName('JSON files (*.json)', `Download "${name}"`, dialog);
+      if (!path || closed || !isCurrentScene()) return;
+      if (!/\.json$/i.test(path)) {
+        path += '.json';
+        if (new $.QFile(path).exists() &&
+          !$.Utils.confirm(`Replace the existing file "${path}"?`, 'Replace JSON File', 'Replace', 'Cancel')) return;
+      }
+      const current = resolvePalette();
+      if (!current || closed || !isCurrentScene()) return;
+      writePaletteJson(current, path);
+    }
+
+    function deletePalette(): void {
+      if (!isCurrentScene() || !resolvePalette()) return;
+      const confirmed = $.Utils.confirm(
+        `Delete "${name}"? Harmony will remove the palette from the scene and delete its file on the next save. Drawings that use this palette may lose their colors.`,
+        'Delete Palette',
+        'Delete',
+        'Cancel',
+      );
+      if (!confirmed || closed || !isCurrentScene() || !resolvePalette()) return;
+      withUndoGroup('Delete Palette', function () {
+        if (!$.PaletteObjectManager.removePaletteReferencesAndDeleteOnDisk(paletteId)) {
+          throw new ScriptError(`Could not delete the palette "${name}".`);
+        }
+      });
+      syncPaletteContents();
+      syncActiveSwatch();
+    }
+
+    function duplicatePalette(): void {
+      if (!isCurrentScene() || editSolidColor.isDragging() || editGradientColor.isDragging()) return;
+      const source = resolvePalette();
+      if (!source) return;
+      ensurePaletteDirectory(paletteFolder);
+      withScenePaletteList('Duplicate Palette', (list) => {
+        const existingNames = scenePaletteNames();
+        const base = safePaletteName(source.name);
+        let copyName = base + '_copy';
+        for (let suffix = 2; existingNames.indexOf(copyName.toLowerCase()) !== -1 ||
+          pathTaken(paletteStem(paletteFolder, copyName), '.plt'); suffix++) {
+          copyName = base + '_' + suffix + '_copy';
+        }
+        const copy = newScenePalette(list, copyName);
+        const copied = copy.withLock(function () {
+          clearDefaultColors(copy);
+          if (source.isTexturePalette) copy.setToTexturePalette();
+          for (const color of source.getColors()) {
+            const result = copy.duplicateColor(color);
+            if (!result || !result.id || result.id === color.id) {
+              throw new ScriptError(`Could not copy "${color.name}" into "${copyName}".`);
+            }
+            if (result.name !== color.name) result.name = color.name;
+          }
+          return true;
+        });
+        if (!copied) throw new ScriptError(`Could not edit "${copyName}".`);
+      });
+      syncPaletteContents();
+    }
+
+    function dropSlot(
+      event: any,
+      entry: PaletteManagerSwatch,
+    ): { index: number; x: number; y: number } | undefined {
+      const step = swatchSize + swatchGap;
+      const origin = swatches.indexOf(entry);
+      if (origin === -1 || !grid.visible) return unset;
+      let x = event.x() + (origin % columns) * step;
+      let y = event.y() + $.Math.floor(origin / columns) * step;
+      if (typeof event.globalPos === 'function' && typeof grid.mapFromGlobal === 'function') {
+        const global = event.globalPos();
+        const local = grid.mapFromGlobal(global);
+        x = typeof local.x === 'function' ? local.x() : local.x;
+        y = typeof local.y === 'function' ? local.y() : local.y;
+        if (typeof scroll.value.viewport === 'function') {
+          const viewport = scroll.value.viewport();
+          const point = viewport.mapFromGlobal(global);
+          const viewX = typeof point.x === 'function' ? point.x() : point.x;
+          const viewY = typeof point.y === 'function' ? point.y() : point.y;
+          if (viewX < 0 || viewY < 0 || viewX >= viewport.width || viewY >= viewport.height) {
+            return unset;
+          }
+        }
+      }
+      if (x < 0 || y < 0 || x >= grid.width || y >= grid.height) return unset;
+
+      const row = $.Math.floor(y / step);
+      const column = $.Math.floor(x / step);
+      const start = row * columns;
+      const end = $.Math.min(start + columns, swatches.length);
+      const after = x - column * step >= swatchSize / 2;
+      const index = $.Math.min(start + column + (after ? 1 : 0), end);
+      const markerX =
+        index === end && index > start
+          ? (index - start - 1) * step + swatchSize + 1
+          : $.Math.max(0, (index - start) * step - 3);
+      return { index, x: markerX, y: row * step };
+    }
+
+    function showInsertionMarker(slot?: { x: number; y: number }): void {
+      if (!slot) {
+        if (insertionMarker) insertionMarker.hide();
+        return;
+      }
+      if (!insertionMarker) {
+        insertionMarker = new $.QLabel('', grid);
+        insertionMarker.setAttribute($.Qt.WA_TransparentForMouseEvents, true);
+        insertionMarker.setFixedSize(3, swatchSize);
+        insertionMarker.styleSheet = 'background: #8fc5ff; border-radius: 1px;';
+      }
+      insertionMarker.move(slot.x, slot.y);
+      insertionMarker.show();
+      insertionMarker.raise();
+    }
+
+    function reorderSwatches(entry: PaletteManagerSwatch, slot: number): void {
+      if (!isCurrentScene()) return;
+      const fromSelection = selectedSwatches.indexOf(entry) !== -1;
+      const moving = fromSelection
+        ? swatches.filter((swatch) => selectedSwatches.indexOf(swatch) !== -1)
+        : [entry];
+      // Keep the insertion point attached to a color that will stay in the palette.
+      const anchor = swatches.slice(slot).filter((swatch) => moving.indexOf(swatch) === -1)[0];
+      const target = resolvePalette();
+      if (!target) return;
+      const order = target.getColors().map((color) => color.id);
+      const movingIds = moving.map((swatch) => swatch.id);
+      if (movingIds.some((id) => order.indexOf(id) === -1)) return;
+      const remaining = order.filter((id) => movingIds.indexOf(id) === -1);
+      const destination = anchor ? remaining.indexOf(anchor.id) : remaining.length;
+      if (destination === -1) return;
+      const reordered = remaining.slice(0, destination).concat(movingIds, remaining.slice(destination));
+      if (order.every((id, i) => id === reordered[i])) return;
+
+      const moved = changePalette(target, 'Reorder Palette Colors', function () {
+        for (const id of movingIds) {
+          const from = order.indexOf(id);
+          const before = anchor ? order.indexOf(anchor.id) : -1;
+          if (before === -1 ? from === order.length - 1 : from + 1 === before) continue;
+          if (!target.moveColor(from, before)) {
+            throw new ScriptError(`Could not reorder colors in "${name}".`);
+          }
+          order.splice(from, 1);
+          order.splice(before === -1 ? order.length : before - (from < before ? 1 : 0), 0, id);
+        }
+        return true;
+      });
+      if (!moved) return;
+      const current = resolvePalette();
+      if (!current) return;
+      if (refreshCard(current) && lastSearchQuery) filterPalettes(revealedCard, true);
+
+      if (!fromSelection) {
+        selectedSwatches = selectedSwatches.filter((swatch) => swatches.indexOf(swatch) === -1);
+        selectedSwatches.push(entry);
+      }
+      if (selectedCards.indexOf(cardState) === -1) selectedCards.push(cardState);
+      selectedCard = cardState;
+      selectedSwatch = entry;
+      selectionAnchor = { card: cardState, swatch: entry };
+      refreshSelectionState();
+      if (!isTexturePalette) {
+        activePaletteId = paletteId;
+        activeColorId = entry.id;
+        paletteManager.selectPaletteAndColor(paletteId, entry.id);
+      }
+      entry.widget.setFocus();
     }
 
     function refreshCard(current: PaletteInstance): boolean {
@@ -798,6 +1470,8 @@ function showPaletteManager(): void {
       ).value;
       swatch.setFixedSize(swatchSize, swatchSize);
       swatch.mousePressEvent = function (event: any): void {
+        if (closed) return;
+        if (swatchGesture) swatchGesture.cancel();
         if (typeof event.button === 'function' && event.button() === $.Qt.RightButton) {
           if (selectedSwatches.indexOf(entry) === -1) setSelection(cardState, entry);
           showSwatchContextMenu(swatch, event);
@@ -805,19 +1479,62 @@ function showPaletteManager(): void {
           return;
         }
         if (typeof event.button === 'function' && event.button() !== $.Qt.LeftButton) return;
+        swatchGesture = {
+          swatch: entry,
+          x: event.x(),
+          y: event.y(),
+          modifiers: getMouseModifiers(event),
+          dragging: false,
+          cancel: function () {
+            swatchGesture = unset;
+            showInsertionMarker();
+          },
+        };
+        if (typeof event.accept === 'function') event.accept();
+      };
 
-        const modifiers = getMouseModifiers(event);
-        if (modifiers.ctrl) {
-          ctrlClick(cardState, entry);
-        } else if (modifiers.shift) {
-          shiftClick(cardState, entry);
-        } else {
-          activateSwatch();
+      swatch.mouseMoveEvent = function (event: any): void {
+        const gesture = swatchGesture;
+        if (!gesture || gesture.swatch !== entry) return;
+        if (!gesture.dragging) {
+          const distance = $.Math.abs(event.x() - gesture.x) + $.Math.abs(event.y() - gesture.y);
+          if (distance < dragDistance) return;
+          gesture.dragging = true;
+          lastClick = unset;
+          swatch.setFocus();
+        }
+        showInsertionMarker(dropSlot(event, entry));
+        if (typeof event.accept === 'function') event.accept();
+      };
+
+      swatch.mouseReleaseEvent = function (event: any): void {
+        const gesture = swatchGesture;
+        if (!gesture || gesture.swatch !== entry || event.button() !== $.Qt.LeftButton) return;
+        gesture.cancel();
+        if (gesture.dragging) {
+          const slot = dropSlot(event, entry);
+          if (slot) runColorAction(() => reorderSwatches(entry, slot.index));
+        } else if (
+          event.x() >= 0 && event.x() < swatchSize &&
+          event.y() >= 0 && event.y() < swatchSize
+        ) {
+          if (gesture.modifiers.ctrl) {
+            lastClick = unset;
+            ctrlClick(cardState, entry);
+          } else if (gesture.modifiers.shift) {
+            lastClick = unset;
+            shiftClick(cardState, entry);
+          } else {
+            activateSwatch();
+          }
         }
         if (typeof event.accept === 'function') event.accept();
       };
       function showSwatchContextMenu(widget: QWidget, event: any): void {
         const menu = new Menu(dialog);
+        const hexes = selectedSwatchHexes();
+        const copyHex = menu.addAction('Copy hex');
+        copyHex.enabled = hexes.length > 0;
         const duplicateAction = menu.addAction('Duplicate');
         const deleteAction = menu.addAction('Delete');
 
@@ -827,8 +1544,10 @@ function showPaletteManager(): void {
         } else if (typeof event.pos === 'function' && typeof widget.mapToGlobal === 'function') {
           globalPos = widget.mapToGlobal(event.pos());
         }
-        const selectedAction = globalPos ? menu.exec(globalPos) : menu.exec();
-        if (selectedAction === duplicateAction) {
+        const selectedAction = executePaletteMenu(menu, globalPos);
+        if (selectedAction === copyHex && hexes.length) {
+          runColorAction(() => $.Utils.setClipboardText(hexes.join('\n') + '\n'));
+        } else if (selectedAction === duplicateAction) {
           runColorAction(duplicateSelectedSwatches);
         } else if (selectedAction === deleteAction) {
           runColorAction(deleteSelectedSwatches);
@@ -841,6 +1560,10 @@ function showPaletteManager(): void {
         id: colorId,
         name: appearance.name.toLowerCase(),
         widget: swatch,
+        hex: function () {
+          const rgba = appearance.rgba;
+          return rgba ? $.ColorUtils.rgbToHex(rgba.r, rgba.g, rgba.b).toUpperCase() : '';
+        },
         edit: function () {
           if (appearance.texture) return;
           if (isGradient(appearance.type)) {
@@ -894,7 +1617,7 @@ function showPaletteManager(): void {
       function activateSwatch(): void {
         if (closed) return;
 
-        // Use native button activation so QtScript never overrides the swatch mouse events.
+        // Double-click detection runs only after releasing a stationary click.
         const now = new Clock().getTime();
         const canEdit =
           !appearance.texture &&
@@ -940,6 +1663,39 @@ function showPaletteManager(): void {
 
   function isGradient(type: HarmonyColorType): boolean {
     return type === colorTypes.LINEAR_GRADIENT || type === colorTypes.RADIAL_GRADIENT;
+  }
+
+  function serializeColor(color: PaletteColorInstance): {
+    id: string;
+    name: string;
+    type: string;
+    data: unknown;
+  } {
+    const id = color.id;
+    const name = color.name;
+    if (color.isTexture) {
+      const texture = color.getNative();
+      const bitmap = texture.bitmap;
+      const width = bitmap && bitmap.width();
+      const height = bitmap && bitmap.height();
+      if (!width || !height) throw new ScriptError(`Could not read the texture "${name}".`);
+      const pixels: number[] = [];
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) pixels.push(bitmap.pixel(x, y) >>> 0);
+      }
+      return { id, name, type: 'texture', data: { tiled: texture.tiled, width, height, argb32: pixels } };
+    }
+
+    const appearance = readSwatchAppearance(color);
+    if (appearance.type === colorTypes.SOLID_COLOR && appearance.rgba) {
+      const { r, g, b, a } = appearance.rgba;
+      return { id, name, type: 'solid', data: { r, g, b, a: a == null ? 255 : a } };
+    }
+    if (appearance.stops) {
+      const type = appearance.type === colorTypes.RADIAL_GRADIENT ? 'radial-gradient' : 'linear-gradient';
+      return { id, name, type, data: appearance.stops };
+    }
+    throw new ScriptError(`Could not export the color "${name}".`);
   }
 
   function sameRgba(left?: RgbColorInput, right?: RgbColorInput): boolean {
@@ -1792,8 +2548,8 @@ function showPaletteManager(): void {
     let modifiers = 0;
     if (typeof event.modifiers === 'function') {
       modifiers = event.modifiers();
-    } else if (typeof QApplication.keyboardModifiers === 'function') {
-      modifiers = QApplication.keyboardModifiers();
+    } else if (typeof app.keyboardModifiers === 'function') {
+      modifiers = app.keyboardModifiers();
     }
     return {
       shift: (modifiers & 0x02000000) !== 0,
@@ -1823,6 +2579,11 @@ function showPaletteManager(): void {
   const colorTimer = new $.QTimer(dialog);
   let nextContentsRefresh = 0;
   colorTimer.timeout.connect(function () {
+    if (swatchGesture) {
+      const buttons = typeof app.mouseButtons === 'function' ? app.mouseButtons() : app.mouseButtons;
+      if (typeof buttons !== 'number' || (buttons & $.Qt.LeftButton) !== 0) return;
+      swatchGesture.cancel();
+    }
     refreshActiveSwatch();
     if (closed) return;
     runColorAction(function () {
@@ -1844,6 +2605,7 @@ function showPaletteManager(): void {
   });
   dialog.finished.connect(function () {
     closed = true;
+    if (swatchGesture) swatchGesture.cancel();
     colorTimer.stop();
     editSolidColor.finishDrag();
     editGradientColor.finishDrag();

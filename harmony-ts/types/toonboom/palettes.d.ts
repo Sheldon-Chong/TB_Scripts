@@ -4,6 +4,10 @@
 declare interface PaletteList {
   numPalettes: number;
   getPaletteByIndex(index: number): PaletteObject;
+  getLock(): boolean;
+  releaseLock(): boolean;
+  createPaletteAtLocation(location: number, elementId: number, diskName: string): PaletteObject;
+  addPalette(path: string): PaletteObject;
 }
 
 /** Palette returned by PaletteObjectManager.getScenePaletteList(). */
@@ -17,6 +21,8 @@ declare interface PaletteObject {
  * Interface defining the API methods for PaletteObjectManager.
  */
 declare interface PaletteObjectManagerAPI {
+  readonly Constants: { readonly Location: { readonly SCENE: number } };
+
   /**
    * Loads the scene palette list and returns the corresponding PaletteList object.
    * If the palette list isn't already loaded, the method will load the palette list from the disk.
