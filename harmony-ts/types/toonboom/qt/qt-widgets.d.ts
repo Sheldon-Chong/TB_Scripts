@@ -99,6 +99,16 @@ declare class QPushButton extends QWidget {
   text: string;
   clicked: QSignal;
 }
+declare class QKeySequence {
+  constructor(sequence: string);
+}
+declare class QShortcut {
+  constructor(parent: QWidget);
+  key: QKeySequence;
+  context: number;
+  autoRepeat: boolean;
+  activated: QSignal;
+}
 declare class QToolButton extends QWidget {
   constructor(...args: any[]);
   text: string;

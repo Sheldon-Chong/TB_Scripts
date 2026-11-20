@@ -125,32 +125,26 @@ function createColorUtils(Core: CoreRuntime) {
           this._r = rgb.r;
           this._g = rgb.g;
           this._b = rgb.b;
-          this._a = input.a !== undefined ? input.a : null;
-          if (this._a === undefined) {
-            this._a = null;
-          }
+          this._a = input.a ?? null;
           return;
         }
         if ('r' in input && 'g' in input && 'b' in input) {
           this._r = input.r;
           this._g = input.g;
           this._b = input.b;
-          this._a = input.a !== undefined ? input.a : null;
-          if (this._a === undefined) {
-            this._a = null;
-          }
+          this._a = input.a ?? null;
           return;
         }
-        throw new Error('Invalid color input object. Must contain either {h,s,v} or {r,g,b}');
+        throw new Core.Error('Invalid color input object. Must contain either {h,s,v} or {r,g,b}');
       }
-      throw new Error(
+      throw new Core.Error(
         'Invalid color input. Must be a hex string or an object with RGB or HSV values',
       );
     }
     private _parseHex(hexString: string): void {
       var hex = hexString.replace(/^#/, '');
       if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
-        throw new Error('Invalid hex color format. Expected format: #RRGGBB or RRGGBB');
+        throw new Core.Error('Invalid hex color format. Expected format: #RRGGBB or RRGGBB');
       }
       this._r = Core.parseInt(hex.substring(0, 2), 16);
       this._g = Core.parseInt(hex.substring(2, 4), 16);

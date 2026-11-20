@@ -15,7 +15,7 @@ function createGlobalPaletteManagerClass(Core: CoreRuntime, PaletteClass: Palett
     }
 
     count(scenePaletteList?: boolean): number {
-      return scenePaletteList !== undefined
+      return scenePaletteList !== void 0
         ? Core.PaletteManager.getNumPalettes(scenePaletteList)
         : Core.PaletteManager.getNumPalettes();
     }
@@ -78,19 +78,19 @@ function createGlobalPaletteManagerClass(Core: CoreRuntime, PaletteClass: Palett
       var id = '';
       if (typeof key === 'number') {
         id =
-          scenePaletteList !== undefined
+          scenePaletteList !== void 0
             ? Core.PaletteManager.getPaletteId(key, scenePaletteList)
             : Core.PaletteManager.getPaletteId(key);
       } else {
         var count = this.count(scenePaletteList);
         for (var i = 0; i < count; i++) {
           var name =
-            scenePaletteList !== undefined
+            scenePaletteList !== void 0
               ? Core.PaletteManager.getPaletteName(i, scenePaletteList)
               : Core.PaletteManager.getPaletteName(i);
           if (name === key) {
             id =
-              scenePaletteList !== undefined
+              scenePaletteList !== void 0
                 ? Core.PaletteManager.getPaletteId(i, scenePaletteList)
                 : Core.PaletteManager.getPaletteId(i);
             break;
@@ -129,7 +129,7 @@ function createGlobalPaletteManagerClass(Core: CoreRuntime, PaletteClass: Palett
 
     private _paletteFromIndex(index: number, scenePaletteList?: boolean): PaletteInstance | null {
       var id =
-        scenePaletteList !== undefined
+        scenePaletteList !== void 0
           ? Core.PaletteManager.getPaletteId(index, scenePaletteList)
           : Core.PaletteManager.getPaletteId(index);
       return id ? this._resolvePaletteById(id) : null;
@@ -139,7 +139,7 @@ function createGlobalPaletteManagerClass(Core: CoreRuntime, PaletteClass: Palett
       var count = this.count(scenePaletteList);
       for (var i = 0; i < count; i++) {
         var paletteName =
-          scenePaletteList !== undefined
+          scenePaletteList !== void 0
             ? Core.PaletteManager.getPaletteName(i, scenePaletteList)
             : Core.PaletteManager.getPaletteName(i);
         if (paletteName === name) {

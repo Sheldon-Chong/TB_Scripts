@@ -108,6 +108,7 @@ declare namespace JSX {
  * a standalone global and as `UI.createSignal`.
  */
 function createUIRuntime(core?: HarmonyCore): UIRuntime {
+  var ScriptArray = core ? core.Array : Array;
   function uiError(message: string): Error {
     var ErrorConstructor = core ? core.Error : Error;
     return new ErrorConstructor(message);
@@ -206,7 +207,7 @@ function createUIRuntime(core?: HarmonyCore): UIRuntime {
 
       var value = props[key];
 
-      if (value === undefined) continue;
+      if (value === void 0) continue;
 
       if (value && typeof value.subscribe === 'function') {
         (function (property: string, signal: any) {
@@ -247,7 +248,7 @@ function createUIRuntime(core?: HarmonyCore): UIRuntime {
 
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
-      if (Array.isArray(node)) {
+      if (ScriptArray.isArray(node)) {
         elements = elements.concat(toElements(node));
       } else if (isElement(node)) {
         elements.push(node);
@@ -369,9 +370,9 @@ function createUIRuntime(core?: HarmonyCore): UIRuntime {
           layout = props.parent ? new $.QHBoxLayout(props.parent) : new $.QHBoxLayout();
         }
 
-        layout.spacing = props.spacing === undefined ? 8 : props.spacing;
+        layout.spacing = props.spacing === void 0 ? 8 : props.spacing;
 
-        var alignment = props.alignment === undefined ? $.Qt.AlignmentFlag.AlignLeft : props.alignment;
+        var alignment = props.alignment === void 0 ? $.Qt.AlignmentFlag.AlignLeft : props.alignment;
         addToLayout(layout, toElements(children), alignment);
 
         return { kind: 'layout', value: layout, props: props };

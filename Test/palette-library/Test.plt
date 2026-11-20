@@ -5,4 +5,6 @@ Solid    Red                        0x0d404d862390170a 255   0   0 255
 Solid    Green                      0x0d404d862390170d   0 255   0 255
 Solid    Blue                       0x0d404d8623901710   0   0 255 255
 Solid    "Vectorized Line"          0x0000000000000003   0   0   0 255
-Solid    "New 0"                    0x0d5cea8b81d04320 255 255 255 255
+Solid    "New 0"                    0x0d5cea8b81d04320 121   8   8 255
+Solid    "New Color"                0x0d5d07a37ce02323 169 154 154 255
+Solid    "New Color 2"              0x0d5d07a37ce023f1 255  40  40 255
