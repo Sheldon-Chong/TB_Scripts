@@ -5,10 +5,8 @@ function showColorPicker(
   onColorPick?: (value: ColorPickerValue) => void,
   onColorDrag?: (value: ColorPickerValue) => void,
 ): void {
-  include(specialFolders.userScripts + '/widgets/ColorPicker.js');
-  const picker: ColorPickerComponents = Function('return this;')().__proto__.__TBColorPicker;
-  if (!picker || typeof picker.openDialog !== 'function') throw new Error('Could not load widgets/ColorPicker.js from the user scripts folder.');
-  picker.openDialog({ core: getCore(), ComboBox: QComboBox, math: Math }, { onColorPick, onColorDrag });
+  const $ = getCore();
+  $.Widgets.ColorPicker.openDialog($.QApplication.activeWindow(), { onColorPick, onColorDrag });
 }
 
 function showNestedDialog(): void {

@@ -132,7 +132,7 @@ function createGlobalPaletteManagerClass(Core: CoreRuntime, PaletteClass: Palett
         scenePaletteList !== void 0
           ? Core.PaletteManager.getPaletteId(index, scenePaletteList)
           : Core.PaletteManager.getPaletteId(index);
-      return id ? this._resolvePaletteById(id) : null;
+      return id ? this.getById(id) : null;
     }
 
     private _paletteFromName(name: string, scenePaletteList?: boolean): PaletteInstance | null {
@@ -149,7 +149,7 @@ function createGlobalPaletteManagerClass(Core: CoreRuntime, PaletteClass: Palett
       return null;
     }
 
-    private _resolvePaletteById(id: string): PaletteInstance | null {
+    getById(id: string): PaletteInstance | null {
       var nativeList = this._scenePaletteList();
       if (!nativeList) {
         return null;

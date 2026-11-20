@@ -3,36 +3,59 @@ interface ColorPickerValue {
   r: number;
   g: number;
   b: number;
+  a: number;
   opacity: number;
 }
 
 interface ColorPickerRuntime {
-  core: HarmonyCore;
+  core: CoreRuntime;
   ComboBox: typeof QComboBox;
-  math: typeof Math;
 }
 
 interface ColorPickerOptions {
   initial?: RgbColorInput;
+  focusAfterTextCommit?: boolean;
   onColorPick?: (value: ColorPickerValue) => void;
   onColorDrag?: (value: ColorPickerValue) => void;
+  onColorDragStart?: (value: ColorPickerValue) => void;
+  onColorDragEnd?: (value: ColorPickerValue) => void;
 }
 
 interface ColorPickerWidget {
   widget: QWidget;
+  getColor(): ColorPickerValue;
   setColor(color: RgbColorInput): void;
 }
 
+interface ColorPickerViewProps extends CommonProps {
+  parent: QWidget;
+  options?: ColorPickerOptions;
+  ref?: (picker: ColorPickerWidget) => void;
+}
+
 interface ColorPickerComponents {
-  createWidget(parent: QWidget, runtime: ColorPickerRuntime, options: ColorPickerOptions): ColorPickerWidget;
-  openDialog(runtime: ColorPickerRuntime, options: ColorPickerOptions): void;
+  createWidget(parent: QWidget, options?: ColorPickerOptions): ColorPickerWidget;
+  View(props: ColorPickerViewProps): JSX.Element;
+  openDialog(parent: QWidget, options?: ColorPickerOptions): void;
+  pick(parent: QWidget, initial?: RgbColorInput): ColorPickerValue | null;
 }
 
 // Harmony can evaluate included scripts in a different scope from the entry point.
-Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPickerComponents {
-  function createWidget(parent: QWidget, runtime: ColorPickerRuntime, options: ColorPickerOptions): ColorPickerWidget {
-    const { core: $, math } = runtime;
-    const { initial, onColorPick, onColorDrag } = options;
+Function('return this;')().__proto__.__TBCreateColorPicker = function (
+  runtime: ColorPickerRuntime,
+): ColorPickerComponents {
+  const { core: $, ComboBox } = runtime;
+  const math = $.Math;
+
+  function createWidget(parent: QWidget, options: ColorPickerOptions = {}): ColorPickerWidget {
+    const {
+      initial,
+      focusAfterTextCommit,
+      onColorPick,
+      onColorDrag,
+      onColorDragStart,
+      onColorDragEnd,
+    } = options;
     const picker = new $.QWidget(parent);
     picker.objectName = 'baseColorPicker';
     picker.setFixedSize(244, 252);
@@ -49,7 +72,7 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
     const Color = $.ColorUtils.ColorObj;
     let color = Color.fromHex('#4F46E5');
     let hsv = color.toHsv();
-    let opacity = 100;
+    let alpha = 255;
 
     const field = surface(picker, 12, 12, width, fieldHeight);
     const shade = surface(field, 0, 0, width, fieldHeight);
@@ -61,7 +84,7 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
     const alphaTrack = surface(alphaHitArea, 0, 8, width, trackHeight);
     const alphaTint = surface(alphaTrack, 0, 0, width, trackHeight);
     const alphaMarker = surface(alphaTrack, 0, 0, 8, 8);
-    const format = new runtime.ComboBox(picker);
+    const format = new ComboBox(picker);
     const colorInput = new $.QLineEdit(picker);
     const opacityInput = new $.QLineEdit(picker);
     format.setGeometry(12, 216, 67, 28);
@@ -106,10 +129,18 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
       return math.max(0, math.min(1, coordinate / (size - 1)));
     }
 
+    function opacityPercent(): number {
+      return math.round((alpha * 100) / 255);
+    }
+
+    function setOpacity(percent: number): void {
+      if (percent !== opacityPercent()) alpha = math.round((percent * 255) / 100);
+    }
+
     function updateFields(): void {
       const rgb = color.toRgb();
       colorInput.text = format.currentIndex === 0 ? color.toHex() : [rgb.r, rgb.g, rgb.b].join(', ');
-      opacityInput.text = opacity + '%';
+      opacityInput.text = opacityPercent() + '%';
     }
 
     function render(): void {
@@ -127,14 +158,24 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
         'x1:0, y1:0, x2:1, y2:0, stop:0 rgba(' + [rgb.r, rgb.g, rgb.b, 0].join(',') +
         '), stop:1 ' + hex + ');';
       alphaMarker.styleSheet = 'border: 1px solid white; border-radius: 4px; background: ' + hex + ';';
-      alphaMarker.move(math.round(opacity / 100 * (width - 8)), 0);
+      alphaMarker.move(math.round((alpha / 255) * (width - 8)), 0);
       updateFields();
     }
 
-    function notify(callback: (value: ColorPickerValue) => void): void {
-      if (typeof callback !== 'function') return;
+    function getColor(): ColorPickerValue {
       const rgb = color.toRgb();
-      callback({ hex: color.toHex(), r: rgb.r, g: rgb.g, b: rgb.b, opacity });
+      return {
+        hex: color.toHex(),
+        r: rgb.r,
+        g: rgb.g,
+        b: rgb.b,
+        a: alpha,
+        opacity: opacityPercent(),
+      };
+    }
+
+    function notify(callback: (value: ColorPickerValue) => void): void {
+      if (typeof callback === 'function') callback(getColor());
     }
 
     function bindDrag(widget: QWidget, update: (x: number, y: number) => void): void {
@@ -154,9 +195,10 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
 
       widget.mousePressEvent = function (event) {
         if (event.button() !== $.Qt.LeftButton) return;
+        picker.setFocus();
         picking = true;
         lastX = lastY = void 0;
-        updatePosition(event);
+        if (updatePosition(event) && typeof onColorDragStart === 'function') notify(onColorDragStart);
       };
       widget.mouseMoveEvent = function (event) {
         if (picking && (event.buttons() & $.Qt.LeftButton) && updatePosition(event)) {
@@ -168,6 +210,7 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
         picking = false;
         updatePosition(event);
         notify(onColorPick);
+        if (typeof onColorDragEnd === 'function') notify(onColorDragEnd);
       };
     }
 
@@ -183,7 +226,7 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
       render();
     });
     bindDrag(alphaHitArea, function (x) {
-      opacity = math.round(100 * fraction(x, width));
+      setOpacity(math.round(100 * fraction(x, width)));
       render();
     });
 
@@ -204,35 +247,87 @@ Function('return this;')().__proto__.__TBColorPicker = (function (): ColorPicker
         hsv = next;
       }
       render();
-      if (changed) notify(onColorPick);
+      if (changed) {
+        notify(onColorPick);
+        if (focusAfterTextCommit && colorInput.focus) picker.setFocus();
+      }
     });
     opacityInput.editingFinished.connect(function () {
       const value = /^\s*(\d{1,3})\s*%?\s*$/.exec(opacityInput.text);
-      const previousOpacity = opacity;
-      if (value && +value[1] <= 100) opacity = +value[1];
+      const previousAlpha = alpha;
+      if (value && +value[1] <= 100) setOpacity(+value[1]);
       render();
-      if (opacity !== previousOpacity) notify(onColorPick);
+      if (alpha !== previousAlpha) {
+        notify(onColorPick);
+        if (focusAfterTextCommit && opacityInput.focus) picker.setFocus();
+      }
     });
 
     if (initial) setColor(initial);
     else render();
-    return { widget: picker, setColor };
+    return { widget: picker, getColor, setColor };
 
     function setColor(value: RgbColorInput): void {
       color = Color.fromRgb(value.r, value.g, value.b);
       hsv = color.toHsv();
-      opacity = value.a == null ? 100 : math.round((value.a * 100) / 255);
+      alpha = value.a == null ? 255 : value.a;
       render();
     }
   }
 
-  function openDialog(runtime: ColorPickerRuntime, options: ColorPickerOptions): void {
-    const dialog = new runtime.core.QDialog();
-    dialog.windowTitle = 'Color Picker';
-    const picker = createWidget(dialog, runtime, options).widget;
-    dialog.setFixedSize(picker.width, picker.height);
-    dialog.exec();
+  function View(props: ColorPickerViewProps): JSX.Element {
+    const picker = createWidget(props.parent, props.options);
+    if (props.ref) props.ref(picker);
+    return { kind: 'widget', value: picker.widget, props };
   }
 
-  return { createWidget, openDialog };
-})();
+  function createDialog(parent: QWidget, options: ColorPickerOptions) {
+    const dialog = parent ? new $.QDialog(parent) : new $.QDialog();
+    dialog.windowTitle = 'Color Picker';
+    return { dialog, picker: createWidget(dialog, options) };
+  }
+
+  function openDialog(parent: QWidget, options: ColorPickerOptions = {}): void {
+    const { dialog, picker } = createDialog(parent, options);
+    dialog.setFixedSize(picker.widget.width, picker.widget.height);
+    try {
+      dialog.exec();
+    } finally {
+      dialog.deleteLater();
+    }
+  }
+
+  function pick(parent: QWidget, initial?: RgbColorInput): ColorPickerValue | null {
+    const { dialog, picker } = createDialog(parent, { initial });
+    const layout = new $.QVBoxLayout(dialog);
+    layout.setContentsMargins(0, 0, 0, 8);
+    layout.addWidget(picker.widget, 0, $.Qt.AlignmentFlag.AlignCenter);
+
+    const buttons = new $.QHBoxLayout();
+    buttons.setContentsMargins(8, 0, 8, 0);
+    buttons.addStretch(1);
+    const cancel = new $.QPushButton('Cancel', dialog);
+    const ok = new $.QPushButton('OK', dialog);
+    cancel.autoDefault = false;
+    // QtScript reserves "default" in dot notation.
+    ok['default'] = true;
+    cancel.clicked.connect(function () {
+      dialog.reject();
+    });
+    ok.clicked.connect(function () {
+      ok.setFocus();
+      dialog.accept();
+    });
+    buttons.addWidget(cancel, 0, 0);
+    buttons.addWidget(ok, 0, 0);
+    layout.addLayout(buttons, 0);
+
+    try {
+      return dialog.exec() === 1 ? picker.getColor() : null;
+    } finally {
+      dialog.deleteLater();
+    }
+  }
+
+  return { createWidget, View, openDialog, pick };
+};

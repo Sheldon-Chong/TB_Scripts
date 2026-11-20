@@ -13,6 +13,7 @@ include(specialFolders.userScripts + '/core/Toolbar.js');
 include(specialFolders.userScripts + '/core/FileUtils.js');
 include(specialFolders.userScripts + '/core/Attributes.js');
 include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
+include(specialFolders.userScripts + '/widgets/ColorPicker.js');
 include(specialFolders.userScripts + '/core/Logging.js');
 include(specialFolders.userScripts + '/core/columns/BaseColumn.js');
 include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
@@ -99,6 +100,9 @@ if (!__tbShared.__TBTest) {
   MessageLog.trace('[Core INIT] Created successfully');
   MessageLog.trace('[Core INIT] Context: ' + __tbShared.__TBContextID);
 } else {
+  if (!__tbShared.__TBTest.Widgets.ColorPicker) {
+    __tbShared.__TBTest.Widgets = createCoreWidgets(__tbShared.__TBTest);
+  }
   if (!__tbShared.__TBTest.ProcessKit) {
     __tbShared.__TBTest.ProcessKit = createProcessKit(__tbShared.__TBTest);
   }
@@ -126,6 +130,7 @@ function reloadDevelopmentCore() {
   include(specialFolders.userScripts + '/core/FileUtils.js');
   include(specialFolders.userScripts + '/core/Attributes.js');
   include(specialFolders.userScripts + '/core/UI/WidgetKit.js');
+  include(specialFolders.userScripts + '/widgets/ColorPicker.js');
   include(specialFolders.userScripts + '/core/Logging.js');
   include(specialFolders.userScripts + '/core/columns/BaseColumn.js');
   include(specialFolders.userScripts + '/core/columns/DrawingElementColumn.js');
@@ -184,6 +189,20 @@ function mergeCore<TBase, TModules>(base: TBase, modules: TModules): TBase & TMo
 type Constructor<T = any> = new (...args: any[]) => T;
 
 type CoreBase = ReturnType<typeof createCoreBase>;
+type CoreWidgets = typeof WidgetKit & { ColorPicker: ColorPickerComponents };
+
+function createCoreWidgets(core: CoreRuntime): CoreWidgets {
+  var createColorPicker: (runtime: ColorPickerRuntime) => ColorPickerComponents =
+    __tbShared.__TBCreateColorPicker;
+  if (typeof createColorPicker !== 'function') {
+    throw new core.Error('Could not load widgets/ColorPicker.js from the user scripts folder.');
+  }
+  var comboBox: typeof QComboBox =
+    __tbShared.QComboBox || (typeof QComboBox === 'function' ? QComboBox : void 0);
+  return mergeCore(mergeCore({}, core.Widgets), {
+    ColorPicker: createColorPicker({ core, ComboBox: comboBox }),
+  });
+}
 
 interface CoreModules {
   Utils: ReturnType<typeof createUtils>;
@@ -274,7 +293,7 @@ function createCoreBase(H?: any) {
     QDir: H.QDir as typeof QDir,
     QFile: H.QFile as typeof QFile,
     QWidget: H.QWidget as typeof QWidget,
-    Widgets: WidgetKit,
+    Widgets: WidgetKit as CoreWidgets,
     QDialog: H.QDialog as typeof QDialog,
     QLineEdit: H.QLineEdit as typeof QLineEdit,
     QTextEdit: H.QTextEdit as typeof QTextEdit,
@@ -332,6 +351,8 @@ function createCore(base?: CoreBase): HarmonyCore {
 
     setStage('ColorObj assignment');
     Runtime.ColorObj = Runtime.ColorUtils.ColorObj;
+    setStage('createCoreWidgets');
+    Runtime.Widgets = createCoreWidgets(Runtime);
 
     setStage('createPaletteKit');
     Runtime.PaletteKit = createPaletteKit(Runtime);
